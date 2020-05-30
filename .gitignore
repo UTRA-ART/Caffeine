@@ -1,0 +1,10 @@
+*~
+
+# Catkin workspace top-level Make file
+CMakeLists.txt
+
+# Python Byte Code
+*.pyc
+
+# VSCode
+.vscode
