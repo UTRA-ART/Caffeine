@@ -5,10 +5,10 @@ This project runs on ROS melodic for Ubuntu 18.04 LTS. Caffeine is a robot being
 ## Setting up the ROS Environment ##
 
 ### Install Ubuntu 18.04 LTS ###
-This is generally dependent on what OS and computer is currently used. The wiki will be updated with some guides in the near future.
+This is dependent on what OS and computer is currently used. The [wiki](https://github.com/UTRA-ART/Caffeine/wiki) has a section on how to dual boot.
 
 ### Install ROS Melodic ###
-These following instructions are taken from the ROS wiki [install melodic](http://wiki.ros.org/melodic/Installation/Ubuntu) page:
+The following instructions are taken from the ROS wiki [install melodic](http://wiki.ros.org/melodic/Installation/Ubuntu) page:
 ```
 # Set up sources.list
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
@@ -29,14 +29,14 @@ sudo rosdep init
 rosdep update
 ```
 
-### Install huhsky-desktop and husky-simulator Packages ###
+### Install husky-desktop and husky-simulator Packages ###
 Husky is a robot that can be simulated in Gazebo and provides us with a few pre-built worlds.
 ```
 sudo apt-get install ros-melodic-husky-desktop
 sudo apt-get install ros-melodic-husky-simulator
 ```
 
-### Install the navigation Package ###
+### Install the Navigation Package ###
 Provides the [Navigation Stack](http://wiki.ros.org/navigation) which is used for autonomous navigation.
 ```
 sudo apt-get install ros-melodic-navigation
@@ -58,7 +58,8 @@ Every once in a while it is necessary to clear unnecesary logs that are saved fr
 rosclean check
 ```
 
-This should give you how much memory is consumed by logs. If nothing is returned you have no logs. 
+This should give you how much memory is consumed by logs. If nothing is returned you have no logs.
+
 To delete logs run:
 
 ```
