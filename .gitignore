@@ -1,7 +1,7 @@
 *~
 
 # Catkin workspace top-level Make file
-CMakeLists.txt
+/CMakeLists.txt
 
 # Python Byte Code
 *.pyc
