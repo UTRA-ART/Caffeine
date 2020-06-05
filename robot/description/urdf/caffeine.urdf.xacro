@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<robot name="caffeine" xmlns:xacro="http://ros.org/wiki/xacro">
+    <!-- Includes -->
+
+    <xacro:include filename="$(find description)/urdf/caffeine_constants.xacro"/>
+
+    <!-- Base link; dummy link. This is the base for everything else. Located at the plate centroid of the plate of the robot -->
+    <link name="base_link"> 
+    </link> 
+
+    <!-- Chassis link; this link is associated with the main body of the robot. Located at centroid of bounding box around chassis+stand -->
+    <!-- This link is associated with chassis_link.dae -->
+    <!-- This include is done to include the chassis_link definition and any constants associated with it to the file -->
+    <xacro:include filename="$(find description)/urdf/chassis_link.urdf.xacro"/>
+    <joint name="chassis_link_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="chassis_link"/>
+        <origin rpy="0 0 0" xyz="0 0 ${chassis_to_base_link_dist}"/>
+    </joint>
+
+    <!-- Stand link; this is a dummy link that is used to make camera placement and other sensors on the stand more convenient -->
+    <!-- This is not associated with a dae file -->
+    <!-- This include is done to include the stand_link definition and any constants associaed with it to the file -->
+    <xacro:include filename="$(find description)/urdf/stand_link.urdf.xacro"/>
+    <joint name="stand_link_joint" type="fixed">
+        <parent link="chassis_link"/>
+        <child link="stand_link"/>
+        <origin rpy="0 0 0" xyz="0 0 ${chassis_to_stand_link_dist}"/>
+    </joint>
+
+</robot>

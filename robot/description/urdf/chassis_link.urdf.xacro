@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<robot name="chassis" xmlns:xacro="http://ros.org/wiki/xacro">
+    
+    <!-- Constants for chassis_link -->
+    <xacro:property name="chassis_link_mass" value="30.0"/>
+    <xacro:macro name="chassis_link_inertia">
+        <inertia
+            ixx="10.77" ixy="0.00" ixz="0.00"
+            iyx="0.00" iyy="10.74" iyz="0.00"
+            izx="0.00" izy="0.00" izz="2.14"
+        />
+    </xacro:macro> 
+
+    <!-- Chassis link definition; chassis link is associated with the centroid of the bounding box of the robot and the chassis_link.dae file-->
+    <link name="chassis_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/chassis_link.dae"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/chassis_link.dae"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <mass value="${chassis_link_mass}"/>
+            <xacro:chassis_link_inertia/>
+        </inertial>
+    </link>
+</robot>

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<robot name="caffeine_constants" xmlns:xacro="http://ros.org/wiki/xacro">
+    <!-- Constants related to joint locations --> 
+    <xacro:property name="chassis_to_base_link_dist" value="0.501747"/>
+    <xacro:property name="chassis_to_stand_link_dist" value="0.713459"/>
+</robot>

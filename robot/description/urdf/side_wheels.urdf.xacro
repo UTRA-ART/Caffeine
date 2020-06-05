@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<robot name="side_wheels" xmlns:xacro="http://ros.org/wiki/xacro">
+    <!-- TODO: include Transmission later for use with motors -->
+    <!-- TODO: populate this file with definitions and constants for left, right wheels -->
+</robot>
