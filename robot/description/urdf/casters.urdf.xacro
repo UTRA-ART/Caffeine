@@ -4,27 +4,11 @@
     <!-- Note: this file contains definitions for both the casters & the caster wheels -->
     <!-- When included, only use front_caster_link and back_caster_link (joints for the wheels are defined in this file) -->
 
-    <!-- Constants -->
+    <!-- Includes -->
     <xacro:include filename="$(find description)/urdf/constants.xacro"/>
+    <xacro:include filename="$(find description)/urdf/inertias.xacro"/>
 
-    <!-- Note: mass can be used across both casters -->
-    <xacro:macro name="front_caster_link_inertia">
-        <inertia
-            ixx="0.07" ixy="0.00" ixz="-0.06"
-            iyx="0.00" iyy="0.12" iyz="0.00"
-            izx="-0.06" izy="0.00" izz="0.06"
-        />
-    </xacro:macro>
-
-    <xacro:macro name="back_caster_link_inertia">
-        <inertia
-            ixx="0.07" ixy="0.00" ixz="0.06"
-            iyx="0.00" iyy="0.00" iyz="0.00"
-            izx="0.06" izy="0.00" izz="0.06"
-        />
-    </xacro:macro>
-
-    <!-- Front caster link definition -->
+    <!-- Front caster definition -->
     <link name="front_caster_link">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -46,7 +30,6 @@
         </inertial>
     </link>
 
-    <!-- Front caster joint definition -->
     <joint name="front_caster_link_joint" type="continuous">
         <axis xyz="0 0 1"/>
         <parent link="chassis_link"/>
@@ -54,7 +37,7 @@
         <origin rpy="0 0 0" xyz="${casters_separation / 2.0} 0 ${caster_vertical_offset}"/>
     </joint>
 
-    <!-- Back caster link definition -->
+    <!-- Back caster definition -->
     <link name="back_caster_link">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -62,44 +45,26 @@
                 <mesh filename="package://description/urdf/meshes/back_caster.dae"/>
             </geometry>
         </visual>
- 
+
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
                 <mesh filename="package://description/urdf/meshes/back_caster.dae"/>
             </geometry>
         </collision>
- 
+
         <inertial>
             <mass value="${caster_link_mass}"/>
             <xacro:back_caster_link_inertia/>
         </inertial>
     </link>
 
-    <!-- Back caster joint definition -->
     <joint name="back_caster_link_joint" type="continuous">
         <axis xyz="0 0 1"/>
         <parent link="chassis_link"/>
         <child link="back_caster_link"/>
         <origin rpy="0 0 0" xyz="-${casters_separation / 2.0} 0 ${caster_vertical_offset}"/>
     </joint>
-
-    <!-- Wheel definitions and joints -->
-    <xacro:macro name="front_caster_wheel_inertia">
-        <inertia
-            ixx="0.29" ixy="0.00" ixz="-0.27"
-            iyx="0.00" iyy="0.54" iyz="0.00"
-            izx="-0.27" izy="0.00" izz="0.25"
-        />
-    </xacro:macro>
-
-    <xacro:macro name="back_caster_wheel_inertia">
-        <inertia
-            ixx="0.29" ixy="0.00" ixz="0.27"
-            iyx="0.00" iyy="0.54" iyz="0.00"
-            izx="0.27" izy="0.00" izz="0.25"
-        />
-    </xacro:macro>
 
     <!-- Front caster wheel definition -->
     <link name="front_caster_wheel">
@@ -121,10 +86,9 @@
             <mass value="${caster_wheel_mass}"/>
             <xacro:front_caster_wheel_inertia/>
         </inertial>
-    
+
     </link>
-    
-    <!-- Front caster wheel joint -->
+
     <joint name="front_caster_wheel_joint" type="continuous">
         <axis xyz="0 1 0"/>
         <parent link="front_caster_link"/>
@@ -132,29 +96,28 @@
         <origin rpy="0 0 0" xyz="${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
     </joint>
 
-     <!-- Back caster wheel definition -->
-     <link name="back_caster_wheel">
-         <visual>
-             <origin rpy="0 0 0" xyz="0 0 0"/>
-             <geometry>
-                 <mesh filename="package://description/urdf/meshes/back_caster_wheel.dae"/>
-             </geometry>
-         </visual>
- 
-         <collision>
-             <origin rpy="0 0 0" xyz="0 0 0"/>
-             <geometry>
-                 <mesh filename="package://description/urdf/meshes/back_caster_wheel.dae"/>
-             </geometry>
-         </collision>
- 
-         <inertial>
-             <mass value="${caster_wheel_mass}"/>
-             <xacro:back_caster_wheel_inertia/>
-         </inertial>
-     </link>
+    <!-- Back caster wheel definition -->
+    <link name="back_caster_wheel">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/back_caster_wheel.dae"/>
+            </geometry>
+        </visual>
 
-    <!-- Back caster wheel joint -->
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/back_caster_wheel.dae"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <mass value="${caster_wheel_mass}"/>
+            <xacro:back_caster_wheel_inertia/>
+        </inertial>
+    </link>
+        
     <joint name="back_caster_wheel_joint" type="continuous">
         <axis xyz="0 1 0"/>
         <parent link="back_caster_link"/>

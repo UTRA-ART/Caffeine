@@ -1,16 +1,8 @@
 <?xml version="1.0"?>
 <robot name="chassis" xmlns:xacro="http://ros.org/wiki/xacro">
-    <!-- Constants -->
+    <!-- Includes -->
     <xacro:include filename="$(find description)/urdf/constants.xacro"/>
-
-    <!-- Inertias -->
-    <xacro:macro name="chassis_link_inertia">
-        <inertia
-            ixx="10.77" ixy="0.00" ixz="0.00"
-            iyx="0.00" iyy="10.74" iyz="0.00"
-            izx="0.00" izy="0.00" izz="2.14"
-        />
-    </xacro:macro> 
+    <xacro:include filename="$(find description)/urdf/inertias.xacro"/>
 
     <!-- Chassis link definition; chassis link is associated with the centroid of the bounding box of the robot and the chassis_link.dae file-->
     <link name="chassis_link">

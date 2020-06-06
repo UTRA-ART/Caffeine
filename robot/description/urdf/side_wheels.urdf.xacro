@@ -1,23 +1,8 @@
 <?xml version="1.0"?>
 <robot name="side_wheels" xmlns:xacro="http://ros.org/wiki/xacro">
-    <!-- Constants -->
+    <!-- Includes -->
     <xacro:include filename="$(find description)/urdf/constants.xacro"/>
-
-    <!-- Inertias -->
-    <xacro:macro name="left_wheel_inertia">
-        <inertia
-            ixx="2.43" ixy="0.00" ixz="0.00"
-            iyx="0.00" iyy="1.60" iyz="1.15"
-            izx="0.00" izy="1.15" izz="0.87"
-            />
-    </xacro:macro>
-    <xacro:macro name="right_wheel_inertia">
-        <inertia
-            ixx="2.43" ixy="0.00" ixz="0.00"
-            iyx="0.00" iyy="1.60" iyz="-1.15"
-            izx="0.00" izy="-1.15" izz="0.87"
-            />
-    </xacro:macro>
+    <xacro:include filename="$(find description)/urdf/inertias.xacro"/>
 
     <!-- Motor Transmissions -->
     <xacro:macro name="Transmission" params="joint">
