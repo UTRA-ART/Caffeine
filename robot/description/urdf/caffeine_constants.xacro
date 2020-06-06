@@ -3,10 +3,4 @@
     <!-- Constants related to joint locations --> 
     <xacro:property name="chassis_to_base_link_dist" value="0.501747"/>
     <xacro:property name="chassis_to_stand_link_dist" value="0.713459"/>
-
-    <xacro:property name="chassis_to_front_caster_link_dist_x" value="0.55951056"/>
-    <xacro:property name="chassis_to_back_caster_link_dist_x" value="-0.55951056"/>
-
-    <!-- Applicable to both casters --> 
-    <xacro:property name="chassis_to_caster_link_dist_z" value="-0.619167561"/>
 </robot>
