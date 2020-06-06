@@ -34,4 +34,6 @@
     <!-- wheels: front and back casters -->
     <xacro:include filename="$(find description)/urdf/casters.urdf.xacro"/>
 
+    <!-- Include gazebo file -->
+    <xacro:include filename="$(find description)/urdf/caffeine.gazebo.xacro"/>
 </robot>
