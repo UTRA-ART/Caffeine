@@ -45,8 +45,8 @@ sudo apt-get install ros-melodic-navigation
 ## Cloning this repository ##
 Before cloning this repository, create a ROS workspace:
 ```
-mkdir -p /caffeine-ws/src
-cd /caffeine-ws/src
+mkdir -p caffeine-ws/src
+cd caffeine-ws
 catkin_make
 ```
 After, clone this repository into the `/src` folder.
