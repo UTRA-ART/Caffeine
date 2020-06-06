@@ -21,7 +21,7 @@
     <xacro:macro name="back_caster_link_inertia">
         <inertia
             ixx="0.07" ixy="0.00" ixz="0.06"
-            iyx="0.00" iyy="0.00" iyz="0.00"
+            iyx="0.00" iyy="0.12" iyz="0.00"
             izx="0.06" izy="0.00" izz="0.06"
         />
     </xacro:macro>
