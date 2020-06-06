@@ -6,7 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /RobotModel1
-        - /RobotModel1/Links1
+        - /RobotModel1/Links1/base_link1
       Splitter Ratio: 0.5
     Tree Height: 983
   - Class: rviz/Selection
@@ -63,21 +63,51 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
+        back_caster_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        back_caster_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         base_link:
           Alpha: 1
-          Show Axes: true
+          Show Axes: false
           Show Trail: false
         chassis_link:
           Alpha: 1
-          Show Axes: true
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_caster_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_caster_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_wheel_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_wheel_link:
+          Alpha: 1
+          Show Axes: false
           Show Trail: false
           Value: true
         stand_link:
           Alpha: 1
-          Show Axes: true
+          Show Axes: false
           Show Trail: false
       Name: RobotModel
-      Robot Description: robot_description
+      Robot Description: caffeine/robot_description
       TF Prefix: ""
       Update Interval: 0
       Value: true
@@ -110,25 +140,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 2.378314256668091
+      Distance: 2.3403160572052
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.07599210739135742
-        Y: -0.004486819729208946
-        Z: 0.3188967704772949
+        X: 0.04438412934541702
+        Y: -0.08444236218929291
+        Z: 0.3889967203140259
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6303977370262146
+      Pitch: 0.4803978204727173
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.7903966903686523
+      Yaw: 1.1003963947296143
     Saved: ~
 Window Geometry:
   Displays:
