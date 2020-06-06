@@ -31,4 +31,20 @@
     <!-- wheels: associated to wheels that can be moved by a motor -->
     <xacro:include filename="$(find description)/urdf/side_wheels.urdf.xacro"/>
 
+    <!-- wheels: front and back casters -->
+    <xacro:include filename="$(find description)/urdf/casters.urdf.xacro"/>
+    <joint name="front_caster_link_joint" type="continuous">
+        <axis xyz="0 0 1"/>
+        <parent link="chassis_link"/>
+        <child link="front_caster_link"/>
+        <origin rpy="0 0 0" xyz="${chassis_to_front_caster_link_dist_x} 0 ${chassis_to_caster_link_dist_z}"/>
+    </joint>
+
+    <joint name="base_caster_link_joint" type="continuous">
+        <axis xyz="0 0 1"/>
+        <parent link="chassis_link"/>
+        <child link="back_caster_link"/>
+        <origin rpy="0 0 0" xyz="${chassis_to_back_caster_link_dist_x} 0 ${chassis_to_caster_link_dist_z}"/>
+    </joint>
+
 </robot>
