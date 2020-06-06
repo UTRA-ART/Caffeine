@@ -4,9 +4,10 @@
     <!-- Note: this file contains definitions for both the casters & the caster wheels -->
     <!-- When included, only use front_caster_link and back_caster_link (joints for the wheels are defined in this file) -->
 
-    <!-- Constants related to casters link definition  -->
+    <!-- Constants -->
+    <xacro:include filename="$(find description)/urdf/constants.xacro"/>
+
     <!-- Note: mass can be used across both casters -->
-    <xacro:property name="caster_link_mass" value="0.5"/>
     <xacro:macro name="front_caster_link_inertia">
         <inertia
             ixx="0.07" ixy="0.00" ixz="-0.06"
@@ -22,10 +23,6 @@
             izx="0.06" izy="0.00" izz="0.06"
         />
     </xacro:macro>
-
-    <!-- Constants realted to casters joint definition --> 
-    <xacro:property name="casters_separation" value="1.12"/>
-    <xacro:property name="caster_vertical_offset" value="-0.619167561"/>
 
     <!-- Front caster link definition -->
     <link name="front_caster_link">
@@ -88,8 +85,6 @@
     </joint>
 
     <!-- Wheel definitions and joints -->
-    <!-- Constants related to caster wheel definition -->
-    <xacro:property name="caster_wheel_mass" value="0.7"/>
     <xacro:macro name="front_caster_wheel_inertia">
         <inertia
             ixx="0.29" ixy="0.00" ixz="-0.27"
@@ -106,10 +101,6 @@
         />
     </xacro:macro>
 
-    <!-- Constants related to caster wheel joint definition -->
-    <xacro:property name="caster_link_to_wheel_dist_x" value="0.03621719"/>
-    <xacro:property name="caster_link_to_wheel_dist_z" value="-0.04361749"/>
-    
     <!-- Front caster wheel definition -->
     <link name="front_caster_wheel">
         <visual>

@@ -1,12 +1,9 @@
 <?xml version="1.0"?>
 <robot name="side_wheels" xmlns:xacro="http://ros.org/wiki/xacro">
     <!-- Constants -->
-    <xacro:property name="wheel_vertical_offset" value="-0.61759696"/>
-    <xacro:property name="wheels_separation" value="0.875"/>
-    <xacro:property name="wheel_diameter" value="0.25"/> <!-- TODO: update this value -->
+    <xacro:include filename="$(find description)/urdf/constants.xacro"/>
 
-    <xacro:property name="wheel_mass" value="4.45"/>
-
+    <!-- Inertias -->
     <xacro:macro name="left_wheel_inertia">
         <inertia
             ixx="2.43" ixy="0.00" ixz="0.00"

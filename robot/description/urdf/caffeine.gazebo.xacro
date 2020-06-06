@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <robot name="caffeine_sim" xmlns:xacro="http://ros.org/wiki/xacro">
     
-    <xacro:property name="diff_drive_update_rate" value="30.0"/>
+    <!-- Constants -->
+    <xacro:include filename="$(find description)/urdf/constants.xacro"/>
 
     <!-- differential drive control support -->
     <!-- TODO: update parameters once they become known -->
@@ -32,7 +33,7 @@
     <gazebo>
         <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
             <!-- TODO: put namespace if necessary -->
-            <robotNamespace></robotNamespace>
+            <robotNamespace>caffeine</robotNamespace>
         </plugin>
     </gazebo>
 

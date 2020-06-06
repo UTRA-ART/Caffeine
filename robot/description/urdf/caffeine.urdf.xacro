@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
 <robot name="caffeine" xmlns:xacro="http://ros.org/wiki/xacro">
-    <!-- Includes -->
-
-    <xacro:include filename="$(find description)/urdf/caffeine_constants.xacro"/>
+    
+    <!-- Constants -->
+    <xacro:include filename="$(find description)/urdf/constants.xacro"/>
 
     <!-- Base link; dummy link. This is the base for everything else. Located at the plate centroid of the plate of the robot -->
-    <link name="base_link"> 
-    </link> 
+    <link name="base_link"/>
 
     <!-- Chassis link; this link is associated with the main body of the robot. Located at centroid of bounding box around chassis+stand -->
     <!-- This link is associated with chassis_link.dae -->

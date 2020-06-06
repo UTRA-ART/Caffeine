@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <robot name="chassis" xmlns:xacro="http://ros.org/wiki/xacro">
-    
-    <!-- Constants for chassis_link -->
-    <xacro:property name="chassis_link_mass" value="33.9"/>
+    <!-- Constants -->
+    <xacro:include filename="$(find description)/urdf/constants.xacro"/>
+
+    <!-- Inertias -->
     <xacro:macro name="chassis_link_inertia">
         <inertia
             ixx="10.77" ixy="0.00" ixz="0.00"
