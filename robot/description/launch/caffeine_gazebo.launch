@@ -1,19 +1,43 @@
 <launch>
-   <arg name="model" default = "caffeine"/>
+   <arg name="use_gui" default="true"/>
+   <arg name="debug_mode" default="false"/>
+   <arg name="world" default="$(find husky_gazebo)/worlds/clearpath_playpen.world"/>
+
+   <!-- Initial Pose (NOTE: angles in radians) -->
+   <arg name="x" value="0"/>
+   <arg name="y" value="0"/>
+   <arg name="z" value="0"/>
+   <arg name="roll" value="0"/>
+   <arg name="pitch" value="0"/>
+   <arg name="yaw" value="0"/>
    
    <!-- Open a world in Gazebo -->
-   <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
+   <include file="$(find gazebo_ros)/launch/empty_world.launch">
+      <arg name="world_name" value="$(arg world)"/>
+      
+      <arg name="paused" value="false"/>
+      <arg name="verbose" value="false"/>
+      <arg name="use_sim_time" value="true"/>
+
+      <arg name="gui" value="$(arg use_gui)"/>
+      <arg name="gui_required" value="$(arg use_gui)"/>
+
+      <arg name="debug" value="$(arg debug_mode)"/>
+      <arg name="server_required" value="$(arg debug_mode)"/>
+   </include>
 
    <!-- Parse URDF with xacro -->
-   <param name="robot_description" command="xacro '$(find description)/urdf/$(arg model).urdf.xacro'"/>
+   <param name="robot_description" command="xacro '$(find description)/urdf/caffeine.urdf.xacro'"/>
 
    <!-- Spawn Caffeine in Gazebo -->
    <node name="spawn_caffeine" pkg="gazebo_ros" type="spawn_model"
       args="-param robot_description
-            -urdf -model caffeine" />
+            -urdf -model caffeine
+            -x $(arg x) -y $(arg y) -z $(arg z)
+            -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)" />
 
    <!-- Set up TF Tree -->
-   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
-   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+   <include file="$(find description)/launch/setup_tf_tree.launch">
+      <arg name="robot" value="caffeine"/>
+   </include>
 </launch>
-
