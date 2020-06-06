@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<robot name="caster_wheels" xmlns:xacro="http://ros.org/wiki/xacro">
-    <!-- TODO: populate this with caster wheels definitions and constants -->
-    <!-- For convenience, include the support definitions and constants for them here too -->
-</robot>
