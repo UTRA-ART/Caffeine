@@ -1,5 +1,85 @@
 <?xml version="1.0"?>
 <robot name="side_wheels" xmlns:xacro="http://ros.org/wiki/xacro">
     <!-- TODO: include Transmission later for use with motors -->
-    <!-- TODO: populate this file with definitions and constants for left, right wheels -->
+
+    <!-- Constants -->
+    <xacro:property name="wheel_vertical_offset" value="-0.61759696"/>
+    <xacro:property name="wheels_separation" value="0.875"/>
+
+    <xacro:property name="wheel_mass" value="4.45"/>
+
+    <xacro:macro name="left_wheel_inertia">
+        <inertia
+            ixx="2.43" ixy="0.00" ixz="0.00"
+            iyx="0.00" iyy="1.60" iyz="1.15"
+            izx="0.00" izy="1.15" izz="0.87"
+            />
+    </xacro:macro>
+    <xacro:macro name="right_wheel_inertia">
+        <inertia
+            ixx="2.43" ixy="0.00" ixz="0.00"
+            iyx="0.00" iyy="1.60" iyz="-1.15"
+            izx="0.00" izy="-1.15" izz="0.87"
+            />
+    </xacro:macro>
+
+    <!-- left wheel -->
+    <link name="left_wheel_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/left_wheel.dae"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/left_wheel.dae"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <mass value="${wheel_mass}"/>
+            <xacro:left_wheel_inertia/>
+        </inertial>
+    </link>
+
+    <joint name="left_wheel_joint" type="continuous">
+        <parent link="chassis_link"/>
+        <child link="left_wheel_link"/>
+        <origin xyz= "0 ${wheels_separation / 2.0} ${wheel_vertical_offset}"/>
+
+        <axis xyz="0 1 0"/>
+    </joint>
+
+    <!-- right wheel -->
+    <link name="right_wheel_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/right_wheel.dae"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/right_wheel.dae"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <mass value="${wheel_mass}"/>
+            <xacro:right_wheel_inertia/>
+        </inertial>
+    </link>
+
+    <joint name="right_wheel_joint" type="continuous">
+        <parent link="chassis_link"/>
+        <child link="right_wheel_link"/>
+        <origin xyz= "0 -${wheels_separation / 2.0} ${wheel_vertical_offset}"/>
+
+        <axis xyz="0 1 0"/>
+    </joint>
 </robot>
