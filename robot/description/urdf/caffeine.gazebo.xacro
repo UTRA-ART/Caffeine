@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <robot name="caffeine_sim" xmlns:xacro="http://ros.org/wiki/xacro">
+    
     <xacro:property name="diff_drive_update_rate" value="30.0"/>
 
     <!-- differential drive control support -->
@@ -10,7 +11,7 @@
             <leftJoint>left_wheel_joint</leftJoint>
             <rightJoint>right_wheel_joint</rightJoint>
             <!-- wheel_diameter and wheel_separation from side_wheels.urdf.xacro -->
-            <wheelSeparation>${wheel_separation}</wheelSeparation>
+            <wheelSeparation>${wheels_separation}</wheelSeparation>
             <wheelDiameter>${wheel_diameter}</wheelDiameter>
             <wheelAcceleration>1.0</wheelAcceleration>
             <wheelTorque>20</wheelTorque>
@@ -18,12 +19,12 @@
             <odometryTopic>odom</odometryTopic>
             <odometryFrame>odom</odometryFrame>
             <robotBaseFrame>base_link</robotBaseFrame>
-            <!-- For odometry source, 0 = ENCODER, 1 = WORLD --> 
-            <odometrySource>1</odometrySource>
             <publishWheelTF>true</publishWheelTF>
-            <publishOdom>true</publishOdom>
+            <publishOdomTF>true</publishOdomTF>
+            <publishTf>true</publishTf>
             <publishWheelJointState>true</publishWheelJointState>
             <legacyMode>false</legacyMode>
+            <rosDebugLevel>na</rosDebugLevel>
         </plugin>
     </gazebo>
     

@@ -27,7 +27,7 @@
         <transmission name="trans_${joint}">
             <type>transmission_interface/SimpleTransmission</type>
             <joint name="${joint}">
-                <hardwareInterface>EffortJointInterface</hardwareInterface>
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
             </joint>
             <actuator name="${joint}_motor"/>
         </transmission>
