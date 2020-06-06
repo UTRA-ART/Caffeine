@@ -1,7 +1,11 @@
 <?xml version="1.0"?>
 <robot name="caster_wheels" xmlns:xacro="http://ros.org/wiki/xacro">
-    <!-- TODO: populate this with caster wheels definitions and constants -->
-    <!-- For convenience, include the support definitions and constants for them here too -->
+    <!-- TODO: make sure the inertias associated with each caster and wheel is correct -->
+    <!-- Note: this file contains definitions for both the casters & the caster wheels -->
+    <!-- When included, only use front_caster_link and back_caster_link (joints for the wheels are defined in this file) -->
+
+    <!-- Constants related to casters -->
+    <!-- Note: mass can be used across both casters -->
     <xacro:property name="caster_link_mass" value="0.5"/>
     <xacro:macro name="front_caster_link_inertia">
         <inertia
@@ -19,6 +23,7 @@
         />
     </xacro:macro>
 
+    <!-- Front caster link definition -->
     <link name="front_caster_link">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -40,6 +45,7 @@
         </inertial>
     </link> 
 
+    <!-- Back caster link definition -->
     <link name="back_caster_link">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -62,7 +68,89 @@
     </link>
 
     <!-- Wheel definitions and joints -->
+    <!-- Constants related to caster wheel definition -->
+    <xacro:property name="caster_wheel_mass" value="0.7"/>
+    <xacro:macro name="front_caster_wheel_inertia">
+        <inertia
+            ixx="0.29" ixy="0.00" ixz="-0.27"
+            iyx="0.00" iyy="0.54" iyz="0.00"
+            izx="-0.27" izy="0.00" izz="0.25"
+        />
+    </xacro:macro>
 
+    <xacro:macro name="back_caster_wheel_inertia">
+        <inertia
+            ixx="0.29" ixy="0.00" ixz="0.27"
+            iyx="0.00" iyy="0.54" iyz="0.00"
+            izx="0.27" izy="0.00" izz="0.25"
+        />
+    </xacro:macro>
+
+    <!-- Constants related to caster wheel joint definition -->
+    <xacro:property name="front_caster_link_to_front_caster_wheel_dist_x" value="0.03621719"/>
+    <xacro:property name="back_caster_link_to_back_caster_wheel_dist_x" value="-0.03621719"/>
+    <xacro:property name="caster_link_to_caster_wheel_dist_z" value="-0.04361749"/>
+    
+    <!-- Front caster wheel definition -->
+    <link name="front_caster_wheel">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/front_caster_wheel.dae"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/front_caster_wheel.dae"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <mass value="${caster_wheel_mass}"/>
+            <xacro:front_caster_wheel_inertia/>
+        </inertial>
+    
+    </link>
+    <!-- Front caster wheel joint -->
+    <joint name="front_caster_wheel_joint" type="continuous">
+        <axis xyz="0 1 0"/>
+        <parent link="front_caster_link"/>
+        <child link="front_caster_wheel"/>
+        <origin rpy="0 0 0" xyz="${front_caster_link_to_front_caster_wheel_dist_x} 0 ${caster_link_to_caster_wheel_dist_z}"/>
+    </joint>
+
+     <!-- Back caster wheel definition -->
+     <link name="back_caster_wheel">
+         <visual>
+             <origin rpy="0 0 0" xyz="0 0 0"/>
+             <geometry>
+                 <mesh filename="package://description/urdf/meshes/back_caster_wheel.dae"/>
+             </geometry>
+         </visual>
+ 
+         <collision>
+             <origin rpy="0 0 0" xyz="0 0 0"/>
+             <geometry>
+                 <mesh filename="package://description/urdf/meshes/back_caster_wheel.dae"/>
+             </geometry>
+         </collision>
+ 
+         <inertial>
+             <mass value="${caster_wheel_mass}"/>
+             <xacro:back_caster_wheel_inertia/>
+         </inertial>
+ 
+     </link>
+
+    <!-- Back caster wheel joint -->
+     <joint name="back_caster_wheel_joint" type="continuous">
+         <axis xyz="0 1 0"/>
+         <parent link="back_caster_link"/>
+         <child link="back_caster_wheel"/>
+         <origin rpy="0 0 0" xyz="${back_caster_link_to_back_caster_wheel_dist_x} 0 ${caster_link_to_caster_wheel_dist_z}"/>
+     </joint>
 
 
 </robot>
