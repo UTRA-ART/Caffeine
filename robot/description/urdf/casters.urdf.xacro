@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<robot name="caster_wheels" xmlns:xacro="http://ros.org/wiki/xacro">
+    <!-- TODO: populate this with caster wheels definitions and constants -->
+    <!-- For convenience, include the support definitions and constants for them here too -->
+    <xacro:property name="caster_link_mass" value="0.5"/>
+    <xacro:macro name="front_caster_link_inertia">
+        <inertia
+            ixx="0.07" ixy="0.00" ixz="-0.06"
+            iyx="0.00" iyy="0.12" iyz="0.00"
+            izx="-0.06" izy="0.00" izz="0.06"
+        />
+    </xacro:macro>
+
+    <xacro:macro name="back_caster_link_inertia">
+        <inertia
+            ixx="0.07" ixy="0.00" ixz="0.06"
+            iyx="0.00" iyy="0.00" iyz="0.00"
+            izx="0.06" izy="0.00" izz="0.06"
+        />
+    </xacro:macro>
+
+    <link name="front_caster_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/front_caster.dae"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/front_caster.dae"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <mass value="${caster_link_mass}"/>
+            <xacro:front_caster_link_inertia/>
+        </inertial>
+    </link> 
+
+    <link name="back_caster_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/back_caster.dae"/>
+            </geometry>
+        </visual>
+ 
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/back_caster.dae"/>
+            </geometry>
+        </collision>
+ 
+        <inertial>
+            <mass value="${caster_link_mass}"/>
+            <xacro:back_caster_link_inertia/>
+        </inertial>
+    </link>
+
+    <!-- Wheel definitions and joints -->
+
+
+
+</robot>
