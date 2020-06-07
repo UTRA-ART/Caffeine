@@ -33,7 +33,7 @@
 
         <inertial>
             <mass value="${wheel_mass}"/>
-            <xacro:left_wheel_inertia/>
+            <xacro:side_wheel_inertia/>
         </inertial>
     </link>
 
@@ -65,7 +65,7 @@
 
         <inertial>
             <mass value="${wheel_mass}"/>
-            <xacro:right_wheel_inertia/>
+            <xacro:side_wheel_inertia/>
         </inertial>
     </link>
 

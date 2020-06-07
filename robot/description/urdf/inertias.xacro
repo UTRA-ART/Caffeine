@@ -3,59 +3,36 @@
     <!-- Chassis --> 
     <xacro:macro name="chassis_link_inertia">
         <inertia
-            ixx="10.77" ixy="0.00" ixz="0.00"
-            iyx="0.00" iyy="10.74" iyz="0.00"
-            izx="0.00" izy="0.00" izz="2.14"
+            ixx="10.9364" ixy="0.0000" ixz="0.0000"
+            iyx="0.0000" iyy="10.9070" iyz="0.0000"
+            izx="0.0000" izy="0.0000" izz="2.3961"
         />
     </xacro:macro> 
 
     <!-- Casters -->
-    <xacro:macro name="front_caster_link_inertia">
+    <xacro:macro name="caster_link_inertia">
         <inertia
-            ixx="0.07" ixy="0.00" ixz="-0.06"
-            iyx="0.00" iyy="0.12" iyz="0.00"
-            izx="-0.06" izy="0.00" izz="0.06"
+            ixx="0.0020" ixy="0.0000" ixz="0.0000"
+            iyx="0.0000" iyy="0.0020" iyz="0.0000"
+            izx="0.0000" izy="0.0000" izz="0.0008"
         />
     </xacro:macro>
 
-    <xacro:macro name="back_caster_link_inertia">
+    <xacro:macro name="caster_wheel_inertia">
         <inertia
-            ixx="0.07" ixy="0.00" ixz="0.06"
-            iyx="0.00" iyy="0.12" iyz="0.00"
-            izx="0.06" izy="0.00" izz="0.06"
-        />
-    </xacro:macro>
-
-    <xacro:macro name="front_caster_wheel_inertia">
-        <inertia
-            ixx="0.29" ixy="0.00" ixz="-0.27"
-            iyx="0.00" iyy="0.54" iyz="0.00"
-            izx="-0.27" izy="0.00" izz="0.25"
-        />
-    </xacro:macro>
-
-    <xacro:macro name="back_caster_wheel_inertia">
-        <inertia
-            ixx="0.29" ixy="0.00" ixz="0.27"
-            iyx="0.00" iyy="0.54" iyz="0.00"
-            izx="0.27" izy="0.00" izz="0.25"
+            ixx="0.0012" ixy="0.0000" ixz="0.0000"
+            iyx="0.0000" iyy="0.0022" iyz="0.0000"
+            izx="0.0000" izy="0.0000" izz="0.0012"
         />
     </xacro:macro>
 
     <!-- Wheels -->
-    <xacro:macro name="left_wheel_inertia">
+    <xacro:macro name="side_wheel_inertia">
         <inertia
-            ixx="2.43" ixy="0.00" ixz="0.00"
-            iyx="0.00" iyy="1.60" iyz="1.15"
-            izx="0.00" izy="1.15" izz="0.87"
-            />
+            ixx="0.0231" ixy="0.0000" ixz="0.0000"
+            iyx="0.0000" iyy="0.0374" iyz="0.0000"
+            izx="0.0000" izy="0.0000" izz="0.0231"
+        />
     </xacro:macro>
     
-    <xacro:macro name="right_wheel_inertia">
-        <inertia
-            ixx="2.43" ixy="0.00" ixz="0.00"
-            iyx="0.00" iyy="1.60" iyz="-1.15"
-            izx="0.00" izy="-1.15" izz="0.87"
-            />
-    </xacro:macro>
 </robot>

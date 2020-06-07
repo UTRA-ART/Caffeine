@@ -26,7 +26,7 @@
 
         <inertial>
             <mass value="${caster_link_mass}"/>
-            <xacro:front_caster_link_inertia/>
+            <xacro:caster_link_inertia/>
         </inertial>
     </link>
 
@@ -55,7 +55,7 @@
 
         <inertial>
             <mass value="${caster_link_mass}"/>
-            <xacro:back_caster_link_inertia/>
+            <xacro:caster_link_inertia/>
         </inertial>
     </link>
 
@@ -84,7 +84,7 @@
 
         <inertial>
             <mass value="${caster_wheel_mass}"/>
-            <xacro:front_caster_wheel_inertia/>
+            <xacro:caster_wheel_inertia/>
         </inertial>
 
     </link>
@@ -114,7 +114,7 @@
 
         <inertial>
             <mass value="${caster_wheel_mass}"/>
-            <xacro:back_caster_wheel_inertia/>
+            <xacro:caster_wheel_inertia/>
         </inertial>
     </link>
         
