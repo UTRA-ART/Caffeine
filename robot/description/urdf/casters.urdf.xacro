@@ -30,8 +30,9 @@
         </inertial>
     </link>
 
-    <joint name="front_caster_link_joint" type="continuous">
-        <axis xyz="0 0 1"/>
+    <!-- NOTE: using a fixed joint prevents Caffeine spawning tipped over -->
+    <joint name="front_caster_link_joint" type="fixed">
+        <!-- <axis xyz="0 0 1"/> -->
         <parent link="chassis_link"/>
         <child link="front_caster_link"/>
         <origin rpy="0 0 0" xyz="${casters_separation / 2.0} 0 ${caster_vertical_offset}"/>
@@ -59,8 +60,9 @@
         </inertial>
     </link>
 
-    <joint name="back_caster_link_joint" type="continuous">
-        <axis xyz="0 0 1"/>
+    <!-- NOTE: using a fixed joint prevents Caffeine spawning tipped over -->
+    <joint name="back_caster_link_joint" type="fixed">
+        <!-- <axis xyz="0 0 1"/> -->
         <parent link="chassis_link"/>
         <child link="back_caster_link"/>
         <origin rpy="0 0 0" xyz="-${casters_separation / 2.0} 0 ${caster_vertical_offset}"/>
@@ -90,10 +92,11 @@
     </link>
 
     <joint name="front_caster_wheel_joint" type="continuous">
-        <axis xyz="0 1 0"/>
         <parent link="front_caster_link"/>
         <child link="front_caster_wheel"/>
         <origin rpy="0 0 0" xyz="${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
+
+        <axis xyz="0 1 0"/>
     </joint>
 
     <!-- Back caster wheel definition -->
@@ -119,10 +122,11 @@
     </link>
         
     <joint name="back_caster_wheel_joint" type="continuous">
-        <axis xyz="0 1 0"/>
         <parent link="back_caster_link"/>
         <child link="back_caster_wheel"/>
         <origin rpy="0 0 0" xyz="-${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
+
+        <axis xyz="0 1 0"/>
     </joint>
 
 
