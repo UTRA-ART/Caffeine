@@ -1,8 +1,5 @@
 <?xml version="1.0"?>
 <robot name="caster_wheels" xmlns:xacro="http://ros.org/wiki/xacro">
-    <!-- TODO: make sure the inertias associated with each caster and wheel is correct -->
-    <!-- Note: this file contains definitions for both the casters & the caster wheels -->
-    <!-- When included, only use front_caster_link and back_caster_link (joints for the wheels are defined in this file) -->
 
     <!-- Includes -->
     <xacro:include filename="$(find description)/urdf/constants.xacro"/>
