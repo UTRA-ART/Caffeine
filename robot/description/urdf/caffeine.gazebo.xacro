@@ -8,11 +8,10 @@
     <!-- TODO: update parameters once they become known -->
     <gazebo>
         <plugin name="caffeine_drive_controller" filename="libgazebo_ros_diff_drive.so">
-            <robotNamespace>/caffeine</robotNamespace>
+            <robotNamespace>caffeine</robotNamespace>
             <updateRate>${diff_drive_update_rate}</updateRate>
             <leftJoint>left_wheel_joint</leftJoint>
             <rightJoint>right_wheel_joint</rightJoint>
-            <!-- wheel_diameter and wheel_separation from side_wheels.urdf.xacro -->
             <wheelSeparation>${wheels_separation}</wheelSeparation>
             <wheelDiameter>${wheel_diameter}</wheelDiameter>
             <wheelAcceleration>1.0</wheelAcceleration>
