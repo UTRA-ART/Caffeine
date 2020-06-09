@@ -28,3 +28,4 @@
     <!-- Gazebo Motor -->
     <xacro:property name="diff_drive_update_rate" value="30.0"/>
 </robot>
+
