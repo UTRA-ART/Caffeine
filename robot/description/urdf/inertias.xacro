@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<robot name="caffeine_inertias" xmlns:xacro="http://ros.org/wiki/xacro">
+    <!-- Chassis --> 
+    <xacro:macro name="chassis_link_inertia">
+        <inertia
+            ixx="10.9364" ixy="0.0000" ixz="0.0000"
+            iyx="0.0000" iyy="10.9070" iyz="0.0000"
+            izx="0.0000" izy="0.0000" izz="2.3961"
+        />
+    </xacro:macro> 
+
+    <!-- Casters -->
+    <xacro:macro name="caster_link_inertia">
+        <inertia
+            ixx="0.0020" ixy="0.0000" ixz="0.0000"
+            iyx="0.0000" iyy="0.0020" iyz="0.0000"
+            izx="0.0000" izy="0.0000" izz="0.0008"
+        />
+    </xacro:macro>
+
+    <xacro:macro name="caster_wheel_inertia">
+        <inertia
+            ixx="0.0012" ixy="0.0000" ixz="0.0000"
+            iyx="0.0000" iyy="0.0022" iyz="0.0000"
+            izx="0.0000" izy="0.0000" izz="0.0012"
+        />
+    </xacro:macro>
+
+    <!-- Wheels -->
+    <xacro:macro name="side_wheel_inertia">
+        <inertia
+            ixx="0.0231" ixy="0.0000" ixz="0.0000"
+            iyx="0.0000" iyy="0.0374" iyz="0.0000"
+            izx="0.0000" izy="0.0000" izz="0.0231"
+        />
+    </xacro:macro>
+    
+</robot>
+
