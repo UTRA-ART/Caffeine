@@ -37,12 +37,13 @@
     <xacro:property name="laser_horizontal_min_angle" value="-2.356"/>
     <xacro:property name="laser_horizontal_max_angle" value="2.356"/>
 
-    <xacro:property name="laser_range_min_angle" value="0.1"/>
-    <xacro:property name="laser_range_max_angle" value="5.6"/>
+    <xacro:property name="laser_range_min" value="0.1"/>
+    <xacro:property name="laser_range_max" value="5.6"/>
     <xacro:property name="laser_range_resolution" value="0.01"/>
 
-    <xacro:property name="laser_mean" value="0.0"/>
-    <xacro:property name="laser_stddev" value="0.1"/>
+    <xacro:property name="laser_noise_type" value="gaussian"/>
+    <xacro:property name="laser_noise_mean" value="0.0"/>
+    <xacro:property name="laser_noise_stddev" value="0.1"/>
 
     <xacro:property name="laser_topicName" value="scan"/>
     <xacro:property name="laser_frameName" value="base_laser"/>
