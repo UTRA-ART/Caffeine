@@ -7,7 +7,7 @@
 
     <!-- base_link: origin of the robot; located in the middle, on the top of the base plate -->
     <link name="base_link"/>
-
+ 
     <!-- chassis_link: geometric center of the robot; used as the parent in which all other links connect to -->
     <xacro:include filename="$(find description)/urdf/chassis_link.urdf.xacro"/>
     <joint name="chassis_link_joint" type="fixed">

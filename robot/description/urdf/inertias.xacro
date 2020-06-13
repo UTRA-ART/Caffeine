@@ -34,6 +34,19 @@
             izx="0.0000" izy="0.0000" izz="0.0231"
         />
     </xacro:macro>
+
+    <!-- Camera -->
+    <xacro:macro name="box_inertia" params="mass length width height">
+        <inertia
+            ixx="${mass * (height*height + length*length)/12.0}" 
+                        ixy="0.0" 
+            ixz="0.0" 
+                        iyy="${mass * (width*width + length*length)/12.0}" 
+                        iyz="0.0" 
+            izz="${mass * (width*width + height*height)/12.0}"
+        />
+                
+    </xacro:macro>
     
 </robot>
 

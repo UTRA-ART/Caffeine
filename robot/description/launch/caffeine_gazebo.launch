@@ -3,6 +3,7 @@
    <arg name="debug_mode" default="false"/>
    <arg name="world" default="$(find husky_gazebo)/worlds/clearpath_playpen.world"/>
 
+   <arg name="camera_ns" default="/zed/zed_node"/>
    <!-- Initial Pose (NOTE: angles in radians) -->
    <arg name="x" value="0"/>
    <arg name="y" value="0"/>
@@ -40,5 +41,11 @@
    <include file="$(find description)/launch/setup_tf_tree.launch">
       <arg name="robot" value="caffeine"/>
    </include>
+
+   <!-- Emulate ZED stereo camera image processing -->
+   <include file="$(find description)/launch/zed_emulation.launch">
+      <arg name="camera_ns" value="$(arg camera_ns)"/>
+   </include>
+
 </launch>
 
