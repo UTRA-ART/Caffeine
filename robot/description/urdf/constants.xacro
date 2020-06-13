@@ -27,5 +27,29 @@
 
     <!-- Gazebo Motor -->
     <xacro:property name="diff_drive_update_rate" value="30.0"/>
+
+    <!-- Constants for hokuyo 2D LIDAR sensor -->
+    <xacro:property name="laser_visualize" value="false"/>
+    <xacro:property name="laser_update_rate" value="30"/>
+
+    <xacro:property name="laser_horizontal_samples" value="1080"/>
+    <xacro:property name="laser_horizontal_resolution" value="1"/>
+    <xacro:property name="laser_horizontal_min_angle" value="-2.356"/>
+    <xacro:property name="laser_horizontal_max_angle" value="2.356"/>
+
+    <xacro:property name="laser_range_min_angle" value="0.1"/>
+    <xacro:property name="laser_range_max_angle" value="5.6"/>
+    <xacro:property name="laser_range_resolution" value="0.01"/>
+
+    <xacro:property name="laser_mean" value="0.0"/>
+    <xacro:property name="laser_stddev" value="0.1"/>
+
+    <xacro:property name="hokuyo_length" value="0.05"/>
+    <xacro:property name="hokuyo_width" value="0.05"/>
+    <xacro:property name="hokuyo_height" value="0.07"/>
+    <xacro:property name="hokuyo_mass" value="0.16"/> 
+
+    <xacro:property name="laser_x_dist" value="0.07"/>
+    <xacro:property name="laser_z_dist" value="0.16"/>  
 </robot>
 
