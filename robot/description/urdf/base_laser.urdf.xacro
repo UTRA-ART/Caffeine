@@ -22,7 +22,7 @@
       <collision>
          <origin xyz="0 0 0" rpy="0 0 0"/>
          <geometry>
-           <mesh filename="package://description//rdf.meshes/hokuyo.dae"/>
+           <mesh filename="package://description//urdf/meshes/hokuyo.dae"/>
          </geometry>
       </collision>
    </link>
