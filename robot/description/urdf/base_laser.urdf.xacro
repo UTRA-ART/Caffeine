@@ -1,5 +1,6 @@
-   <?xml version="1.0"?
-   <robot name="caffeine_inertias" xmlns:xacro="http://ros.org/wiki/xacro">
+<?xml version="1.0"?>
+<robot name="caffeine_inertias" xmlns:xacro="http://ros.org/wiki/xacro">
+
    <!-- LIDAR link -->
    <link name="base_laser">
         <inertial>
