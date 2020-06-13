@@ -30,29 +30,6 @@
     <!-- wheels: front and back casters -->
     <xacro:include filename="$(find description)/urdf/casters.urdf.xacro"/>
 
-   
-   <!-- LIDAR link -->
-   <link name="base_laser">
-        <inertial>
-            <mass value="${hokuyo_mass}"/>
-            <xacro:box_inertia mass="${hokuyo_mass}" length="${hokuyo_length}" width="${hokuyo_width}" height="${hokuyo_height}"/>
-        </inertial>
-
-      <visual>
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <mesh filename="package:///description/meshes/hokuyo.dae"/>
-         </geometry>
-      </visual>
-
-      <collision>
-         <origin xyz="0 0 0" rpy="0 0 0"/>
-         <geometry>
-            <mesh filename="package:///description/meshes/hokuyo.dae"/>
-         </geometry>
-      </collision>
-   </link>
-
    <!-- LIDAR joint -->
    <!-- TODO: double check xyz location-->
    <joint name="base_laser_joint" type="fixed">
