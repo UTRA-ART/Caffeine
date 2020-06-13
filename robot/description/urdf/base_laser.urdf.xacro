@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <robot name="caffeine_inertias" xmlns:xacro="http://ros.org/wiki/xacro">
 
+   <!-- Includes --!>
+   <xacro:include filename="$(find description)/urdf/constants.xacro"/>
+   <xacro:include filename="$(find description)/urdf/inertias.xacro"/>
+
    <!-- LIDAR link -->
    <link name="base_laser">
         <inertial>
