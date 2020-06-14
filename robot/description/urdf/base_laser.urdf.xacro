@@ -8,8 +8,8 @@
    <!-- LIDAR link -->
    <link name="base_laser">
         <inertial>
-            <mass value="${hokuyo_mass}"/>
-            <xacro:box_inertia mass="${hokuyo_mass}" length="${hokuyo_length}" width="${hokuyo_width}" height="${hokuyo_height}"/>
+            <mass value="${laser_mass}"/>
+            <xacro:box_inertia mass="${laser_mass}" length="${laser_length}" width="${laser_width}" height="${laser_height}"/>
         </inertial>
 
       <visual>
