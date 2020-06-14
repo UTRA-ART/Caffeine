@@ -8,7 +8,7 @@
     <!-- TODO: update parameters once they become known -->
     <gazebo>
         <plugin name="caffeine_drive_controller" filename="libgazebo_ros_diff_drive.so">
-            <robotNamespace>${diff_drive_robotNamespace}</robotNamespace>
+            <robotNamespace>${robotNamespace}</robotNamespace>
             <updateRate>${diff_drive_update_rate}</updateRate>
             <leftJoint>${wheel_left_joint}</leftJoint>
             <rightJoint>${wheel_right_joint}</rightJoint>
@@ -33,7 +33,7 @@
     <!-- lets all the transmission tags be read -->
     <gazebo>
         <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-            <robotNamespace>caffeine</robotNamespace>
+            <robotNamespace>${robotNamespace}</robotNamespace>
         </plugin>
     </gazebo>
 
