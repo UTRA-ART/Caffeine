@@ -25,7 +25,7 @@
             <publishOdomTF>${diff_drive_publishOdomTF}</publishOdomTF>
             <publishTf>${diff_drive_publishTf}</publishTf>
             <publishWheelJointState>${diff_drive_publishWheelJointState}</publishWheelJointState>
-            <legacyMode>${diff_drive_legacymode"}</legacyMode>
+            <legacyMode>${diff_drive_legacymode}</legacyMode>
             <rosDebugLevel>${diff_drive_rosDebugLevel}</rosDebugLevel>
         </plugin>
     </gazebo>
