@@ -8,25 +8,25 @@
     <!-- TODO: update parameters once they become known -->
     <gazebo>
         <plugin name="caffeine_drive_controller" filename="libgazebo_ros_diff_drive.so">
-            <robotNamespace>caffeine</robotNamespace>
+            <robotNamespace>${diff_drive_robotNamespace}</robotNamespace>
             <updateRate>${diff_drive_update_rate}</updateRate>
-            <leftJoint>left_wheel_joint</leftJoint>
-            <rightJoint>right_wheel_joint</rightJoint>
+            <leftJoint>${wheel_left_joint}</leftJoint>
+            <rightJoint>${wheel_right_joint}</rightJoint>
             <wheelSeparation>${wheels_separation}</wheelSeparation>
             <wheelDiameter>${wheel_diameter}</wheelDiameter>
-            <wheelAcceleration>1.0</wheelAcceleration>
-            <wheelTorque>20</wheelTorque>
-            <commandTopic>cmd_vel</commandTopic>
-            <odometryTopic>odom</odometryTopic>
-            <odometryFrame>odom</odometryFrame>
-            <robotBaseFrame>base_link</robotBaseFrame>
-            <odometrySource>encoder</odometrySource>
-            <publishWheelTF>false</publishWheelTF>
-            <publishOdomTF>true</publishOdomTF>
-            <publishTf>true</publishTf>
-            <publishWheelJointState>true</publishWheelJointState>
-            <legacyMode>false</legacyMode>
-            <rosDebugLevel>na</rosDebugLevel>
+            <wheelAcceleration>${wheel_acceleration}</wheelAcceleration>
+            <wheelTorque>${wheel_torque}</wheelTorque>
+            <commandTopic>${diff_drive_commandTopic}</commandTopic>
+            <odometryTopic>${diff_drive_odometryTopic}</odometryTopic>
+            <odometryFrame>${diff_drive_odometryFrame}</odometryFrame>
+            <robotBaseFrame>${diff_drive_robotBaseFrame}</robotBaseFrame>
+            <odometrySource>${diff_drive_odometrySource}</odometrySource>
+            <publishWheelTF>${diff_drive_publishWheelTF}</publishWheelTF>
+            <publishOdomTF>${diff_drive_publishOdomTF}</publishOdomTF>
+            <publishTf>${diff_drive_publishTf}</publishTf>
+            <publishWheelJointState>${diff_drive_publishWheelJointState}</publishWheelJointState>
+            <legacyMode>${diff_drive_legacymode"}</legacyMode>
+            <rosDebugLevel>${diff_drive_rosDebugLevel}</rosDebugLevel>
         </plugin>
     </gazebo>
     
