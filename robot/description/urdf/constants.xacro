@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <robot name="caffeine_constants" xmlns:xacro="http://ros.org/wiki/xacro">
+    <!-- Caffeine -->
+    <xacro:property name="robotNamespace" value="caffeine"/>
+
     <!-- Chassis --> 
     <xacro:property name="chassis_to_base_link_dist" value="0.501747"/>
     <xacro:property name="chassis_to_stand_link_dist" value="0.713459"/>
@@ -34,7 +37,6 @@
 
     <!-- Gazebo Motor -->
     <!-- TODO: update parameters once they become known -->
-    <xacro:property name="diff_drive_robotNamespace" value="caffeine"/>
 
     <xacro:property name="diff_drive_update_rate" value="30.0"/>
 
