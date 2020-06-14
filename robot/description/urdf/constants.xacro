@@ -73,7 +73,7 @@
     <xacro:property name="laser_noise_mean" value="0.0"/>
     <xacro:property name="laser_noise_stddev" value="0.1"/>
 
-    <xacro:property name="laser_topicName" value="scan"/>
+    <xacro:property name="laser_topicName" value="caffeine/scan"/>
     <xacro:property name="laser_frameName" value="base_laser"/>
 
     <xacro:property name="laser_length" value="0.05"/>
