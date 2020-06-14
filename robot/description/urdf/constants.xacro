@@ -18,6 +18,7 @@
     <xacro:property name="caster_link_to_wheel_dist_z" value="-0.04361749"/>
 
     <!-- Wheels -->
+    <!-- TODO: update parameters once they become known -->
     <xacro:property name="wheel_vertical_offset" value="-0.61759696"/>
     
     <xacro:property name="wheel_left_joint" value="left_wheel_joint"/>
@@ -32,6 +33,7 @@
     <xacro:property name="wheel_mass" value="4.45"/>
 
     <!-- Gazebo Motor -->
+    <!-- TODO: update parameters once they become known -->
     <xacro:property name="diff_drive_robotNamespace" value="caffeine"/>
 
     <xacro:property name="diff_drive_update_rate" value="30.0"/>
