@@ -68,7 +68,6 @@
             </noise>
          </ray>
          <plugin name="gazebo_ros_hokuyo_controller" filename="libgazebo_ros_laser.so">
-            <robotNamespace>${robotNamespace}</robotNamespace>
             <topicName>${laser_topicName}</topicName>
             <frameName>${laser_frameName}</frameName>
          </plugin>
