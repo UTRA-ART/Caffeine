@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<robot name="caffeine_sim" xmlns:xacro="http://ros.org/wiki/xacro">
+    
+    <!-- Constants -->
+    <xacro:include filename="$(find description)/urdf/constants.xacro"/>
+
+    <!-- differential drive control support -->
+    <!-- TODO: update parameters once they become known -->
+    <gazebo>
+        <plugin name="caffeine_drive_controller" filename="libgazebo_ros_diff_drive.so">
+            <robotNamespace>caffeine</robotNamespace>
+            <updateRate>${diff_drive_update_rate}</updateRate>
+            <leftJoint>left_wheel_joint</leftJoint>
+            <rightJoint>right_wheel_joint</rightJoint>
+            <wheelSeparation>${wheels_separation}</wheelSeparation>
+            <wheelDiameter>${wheel_diameter}</wheelDiameter>
+            <wheelAcceleration>1.0</wheelAcceleration>
+            <wheelTorque>20</wheelTorque>
+            <commandTopic>cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <robotBaseFrame>base_link</robotBaseFrame>
+            <odometrySource>encoder</odometrySource>
+            <publishWheelTF>false</publishWheelTF>
+            <publishOdomTF>true</publishOdomTF>
+            <publishTf>true</publishTf>
+            <publishWheelJointState>true</publishWheelJointState>
+            <legacyMode>false</legacyMode>
+            <rosDebugLevel>na</rosDebugLevel>
+        </plugin>
+    </gazebo>
+    
+    <!-- lets all the transmission tags be read -->
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>caffeine</robotNamespace>
+        </plugin>
+    </gazebo>
+
+</robot>
+
