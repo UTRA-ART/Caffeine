@@ -5,7 +5,6 @@
     <xacro:include filename="$(find description)/urdf/constants.xacro"/>
 
     <!-- differential drive control support -->
-    <!-- TODO: update parameters once they become known -->
     <gazebo>
         <plugin name="caffeine_drive_controller" filename="libgazebo_ros_diff_drive.so">
             <robotNamespace>${robotNamespace}</robotNamespace>
@@ -37,8 +36,7 @@
         </plugin>
     </gazebo>
 
-    <!-- LIDAR plug-in -->
-    <!-- TODO: Double check the numbers-->
+    <!-- LIDAR -->
    <gazebo reference="base_laser">
       <sensor type="ray" name="gpu_hokuyo_sensor">
          <pose>0 0 0 0 0 0</pose>
@@ -61,8 +59,8 @@
             <noise>
                <type>${laser_noise_type}</type>
                <!-- Noise based on gazebosim.org's tutorial on writing gazebo plugins w/ ROS. The comment they put will be reproduced:
-                    Noise parameters based on published spec for Hokuyo laser achieving "+-30mm" accuracy at range < 10 m. A mean of 
-                    0.0m and stddev of 0.01m will put 99.7% of samples within 0.03m of the true reading. -->
+                    Noise parameters based on published spec for Hokuyo laser achieving "+-10mm" accuracy at range < 10 m. A mean of 
+                    0.0m and stddev of (0.01/3), will put 99.8% of samples within 0.03m of the true reading. -->
                <mean>${laser_noise_mean}</mean>
                <stddev>${laser_noise_stddev}</stddev>
             </noise>
