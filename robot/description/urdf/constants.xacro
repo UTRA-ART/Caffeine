@@ -21,7 +21,7 @@
     <xacro:property name="caster_link_to_wheel_dist_z" value="-0.04361749"/>
 
     <!-- Wheels -->
-    <!-- TODO: update parameters once they become known -->
+    <!-- TODO: Update acceleration and torque parameters when known -->
     <xacro:property name="wheel_vertical_offset" value="-0.61759696"/>
     
     <xacro:property name="wheel_left_joint" value="left_wheel_joint"/>
@@ -36,8 +36,6 @@
     <xacro:property name="wheel_mass" value="4.45"/>
 
     <!-- Gazebo Motor -->
-    <!-- TODO: update parameters once they become known -->
-
     <xacro:property name="diff_drive_update_rate" value="30.0"/>
 
     <xacro:property name="diff_drive_commandTopic" value="cmd_vel"/>
@@ -56,22 +54,24 @@
     <xacro:property name="diff_drive_legacymode" value="false"/>
     <xacro:property name="diff_drive_rosDebugLevel" value="na"/>
 
-    <!-- Constants for hokuyo 2D LIDAR sensor -->
+    <!-- Hokuyo 2D LIDAR sensor -->
     <xacro:property name="laser_visualize" value="false"/>
-    <xacro:property name="laser_update_rate" value="30"/>
+    <xacro:property name="laser_update_rate" value="10"/>
 
     <xacro:property name="laser_horizontal_samples" value="1080"/>
     <xacro:property name="laser_horizontal_resolution" value="1"/>
-    <xacro:property name="laser_horizontal_min_angle" value="-2.356"/>
-    <xacro:property name="laser_horizontal_max_angle" value="2.356"/>
+    <xacro:property name="laser_field_of_view" value="240"/>
+    <xacro:property name="laser_horizontal_min_angle" value="$(-laser_field_of_view*pi/180)"/>
+    <xacro:property name="laser_horizontal_max_angle" value="$(laser_field_of_view*pi/180)"/>
 
-    <xacro:property name="laser_range_min" value="0.1"/>
-    <xacro:property name="laser_range_max" value="5.6"/>
-    <xacro:property name="laser_range_resolution" value="0.01"/>
+    <xacro:property name="laser_range_min" value="0.06"/>
+    <xacro:property name="laser_range_max" value="4.095"/>
+    <xacro:property name="laser_resolution_angle" value="0.36"/> 
+    <xacro:property name="laser_range_resolution" value="$(laser_resolution_angle*pi/180)"/>
 
     <xacro:property name="laser_noise_type" value="gaussian"/>
     <xacro:property name="laser_noise_mean" value="0.0"/>
-    <xacro:property name="laser_noise_stddev" value="0.1"/>
+    <xacro:property name="laser_noise_stddev" value="0.01/3"/>
 
     <xacro:property name="laser_topicName" value="caffeine/scan"/>
     <xacro:property name="laser_frameName" value="base_laser"/>
@@ -81,7 +81,7 @@
     <xacro:property name="laser_height" value="0.07"/>
     <xacro:property name="laser_mass" value="0.16"/> 
 
-    <xacro:property name="laser_x_dist" value="0.55"/>
+    <xacro:property name="laser_x_dist" value="${0.634-laser_length}"/>
     <xacro:property name="laser_z_dist" value="${laser_height/2}"/>  
 </robot>
 
