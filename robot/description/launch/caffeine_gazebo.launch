@@ -27,7 +27,7 @@
    </include>
 
    <!-- Parse URDF with xacro -->
-   <param name="robot_description" command="xacro '$(find description)/urdf/caffeine.urdf.xacro'"/>
+   <param name="robot_description" command="xacro '$(find description)/urdf/caffeine.urdf.xacro' tf_prefix:=caffeine"/>
 
    <!-- Spawn Caffeine in Gazebo -->
    <node name="spawn_caffeine" pkg="gazebo_ros" type="spawn_model"

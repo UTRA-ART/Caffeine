@@ -1,12 +1,14 @@
 <?xml version="1.0"?>
 <robot name="stand_link" xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:arg name="tf_prefix" default="caffeine"/>
+    
     <!-- Includes -->
     <xacro:include filename="$(find description)/urdf/constants.xacro"/>
     <xacro:include filename="$(find description)/urdf/inertias.xacro"/>
     
     <!-- Stand link; this is a dummy link that is used to make camera placement and other sensors on the stand more convenient -->
     <!-- Stand link definition. Note: purposely left blank -->
-    <link name="stand_link">
+    <link name="$(arg tf_prefix)/stand_link">
     </link>
 
 </robot>
