@@ -92,7 +92,6 @@
         <parent link="front_caster_link"/>
         <child link="front_caster_wheel"/>
         <origin rpy="0 0 0" xyz="${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
-
         <axis xyz="0 1 0"/>
     </joint>
 
@@ -117,12 +116,11 @@
             <xacro:caster_wheel_inertia/>
         </inertial>
     </link>
-        
+
     <joint name="back_caster_wheel_joint" type="continuous">
         <parent link="back_caster_link"/>
         <child link="back_caster_wheel"/>
         <origin rpy="0 0 0" xyz="-${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
-
         <axis xyz="0 1 0"/>
     </joint>
 

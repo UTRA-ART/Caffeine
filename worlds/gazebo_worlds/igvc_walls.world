@@ -85,7 +85,7 @@
     </spherical_coordinates>
     <model name='ramp1_up'>
       <static>1</static>
-      <pose frame=''>-18.4 -10.4 0.2 0.2612 -0 -0.6</pose>
+      <pose frame=''>-18.4 -10.4 0.15 0.2612 -0 -0.6</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
@@ -113,6 +113,11 @@
               <size>4.5 2 0.1</size>
             </box>
           </geometry>
+          <material>
+            <ambient>0.8 1 0.8 1</ambient>
+            <specular>0.2 0.2 0.2 64</specular>
+            <diffuse>0.4 0.4 0.4 1</diffuse>
+          </material>
         </visual>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -121,7 +126,7 @@
     </model>
     <model name='ramp1_down'>
       <static>1</static>
-      <pose frame=''>-17.3 -8.8414 0.2 0.2612 -0 2.5416</pose>
+      <pose frame=''>-17.3 -8.8414 0.15 0.2612 -0 2.5416</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
@@ -149,6 +154,11 @@
               <size>4.5 2 0.1</size>
             </box>
           </geometry>
+          <material>
+            <ambient>0.8 1 0.8 1</ambient>
+            <specular>0.2 0.2 0.2 64</specular>
+            <diffuse>0.4 0.4 0.4 1</diffuse>
+          </material>
         </visual>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -157,7 +167,7 @@
     </model>
     <model name='ramp2_up'>
       <static>1</static>
-      <pose frame=''>17.6547 -6.1 0.2 0.2612 -0 -2.962</pose>
+      <pose frame=''>17.6547 -6.1 0.15 0.2612 -0 -2.962</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
@@ -185,6 +195,11 @@
               <size>6 2 0.1</size>
             </box>
           </geometry>
+          <material>
+            <ambient>0.8 1 0.8 1</ambient>
+            <specular>0.2 0.2 0.2 64</specular>
+            <diffuse>0.4 0.4 0.4 1</diffuse>
+          </material>
         </visual>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -193,7 +208,7 @@
     </model>
     <model name='ramp2_down'>
       <static>1</static>
-      <pose frame=''>18 -8 0.2 0.2612 -0 0.18</pose>
+      <pose frame=''>18 -8 0.15 0.2612 -0 0.18</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
@@ -221,6 +236,11 @@
               <size>6 2 0.1</size>
             </box>
           </geometry>
+          <material>
+            <ambient>0.8 1 0.8 1</ambient>
+            <specular>0.2 0.2 0.2 64</specular>
+            <diffuse>0.4 0.4 0.4 1</diffuse>
+          </material>
         </visual>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
@@ -6669,40 +6689,40 @@
         </link>
       </model>
       <model name='ramp1_down'>
-        <pose frame=''>-17.3 -8.8414 0.2 0.2612 -0 2.5416</pose>
+        <pose frame=''>-17.3 -8.8414 0.15 0.2612 -0 2.5416</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>-17.3 -8.8414 0.2 0.2612 -0 2.5416</pose>
+          <pose frame=''>-17.3 -8.8414 0.15 0.2612 -0 2.5416</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
       <model name='ramp1_up'>
-        <pose frame=''>-18.4 -10.4 0.2 0.2612 -0 -0.6</pose>
+        <pose frame=''>-18.4 -10.4 0.15 0.2612 -0 -0.6</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>-18.4 -10.4 0.2 0.2612 -0 -0.6</pose>
+          <pose frame=''>-18.4 -10.4 0.15 0.2612 -0 -0.6</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
       <model name='ramp2_down'>
-        <pose frame=''>18 -8 0.2 0.2612 -0 0.18</pose>
+        <pose frame=''>18 -8 0.15 0.2612 -0 0.18</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>18 -8 0.2 0.2612 -0 0.18</pose>
+          <pose frame=''>18 -8 0.15 0.2612 -0 0.18</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
       <model name='ramp2_up'>
-        <pose frame=''>17.6547 -6.1 0.2 0.2612 -0 -2.962</pose>
+        <pose frame=''>17.6547 -6.1 0.15 0.2612 -0 -2.962</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>17.6547 -6.1 0.2 0.2612 -0 -2.962</pose>
+          <pose frame=''>17.6547 -6.1 0.15 0.2612 -0 -2.962</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
