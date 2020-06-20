@@ -27,5 +27,16 @@
 
     <!-- Gazebo Motor -->
     <xacro:property name="diff_drive_update_rate" value="30.0"/>
+
+    <!-- Garmin GPS -->
+    <!-- NOTE: approx as a cylinder; garmin itself is similar to a hockey puck -->
+    <xacro:property name="gps_diam" value="0.061"/>
+    <xacro:property name="gps_length" value="0.0195"/>
+    <xacro:property name="gps_mass" value="0.165"/>
+
+
+
+
+
 </robot>
 
