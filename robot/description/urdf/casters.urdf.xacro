@@ -92,7 +92,6 @@
         <parent link="${tf_prefix}/front_caster_link"/>
         <child link="${tf_prefix}/front_caster_wheel"/>
         <origin rpy="0 0 0" xyz="${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
-
         <axis xyz="0 1 0"/>
     </joint>
 
@@ -122,7 +121,6 @@
         <parent link="${tf_prefix}/back_caster_link"/>
         <child link="${tf_prefix}/back_caster_wheel"/>
         <origin rpy="0 0 0" xyz="-${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
-
         <axis xyz="0 1 0"/>
     </joint>
 
