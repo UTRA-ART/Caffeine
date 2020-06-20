@@ -2,28 +2,18 @@
    <arg name="use_gui" default="true"/>
    <arg name="debug_mode" default="false"/>
    <arg name="world" default="walls"/>
-   <arg name="spawn" default="start"/>
 
    <!-- IGVC worlds -->
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_walls.world"  if="$(eval arg('world') == 'walls')"/>
-   <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_ramp.world"   if="$(eval arg('world') == 'ramp')"/>
-   <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_plain.world"  if="$(eval arg('world') == 'plain')"/>
+   <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc.world"        if="$(eval arg('world') == 'full')"/>
 
-   <!-- Default spawn at course start -->
-   <arg name="x"     value="0"      if="$(eval arg('spawn') == 'start')"/>
-   <arg name="y"     value="-21.5"  if="$(eval arg('spawn') == 'start')"/>
-   <arg name="z"     value="0.3"    if="$(eval arg('spawn') == 'start')"/>
-   <arg name="roll"  value="0"      if="$(eval arg('spawn') == 'start')"/>
-   <arg name="pitch" value="0"      if="$(eval arg('spawn') == 'start')"/>
-   <arg name="yaw"   value="3.14"   if="$(eval arg('spawn') == 'start')"/>
-
-   <!-- Spawn at ramp -->
-   <arg name="x"     value="-19.4"  if="$(eval arg('spawn') == 'ramp')"/>
-   <arg name="y"     value="-12.7"  if="$(eval arg('spawn') == 'ramp')"/>
-   <arg name="z"     value="0.24"   if="$(eval arg('spawn') == 'ramp')"/>
-   <arg name="roll"  value="0"      if="$(eval arg('spawn') == 'ramp')"/>
-   <arg name="pitch" value="0"      if="$(eval arg('spawn') == 'ramp')"/>
-   <arg name="yaw"   value="0.986"  if="$(eval arg('spawn') == 'ramp')"/>
+   <!-- Spawn at course start -->
+   <arg name="x"     value="0"/>
+   <arg name="y"     value="-21.5"/>
+   <arg name="z"     value="0.3"/>
+   <arg name="roll"  value="0"/>
+   <arg name="pitch" value="0"/>
+   <arg name="yaw"   value="3.14"/>
 
    <!-- Open a world in Gazebo -->
    <include file="$(find gazebo_ros)/launch/empty_world.launch">
