@@ -32,10 +32,10 @@
 
    <!-- base_laser: LIDAR at front of Caffeine -->
    <xacro:include filename="$(find description)/urdf/base_laser.urdf.xacro"/>
-    <joint name="${tf_prefix}/base_laser_joint" type="fixed">
+   <joint name="${tf_prefix}/base_laser_joint" type="fixed">
         <parent link="${tf_prefix}/base_link"/>
         <child link="${tf_prefix}/base_laser"/>
         <origin xyz="${laser_x_dist} 0 ${laser_z_dist}" rpy="0 0 0"/>
-    </joint>
+   </joint>
 
 </robot>
