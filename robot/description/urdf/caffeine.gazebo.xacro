@@ -9,8 +9,8 @@
         <plugin name="caffeine_drive_controller" filename="libgazebo_ros_diff_drive.so">
             <robotNamespace>${robotNamespace}</robotNamespace>
             <updateRate>${diff_drive_update_rate}</updateRate>
-	        <leftJoint>${tf_prefix}/${wheel_left_joint}</leftJoint>
-	        <rightJoint>${tf_prefix}/${wheel_right_joint}</rightJoint>
+            <leftJoint>${tf_prefix}/${wheel_left_joint}</leftJoint>
+            <rightJoint>${tf_prefix}/${wheel_right_joint}</rightJoint>
             <wheelSeparation>${wheels_separation}</wheelSeparation>
             <wheelDiameter>${wheel_diameter}</wheelDiameter>
             <wheelAcceleration>${wheel_acceleration}</wheelAcceleration>
