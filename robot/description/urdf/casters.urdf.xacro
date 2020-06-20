@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 <robot name="caster_wheels" xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:arg name="tf_prefix" default="caffeine"/>
 
     <!-- Includes -->
     <xacro:include filename="$(find description)/urdf/constants.xacro"/>
     <xacro:include filename="$(find description)/urdf/inertias.xacro"/>
 
     <!-- Front caster definition -->
-    <link name="front_caster_link">
+    <link name="$(arg tf_prefix)/front_caster_link">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -28,15 +29,15 @@
     </link>
 
     <!-- NOTE: using a fixed joint prevents Caffeine spawning tipped over -->
-    <joint name="front_caster_link_joint" type="fixed">
+    <joint name="$(arg tf_prefix)/front_caster_link_joint" type="fixed">
         <!-- <axis xyz="0 0 1"/> -->
-        <parent link="chassis_link"/>
-        <child link="front_caster_link"/>
+        <parent link="$(arg tf_prefix)/chassis_link"/>
+        <child link="$(arg tf_prefix)/front_caster_link"/>
         <origin rpy="0 0 0" xyz="${casters_separation / 2.0} 0 ${caster_vertical_offset}"/>
     </joint>
 
     <!-- Back caster definition -->
-    <link name="back_caster_link">
+    <link name="$(arg tf_prefix)/back_caster_link">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -58,15 +59,15 @@
     </link>
 
     <!-- NOTE: using a fixed joint prevents Caffeine spawning tipped over -->
-    <joint name="back_caster_link_joint" type="fixed">
+    <joint name="$(arg tf_prefix)/back_caster_link_joint" type="fixed">
         <!-- <axis xyz="0 0 1"/> -->
-        <parent link="chassis_link"/>
-        <child link="back_caster_link"/>
+        <parent link="$(arg tf_prefix)/chassis_link"/>
+        <child link="$(arg tf_prefix)/back_caster_link"/>
         <origin rpy="0 0 0" xyz="-${casters_separation / 2.0} 0 ${caster_vertical_offset}"/>
     </joint>
 
     <!-- Front caster wheel definition -->
-    <link name="front_caster_wheel">
+    <link name="$(arg tf_prefix)/front_caster_wheel">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -88,16 +89,16 @@
 
     </link>
 
-    <joint name="front_caster_wheel_joint" type="continuous">
-        <parent link="front_caster_link"/>
-        <child link="front_caster_wheel"/>
+    <joint name="$(arg tf_prefix)/front_caster_wheel_joint" type="continuous">
+        <parent link="$(arg tf_prefix)/front_caster_link"/>
+        <child link="$(arg tf_prefix)/front_caster_wheel"/>
         <origin rpy="0 0 0" xyz="${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
 
         <axis xyz="0 1 0"/>
     </joint>
 
     <!-- Back caster wheel definition -->
-    <link name="back_caster_wheel">
+    <link name="$(arg tf_prefix)/back_caster_wheel">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -118,9 +119,9 @@
         </inertial>
     </link>
         
-    <joint name="back_caster_wheel_joint" type="continuous">
-        <parent link="back_caster_link"/>
-        <child link="back_caster_wheel"/>
+    <joint name="$(arg tf_prefix)/back_caster_wheel_joint" type="continuous">
+        <parent link="$(arg tf_prefix)/back_caster_link"/>
+        <child link="$(arg tf_prefix)/back_caster_wheel"/>
         <origin rpy="0 0 0" xyz="-${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
 
         <axis xyz="0 1 0"/>
