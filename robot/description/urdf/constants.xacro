@@ -61,7 +61,7 @@
     <xacro:property name="diff_drive_rosDebugLevel" value="na"/>
 
     <!-- Hokuyo 2D LIDAR sensor -->
-    <xacro:property name="laser_visualize" value="true"/>
+    <xacro:property name="laser_visualize" value="false"/>
     <xacro:property name="laser_update_rate" value="10"/>
 
     <xacro:property name="laser_horizontal_samples" value="1080"/>
