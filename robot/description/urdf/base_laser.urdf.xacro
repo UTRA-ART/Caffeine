@@ -6,7 +6,7 @@
    <xacro:include filename="$(find description)/urdf/inertias.xacro"/>
 
    <!-- LIDAR link -->
-   <link name="base_laser">
+   <link name="${tf_prefix}/base_laser">
         <inertial>
             <mass value="${laser_mass}"/>
             <xacro:box_inertia mass="${laser_mass}" length="${laser_length}" width="${laser_width}" height="${laser_height}"/>

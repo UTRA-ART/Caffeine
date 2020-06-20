@@ -2,6 +2,7 @@
 <robot name="caffeine_constants" xmlns:xacro="http://ros.org/wiki/xacro">
     <!-- Caffeine -->
     <xacro:property name="robotNamespace" value="caffeine"/>
+    <xacro:property name="tf_prefix" value="caffeine"/>
 
     <!-- Drivebase -->
    <xacro:property name="base_length" value="1.268"/>

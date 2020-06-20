@@ -1,48 +1,41 @@
 <?xml version="1.0"?>
 <robot name="caffeine" xmlns:xacro="http://ros.org/wiki/xacro">
-    <xacro:arg name="tf_prefix" default="caffeine"/>
     
     <!-- Includes -->
     <xacro:include filename="$(find description)/urdf/constants.xacro"/>
     <xacro:include filename="$(find description)/urdf/caffeine.gazebo.xacro"/>
 
     <!-- base_link: origin of the robot; located in the middle, on the top of the base plate -->
-    <link name="$(arg tf_prefix)/base_link"/>
+    <link name="${tf_prefix}/base_link"/>
 
     <!-- chassis_link: geometric center of the robot; used as the parent in which all other links connect to -->
-    <xacro:include filename="$(find description)/urdf/chassis_link.urdf.xacro">
-        <xacro:arg name="tf_prefix" value="$(arg tf_prefix)"/>
-    </xacro:include>
-    <joint name="$(arg tf_prefix)/chassis_link_joint" type="fixed">
-        <parent link="$(arg tf_prefix)/base_link"/>
-        <child link="$(arg tf_prefix)/chassis_link"/>
+    <xacro:include filename="$(find description)/urdf/chassis_link.urdf.xacro"/>
+    <joint name="${tf_prefix}/chassis_link_joint" type="fixed">
+	<parent link="${tf_prefix}/base_link"/>
+	<child link="${tf_prefix}/chassis_link"/>
         <origin rpy="0 0 0" xyz="0 0 ${chassis_to_base_link_dist}"/>
     </joint>
 
     <!-- stand_link: origin for anything on the stand; located in the middle, on the top of the stand plate -->
-    <xacro:include filename="$(find description)/urdf/stand_link.urdf.xacro">
-        <xacro:arg name="tf_prefix" value="$(arg tf_prefix)"/>
-    </xacro:include>
-    <joint name="$(arg tf_prefix)/stand_link_joint" type="fixed">
-        <parent link="$(arg tf_prefix)/chassis_link"/>
-        <child link="$(arg tf_prefix)/stand_link"/>
+    <xacro:include filename="$(find description)/urdf/stand_link.urdf.xacro"/>
+    <joint name="${tf_prefix}/stand_link_joint" type="fixed">
+	<parent link="${tf_prefix}/chassis_link"/>
+	<child link="${tf_prefix}/stand_link"/>
         <origin rpy="0 0 0" xyz="0 0 ${chassis_to_stand_link_dist}"/>
     </joint>
 
     <!-- wheels: associated to wheels that can be moved by a motor -->
-    <xacro:include filename="$(find description)/urdf/side_wheels.urdf.xacro">
-        <xacro:arg name="tf_prefix" value="$(arg tf_prefix)"/>
-    </xacro:include>
+    <xacro:include filename="$(find description)/urdf/side_wheels.urdf.xacro"/>
 
     <!-- wheels: front and back casters -->
     <xacro:include filename="$(find description)/urdf/casters.urdf.xacro"/>
 
-    <!-- base_laser: LIDAR at front of Caffeine -->
-    <xacro:include filename="$(find description)/urdf/base_laser.urdf.xacro"/>
-    <joint name="base_laser_joint" type="fixed">
-        <parent link="base_link"/>
-        <child link="base_laser"/>
-        <origin xyz="${laser_x_dist} 0 ${laser_z_dist}" rpy="0 0 0"/>
+   <!-- base_laser: LIDAR at front of Caffeine -->
+   <xacro:include filename="$(find description)/urdf/base_laser.urdf.xacro"/>
+   <joint name="${tf_prefix}/base_laser_joint" type="fixed">
+      <parent link="${tf_prefix}/base_link"/>
+      <child link="${tf_prefix}/base_laser"/>
+      <origin xyz="${laser_x_dist} 0 ${laser_z_dist}" rpy="0 0 0"/>
    </joint>
 
 </robot>
