@@ -9,8 +9,8 @@
         <plugin name="caffeine_drive_controller" filename="libgazebo_ros_diff_drive.so">
             <robotNamespace>${robotNamespace}</robotNamespace>
             <updateRate>${diff_drive_update_rate}</updateRate>
-	    <leftJoint>${tf_prefix}/${wheel_left_joint}</leftJoint>
-	    <rightJoint>${tf_prefix}/${wheel_right_joint}</rightJoint>
+	        <leftJoint>${tf_prefix}/${wheel_left_joint}</leftJoint>
+	        <rightJoint>${tf_prefix}/${wheel_right_joint}</rightJoint>
             <wheelSeparation>${wheels_separation}</wheelSeparation>
             <wheelDiameter>${wheel_diameter}</wheelDiameter>
             <wheelAcceleration>${wheel_acceleration}</wheelAcceleration>
@@ -41,7 +41,7 @@
       <sensor type="ray" name="gpu_hokuyo_sensor">
          <pose>0 0 0 0 0 0</pose>
          <visualize>${laser_visualize}</visualize>
-        <update_rate>${laser_update_rate}</update_rate>
+         <update_rate>${laser_update_rate}</update_rate>
          <ray>
             <scan>
                <horizontal>
@@ -68,7 +68,7 @@
          <plugin name="gazebo_ros_hokuyo_controller" filename="libgazebo_ros_laser.so">
             <robotNamespace>${robotNamespace}</robotNamespace>
             <topicName>${laser_topicName}</topicName>
-	    <frameName>${laser_frameName}</frameName>
+            <frameName>${laser_frameName}</frameName>
          </plugin>
       </sensor>
    </gazebo>

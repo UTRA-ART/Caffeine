@@ -38,8 +38,8 @@
     </link>
 
     <joint name="${tf_prefix}/left_wheel_joint" type="continuous">
-	<parent link="${tf_prefix}/chassis_link"/>
-	<child link="${tf_prefix}/left_wheel_link"/>
+	    <parent link="${tf_prefix}/chassis_link"/>
+	    <child link="${tf_prefix}/left_wheel_link"/>
         <origin xyz= "0 ${wheels_separation / 2.0} ${wheel_vertical_offset}"/>
 
         <axis xyz="0 1 0"/>
@@ -70,8 +70,8 @@
     </link>
 
     <joint name="${tf_prefix}/right_wheel_joint" type="continuous">
-	<parent link="${tf_prefix}/chassis_link"/>
-	<child link="${tf_prefix}/right_wheel_link"/>
+	    <parent link="${tf_prefix}/chassis_link"/>
+    	<child link="${tf_prefix}/right_wheel_link"/>
         <origin xyz= "0 -${wheels_separation / 2.0} ${wheel_vertical_offset}"/>
 
         <axis xyz="0 1 0"/>

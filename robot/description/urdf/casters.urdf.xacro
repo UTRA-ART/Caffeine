@@ -30,8 +30,8 @@
     <!-- NOTE: using a fixed joint prevents Caffeine spawning tipped over -->
     <joint name="${tf_prefix}/front_caster_link_joint" type="fixed">
         <!-- <axis xyz="0 0 1"/> -->
-	<parent link="${tf_prefix}/chassis_link"/>
-	<child link="${tf_prefix}/front_caster_link"/>
+	    <parent link="${tf_prefix}/chassis_link"/>
+	    <child link="${tf_prefix}/front_caster_link"/>
         <origin rpy="0 0 0" xyz="${casters_separation / 2.0} 0 ${caster_vertical_offset}"/>
     </joint>
 
@@ -60,8 +60,8 @@
     <!-- NOTE: using a fixed joint prevents Caffeine spawning tipped over -->
     <joint name="${tf_prefix}/back_caster_link_joint" type="fixed">
         <!-- <axis xyz="0 0 1"/> -->
-	<parent link="${tf_prefix}/chassis_link"/>
-	<child link="${tf_prefix}/back_caster_link"/>
+	    <parent link="${tf_prefix}/chassis_link"/>
+	    <child link="${tf_prefix}/back_caster_link"/>
         <origin rpy="0 0 0" xyz="-${casters_separation / 2.0} 0 ${caster_vertical_offset}"/>
     </joint>
 
@@ -89,8 +89,8 @@
     </link>
 
     <joint name="${tf_prefix}/front_caster_wheel_joint" type="continuous">
-	<parent link="${tf_prefix}/front_caster_link"/>
-	<child link="${tf_prefix}/front_caster_wheel"/>
+	    <parent link="${tf_prefix}/front_caster_link"/>
+	    <child link="${tf_prefix}/front_caster_wheel"/>
         <origin rpy="0 0 0" xyz="${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
 
         <axis xyz="0 1 0"/>
@@ -119,8 +119,8 @@
     </link>
         
     <joint name="${tf_prefix}/back_caster_wheel_joint" type="continuous">
-	<parent link="${tf_prefix}/back_caster_link"/>
-	<child link="${tf_prefix}/back_caster_wheel"/>
+	    <parent link="${tf_prefix}/back_caster_link"/>
+	    <child link="${tf_prefix}/back_caster_wheel"/>
         <origin rpy="0 0 0" xyz="-${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
 
         <axis xyz="0 1 0"/>
