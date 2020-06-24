@@ -9,8 +9,8 @@
         <plugin name="caffeine_drive_controller" filename="libgazebo_ros_diff_drive.so">
             <robotNamespace>${robotNamespace}</robotNamespace>
             <updateRate>${diff_drive_update_rate}</updateRate>
-            <leftJoint>${wheel_left_joint}</leftJoint>
-            <rightJoint>${wheel_right_joint}</rightJoint>
+            <leftJoint>${tf_prefix}/${wheel_left_joint}</leftJoint>
+            <rightJoint>${tf_prefix}/${wheel_right_joint}</rightJoint>
             <wheelSeparation>${wheels_separation}</wheelSeparation>
             <wheelDiameter>${wheel_diameter}</wheelDiameter>
             <wheelAcceleration>${wheel_acceleration}</wheelAcceleration>
@@ -37,42 +37,40 @@
     </gazebo>
 
     <!-- LIDAR -->
-   <gazebo reference="base_laser">
-      <sensor type="ray" name="gpu_hokuyo_sensor">
-         <pose>0 0 0 0 0 0</pose>
-         <visualize>${laser_visualize}</visualize>
-        <update_rate>${laser_update_rate}</update_rate>
-         <ray>
-            <scan>
-               <horizontal>
-                  <samples>${laser_horizontal_samples}</samples>
-                  <resolution>${laser_horizontal_resolution}</resolution>
-                  <min_angle>${laser_horizontal_min_angle}</min_angle>
-                  <max_angle>${laser_horizontal_max_angle}</max_angle>
-               </horizontal>
-            </scan>
-            <range>
-               <min>${laser_range_min}</min>
-               <max>${laser_range_max}</max>
-               <resolution>${laser_range_resolution}</resolution>
-            </range>
-            <noise>
-               <type>${laser_noise_type}</type>
-               <!-- Noise based on gazebosim.org's tutorial on writing gazebo plugins w/ ROS. The comment they put will be reproduced:
-                    Noise parameters based on published spec for Hokuyo laser achieving "+-10mm" accuracy at range < 10 m. A mean of 
-                    0.0m and stddev of (0.01/3), will put 99.8% of samples within 0.03m of the true reading. -->
-               <mean>${laser_noise_mean}</mean>
-               <stddev>${laser_noise_stddev}</stddev>
-            </noise>
-         </ray>
-         <plugin name="gazebo_ros_hokuyo_controller" filename="libgazebo_ros_laser.so">
-            <robotNamespace>${robotNamespace}</robotNamespace>
-            <topicName>${laser_topicName}</topicName>
-            <frameName>${laser_frameName}</frameName>
-         </plugin>
-      </sensor>
-   </gazebo>
-
-
+    <gazebo reference="${tf_prefix}/base_laser">
+        <sensor type="ray" name="gpu_hokuyo_sensor">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>${laser_visualize}</visualize>
+            <update_rate>${laser_update_rate}</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>${laser_horizontal_samples}</samples>
+                        <resolution>${laser_horizontal_resolution}</resolution>
+                        <min_angle>${laser_horizontal_min_angle}</min_angle>
+                        <max_angle>${laser_horizontal_max_angle}</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>${laser_range_min}</min>
+                    <max>${laser_range_max}</max>
+                    <resolution>${laser_range_resolution}</resolution>
+                </range>
+                <noise>
+                    <type>${laser_noise_type}</type>
+                    <!-- Noise based on gazebosim.org's tutorial on writing gazebo plugins w/ ROS. The comment they put will be reproduced:
+                        Noise parameters based on published spec for Hokuyo laser achieving "+-10mm" accuracy at range < 10 m. A mean of 
+                        0.0m and stddev of (0.01/3), will put 99.8% of samples within 0.03m of the true reading. -->
+                    <mean>${laser_noise_mean}</mean>
+                    <stddev>${laser_noise_stddev}</stddev>
+                </noise>
+            </ray>
+            <plugin name="gazebo_ros_hokuyo_controller" filename="libgazebo_ros_laser.so">
+                <robotNamespace>${robotNamespace}</robotNamespace>
+                <topicName>${laser_topicName}</topicName>
+                <frameName>${laser_frameName}</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
 </robot>
 
