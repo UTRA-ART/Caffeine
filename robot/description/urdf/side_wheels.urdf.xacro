@@ -45,6 +45,13 @@
         <axis xyz="0 1 0"/>
     </joint>
 
+    <gazebo reference="${tf_prefix}/left_wheel_link">
+        <mu1 value="1.0"/>
+        <mu2 value="1.0"/>
+        <kp value="10000000.0" />
+        <kd value="1.0" />
+    </gazebo>
+
     <xacro:Transmission joint="${tf_prefix}/left_wheel_joint"/>
 
     <!-- right wheel -->
@@ -76,6 +83,13 @@
 
         <axis xyz="0 1 0"/>
     </joint>
+
+    <gazebo reference="${tf_prefix}/right_wheel_link">
+        <mu1 value="1.0"/>
+        <mu2 value="1.0"/>
+        <kp value="10000000.0" />
+        <kd value="1.0" />
+    </gazebo>
 
     <xacro:Transmission joint="${tf_prefix}/right_wheel_joint"/>
 </robot>
