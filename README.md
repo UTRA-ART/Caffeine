@@ -65,6 +65,10 @@ To delete logs run:
 ```
 rosclean purge
 ``` 
+## Notes ##
+
+When running `caffeine_gazebo.launch`, an error saying that the `spawn_model` node failed will appear. This occurs because both the gazebo world and the urdf are loaded in the same `roslaunch` file (IGVC takes too long to load before model is spawned). The spawner will automatically retry and spawn Caffeine properly, so this error can be safely ignored.
+> A solution is to spawn Caffeine only once the gazebo (IGVC) world has been loaded, but this requires a new `roslaunch` file and thus a new terminal - which is excessive at this point.
 
 ---
 <p align="center">
