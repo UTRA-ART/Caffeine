@@ -44,6 +44,7 @@
     <!-- Gazebo Motor -->
     <xacro:property name="diff_drive_update_rate" value="30.0"/>
 
+<<<<<<< HEAD
     <xacro:property name="diff_drive_commandTopic" value="cmd_vel"/>
     <xacro:property name="diff_drive_odometryTopic" value="odom"/>
 
@@ -89,5 +90,20 @@
 
     <xacro:property name="laser_x_dist" value="${base_length/2 - 2*laser_length}"/>
     <xacro:property name="laser_z_dist" value="${laser_height/2}"/>  
+=======
+    <!-- ZED camera -->
+    <!-- NOTE: approx as a rectangular prism -->
+    <xacro:property name="ZED_camera_mass" value="0.1587573"/>
+    <xacro:property name="ZED_camera_length" value="0.175"/>
+    <xacro:property name="ZED_camera_width" value="0.03"/>
+    <xacro:property name="ZED_camera_height" value="0.033"/>
+
+    <!-- Stand -->
+    <xacro:property name="stand_length" value="0.412"/>
+    <xacro:property name="stand_width" value="0.254"/>
+    <xacro:property name="stand_height" value="1.324"/>
+    <xacro:property name="stand_mass" value="1.0"/>
+    
+>>>>>>> 9f8b0a61cddf46fc7b7b52e5512b828974b6028a
 </robot>
 

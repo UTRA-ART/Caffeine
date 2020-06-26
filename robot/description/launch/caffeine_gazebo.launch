@@ -3,6 +3,7 @@
    <arg name="debug_mode" default="false"/>
    <arg name="world" default="walls"/>
 
+<<<<<<< HEAD
    <!-- IGVC worlds -->
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_walls.world"  if="$(eval arg('world') == 'walls')"/>
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc.world"        if="$(eval arg('world') == 'full')"/>
@@ -12,6 +13,14 @@
    <arg name="y"     value="-21.5"/>
    <arg name="z"     value="0.3"/>
    <arg name="roll"  value="0"/>
+=======
+   <arg name="camera_ns" default="/zed/zed_node"/>
+   <!-- Initial Pose (NOTE: angles in radians) -->
+   <arg name="x" value="0"/>
+   <arg name="y" value="0"/>
+   <arg name="z" value="0"/>
+   <arg name="roll" value="0"/>
+>>>>>>> 9f8b0a61cddf46fc7b7b52e5512b828974b6028a
    <arg name="pitch" value="0"/>
    <arg name="yaw"   value="3.14"/>
 
@@ -44,5 +53,11 @@
    <include file="$(find description)/launch/setup_tf_tree.launch">
       <arg name="robot" value="caffeine"/>
    </include>
+
+   <!-- Emulate ZED stereo camera image processing -->
+   <include file="$(find description)/launch/zed_emulation.launch">
+      <arg name="camera_ns" value="$(arg camera_ns)"/>
+   </include>
+
 </launch>
 
