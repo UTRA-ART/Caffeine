@@ -1,5 +1,5 @@
 <launch>
-   <arg name="use_gui" default="true"/>
+   <arg name="use_gui" default="false"/>
    <arg name="debug_mode" default="false"/>
    <arg name="world" default="plain"/>
 
@@ -16,6 +16,7 @@
    <arg name="roll"  value="0"/>
    <arg name="pitch" value="0"/>
    <arg name="yaw"   value="0.986"/>
+
 
    <!-- Open a world in Gazebo -->
    <include file="$(find gazebo_ros)/launch/empty_world.launch">

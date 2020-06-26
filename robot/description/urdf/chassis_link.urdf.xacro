@@ -5,7 +5,7 @@
     <xacro:include filename="$(find description)/urdf/inertias.xacro"/>
 
     <!-- Chassis link definition; chassis link is associated with the centroid of the bounding box of the robot and the chassis_link.dae file-->
-    <link name="chassis_link">
+    <link name="${tf_prefix}/chassis_link">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
