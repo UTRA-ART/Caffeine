@@ -36,7 +36,6 @@
     <!-- lets all the transmission tags be read -->
     <gazebo>
         <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-<<<<<<< HEAD
             <robotNamespace>${robotNamespace}</robotNamespace>
         </plugin>
     </gazebo>
@@ -76,10 +75,6 @@
                 <frameName>${laser_frameName}</frameName>
             </plugin>
         </sensor>
-    </gazebo>
-=======
-            <!-- <robotNamespace></robotNamespace> -->
-        </plugin>
     </gazebo>
 
     <!-- TODO: double check these numbers -->
@@ -133,6 +128,5 @@
         </sensor>
     </gazebo>
 
->>>>>>> 9f8b0a61cddf46fc7b7b52e5512b828974b6028a
 </robot>
 
