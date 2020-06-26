@@ -7,11 +7,7 @@
     <!-- differential drive control support -->
     <gazebo>
         <plugin name="caffeine_drive_controller" filename="libgazebo_ros_diff_drive.so">
-<<<<<<< HEAD
             <robotNamespace>${robotNamespace}</robotNamespace>
-=======
-            <!-- <robotNamespace></robotNamespace> -->
->>>>>>> 9f8b0a61cddf46fc7b7b52e5512b828974b6028a
             <updateRate>${diff_drive_update_rate}</updateRate>
             <leftJoint>${tf_prefix}/${wheel_left_joint}</leftJoint>
             <rightJoint>${tf_prefix}/${wheel_right_joint}</rightJoint>

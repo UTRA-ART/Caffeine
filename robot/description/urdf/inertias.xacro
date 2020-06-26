@@ -35,7 +35,6 @@
         />
     </xacro:macro>
 
-<<<<<<< HEAD
     <!-- Lidar -->
     <xacro:macro name="box_inertia" params="mass length width height">
         <inertia
@@ -44,7 +43,6 @@
             izx="0.0000" izy="0.0000" izz="${mass * (width*width + height*height)/12.0}"
         /> 
     </xacro:macro>
-=======
     <!-- Camera -->
     <xacro:macro name="box_inertia" params="mass length width height">
         <inertia
@@ -58,6 +56,5 @@
                 
     </xacro:macro>
     
->>>>>>> 9f8b0a61cddf46fc7b7b52e5512b828974b6028a
 </robot>
 
