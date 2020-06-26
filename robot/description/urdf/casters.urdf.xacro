@@ -135,17 +135,10 @@
             <xacro:caster_wheel_inertia/>
         </inertial>
     </link>
-<<<<<<< HEAD
-
-    <joint name="back_caster_wheel_joint" type="continuous">
-        <parent link="back_caster_link"/>
-        <child link="back_caster_wheel"/>
-=======
         
     <joint name="${tf_prefix}/back_caster_wheel_joint" type="continuous">
         <parent link="${tf_prefix}/back_caster_link"/>
         <child link="${tf_prefix}/back_caster_wheel"/>
->>>>>>> 3e3c6deaa9438f8a3a68e9a89c9fcb679f226f31
         <origin rpy="0 0 0" xyz="-${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
         <axis xyz="0 1 0"/>
     </joint>
