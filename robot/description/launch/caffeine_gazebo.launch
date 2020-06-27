@@ -1,16 +1,18 @@
 <launch>
-   <arg name="use_gui" default="false"/>
+   <arg name="use_gui" default="true"/>
    <arg name="debug_mode" default="false"/>
-   <arg name="world" default="walls"/>
+   <arg name="world" default="plain"/>
 
    <!-- IGVC worlds -->
+   <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_plain.world"  if="$(eval arg('world') == 'plain')"/>
+   <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_ramp.world"   if="$(eval arg('world') == 'ramp')"/>
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_walls.world"  if="$(eval arg('world') == 'walls')"/>
-   <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc.world"        if="$(eval arg('world') == 'full')"/>
+   <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_full.world"   if="$(eval arg('world') == 'full')"/>
 
    <!-- Spawn at course start -->
    <arg name="x"     value="0"/>
    <arg name="y"     value="-21.5"/>
-   <arg name="z"     value="0.3"/>
+   <arg name="z"     value="0.25"/>
    <arg name="roll"  value="0"/>
    <arg name="pitch" value="0"/>
    <arg name="yaw"   value="3.14"/>
