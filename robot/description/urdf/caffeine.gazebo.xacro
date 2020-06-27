@@ -75,7 +75,7 @@
 
     <!-- TODO: double check these numbers -->
     <!-- Gazebo multicamera plugin -->
-    <gazebo reference="camera_link">
+    <gazebo reference="${tf_prefix}/camera_link">
         <sensor type="multicamera" name="stereo_camera">
             <update_rate>30.0</update_rate>
             <camera name="left">
