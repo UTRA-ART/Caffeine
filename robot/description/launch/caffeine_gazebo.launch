@@ -7,6 +7,7 @@
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_plain.world"  if="$(eval arg('world') == 'plain')"/>
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_ramp.world"   if="$(eval arg('world') == 'ramp')"/>
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_walls.world"  if="$(eval arg('world') == 'walls')"/>
+   <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_full.world"   if="$(eval arg('world') == 'full')"/>
 
    <!-- Spawn at course start -->
    <arg name="x"     value="0"/>
