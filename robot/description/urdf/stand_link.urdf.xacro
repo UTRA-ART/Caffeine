@@ -6,11 +6,11 @@
     
     <!-- Stand link; this is a dummy link that is used to make camera placement and other sensors on the stand more convenient -->
     <!-- Stand link definition. Note: purposely left blank -->
-    <link name="stand_link">
+    <link name="${tf_prefix}/stand_link">
     </link>
 
     <!-- GPS -->
-    <link name="gps_link">
+    <link name="${tf_prefix}/gps_link">
         <inertial>
             <mass value="${gps_mass}"/>
             <xacro:cylinder_inertia mass="${gps_mass}" length="${gps_length}" radius="${gps_diam / 2.0}"/>
@@ -22,6 +22,7 @@
                 <cylinder length="${gps_length}" radius="${gps_diam / 2.0}"/>
             </geometry>
         </visual>
+
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry>
@@ -31,10 +32,10 @@
     </link>
 
     <!-- GPS: attach gps_link to base_link -->
-    <joint name="gps_joint" type="fixed">
-        <parent link="base_link"/>
-        <child link="gps_link"/>
-        <origin xyz="${-base_width / 2.0 - 0.1} 0 ${base_height / 2.0 + gps_length / 2.0}" rpy="0 0 0"/>
+    <joint name="${tf_prefix}/gps_joint" type="fixed">
+        <parent link="${tf_prefix}/stand_link"/>
+        <child link="${tf_prefix}/gps_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
     </joint>
 
 </robot>

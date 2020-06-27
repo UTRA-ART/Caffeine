@@ -35,19 +35,22 @@
         />
     </xacro:macro>
 
-    <!-- Cynlinder inertia for GPS -->
+    <!-- Box Inertia -->
+    <xacro:macro name="box_inertia" params="mass length width height">
+        <inertia
+            ixx="${mass * (height*height + length*length)/12.0}" ixy="0.0" ixz="0.0" 
+            iyx = "0.0" iyy="${mass * (width*width + length*length)/12.0}" iyz="0.0" 
+            izx="0.0" izy="0.0" izz="${mass * (width*width + height*height)/12.0}"
+        /> 
+    </xacro:macro>
+    
+    <!-- Cynlinder Inertia -->
     <xacro:macro name="cylinder_inertia" params="mass length radius">
         <inertia
-            ixx="${mass * (3*radius*radius + length*length)/12.0}" 
-            ixy="0.0" 
-            ixz="0.0" 
-                        iyy="${mass * (3*radius*radius + length*length)/12.0}" 
-            iyz="0.0" 
-            izz="${0.5*mass*radius*radius}"
+            ixx="${mass * (3*radius*radius + length*length)/12.0}" ixy="0.0" ixz="0.0" 
+            iyx="0.0" iyy="${mass * (3*radius*radius + length*length)/12.0}" iyz="0.0"
+            izx="0.0" izy="0.0" izz="${0.5*mass*radius*radius}"
         />
     </xacro:macro>
-
-    
-    
 </robot>
 
