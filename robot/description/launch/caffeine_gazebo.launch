@@ -1,7 +1,8 @@
 <launch>
-   <arg name="use_gui" default="false"/>
+   <arg name="use_gui" default="true"/>
    <arg name="debug_mode" default="false"/>
-   <arg name="world" default="walls"/>
+   <arg name="world" default="plain"/>
+   <arg name="camera_ns" default="/zed/zed_node"/>
 
    <!-- IGVC worlds -->
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_plain.world"  if="$(eval arg('world') == 'plain')"/>
@@ -46,5 +47,11 @@
    <include file="$(find description)/launch/setup_tf_tree.launch">
       <arg name="robot" value="caffeine"/>
    </include>
+
+   <!-- Emulate ZED stereo camera image processing -->
+   <include file="$(find description)/launch/zed_emulation.launch">
+      <arg name="camera_ns" value="$(arg camera_ns)"/>
+   </include>
+
 </launch>
 

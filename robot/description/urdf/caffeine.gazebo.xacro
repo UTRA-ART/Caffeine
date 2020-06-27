@@ -93,5 +93,56 @@
             <!-- TODO: add Gaussian noise based off Garmin GPS -->
         </plugin>
     </gazebo>
+    <!-- TODO: double check these numbers -->
+    <!-- Gazebo multicamera plugin -->
+    <gazebo reference="${tf_prefix}/camera_link">
+        <sensor type="multicamera" name="stereo_camera">
+            <update_rate>30.0</update_rate>
+            <camera name="left">
+            <horizontal_fov>1.571</horizontal_fov>
+            <image>
+                <width>1280</width>
+                <height>720</height>
+                <format>R8G8B8</format>
+            </image>
+            <clip>
+                <near>0.02</near>
+                <far>300</far>
+            </clip>
+            </camera>
+            <camera name="right">
+            <pose>0 ${-ZED_camera_length} 0 0 0 0</pose>
+            <horizontal_fov>1.571</horizontal_fov>
+            <image>
+                <width>1280</width>
+                <height>720</height>
+                <format>R8G8B8</format>
+            </image>
+            <clip>
+                <near>0.02</near>
+                <far>300</far>
+            </clip>
+            </camera>
+            <plugin name="stereo_camera_controller" filename="libgazebo_ros_multicamera.so">
+            <cameraName>zed/zed_node</cameraName>
+            <alwaysOn>true</alwaysOn>
+            <updateRate>0</updateRate>
+            <cameraName></cameraName>
+            <imageTopicName>image_raw</imageTopicName>
+            <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+            <depthImageTopicName>depth/image_raw</depthImageTopicName>
+            <depthImageInfoTopicName>depth/camera_info</depthImageInfoTopicName>
+            <pointCloudTopicName>depth/points</pointCloudTopicName>
+            <frameName>zed_camera_link_optical</frameName>
+            <hackBaseline>${ZED_camera_length}</hackBaseline>
+            <distortionK1>0.0</distortionK1>
+            <distortionK2>0.0</distortionK2>
+            <distortionK3>0.0</distortionK3>
+            <distortionT1>0.0</distortionT1>
+            <distortionT2>0.0</distortionT2>
+            </plugin>
+        </sensor>
+    </gazebo>
+
 </robot>
 
