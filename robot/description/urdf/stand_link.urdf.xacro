@@ -9,5 +9,34 @@
     <link name="${tf_prefix}/stand_link">
     </link>
 
+    <!-- GPS -->
+    <link name="${tf_prefix}/gps_link">
+        <inertial>
+            <mass value="${gps_mass}"/>
+            <xacro:cylinder_inertia mass="${gps_mass}" length="${gps_length}" radius="${gps_diam / 2.0}"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder length="${gps_length}" radius="${gps_diam / 2.0}"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder length="${gps_length}" radius="${gps_diam / 2.0}"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <!-- GPS: attach gps_link to base_link -->
+    <joint name="${tf_prefix}/gps_joint" type="fixed">
+        <parent link="${tf_prefix}/stand_link"/>
+        <child link="${tf_prefix}/gps_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
 </robot>
 
