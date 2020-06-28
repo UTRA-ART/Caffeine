@@ -72,5 +72,26 @@
             </plugin>
         </sensor>
     </gazebo>
+
+    <!-- GPS -->
+    <gazebo>
+        <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
+            <robotNamespace>${robotNamespace}</robotNamespace>
+            <updateRate>5.0</updateRate>  <!-- 5 Hz -->
+            <bodyName>${tf_prefix}/gps_link</bodyName>
+            <frameId>${tf_prefix}/gps_link</frameId>
+            <topicName>gps/fix</topicName>
+            <velocityTopicName>gps/fix_velocity</velocityTopicName>
+            <!-- Set reference GPS coordinates to UofT -->
+            <referenceLatitude>43.6570</referenceLatitude>
+            <referenceLongitude>-79.3903</referenceLongitude>
+            <referenceAltitude>76</referenceAltitude>
+            <!-- Model GPS behaviour -->
+            <service>1</service> <!-- SERVICE_GPS = 1 -->
+            <drift>1.5 1.5 1.5</drift> <!-- m -->
+            <velocityDrift>0.05 0.05 0.05</velocityDrift> <!-- m/s-->
+            <!-- TODO: add Gaussian noise based off Garmin GPS -->
+        </plugin>
+    </gazebo>
 </robot>
 

@@ -43,7 +43,7 @@
 
     <!-- Gazebo Motor -->
     <xacro:property name="diff_drive_update_rate" value="30.0"/>
-
+    
     <xacro:property name="diff_drive_commandTopic" value="cmd_vel"/>
     <xacro:property name="diff_drive_odometryTopic" value="odom"/>
 
@@ -88,6 +88,12 @@
     <xacro:property name="laser_mass" value="0.16"/> 
 
     <xacro:property name="laser_x_dist" value="${base_length/2 - 2*laser_length}"/>
-    <xacro:property name="laser_z_dist" value="${laser_height/2}"/>  
+    <xacro:property name="laser_z_dist" value="${laser_height/2}"/>
+
+    <!-- Garmin GPS -->
+    <!-- NOTE: approx. as a cylinder, Garmin itself is similar to a hockey puck -->
+    <xacro:property name="gps_diam" value="0.061"/>
+    <xacro:property name="gps_length" value="0.0195"/>
+    <xacro:property name="gps_mass" value="0.165"/>
 </robot>
 
