@@ -1,5 +1,5 @@
 <launch>
         <!-- Keyboard teleop launch -->
-	<node name= "teleop_keyboard_twist" pkg="teleop_keyboard_twist" type="teleop_twist_keyboard.py" ns="caffeine" output="screen"/>
+	<node name= "teleop_twist_keyboard" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" ns="caffeine" output="screen"/>
 </launch>
 
