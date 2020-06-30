@@ -2,6 +2,11 @@
 Generic Keyboard Teleop for ROS
 
 # Launch
+Run and publish to caffeine/cmd_vel.
+```
+roslaunch teleop_twist_keyboard keyboard_teleop.launch
+```
+
 Run.
 ```
 rosrun teleop_twist_keyboard teleop_twist_keyboard.py
