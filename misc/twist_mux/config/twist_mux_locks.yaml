@@ -20,9 +20,4 @@ locks:
   topic   : stop_closing_loop
   timeout : 0.0
   priority: 200
--
-  name    : joystick 
-  topic   : joy_priority
-  timeout : 0.0
-  priority: 100
 
