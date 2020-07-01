@@ -48,10 +48,5 @@ endforeach()
 install(DIRECTORY include/
    DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
    FILES_MATCHING PATTERN "*.h"
-)
-
-if (CATKIN_ENABLE_TESTING)
-    find_package(rostest REQUIRED)
-
-    add_rostest(test/system.test)
-endif()
+   )
+`
