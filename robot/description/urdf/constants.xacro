@@ -16,15 +16,11 @@
     <xacro:property name="chassis_link_mass" value="33.9"/>
 
     <!-- Casters -->
-    <xacro:property name="caster_link_mass" value="0.5"/>
+    <xacro:property name="caster_link_mass" value="1.2"/>
     
     <xacro:property name="casters_separation" value="1.12"/>
     <xacro:property name="caster_vertical_offset" value="-0.619167561"/>
-
-    <xacro:property name="caster_wheel_mass" value="0.7"/>
-
-    <xacro:property name="caster_link_to_wheel_dist_x" value="0.03621719"/>
-    <xacro:property name="caster_link_to_wheel_dist_z" value="-0.04361749"/>
+    <xacro:property name="caster_link_radius" value="0.075"/> 
 
     <!-- Wheels -->
     <!-- TODO: Update acceleration and torque parameters when known -->

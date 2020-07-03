@@ -10,25 +10,24 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://description/urdf/meshes/front_caster.dae"/>
+                <sphere radius="${caster_link_radius}"/>
             </geometry>
         </visual>
 
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://description/urdf/meshes/front_caster.dae"/>
+                <sphere radius="${caster_link_radius}"/>
             </geometry>
         </collision>
 
         <inertial>
             <mass value="${caster_link_mass}"/>
-            <xacro:caster_link_inertia/>
+            <xacro:sphere_inertia mass="${caster_link_mass}" radius="${caster_link_radius}"/>
         </inertial>
     </link>
 
-    <joint name="${tf_prefix}/front_caster_link_joint" type="continuous">
-        <axis xyz="0 0 1"/>
+    <joint name="${tf_prefix}/front_caster_link_joint" type="fixed">
         <parent link="${tf_prefix}/chassis_link"/>
         <child link="${tf_prefix}/front_caster_link"/>
         <origin rpy="0 0 0" xyz="${casters_separation / 2.0} 0 ${caster_vertical_offset}"/>
@@ -41,30 +40,50 @@
         <kd value="1.0" />
     </gazebo>
 
+    <gazebo>
+        <joint name='${tf_prefix}/front_caster_link_joint' type='ball'>
+           <parent>${tf_prefix}/chassis_link</parent>
+           <child>${tf_prefix}/front_caster_link</child>
+           <pose frame=''>0 0 0 0 0 0</pose>
+             <physics>
+                 <ode>
+                     <limit>
+                         <cfm>0</cfm>
+                         <erp>0.2</erp>
+                     </limit>
+                     <suspension>
+                         <cfm>0</cfm>
+                         <erp>0.2</erp>
+                     </suspension>
+                 </ode>
+             </physics>
+        </joint>
+    </gazebo>
+
+
     <!-- Back caster definition -->
     <link name="${tf_prefix}/back_caster_link">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://description/urdf/meshes/back_caster.dae"/>
+                <sphere radius="${caster_link_radius}"/> 
             </geometry>
         </visual>
 
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://description/urdf/meshes/back_caster.dae"/>
+                <sphere radius="${caster_link_radius}"/>
             </geometry>
         </collision>
 
         <inertial>
             <mass value="${caster_link_mass}"/>
-            <xacro:caster_link_inertia/>
+            <xacro:sphere_inertia mass="${caster_link_mass}" radius="${caster_link_radius}"/>
         </inertial>
     </link>
 
-    <joint name="${tf_prefix}/back_caster_link_joint" type="continuous">
-        <axis xyz="0 0 1"/>
+    <joint name="${tf_prefix}/back_caster_link_joint" type="fixed">
         <parent link="${tf_prefix}/chassis_link"/>
         <child link="${tf_prefix}/back_caster_link"/>
         <origin rpy="0 0 0" xyz="-${casters_separation / 2.0} 0 ${caster_vertical_offset}"/>
@@ -77,77 +96,24 @@
         <kd value="1.0" />
     </gazebo>
 
-    <!-- Front caster wheel definition -->
-    <link name="${tf_prefix}/front_caster_wheel">
-        <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://description/urdf/meshes/front_caster_wheel.dae"/>
-            </geometry>
-        </visual>
-
-        <collision>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://description/urdf/meshes/front_caster_wheel.dae"/>
-            </geometry>
-        </collision>
-
-        <inertial>
-            <mass value="${caster_wheel_mass}"/>
-            <xacro:caster_wheel_inertia/>
-        </inertial>
-
-    </link>
-
-    <joint name="${tf_prefix}/front_caster_wheel_joint" type="continuous">
-        <parent link="${tf_prefix}/front_caster_link"/>
-        <child link="${tf_prefix}/front_caster_wheel"/>
-        <origin rpy="0 0 0" xyz="${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
-        <axis xyz="0 1 0"/>
-    </joint>
-
-    <gazebo reference="${tf_prefix}/front_caster_wheel">
-        <mu1 value="0.1"/>
-        <mu2 value="0.1"/>
-        <kp value="10000000.0" />
-        <kd value="1.0" />
-    </gazebo>
-
-    <!-- Back caster wheel definition -->
-    <link name="${tf_prefix}/back_caster_wheel">
-        <visual>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://description/urdf/meshes/back_caster_wheel.dae"/>
-            </geometry>
-        </visual>
-
-        <collision>
-            <origin rpy="0 0 0" xyz="0 0 0"/>
-            <geometry>
-                <mesh filename="package://description/urdf/meshes/back_caster_wheel.dae"/>
-            </geometry>
-        </collision>
-
-        <inertial>
-            <mass value="${caster_wheel_mass}"/>
-            <xacro:caster_wheel_inertia/>
-        </inertial>
-    </link>
-        
-    <joint name="${tf_prefix}/back_caster_wheel_joint" type="continuous">
-        <parent link="${tf_prefix}/back_caster_link"/>
-        <child link="${tf_prefix}/back_caster_wheel"/>
-        <origin rpy="0 0 0" xyz="-${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
-        <axis xyz="0 1 0"/>
-    </joint>
-
-    <gazebo reference="${tf_prefix}/back_caster_wheel">
-        <mu1 value="0.1"/>
-        <mu2 value="0.1"/>
-        <kp value="10000000.0" />
-        <kd value="1.0" />
+    <gazebo>
+        <joint name='${tf_prefix}/back_caster_link_joint' type='ball'>
+            <parent>${tf_prefix}/chassis_link</parent>
+            <child>${tf_prefix}/back_caster_link</child>
+            <pose frame=''>0 0 0 0 0 0</pose>
+            <physics>
+                <ode>
+                    <limit>
+                        <cfm>0</cfm>
+                        <erp>0.2</erp>
+                    </limit>
+                    <suspension>
+                        <cfm>0</cfm>
+                        <erp>0.2</erp>
+                    </suspension>
+                </ode>
+            </physics>
+        </joint>
     </gazebo>
 
 </robot>
