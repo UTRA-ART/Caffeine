@@ -46,10 +46,5 @@
    <include file="$(find description)/launch/setup_tf_tree.launch">
       <arg name="robot" value="caffeine"/>
    </include>
-
-   <!-- Set up robot_localization odometry -->
-   <include file="$(find odom)/launch/odom.launch">
-        <arg name="robot_model" value="caffeine_gazebo"/>
-   </include>
 </launch>
 
