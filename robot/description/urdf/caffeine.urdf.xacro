@@ -13,7 +13,7 @@
     <joint name="${tf_prefix}/chassis_link_joint" type="fixed">
         <parent link="${tf_prefix}/base_link"/>
         <child link="${tf_prefix}/chassis_link"/>
-        <origin rpy="0 0 0" xyz="0 0 ${chassis_to_base_link_dist}"/>
+        <origin xyz="0 0 ${chassis_to_base_link_dist}" rpy="0 0 0"/>
     </joint>
 
     <!-- stand_link: origin for anything on the stand; located in the middle, on the top of the stand plate -->
@@ -21,7 +21,7 @@
     <joint name="${tf_prefix}/stand_link_joint" type="fixed">
         <parent link="${tf_prefix}/chassis_link"/>
         <child link="${tf_prefix}/stand_link"/>
-        <origin rpy="0 0 0" xyz="0 0 ${chassis_to_stand_link_dist}"/>
+        <origin xyz="0 0 ${chassis_to_stand_link_dist}" rpy="0 0 0" />
     </joint>
 
     <!-- wheels: associated to wheels that can be moved by a motor -->

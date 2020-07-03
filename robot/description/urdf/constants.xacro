@@ -11,7 +11,7 @@
 
     <!-- Chassis --> 
     <xacro:property name="chassis_to_base_link_dist" value="0.501747"/>
-    <xacro:property name="chassis_to_stand_link_dist" value="0.713459"/>
+    <xacro:property name="chassis_to_stand_link_dist" value="0.698253"/>
 
     <xacro:property name="chassis_link_mass" value="33.9"/>
 
@@ -95,5 +95,11 @@
     <xacro:property name="gps_diam" value="0.061"/>
     <xacro:property name="gps_length" value="0.0195"/>
     <xacro:property name="gps_mass" value="0.165"/>
+
+    <!-- Phidget IMU -->
+   <xacro:property name="phidget_length" value="0.04"/>
+   <xacro:property name="phidget_width" value="0.0375"/>
+   <xacro:property name="phidget_height" value="0.01"/>
+   <xacro:property name="phidget_mass" value="0.04"/>
 </robot>
 
