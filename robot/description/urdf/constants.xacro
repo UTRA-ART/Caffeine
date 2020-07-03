@@ -19,7 +19,7 @@
     <xacro:property name="caster_link_mass" value="1.2"/>
     
     <xacro:property name="casters_separation" value="1.12"/>
-    <xacro:property name="caster_vertical_offset" value="-0.619167561"/>
+    <xacro:property name="caster_vertical_offset" value="-0.59"/>
     <xacro:property name="caster_link_radius" value="0.075"/> 
 
     <!-- Wheels -->

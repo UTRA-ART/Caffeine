@@ -45,18 +45,6 @@
            <parent>${tf_prefix}/chassis_link</parent>
            <child>${tf_prefix}/front_caster_link</child>
            <pose frame=''>0 0 0 0 0 0</pose>
-             <physics>
-                 <ode>
-                     <limit>
-                         <cfm>0</cfm>
-                         <erp>0.2</erp>
-                     </limit>
-                     <suspension>
-                         <cfm>0</cfm>
-                         <erp>0.2</erp>
-                     </suspension>
-                 </ode>
-             </physics>
         </joint>
     </gazebo>
 
@@ -101,18 +89,6 @@
             <parent>${tf_prefix}/chassis_link</parent>
             <child>${tf_prefix}/back_caster_link</child>
             <pose frame=''>0 0 0 0 0 0</pose>
-            <physics>
-                <ode>
-                    <limit>
-                        <cfm>0</cfm>
-                        <erp>0.2</erp>
-                    </limit>
-                    <suspension>
-                        <cfm>0</cfm>
-                        <erp>0.2</erp>
-                    </suspension>
-                </ode>
-            </physics>
         </joint>
     </gazebo>
 
