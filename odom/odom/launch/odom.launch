@@ -1,0 +1,24 @@
+<launch>
+
+  <arg name="robot_model" default="caffeine"/>
+  <arg name="sensor_ekf_config" default=""/>
+
+  <group if="$(eval arg('robot_model') == 'caffeine_gazebo')">
+     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization" ns="caffeine" clear_params="true" output="screen">
+       <rosparam command="load" file="$(find odom)/config/localization.yaml" if="$(eval arg('sensor_ekf_config') == '')"/>
+       <rosparam command="load" file="$(arg sensor_ekf_config)" unless="$(eval arg('sensor_ekf_config') == '')"/>
+     </node>
+  </group>
+
+  <group if="$(eval arg('robot_model') == 'caffeine')">
+
+    <!-- Connect Odometry Sensors to robot_localization ekf node -->
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization" ns="caffeine" clear_params="true" output="screen">
+      <rosparam command="load" file="$(find odom)/config/localization.yaml" if="$(eval arg('sensor_ekf_config') == '')"/>
+      <rosparam command="load" file="$(arg sensor_ekf_config)" unless="$(eval arg('sensor_ekf_config') == '')"/>
+    </node>
+
+  </group>
+
+</launch>
+

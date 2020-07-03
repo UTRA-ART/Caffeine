@@ -1,0 +1,30 @@
+frequency: 50
+
+# Specify planar environment
+two_d_mode: true
+
+map_frame: map
+odom_frame: caffeine/odom
+base_link_frame: caffeine/base_link
+world_frame: caffeine/odom
+
+# publish transform: world_frame --> base_link_frame
+publish_tf: false
+
+transform_time_offset: 0.5
+
+# See /diagnostics topic for debug
+print_diagnostics: true
+
+## Odometry Sensor(s) ##
+
+odom0: caffeine/odom
+odom0_config: [true,  true,  false,
+               false, false, true,
+               true,  true,  false,
+               false, false, true,
+               false, false, false]
+odom0_queue_size: 10
+# Set to false if using navsat_transform or  utm_transform 
+odom0_differential: true 
+
