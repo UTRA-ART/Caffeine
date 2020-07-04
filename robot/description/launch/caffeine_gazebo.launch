@@ -1,7 +1,7 @@
 <launch>
    <arg name="use_gui" default="true"/>
    <arg name="debug_mode" default="false"/>
-   <arg name="world" default="plain"/>
+   <arg name="world" default="walls"/>
    <arg name="camera_ns" default="/zed/zed_node"/>
 
    <!-- IGVC worlds -->

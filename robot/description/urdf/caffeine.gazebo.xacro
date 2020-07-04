@@ -124,22 +124,22 @@
             </clip>
             </camera>
             <plugin name="stereo_camera_controller" filename="libgazebo_ros_multicamera.so">
-            <cameraName>zed/zed_node</cameraName>
-            <alwaysOn>true</alwaysOn>
-            <updateRate>0</updateRate>
-            <cameraName></cameraName>
-            <imageTopicName>image_raw</imageTopicName>
-            <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-            <depthImageTopicName>depth/image_raw</depthImageTopicName>
-            <depthImageInfoTopicName>depth/camera_info</depthImageInfoTopicName>
-            <pointCloudTopicName>depth/points</pointCloudTopicName>
-            <frameName>zed_camera_link_optical</frameName>
-            <hackBaseline>${ZED_camera_length}</hackBaseline>
-            <distortionK1>0.0</distortionK1>
-            <distortionK2>0.0</distortionK2>
-            <distortionK3>0.0</distortionK3>
-            <distortionT1>0.0</distortionT1>
-            <distortionT2>0.0</distortionT2>
+                <cameraName>zed/zed_node</cameraName>
+                <alwaysOn>true</alwaysOn>
+                <updateRate>0</updateRate>
+                <cameraName></cameraName>
+                <imageTopicName>image_raw</imageTopicName>
+                <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+                <depthImageTopicName>depth/image_raw</depthImageTopicName>
+                <depthImageInfoTopicName>depth/camera_info</depthImageInfoTopicName>
+                <pointCloudTopicName>depth/points</pointCloudTopicName>
+                <frameName>${tf_prefix}/zed_camera_link_optical</frameName>
+                <hackBaseline>${ZED_camera_length}</hackBaseline>
+                <distortionK1>0.0</distortionK1>
+                <distortionK2>0.0</distortionK2>
+                <distortionK3>0.0</distortionK3>
+                <distortionT1>0.0</distortionT1>
+                <distortionT2>0.0</distortionT2>
             </plugin>
         </sensor>
     </gazebo>
