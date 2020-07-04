@@ -11,7 +11,7 @@
 
     <!-- Chassis --> 
     <xacro:property name="chassis_to_base_link_dist" value="0.501747"/>
-    <xacro:property name="chassis_to_stand_link_dist" value="0.713459"/>
+    <xacro:property name="chassis_to_stand_link_dist" value="0.698253"/>
 
     <xacro:property name="chassis_link_mass" value="33.9"/>
 
@@ -95,5 +95,28 @@
     <xacro:property name="gps_diam" value="0.061"/>
     <xacro:property name="gps_length" value="0.0195"/>
     <xacro:property name="gps_mass" value="0.165"/>
+
+    <xacro:property name="gps_frame" value="gps_link"/>
+    <xacro:property name="gps_topic" value="gps/fix"/>
+    <xacro:property name="gps_vel_topic" value="gps/fix_velocity"/>
+    <xacro:property name="gps_update_rate" value="5.0"/>
+
+    <!-- NOTE: GPS coordinates for UofT St. George Campus -->
+    <xacro:property name="ref_lat" value="43.6570"/>
+    <xacro:property name="ref_lon" value="-79.3903"/>
+    <xacro:property name="ref_alt" value="76.0000"/>
+
+    <xacro:property name="gps_drift" value="1.5 1.5 1.5"/>
+    <xacro:property name="gps_vel_drift" value="0.05 0.05 0.05"/>
+
+    <!-- Phidget IMU -->
+   <xacro:property name="phidget_length" value="0.04"/>
+   <xacro:property name="phidget_width" value="0.0375"/>
+   <xacro:property name="phidget_height" value="0.01"/>
+   <xacro:property name="phidget_mass" value="0.04"/>
+
+   <xacro:property name="imu_frame" value="imu_link"/>
+   <xacro:property name="imu_topic" value="imu/data"/>
+   <xacro:property name="imu_update_rate" value="128.0"/>
 </robot>
 
