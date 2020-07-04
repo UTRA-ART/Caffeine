@@ -11,7 +11,7 @@ world_frame: caffeine/odom
 # publish transform: world_frame --> base_link_frame
 publish_tf: false
 
-transform_time_offset: 0.5
+transform_time_offset: 0.05
 
 # See /diagnostics topic for debug
 print_diagnostics: true
@@ -25,6 +25,5 @@ odom0_config: [true,  true,  false,
                false, false, true,
                false, false, false]
 odom0_queue_size: 10
-# Set to false if using navsat_transform or  utm_transform 
-odom0_differential: true 
-
+odom0_differential: false 
+odom0_relative: false
