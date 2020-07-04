@@ -1,0 +1,7 @@
+<launch>
+    <arg name="robot" default="caffeine"/>
+
+    <!-- Launch keyboard teleop node -->
+    <node name= "teleop_twist_keyboard" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" ns="$(arg robot)" output="screen"/>
+</launch>
+
