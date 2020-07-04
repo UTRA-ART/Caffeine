@@ -103,13 +103,14 @@
             <always_on>true</always_on>
             <update_rate>128.0</update_rate>
             <topic>__default_topic__</topic>
+            <!-- TODO: set Drift based off Phidget IMU -->
 
             <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
                 <topicName>${robotNamespace}/imu/data</topicName>
                 <bodyName>${tf_prefix}/imu_link</bodyName>
                 <frameName>${tf_prefix}/imu_link</frameName>
                 <updateRateHZ>128.0</updateRateHZ>
-                <gaussianNoise>0.0</gaussianNoise>
+                <gaussianNoise>0.0</gaussianNoise>  <!-- TODO: set Gaussian noise based off Phidget IMU -->
                 <xyzOffset>0 0 0</xyzOffset>
                 <rpyOffset>0 0 0</rpyOffset>
                 <initialOrientationAsReference>false</initialOrientationAsReference>
