@@ -13,10 +13,11 @@
    <!-- Spawn at course start -->
    <arg name="x"     value="0"/>
    <arg name="y"     value="-21.5"/>
+   <arg name="y"     value="0"/>
    <arg name="z"     value="0.25"/>
    <arg name="roll"  value="0"/>
    <arg name="pitch" value="0"/>
-   <arg name="yaw"   value="3.14"/>
+   <arg name="yaw"   value="3.14"/> 
 
    <!-- Open a world in Gazebo -->
    <include file="$(find gazebo_ros)/launch/empty_world.launch">
