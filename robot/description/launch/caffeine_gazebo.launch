@@ -46,5 +46,8 @@
    <include file="$(find description)/launch/setup_tf_tree.launch">
       <arg name="robot" value="caffeine"/>
    </include>
+
+   <!-- Run Twist Multiplexer -->
+   <include file="$(find twist_mux)/launch/twist_mux.launch" ns="caffeine"/>
 </launch>
 
