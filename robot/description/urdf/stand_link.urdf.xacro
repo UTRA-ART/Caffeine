@@ -6,14 +6,12 @@
     
     <!-- Stand link; this is a dummy link that is used to make camera placement and other sensors on the stand more convenient -->
     <!-- Stand link definition. Note: purposely left blank -->
-    <link name="${tf_prefix}/stand_link">
-    </link> 
+    <link name="${tf_prefix}/stand_link"/> 
 
     <!-- ZED Camera -->
     <link name="${tf_prefix}/zed_camera_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
-            <!-- TODO: should be using the mesh but couldn't get it to work -->
             <geometry>
             <box size="${ZED_camera_width} ${ZED_camera_length} ${ZED_camera_height}"/>
             </geometry>
