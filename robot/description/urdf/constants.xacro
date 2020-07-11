@@ -113,7 +113,7 @@
     <xacro:property name="ZED_image_width" value="3840"/>
     <xacro:property name="ZED_image_height" value="1080"/>
     <xacro:property name="ZED_image_format" value="R8G8B8"/>
-    <xacro:property name="ZED_image_horizontal_fov" value="90"/>
+    <xacro:property name="ZED_image_hfov" value="90"/>
     
 </robot>
 

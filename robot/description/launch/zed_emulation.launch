@@ -1,6 +1,6 @@
 <launch>
 
-    <arg name="camera_ns" default="zed/zed_node"/>
+    <arg name="camera_ns" default=""/>
 
     <group ns="$(arg camera_ns)">
         <!-- Image Rectification + Stereo Processing -->
