@@ -28,7 +28,7 @@
         </inertial>
     </link>
     <joint name="${tf_prefix}/zed_camera_joint" type="fixed">
-        <origin xyz="${stand_length/2 - ZED_camera_width} 0 0" rpy="0 0 0"/>
+        <origin xyz="${stand_length/2 - ZED_camera_width} 0 ${ZED_camera_height / 2.0}" rpy="0 0 0"/>
         <parent link="${tf_prefix}/stand_link"/>
         <child link="${tf_prefix}/zed_camera_link"/>
     </joint>
