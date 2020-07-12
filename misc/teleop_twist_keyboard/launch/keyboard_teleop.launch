@@ -1,8 +1,6 @@
 <launch>
     <arg name="robot" default="caffeine"/>
 
-    <include file="$(find twist_mux)/launch/twist_mux.launch" ns="caffeine"/>
-
     <!-- Launch keyboard teleop node -->
     <node name= "teleop_twist_keyboard" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" ns="$(arg robot)" output="screen">
       <remap from="cmd_vel" to="key_vel"/>
