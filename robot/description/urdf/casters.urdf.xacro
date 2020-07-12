@@ -40,15 +40,6 @@
         <kd value="1.0" />
     </gazebo>
 
-    <gazebo>
-        <joint name='${tf_prefix}/front_caster_link_joint' type='ball'>
-           <parent>${tf_prefix}/chassis_link</parent>
-           <child>${tf_prefix}/front_caster_link</child>
-           <pose frame=''>0 0 0 0 0 0</pose>
-        </joint>
-    </gazebo>
-
-
     <!-- Back caster definition -->
     <link name="${tf_prefix}/back_caster_link">
         <visual>
@@ -83,14 +74,5 @@
         <kp value="10000000.0" />
         <kd value="1.0" />
     </gazebo>
-
-    <gazebo>
-        <joint name='${tf_prefix}/back_caster_link_joint' type='ball'>
-            <parent>${tf_prefix}/chassis_link</parent>
-            <child>${tf_prefix}/back_caster_link</child>
-            <pose frame=''>0 0 0 0 0 0</pose>
-        </joint>
-    </gazebo>
-
 </robot>
 
