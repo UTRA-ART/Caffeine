@@ -1,5 +1,5 @@
 <launch>
-   <arg name="use_gui" default="true"/>
+   <arg name="use_gui" default="false"/>
    <arg name="debug_mode" default="false"/>
    <arg name="world" default="walls"/>
    
@@ -49,7 +49,7 @@
 
    <!-- Emulate ZED stereo camera image processing -->
    <include file="$(find description)/launch/zed_emulation.launch">
-      <arg name="camera_ns" value="/zed/zed_node"/>
+      <arg name="camera_ns" value="zed/zed_node"/>
    </include>
 
 </launch>

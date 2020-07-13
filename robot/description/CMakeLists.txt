@@ -11,7 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
     gazebo_ros
     urdf
     xacro
-
+    rtabmap_ros
+    stereo_image_proc
 )
 
 find_package(gazebo REQUIRED)
