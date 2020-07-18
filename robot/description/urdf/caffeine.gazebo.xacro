@@ -128,7 +128,7 @@
                 <alwaysOn>true</alwaysOn>
                 <updateRate>0</updateRate>
                 <cameraName></cameraName>
-                <imageTopicName>image_raw</imageTopicName>
+                <imageTopicName>image_raw_color</imageTopicName>
                 <cameraInfoTopicName>camera_info</cameraInfoTopicName>
                 <depthImageTopicName>depth/image_raw</depthImageTopicName>
                 <depthImageInfoTopicName>depth/camera_info</depthImageInfoTopicName>
@@ -136,11 +136,11 @@
                 <frameName>${tf_prefix}/zed_camera_link_optical</frameName>
                 <hackBaseline>${ZED_camera_length}</hackBaseline>
                 <!-- TODO: Get distortion parameters from real camera -->
-                <distortionK1>2.0</distortionK1>
-                <distortionK2>2.0</distortionK2>
-                <distortionK3>2.0</distortionK3>
-                <distortionT1>2.0</distortionT1>
-                <distortionT2>2.0</distortionT2>
+                <distortionK1>0.0</distortionK1>
+                <distortionK2>0.0</distortionK2>
+                <distortionK3>0.0</distortionK3>
+                <distortionT1>0.0</distortionT1>
+                <distortionT2>0.0</distortionT2>
             </plugin>
         </sensor>
     </gazebo>
