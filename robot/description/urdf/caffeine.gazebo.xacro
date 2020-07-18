@@ -93,6 +93,7 @@
             <!-- TODO: add Gaussian noise based off Garmin GPS -->
         </plugin>
     </gazebo>
+    
     <!-- Gazebo multicamera plugin -->
     <gazebo reference="${tf_prefix}/camera_link">
         <sensor type="multicamera" name="stereo_camera">
