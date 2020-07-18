@@ -49,7 +49,7 @@
 
    <!-- Set up robot_localization odometry -->
    <include file="$(find odom)/launch/odom.launch">
-        <arg name="robot_model" value="caffeine_gazebo"/>
+      <arg name="robot_model" value="caffeine"/>
    </include>
    
    <!-- Run Twist Multiplexer -->
