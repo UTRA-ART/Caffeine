@@ -105,6 +105,16 @@
     <xacro:property name="ZED_image_format" value="R8G8B8"/>
     <xacro:property name="ZED_image_hfov" value="90"/>
 
+    <xacro:property name="ZED_name" value="zed/zed_node"/>
+    <xacro:property name="ZED_always_on" value="true"/>
+    <xacro:property name="ZED_update_rate" value="0"/>
+    <xacro:property name="ZED_image_topicName" value="image_raw_color"/>
+    <xacro:property name="ZED_image_info_topicName" value="camera_info"/>
+    <xacro:property name="ZED_depth_topicName" value="depth/image_raw"/>
+    <xacro:property name="ZED_depth_info_topicName" value="depth/camera_info"/>
+    <xacro:property name="ZED_depth_points_topicName" value="depth/points"/>
+    <xacro:property name="ZED_frameName" value="zed_camera_link_optical"/>
+
     <!-- Garmin GPS -->
     <!-- NOTE: approx. as a cylinder, Garmin itself is similar to a hockey puck -->
     <xacro:property name="gps_diam" value="0.061"/>

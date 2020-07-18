@@ -124,16 +124,16 @@
             </clip>
             </camera>
             <plugin name="stereo_camera_controller" filename="libgazebo_ros_multicamera.so">
-                <cameraName>zed/zed_node</cameraName>
-                <alwaysOn>true</alwaysOn>
-                <updateRate>0</updateRate>
+                <cameraName>${ZED_name}</cameraName>
+                <alwaysOn>${ZED_always_on}</alwaysOn>
+                <updateRate>${ZED_update_rate}</updateRate>
                 <cameraName></cameraName>
-                <imageTopicName>image_raw_color</imageTopicName>
-                <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-                <depthImageTopicName>depth/image_raw</depthImageTopicName>
-                <depthImageInfoTopicName>depth/camera_info</depthImageInfoTopicName>
-                <pointCloudTopicName>depth/points</pointCloudTopicName>
-                <frameName>${tf_prefix}/zed_camera_link_optical</frameName>
+                <imageTopicName>${ZED_image_topicName}</imageTopicName>
+                <cameraInfoTopicName>${ZED_image_info_topicName}</cameraInfoTopicName>
+                <depthImageTopicName>${ZED_depth_topicName}</depthImageTopicName>
+                <depthImageInfoTopicName>${ZED_depth_info_topicName}</depthImageInfoTopicName>
+                <pointCloudTopicName>${ZED_depth_points_topicName}</pointCloudTopicName>
+                <frameName>${tf_prefix}/${ZED_frameName}</frameName>
                 <hackBaseline>${ZED_camera_length}</hackBaseline>
                 <!-- TODO: Get distortion parameters from real camera -->
                 <distortionK1>0.0</distortionK1>

@@ -53,6 +53,7 @@
    </include>
 
    <!-- Run Twist Multiplexer -->
-   <include file="$(find twist_mux)/launch/twist_mux.launch" ns="caffeine"/>
+   <include file="$(find twist_mux)/launch/twist_mux.launch" ns="caffeine">
+      <rosparam name="cmd_vel_out" value="cmd_vel"/>
+   </include>
 </launch>
-
