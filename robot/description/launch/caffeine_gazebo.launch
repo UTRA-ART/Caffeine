@@ -1,7 +1,7 @@
 <launch>
    <arg name="use_gui" default="false"/>
    <arg name="debug_mode" default="false"/>
-   <arg name="world" default="walls"/>
+   <arg name="world" default="full"/>
 
    <!-- IGVC worlds -->
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_plain.world"  if="$(eval arg('world') == 'plain')"/>
@@ -51,5 +51,8 @@
    <include file="$(find odom)/launch/odom.launch">
         <arg name="robot_model" value="caffeine_gazebo"/>
    </include>
+   
+   <!-- Run Twist Multiplexer -->
+   <include file="$(find twist_mux)/launch/twist_mux.launch" ns="caffeine"/>
 </launch>
 

@@ -77,21 +77,47 @@
     <gazebo>
         <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
             <robotNamespace>${robotNamespace}</robotNamespace>
-            <updateRate>5.0</updateRate>  <!-- 5 Hz -->
-            <bodyName>${tf_prefix}/gps_link</bodyName>
-            <frameId>${tf_prefix}/gps_link</frameId>
-            <topicName>gps/fix</topicName>
-            <velocityTopicName>gps/fix_velocity</velocityTopicName>
-            <!-- Set reference GPS coordinates to UofT -->
-            <referenceLatitude>43.6570</referenceLatitude>
-            <referenceLongitude>-79.3903</referenceLongitude>
-            <referenceAltitude>76</referenceAltitude>
-            <!-- Model GPS behaviour -->
-            <service>1</service> <!-- SERVICE_GPS = 1 -->
-            <drift>1.5 1.5 1.5</drift> <!-- m -->
-            <velocityDrift>0.05 0.05 0.05</velocityDrift> <!-- m/s-->
+            <updateRate>${gps_update_rate}</updateRate>
+            <bodyName>${tf_prefix}/${gps_frame}</bodyName>
+            <frameId>${tf_prefix}/${gps_frame}</frameId>
+
+            <topicName>${gps_topic}</topicName>
+            <velocityTopicName>${gps_vel_topic}</velocityTopicName>
+            
+            <referenceLatitude>${ref_lat}</referenceLatitude>
+            <referenceLongitude>${ref_lon}</referenceLongitude>
+            <referenceAltitude>${ref_alt}</referenceAltitude>
+
+            <drift>${gps_drift}</drift> <!-- m -->
+            <velocityDrift>${gps_vel_drift}</velocityDrift> <!-- m/s-->
             <!-- TODO: add Gaussian noise based off Garmin GPS -->
         </plugin>
+    </gazebo>
+
+    <!-- IMU -->
+    <gazebo reference="${tf_prefix}/imu_link">
+        <material>Gazebo/Black</material>
+
+        <gravity>true</gravity>
+        <sensor name="imu_sensor" type="imu">
+            <always_on>true</always_on>
+            <update_rate>${imu_update_rate}</update_rate>
+            <topic>__default_topic__</topic>
+            <!-- TODO: add Drift based on Phidget IMU -->
+
+            <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+                <topicName>${robotNamespace}/${imu_topic}</topicName>
+                <bodyName>${tf_prefix}/${imu_frame}</bodyName>
+                <frameName>${tf_prefix}/${imu_frame}</frameName>
+                <updateRateHZ>${imu_update_rate}</updateRateHZ>
+                <gaussianNoise>0.0</gaussianNoise>  <!-- TODO: set Gaussian noise based on Phidget IMU -->
+                <xyzOffset>0 0 0</xyzOffset>
+                <rpyOffset>0 0 0</rpyOffset>
+                <initialOrientationAsReference>false</initialOrientationAsReference>
+            </plugin>
+            
+            <pose>0 0 0 0 0 0</pose>
+        </sensor>
     </gazebo>
 </robot>
 
