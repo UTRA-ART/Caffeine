@@ -2,6 +2,8 @@
     <arg name="robot" default="caffeine"/>
 
     <!-- Launch keyboard teleop node -->
-    <node name= "teleop_twist_keyboard" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" ns="$(arg robot)" output="screen"/>
+    <node name= "teleop_twist_keyboard" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" ns="$(arg robot)" output="screen">
+      <remap from="cmd_vel" to="key_vel"/>
+    </node>
 </launch>
 
