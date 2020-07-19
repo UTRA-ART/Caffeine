@@ -15,6 +15,12 @@
 
     <xacro:property name="chassis_link_mass" value="33.9"/>
 
+    <!-- Stand -->
+    <xacro:property name="stand_length" value="0.412"/>
+    <xacro:property name="stand_width" value="0.254"/>
+    <xacro:property name="stand_height" value="1.324"/>
+    <xacro:property name="stand_mass" value="1.0"/>
+
     <!-- Casters -->
     <xacro:property name="caster_link_mass" value="1.2"/>
     
@@ -81,17 +87,40 @@
     <xacro:property name="laser_length" value="0.05"/>
     <xacro:property name="laser_width" value="0.05"/>
     <xacro:property name="laser_height" value="0.07"/>
-    <xacro:property name="laser_mass" value="0.16"/> 
+    <xacro:property name="laser_mass" value="0.16"/>
 
     <xacro:property name="laser_x_dist" value="${base_length/2 - 2*laser_length}"/>
     <xacro:property name="laser_z_dist" value="${laser_height/2}"/>
+
+    <!-- ZED camera -->
+    <!-- NOTE: approx as a rectangular prism -->
+    <xacro:property name="ZED_camera_mass" value="0.1587573"/>
+    <xacro:property name="ZED_camera_length" value="0.175"/>
+    <xacro:property name="ZED_camera_width" value="0.03"/>
+    <xacro:property name="ZED_camera_height" value="0.033"/>
+    <!-- ZED image height/width corresponds to image size for 60Hz refresh-->
+    <xacro:property name="ZED_image_refresh" value="60"/>
+    <xacro:property name="ZED_image_width" value="3840"/>
+    <xacro:property name="ZED_image_height" value="1080"/>
+    <xacro:property name="ZED_image_format" value="R8G8B8"/>
+    <xacro:property name="ZED_image_hfov" value="90"/>
+
+    <xacro:property name="ZED_name" value="zed/zed_node"/>
+    <xacro:property name="ZED_always_on" value="true"/>
+    <xacro:property name="ZED_update_rate" value="0"/>
+    <xacro:property name="ZED_image_topicName" value="image_raw_color"/>
+    <xacro:property name="ZED_image_info_topicName" value="camera_info"/>
+    <xacro:property name="ZED_depth_topicName" value="depth/image_raw"/>
+    <xacro:property name="ZED_depth_info_topicName" value="depth/camera_info"/>
+    <xacro:property name="ZED_depth_points_topicName" value="depth/points"/>
+    <xacro:property name="ZED_frameName" value="zed_camera_link_optical"/>
 
     <!-- Garmin GPS -->
     <!-- NOTE: approx. as a cylinder, Garmin itself is similar to a hockey puck -->
     <xacro:property name="gps_diam" value="0.061"/>
     <xacro:property name="gps_length" value="0.0195"/>
     <xacro:property name="gps_mass" value="0.165"/>
-
+    
     <xacro:property name="gps_frame" value="gps_link"/>
     <xacro:property name="gps_topic" value="gps/fix"/>
     <xacro:property name="gps_vel_topic" value="gps/fix_velocity"/>
