@@ -1,0 +1,16 @@
+<launch>
+    <!-- Remember to generate map server -->
+    <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find nav_stack)/src/test_map.pgm my_map_resolution"/> -->
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <rosparam file="$(find nav_stack)/config/caffeine_costmap_common_params.yaml" command="load" ns="global_costmap" /> 
+        <rosparam file="$(find nav_stack)/config/caffeine_costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find nav_stack)/config/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find nav_stack)/config/global_costmap_params.yaml" command="load" /> 
+        <rosparam file="$(find nav_stack)/config/base_local_planner_params.yaml" command="load" />
+
+        <remap from="odom" to="zed/zed_node/odom"/>
+        <remap from="cmd_vel" to="caffeine/cmd_vel"/>
+    </node>
+
+</launch> 
