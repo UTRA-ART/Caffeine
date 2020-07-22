@@ -1,7 +1,7 @@
 <launch>
    <arg name="use_gui" default="false"/>
    <arg name="debug_mode" default="false"/>
-   <arg name="world" default="walls"/>
+   <arg name="world" default="full"/>
 
    <!-- IGVC worlds -->
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_plain.world"  if="$(eval arg('world') == 'plain')"/>
@@ -15,7 +15,7 @@
    <arg name="z"     value="0.25"/>
    <arg name="roll"  value="0"/>
    <arg name="pitch" value="0"/>
-   <arg name="yaw"   value="3.14"/>
+   <arg name="yaw"   value="3.14"/> 
 
    <!-- Open a world in Gazebo -->
    <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -46,5 +46,14 @@
    <include file="$(find description)/launch/setup_tf_tree.launch">
       <arg name="robot" value="caffeine"/>
    </include>
-</launch>
 
+   <!-- Emulate ZED stereo camera image processing -->
+   <include file="$(find description)/launch/zed_emulation.launch">
+      <arg name="camera_ns" value="zed/zed_node"/>
+   </include>
+
+   <!-- Run Twist Multiplexer -->
+   <include file="$(find twist_mux)/launch/twist_mux.launch" ns="caffeine">
+      <arg name="cmd_vel_out" value="cmd_vel"/>
+   </include>
+</launch>
