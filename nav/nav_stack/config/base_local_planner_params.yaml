@@ -5,7 +5,7 @@ NavfnROS:
   # A tolerance on the goal point for the planner.
   default_tolerance: 0.1
 
-# Plans robot movement [I think]
+# Plans robot movement
 TrajectoryPlannerROS:
   max_vel_x: 2.0
   min_vel_x: 0.2
@@ -16,7 +16,7 @@ TrajectoryPlannerROS:
   acc_lim_x: 2.5
   acc_lim_y: 2.5
 
-  # Husky robot is not Holonomic
+  # Caffeine is not Holonomic
   holonomic_robot: false
 
   # Sets distances in cost function to meters instead of cells (allows different map resolutions)

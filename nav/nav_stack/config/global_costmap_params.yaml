@@ -5,6 +5,6 @@ global_costmap:
   rolling_window: true  # Set this to true bc static map == false (this makes setting 2D nav goals in rviz work)
   static_map: false     # Not supplying a static map
 
-  # TODO: Check igvc_world dimensions
-  width: 100
-  height: 100
+  # Full width and height of IGVC map
+  width: 50
+  height: 50

@@ -1,11 +1,9 @@
-# Maybe worth tuning
 obstacle_range: 5.5
 raytrace_range: 6.0
 
 footprint: [[-0.734, -0.582], [-0.734, 0.582], [0.734, 0.582], [0.734, -0.582]]
-#robot_radius: ir_of_robot
 inflation_radius: 1.0
 
-observation_sources: laser_scan_sensor #point_cloud_sensor
+observation_sources: laser_scan_sensor
 
 laser_scan_sensor: {sensor_frame: caffeine/base_laser, data_type: LaserScan, topic: scan, marking: true, clearing: true}
