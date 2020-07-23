@@ -5,11 +5,11 @@ delay: 0.0  # Simulated GPS needs no start-up time
 # Initial configuration
 magnetic_declination_radians: 0.0
 yaw_offset: 1.5707963 # pi/2 rad since 0 yaw == North
-zero_altitude: false
+zero_altitude: true
 
 # Publishing data
 publish_filtered_gps: true
-broadcast_utm_transform: true
+broadcast_utm_transform: true # NOTE: publishes transform (frame sepcified from input odometry) --> UTM
 broadcast_utm_transform_as_parent_frame: false
 
 # Misc
