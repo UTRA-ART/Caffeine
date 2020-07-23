@@ -1,6 +1,6 @@
 <launch>
 
-    <arg name="robot" value="caffeine"/>
+    <arg name="robot" default="caffeine"/>
 
     <group if="$(eval arg('robot') == 'caffeine')">
 
