@@ -54,6 +54,6 @@
 
    <!-- Run Twist Multiplexer -->
    <include file="$(find twist_mux)/launch/twist_mux.launch" ns="caffeine">
-      <rosparam name="cmd_vel_out" value="cmd_vel"/>
+      <arg name="cmd_vel_out" value="cmd_vel"/>
    </include>
 </launch>
