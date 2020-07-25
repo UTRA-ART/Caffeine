@@ -18,7 +18,6 @@ print_diagnostics: true
 
 ## Odometry Sensor(s) ##
 
-# Gazebo odom / encoders
 odom0: caffeine/odom
 odom0_config: [true,  true,  false,
                false, false, true,
@@ -29,7 +28,6 @@ odom0_queue_size: 10
 odom0_differential: false 
 odom0_relative: false
 
-# Zed Camera  
 odom1: zed/zed_node/odom
 odom1_config: [false, false, false,
                false, false, false,
@@ -52,4 +50,3 @@ imu0_queue_size: 10
 imu0_differential: false
 imu0_relative: true
 imu0_remove_gravitational_acceleration: true
-
