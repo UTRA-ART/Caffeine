@@ -1,18 +1,19 @@
 <launch>
+   <arg name="robot" default="caffeine"/>
 
-    <arg name="robot" default="caffeine"/>
+    <!-- Compute local odometry: publish odom frame -->
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization" clear_params="true" output="screen">
+        <remap from="odometry/filtered" to="$(arg robot)/odometry/local"/>
+        
+        <rosparam command="load" file="$(find odom)/config/localization.yaml"/>
+    </node>
 
-    <group if="$(eval arg('robot') == 'caffeine')">
+    <!-- Establish transform b/w Earth reference and Robot reference -->
+    <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" respawn="true" ns="$(arg robot)">
+        <remap from="odometry/filtered" to="odom"/>
 
-        <!-- Establish transform b/w Earth reference and Robot reference -->
-        <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" respawn="true" ns="$(arg robot)">
-            <remap from="imu/data" to="imu/data"/>
-            <remap from="odometry/filtered" to="odom"/>
-            <remap from="gps/fix" to="gps/fix"/>
-
-            <rosparam command="load" file="$(find odom)/config/caffeine_navsat.yaml"/>
-        </node>
-
-    </group>
+        <rosparam command="load" file="$(find odom)/config/navsat.yaml"/>
+    </node>
 
 </launch>
+

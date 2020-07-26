@@ -5,7 +5,9 @@
   <description>The odom package</description>
 
   <maintainer email="erick@todo.todo">erick</maintainer>
-  
+  <maintainer email="kathy@todo.todo">kathy</maintainer>
+  <maintainer email="kajanan@todo.todo">kajanan</maintainer>
+
   <license>TODO</license>
 
   <buildtool_depend>catkin</buildtool_depend>
@@ -15,3 +17,4 @@
 
   <exec_depend>robot_localization</exec_depend>
 </package>
+
