@@ -52,14 +52,14 @@
       <arg name="camera_ns" value="zed/zed_node"/>
    </include>
 
-   <!-- Set up robot_localization odometry -->
-   <include file="$(find odom)/launch/odom.launch">
-      <arg name="robot_model" value="caffeine"/>
-   </include>
-   
    <!-- Run Twist Multiplexer -->
    <include file="$(find twist_mux)/launch/twist_mux.launch" ns="caffeine">
       <arg name="cmd_vel_out" value="cmd_vel"/>
+   </include>
+
+   <!-- Compute Odometry from Sensor Fusion -->
+   <include file="$(find odom)/launch/odom.launch">
+      <arg name="robot" value="caffeine"/>
    </include>
 
 </launch>
