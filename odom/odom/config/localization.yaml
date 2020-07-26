@@ -43,9 +43,9 @@ odom1_relative: false
 imu0: caffeine/imu/data 
 imu0_config: [false, false, false, 
               false, false, true ,
-              true , true , false,
+              false, false, false,
               false, false, true , 
-              false, false, false]
+              true , true , false]
 imu0_queue_size: 10
 imu0_differential: false
 imu0_relative: true
