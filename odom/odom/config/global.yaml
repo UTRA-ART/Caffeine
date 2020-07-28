@@ -3,10 +3,10 @@ frequency: 50
 # Specify planar environment
 two_d_mode: true
 
-map_frame: map
+map_frame: caffeine/map
 odom_frame: caffeine/odom
 base_link_frame: caffeine/base_link
-world_frame: map
+world_frame: caffeine/map
 
 # publish transform: map_frame --> odom_frame
 publish_tf: true
