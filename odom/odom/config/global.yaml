@@ -5,7 +5,7 @@ two_d_mode: true
 
 map_frame: map
 odom_frame: caffeine/odom
-base_link_frame: caffeine/odom
+base_link_frame: caffeine/base_link
 world_frame: map
 
 # publish transform: world_frame --> base_link_frame
