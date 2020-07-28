@@ -2,10 +2,17 @@
    <arg name="robot" default="caffeine"/>
 
     <!-- Compute local odometry: publish odom frame -->
-    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization" clear_params="true" output="screen">
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_local" clear_params="true" output="screen">
         <remap from="odometry/filtered" to="$(arg robot)/odometry/local"/>
         
         <rosparam command="load" file="$(find odom)/config/localization.yaml"/>
+    </node>
+
+    <!-- Compute local odometry: publish odom frame -->
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_global" clear_params="true" output="screen">
+        <remap from="odometry/filtered" to="$(arg robot)/odometry/global"/>
+
+        <rosparam command="load" file="$(find odom)/config/global.yaml"/>
     </node>
 
     <!-- Establish transform b/w Earth reference and Robot reference -->
@@ -16,4 +23,5 @@
     </node>
 
 </launch>
+
 
