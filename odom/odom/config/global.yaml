@@ -8,7 +8,7 @@ odom_frame: caffeine/odom
 base_link_frame: caffeine/base_link
 world_frame: map
 
-# publish transform: world_frame --> base_link_frame
+# publish transform: map_frame --> odom_frame
 publish_tf: true
 
 transform_time_offset: 0.05
