@@ -13,12 +13,14 @@
         <remap from="odometry/filtered" to="$(arg robot)/odometry/global"/>
 
         <rosparam command="load" file="$(find odom)/config/global.yaml"/>
+        <rosparam command="load" file="$(find odom)/config/navsat.yaml"/>
     </node>
 
     <!-- Establish transform b/w Earth reference and Robot reference -->
     <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" respawn="true" ns="$(arg robot)">
         <remap from="odometry/filtered" to="odom"/>
 
+        <rosparam command="load" file="$(find odom)/config/global.yaml"/>
         <rosparam command="load" file="$(find odom)/config/navsat.yaml"/>
     </node>
 
