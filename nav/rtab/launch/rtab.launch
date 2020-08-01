@@ -2,10 +2,11 @@
     <arg name="robot" default="caffeine"/>
 
     <!--- Run Move Base -->
-    <include file="$(find nav_stack)/launch/move_base.launch">
+    <!-- <include file="$(find nav_stack)/launch/move_base.launch">
         <arg name="robot" value="$(arg robot)" />
         <arg name="global_costmap_params" value="$(find gmap)/config/global_costmap_params.yaml"/>
     </include>
+    -->
  
     <!-- Visual SLAM -->
     <!-- Remove "delete_db_on_start" to build on an existing map, saved in ~/.ros/rtabmap.db-->
