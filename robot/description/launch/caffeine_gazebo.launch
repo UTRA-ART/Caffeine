@@ -1,7 +1,7 @@
 <launch>
    <arg name="use_gui" default="true"/>
    <arg name="debug_mode" default="false"/>
-   <arg name="world" default="plain"/>
+   <arg name="world" default="ramp"/>
 
    <!-- IGVC worlds -->
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_plain.world"  if="$(eval arg('world') == 'plain')"/>

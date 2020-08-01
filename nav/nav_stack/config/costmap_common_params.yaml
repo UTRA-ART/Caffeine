@@ -1,12 +1,4 @@
-laser_scan_sensor:
-  obstacle_range: 1.3 # 5.5
-  raytrace_range: 1.5 # 6.0
-
-point_cloud_sensor:
-  obstacle_range: 5.5
-  raytrace_range: 6.0
-
-max_obstacle_height: 1.0
+max_obstacle_height: 2.0
 min_obstacle_height: 0.5
 
 footprint: [[-0.734, -0.582], [-0.734, 0.582], [0.734, 0.582], [0.734, -0.582]]
@@ -14,6 +6,12 @@ inflation_radius: 0.4
 
 observation_sources: laser_scan_sensor point_cloud_sensor
 
-laser_scan_sensor: {sensor_frame: caffeine/base_laser, data_type: LaserScan, topic: caffeine/scan_filtered, marking: true, clearing: true}
+laser_scan_sensor: {sensor_frame: caffeine/base_laser, data_type: LaserScan, topic: caffeine/scan_filtered, marking: true, clearing: true,
+  obstacle_range: 1.3,
+  raytrace_range: 1.5
+}
 
-point_cloud_sensor: {sensor_frame: caffeine/zed_camera_link, data_type: PointCloud2, topic: zed/zed_node/point_cloud/cloud_registered, marking: true, clearing: true}
+point_cloud_sensor: {sensor_frame: caffeine/zed_camera_link, data_type: PointCloud2, topic: zed/zed_node/point_cloud/cloud_registered, marking: true, clearing: true,  
+  obstacle_range: 1.3,
+  raytrace_range: 1.5
+}
