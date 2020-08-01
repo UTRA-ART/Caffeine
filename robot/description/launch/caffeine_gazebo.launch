@@ -1,7 +1,7 @@
 <launch>
-   <arg name="use_gui" default="false"/>
+   <arg name="use_gui" default="true"/>
    <arg name="debug_mode" default="false"/>
-   <arg name="world" default="full"/>
+   <arg name="world" default="plain"/>
 
    <!-- IGVC worlds -->
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_plain.world"  if="$(eval arg('world') == 'plain')"/>
@@ -56,4 +56,8 @@
    <include file="$(find twist_mux)/launch/twist_mux.launch" ns="caffeine">
       <arg name="cmd_vel_out" value="cmd_vel"/>
    </include>
+
+   <!-- Trying Laser Filtering -->
+   <include file="$(find laser_filter)/launch/laser_filter.launch" ns="caffeine"/>
+   
 </launch>
