@@ -18,7 +18,7 @@ print_diagnostics: true
 
 ## Odometry Sensor(s) ##
 
-odom0: caffeine/odom
+odom0: caffeine/odometry/gps
 odom0_config: [true,  true,  false,
                false, false, false,
                true , true , false,
@@ -28,7 +28,7 @@ odom0_queue_size: 10
 odom0_differential: false 
 odom0_relative: false
 
-odom1: zed/zed_node/odom
+odom1: caffeine/odometry/local
 odom1_config: [false, false, false,
                false, false, false,
                true , true , false,
@@ -48,5 +48,5 @@ imu0_config: [false, false, false,
               true , true , false]
 imu0_queue_size: 10
 imu0_differential: false
-imu0_relative: true
+imu0_relative: false
 imu0_remove_gravitational_acceleration: true
