@@ -5,6 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /TF1
         - /Sensors1
         - /Sensors1/Odometry1
         - /Sensors1/Camera1
@@ -154,6 +155,8 @@ Visualization Manager:
           Value: false
         caffeine/left_wheel_link:
           Value: false
+        caffeine/map:
+          Value: true
         caffeine/odom:
           Value: true
         caffeine/right_wheel_link:
@@ -165,36 +168,37 @@ Visualization Manager:
         caffeine/zed_camera_link_optical:
           Value: false
         utm:
-          Value: true
+          Value: false
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        caffeine/odom:
-          caffeine/base_link:
-            caffeine/base_laser:
-              {}
-            caffeine/chassis_link:
-              caffeine/back_caster_link:
+        caffeine/map:
+          caffeine/odom:
+            caffeine/base_link:
+              caffeine/base_laser:
                 {}
-              caffeine/front_caster_link:
-                {}
-              caffeine/left_wheel_link:
-                {}
-              caffeine/right_wheel_link:
-                {}
-              caffeine/stand_link:
-                caffeine/gps_link:
+              caffeine/chassis_link:
+                caffeine/back_caster_link:
                   {}
-                caffeine/imu_link:
+                caffeine/front_caster_link:
                   {}
-                caffeine/zed_camera_link:
-                  caffeine/camera_link:
+                caffeine/left_wheel_link:
+                  {}
+                caffeine/right_wheel_link:
+                  {}
+                caffeine/stand_link:
+                  caffeine/gps_link:
                     {}
-                  caffeine/zed_camera_link_optical:
+                  caffeine/imu_link:
                     {}
+                  caffeine/zed_camera_link:
+                    caffeine/camera_link:
+                      {}
+                    caffeine/zed_camera_link_optical:
+                      {}
           utm:
             {}
       Update Interval: 0
@@ -290,6 +294,40 @@ Visualization Manager:
               Topic: /caffeine/odometry/local
               Unreliable: false
               Value: true
+            - Angle Tolerance: 0.10000000149011612
+              Class: rviz/Odometry
+              Covariance:
+                Orientation:
+                  Alpha: 0.5
+                  Color: 255; 255; 127
+                  Color Style: Unique
+                  Frame: Local
+                  Offset: 1
+                  Scale: 1
+                  Value: true
+                Position:
+                  Alpha: 0.30000001192092896
+                  Color: 204; 51; 204
+                  Scale: 1
+                  Value: true
+                Value: true
+              Enabled: false
+              Keep: 1
+              Name: Global Odometry
+              Position Tolerance: 0.10000000149011612
+              Shape:
+                Alpha: 1
+                Axes Length: 1
+                Axes Radius: 0.10000000149011612
+                Color: 138; 226; 52
+                Head Length: 0.30000001192092896
+                Head Radius: 0.10000000149011612
+                Shaft Length: 1
+                Shaft Radius: 0.05000000074505806
+                Value: Arrow
+              Topic: ""
+              Unreliable: false
+              Value: false
             - Angle Tolerance: 0.10000000149011612
               Class: rviz/Odometry
               Covariance:
@@ -430,6 +468,7 @@ Visualization Manager:
                   Odometry:
                     Encoders: true
                     GPS Odometry: true
+                    Global Odometry: true
                     Local Odometry: true
                     Value: true
                     Visual Odometry: true
@@ -629,7 +668,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: caffeine/odom
+    Fixed Frame: caffeine/map
     Frame Rate: 15
   Name: root
   Tools:
@@ -652,26 +691,21 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Class: rtabmap_ros/OrbitOriented
-      Distance: 5.5
+      Angle: 0
+      Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
-      Focal Point:
-        X: 0.176552414894104
-        Y: 0.021892040967941284
-        Z: 0.5596098303794861
-      Focal Shape Fixed Size: true
-      Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.27479758858680725
+      Scale: 100
       Target Frame: <Fixed Frame>
-      Value: OrbitOriented (rtabmap_ros)
-      Yaw: 2.642225980758667
+      Value: TopDownOrtho (rviz)
+      X: 0
+      Y: 0
     Saved: ~
 Window Geometry:
   Camera:

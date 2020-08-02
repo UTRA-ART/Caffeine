@@ -14,7 +14,7 @@ publish_tf: true
 transform_time_offset: 0.05
 
 # See /diagnostics topic for debug
-print_diagnostics: true
+print_diagnostics: false
 
 ## Odometry Sensor(s) ##
 
