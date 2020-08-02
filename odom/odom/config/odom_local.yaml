@@ -6,9 +6,9 @@ two_d_mode: true
 map_frame: caffeine/map
 odom_frame: caffeine/odom
 base_link_frame: caffeine/base_link
-world_frame: caffeine/map
+world_frame: caffeine/odom
 
-# publish transform: map_frame --> odom_frame
+# publish transform: world_frame --> base_link_frame
 publish_tf: true
 
 transform_time_offset: 0.05

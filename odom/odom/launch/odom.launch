@@ -5,22 +5,20 @@
     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_local" clear_params="true" output="screen">
         <remap from="odometry/filtered" to="$(arg robot)/odometry/local"/>
         
-        <rosparam command="load" file="$(find odom)/config/localization.yaml"/>
+        <rosparam command="load" file="$(find odom)/config/odom_local.yaml"/>
     </node>
 
-    <!-- Compute local odometry: publish odom frame -->
+    <!-- Compute global odometry: publish map frame -->
     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_global" clear_params="true" output="screen">
         <remap from="odometry/filtered" to="$(arg robot)/odometry/global"/>
 
-        <rosparam command="load" file="$(find odom)/config/global.yaml"/>
-        <rosparam command="load" file="$(find odom)/config/navsat.yaml"/>
+        <rosparam command="load" file="$(find odom)/config/odom_global.yaml"/>
     </node>
 
     <!-- Establish transform b/w Earth reference and Robot reference -->
     <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" respawn="true" ns="$(arg robot)">
         <remap from="odometry/filtered" to="odom"/>
 
-        <rosparam command="load" file="$(find odom)/config/global.yaml"/>
         <rosparam command="load" file="$(find odom)/config/navsat.yaml"/>
     </node>
 
