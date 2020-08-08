@@ -1,25 +1,18 @@
 <launch>
     <arg name="robot" default="caffeine"/>
 
-    <!--- Run Move Base -->
-    <!-- <include file="$(find nav_stack)/launch/move_base.launch">
-        <arg name="robot" value="$(arg robot)" />
-        <arg name="global_costmap_params" value="$(find gmap)/config/global_costmap_params.yaml"/>
-    </include>
-    -->
- 
     <!-- Visual SLAM -->
     <!-- Remove "delete_db_on_start" to build on an existing map, saved in ~/.ros/rtabmap.db-->
     <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="--delete_db_on_start">
         <remap from="rgb/image" to="zed/zed_node/left/image_rect"/>
         <remap from="rgb/camera_info" to="zed/zed_node/left/camera_info"/>
-        <remap from="depth/image" to="zed/zed_node/depth"/>
+        <remap from="depth/image" to="zed/zed_node/depth_raw"/>
         <remap from="rtabmap/odom" to="$(arg robot)/odometry/local"/>
         <remap from="scan" to="$(arg robot)/scan"/>
         <remap from="grid_map" to="map"/>
 
         <!-- Load rtabmap parameters -->
-        <rosparam file="$(find nav_rtab)/config/rtab_config.yaml" command="load"/>
+        <rosparam file="$(find rtab)/config/rtab_config.yaml" command="load"/>
     </node>
 </launch>
 

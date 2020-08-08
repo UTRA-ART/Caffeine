@@ -64,7 +64,7 @@
 
     <!-- Hokuyo 2D LIDAR sensor -->
     <xacro:property name="laser_visualize" value="false"/>
-    <xacro:property name="laser_update_rate" value="10"/>
+    <xacro:property name="laser_update_rate" value="30.0"/>
 
     <xacro:property name="laser_horizontal_samples" value="1080"/>
     <xacro:property name="laser_horizontal_resolution" value="1"/>
