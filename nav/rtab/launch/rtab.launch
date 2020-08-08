@@ -6,7 +6,7 @@
     <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="--delete_db_on_start">
         <remap from="rgb/image" to="zed/zed_node/left/image_rect"/>
         <remap from="rgb/camera_info" to="zed/zed_node/left/camera_info"/>
-        <remap from="depth/image" to="zed/zed_node/depth_raw"/>
+        <remap from="depth/image" to="zed/zed_node/depth/depth_registered"/>
         <remap from="rtabmap/odom" to="$(arg robot)/odometry/local"/>
         <remap from="scan" to="$(arg robot)/scan"/>
         <remap from="grid_map" to="map"/>
