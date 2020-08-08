@@ -1,7 +1,7 @@
 <launch>
-   <arg name="use_gui" default="true"/>
+   <arg name="use_gui" default="false"/>
    <arg name="debug_mode" default="false"/>
-   <arg name="world" default="ramp"/>
+   <arg name="world" default="walls"/>
 
    <!-- IGVC worlds -->
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_plain.world"  if="$(eval arg('world') == 'plain')"/>
@@ -58,6 +58,7 @@
    </include>
 
    <!-- Trying Laser Filtering -->
-   <include file="$(find laser_filter)/launch/laser_filter.launch" ns="caffeine"/>
+   <!-- NOTE: must clone the laser_filters repo! But only if we need to use this package -->
+   <!-- <include file="$(find laser_filter)/launch/laser_filter.launch" ns="caffeine"/> -->
    
 </launch>
