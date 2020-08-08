@@ -55,7 +55,7 @@
     <xacro:property name="diff_drive_odometrySource" value="encoder"/>
 
     <xacro:property name="diff_drive_publishWheelTF" value="false"/>
-    <xacro:property name="diff_drive_publishOdomTF" value="true"/>
+    <xacro:property name="diff_drive_publishOdomTF" value="false"/>
     <xacro:property name="diff_drive_publishTf" value="true"/>
     <xacro:property name="diff_drive_publishWheelJointState" value="true"/>
 
@@ -132,7 +132,7 @@
     <xacro:property name="ref_alt" value="76.0000"/>
 
     <xacro:property name="gps_drift" value="1.5 1.5 1.5"/>
-    <xacro:property name="gps_vel_drift" value="0.05 0.05 0.05"/>
+    <xacro:property name="gps_vel_drift" value="0.00 0.00 0.00"/>
 
     <!-- Phidget IMU -->
    <xacro:property name="phidget_length" value="0.04"/>

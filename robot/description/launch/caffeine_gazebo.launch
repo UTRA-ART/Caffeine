@@ -60,4 +60,9 @@
    <!-- Trying Laser Filtering -->
    <include file="$(find laser_filter)/launch/laser_filter.launch" ns="caffeine"/>
    
+   <!-- Compute Odometry from Sensor Fusion -->
+   <include file="$(find odom)/launch/odom.launch">
+      <arg name="robot" value="caffeine"/>
+   </include>
+
 </launch>
