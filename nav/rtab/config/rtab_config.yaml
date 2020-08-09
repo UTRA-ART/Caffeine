@@ -13,6 +13,9 @@ odom_tf_angular_variance: 0.0005   # adjust depending on real odom error
 Vis:
   MinInliers: 12
 
+Grid:
+  FromDepth: true   # True -> Occupancy grid from depth | False -> Occupancy grid from laser scan
+  DepthMax: 15
+
 RGBD:
   CreateOccupancyGrid: true
-
