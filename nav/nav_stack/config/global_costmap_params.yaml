@@ -1,0 +1,10 @@
+global_costmap:
+  global_frame: caffeine/odom   # Because we don't have a map to load in, we use the odom frame as our global frame (rather than /map)
+  robot_base_frame: caffeine/base_link
+  update_frequency: 2.0 # Set update rate lower for large maps
+  rolling_window: true  # Set this to true bc static map == false (this makes setting 2D nav goals in rviz work)
+  static_map: false     # Not supplying a static map
+
+  # Full width and height of IGVC map
+  width: 50
+  height: 50
