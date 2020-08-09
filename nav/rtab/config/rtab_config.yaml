@@ -15,7 +15,7 @@ Vis:
 
 Grid:
   FromDepth: true   # True -> Occupancy grid from depth | False -> Occupancy grid from laser scan
-  DepthMax: 15
+  RangeMax: 15
 
 RGBD:
   CreateOccupancyGrid: true
