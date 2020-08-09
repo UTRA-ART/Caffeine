@@ -5,7 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /TF1
         - /Sensors1
         - /Sensors1/Odometry1
         - /Navigation1
@@ -52,7 +51,7 @@ Visualization Manager:
         Y: 0
         Z: 0
       Plane: XY
-      Plane Cell Count: 10
+      Plane Cell Count: 50
       Reference Frame: <Fixed Frame>
       Value: true
     - Alpha: 1
@@ -325,7 +324,7 @@ Visualization Manager:
                 Shaft Length: 1
                 Shaft Radius: 0.05000000074505806
                 Value: Arrow
-              Topic: ""
+              Topic: /caffeine/odometry/global
               Unreliable: false
               Value: false
             - Angle Tolerance: 0.10000000149011612
