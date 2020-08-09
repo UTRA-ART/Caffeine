@@ -1,7 +1,7 @@
 <launch>
    <arg name="use_gui" default="false"/>
    <arg name="debug_mode" default="false"/>
-   <arg name="world" default="walls"/>
+   <arg name="world" default="full"/>
 
    <!-- IGVC worlds -->
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_plain.world"  if="$(eval arg('world') == 'plain')"/>
@@ -56,10 +56,6 @@
    <include file="$(find twist_mux)/launch/twist_mux.launch" ns="caffeine">
       <arg name="cmd_vel_out" value="cmd_vel"/>
    </include>
-
-   <!-- Trying Laser Filtering -->
-   <!-- NOTE: must clone the laser_filters repo! But only if we need to use this package -->
-   <!-- <include file="$(find laser_filter)/launch/laser_filter.launch" ns="caffeine"/> -->
    
    <!-- Compute Odometry from Sensor Fusion -->
    <include file="$(find odom)/launch/odom.launch">

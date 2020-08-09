@@ -2,7 +2,7 @@
 <package format="2">
   <name>nav_stack</name>
   <version>0.0.0</version>
-  <description>The nav_stack package</description>
+  <description>Configures and runs the Navigation Stack through move_base</description>
 
   <maintainer email="yviel@todo.todo">yviel</maintainer>
 
