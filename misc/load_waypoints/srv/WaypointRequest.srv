@@ -1,0 +1,5 @@
+int8 waypoint_number
+---
+float32[2] waypoint_coord
+bool valid_request_flag 
+string description
