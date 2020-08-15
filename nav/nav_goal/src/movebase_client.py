@@ -19,7 +19,7 @@ def init_node(arguments):
             roll = float(arguments[4])
             pitch = float(arguments[5])
             yaw = float(arguments[6])
-            frame = string(arguments[7])
+            frame = str(arguments[7])
 
             return (x, y, z, roll, pitch, yaw, frame)
         except:
