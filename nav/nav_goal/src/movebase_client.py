@@ -54,7 +54,7 @@ def movebase_client(x, y, z, roll, pitch, yaw, frame):
     # Sends goal and waits until the action is completed (or aborted if it is impossible)
     client.send_goal(goal)
 
-    rospy.loginfo(f"Navigation Goals of {x}, {y}, {z}, {roll}, {pitch}, {yaw} sent to action server!")
+    rospy.loginfo(f"Navigation Goals of x:{x}, y:{y}, z:{z}, roll:{roll}, pitch:{pitch}, yaw:{yaw} sent to action server!")
 
     # Waits for the server to finish performing the action.
     wait = client.wait_for_result()
