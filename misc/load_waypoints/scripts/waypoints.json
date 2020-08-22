@@ -2,26 +2,26 @@
     "waypoints" : [
         {
             "id" : 0,
-            "coordinate 1" : 50,
-            "coordinate 2" : 90,
+            "longitude" : 50.0,
+            "latitude" : 90.0,
             "description"  : "Entrance of No-Man's Land"
         },
         {
             "id" : 1,
-            "coordinate 1" : 11,
-            "coordinate 2" : 22,
+            "longitude" : 11.0,
+            "latitude" : 22.0,
             "description"  : "Exit of No-Man's Land"
         },
         {
             "id" : 2,
-            "coordinate 1" : 12,
-            "coordinate 2" : 34,
+            "longitude" : 12.0,
+            "latitude" : 34.0,
             "description"  : "Inside of No-Man's Land"
         },
         {
             "id" : 3,
-            "coordinate 1" : 54,
-            "coordinate 2" : 100,
+            "longitude" : 54.0,
+            "latitude" : 100.0,
             "description"  : "Inside of No-Man's Land"
         }
     ]   

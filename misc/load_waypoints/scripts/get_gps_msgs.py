@@ -43,8 +43,8 @@ if __name__ == "__main__":
     data = {"waypoints" : [
         {
             "id" : 0,
-            "coordinate 1" : longitude,
-            "coordinate 2" : latitude,
+            "longitude" : longitude,
+            "latitude" : latitude,
             "description"  : "Start point"
         }
     ]}
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     # base_dir = rospy.get_param('~arg_name') # ~ added to arg_name because private param 
     base_dir = '/home/trudie/caffeine-ws/src/Caffeine/misc/load_waypoints'
     
-    with open(base_dir + '/scripts/sample_waypoints.json', 'w') as outfile:
+    with open(base_dir + '/scripts/first_gps_coords.json', 'w') as outfile:
     # with open("sample_waypoints.json", "w") as outfile: 
         # outfile.write(json_waypoint) 
         print(data)
