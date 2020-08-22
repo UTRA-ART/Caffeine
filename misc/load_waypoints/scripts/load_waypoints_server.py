@@ -4,6 +4,8 @@ import rospy, os, json, sys
 from load_waypoints.srv import *
 import rospkg
 import std_msgs.msg, tf
+from sensor_msgs.msg import NavSatFix
+# import sensor_msgs.msg
 
 all_waypoints = list()
 
@@ -25,31 +27,39 @@ def populate_waypoint_table():
 
     # rospy.sleep(5)
 
-    listener = tf.TransformListener()
+    start_time = rospy.get_time()
 
-    # gps_ready = rospy.Publisher('gps_ready', std_msgs.msg.Bool, queue_size=1)
+    # Initialize transform listener 
+    listener = tf.TransformListener()
 
     rate = rospy.Rate(10.0)
 
-    rospy.sleep(1)
+    rospy.sleep(1) # This prevents the waitfortransform to error out 
+    
+    # Wait for transform from /caffeine/map to /utm
     listener.waitForTransform("/caffeine/map", "/utm", rospy.Time(), rospy.Duration(50.0))
 
     while not rospy.is_shutdown():
         try:
             now = rospy.Time.now()
             listener.waitForTransform("/caffeine/map", "/utm", now, rospy.Duration(50.0))
-            # print(rospy.get_time() - start_time)
+            print(rospy.get_time() - start_time)
             break
 
         except (tf.LookupException, tf.ConnectivityException):
             continue
 
-        # gps_ready.publish(available)
-
         rate.sleep()
 
-    rospy.sleep(5)
-    
+    # After waiting UTM transform, we can wait for a message from the gps/fix topic
+    gps_info = rospy.wait_for_message('/caffeine/gps/fix', NavSatFix)
+    print(gps_info.latitude, gps_info.longitude)
+
+    # Add the first coords to the waypoints list 
+    all_waypoints.append([gps_info.longitude, gps_info.latitude])
+
+    # rospy.sleep(5)
+
     base_dir = rospkg.RosPack().get_path('load_waypoints')
     with open(base_dir + '/scripts/waypoints.json') as f:
         try:
@@ -60,23 +70,21 @@ def populate_waypoint_table():
 
     # Get first waypoint 
     ## Need to allow enough time for get_gps_msgs to finish 
-    with open(base_dir + '/scripts/first_gps_coords.json') as f:
-        try:
-            first_coords = json.load(f)
-        except:
-            rospy.loginfo("Invalid JSON")
-            sys.exit(1)
+    # with open(base_dir + '/scripts/first_gps_coords.json') as f:
+    #     try:
+    #         first_coords = json.load(f)
+    #     except:
+    #         rospy.loginfo("Invalid JSON")
+    #         sys.exit(1)
 
     # Parse through dictionary and create list of lists holding all waypoints
-    for first_coord in first_coords["waypoints"]:
-        all_waypoints.append([first_coord['longitude'], first_coord['latitude']])
-
     for waypoint in waypoint_data["waypoints"]:
         all_waypoints.append([waypoint['longitude'], waypoint['latitude']])
 
     # Add the initial waypoint as the final waypoint 
-    for first_coord in first_coords["waypoints"]:
-        all_waypoints.append([first_coord['longitude'], first_coord['latitude']])
+    # for first_coord in first_coords["waypoints"]:
+        # all_waypoints.append([first_coord['longitude'], first_coord['latitude']])
+    all_waypoints.append([gps_info.longitude, gps_info.latitude])
 
     rospy.loginfo("Loaded waypoints: %s", all_waypoints)
     return 
@@ -105,3 +113,6 @@ def load_waypoint_server():
 if __name__ == "__main__":
     load_waypoint_server()
     
+# Current issues 
+# The returning request waypoint is printing/getting called twice ? 
+# The time doesn't look right 
