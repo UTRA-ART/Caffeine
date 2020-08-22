@@ -4,7 +4,7 @@ min_obstacle_height: 0.5
 footprint: [[-0.734, -0.582], [-0.734, 0.582], [0.734, 0.582], [0.734, -0.582]]
 inflation_radius: 0.4
 
-observation_sources: laser_scan_sensor #point_cloud_sensor
+observation_sources: point_cloud_sensor laser_scan_sensors
 
 laser_scan_sensor: {
   sensor_frame: caffeine/base_laser, 
@@ -22,12 +22,12 @@ laser_scan_sensor: {
 #       cam should be angled downwards, to have an overlapping FOV
 #       with the lidar!
 
-# point_cloud_sensor: {
-#   sensor_frame: caffeine/zed_camera_link, 
-#   data_type: PointCloud2, 
-#   topic: zed/zed_node/point_cloud/cloud_registered, 
-#   marking: true, 
-#   clearing: true,
-#   obstacle_range: 15.0,
-#   raytrace_range: 16.0
-# }
+point_cloud_sensor: {
+  sensor_frame: caffeine/zed_camera_link, 
+  data_type: PointCloud2, 
+  topic: zed/zed_node/point_cloud/cloud_registered, 
+  marking: true, 
+  clearing: true,
+  obstacle_range: 15.0,
+  raytrace_range: 16.0
+}
