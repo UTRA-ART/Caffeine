@@ -19,20 +19,20 @@ print_diagnostics: false
 ## Odometry Sensor(s) ##
 
 odom0: caffeine/odom
-odom0_config: [true,  true,  false,
-               false, false, false,
-               true , true , true,
-               true , false , true ,
+odom0_config: [true , true , true ,
+               true , false, true ,
+               true , true , true ,
+               true , false, true ,
                false, false, false]
 odom0_queue_size: 10
 odom0_differential: false 
 odom0_relative: false
 
 odom1: zed/zed_node/odom
-odom1_config: [false, false, false,
-               false, false, false,
+odom1_config: [true , true , true ,
+               true , false, true ,
                true , true , true ,
-               true , false , true,
+               true , false, true ,
                false, false, false]
 odom1_queue_size: 10
 odom1_differential: true
@@ -42,9 +42,9 @@ odom1_relative: false
 
 imu0: caffeine/imu/data 
 imu0_config: [false, false, false, 
-              true , false , true ,
               false, false, false,
-              true , false , true , 
+              false, false, false,
+              true , false, true , 
               true , true , true ]
 imu0_queue_size: 10
 imu0_differential: false
