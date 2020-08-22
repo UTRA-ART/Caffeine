@@ -8,6 +8,7 @@ import std_msgs.msg
 
 if __name__ == '__main__':
     rospy.init_node('gps_transform_listener')
+    start_time = rospy.get_time()
 
     listener = tf.TransformListener()
 
@@ -24,7 +25,8 @@ if __name__ == '__main__':
             now = rospy.Time.now()
             listener.waitForTransform("/caffeine/map", "/utm", now, rospy.Duration(50.0))
             available = True 
-            
+            print(rospy.get_time() - start_time)
+
         except (tf.LookupException, tf.ConnectivityException):
             continue
 

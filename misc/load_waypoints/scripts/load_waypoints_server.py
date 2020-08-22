@@ -3,18 +3,53 @@
 import rospy, os, json, sys 
 from load_waypoints.srv import *
 import rospkg
-import std_msgs.msg
+import std_msgs.msg, tf
 
 all_waypoints = list()
 
 def populate_waypoint_table():
-    gps_info = rospy.wait_for_message('gps_ready', std_msgs.msg.Bool)
-    print(gps_info.data)
-    print(gps_info)
-    while gps_info.data == False:
-        continue
-    rospy.sleep(1)
+    # gps_info = rospy.wait_for_message('gps_ready', std_msgs.msg.Bool)
+    # print(gps_info.data)
+    # print(gps_info)
+    # while gps_info.data == False:
+    #     continue
+    # gps_info = rospy.wait_for_message('gps_ready', std_msgs.msg.Bool)
+    # while True:
+    #     # rospy.loginfo(gps_info, 'service')
+    #     if gps_info.data == False:
+    #         continue
+    #     elif gps_info.data == True:
+    #         break
 
+    #     gps_info = rospy.wait_for_message('gps_ready', std_msgs.msg.Bool)
+
+    # rospy.sleep(5)
+
+    listener = tf.TransformListener()
+
+    # gps_ready = rospy.Publisher('gps_ready', std_msgs.msg.Bool, queue_size=1)
+
+    rate = rospy.Rate(10.0)
+
+    rospy.sleep(1)
+    listener.waitForTransform("/caffeine/map", "/utm", rospy.Time(), rospy.Duration(50.0))
+
+    while not rospy.is_shutdown():
+        try:
+            now = rospy.Time.now()
+            listener.waitForTransform("/caffeine/map", "/utm", now, rospy.Duration(50.0))
+            # print(rospy.get_time() - start_time)
+            break
+
+        except (tf.LookupException, tf.ConnectivityException):
+            continue
+
+        # gps_ready.publish(available)
+
+        rate.sleep()
+
+    rospy.sleep(5)
+    
     base_dir = rospkg.RosPack().get_path('load_waypoints')
     with open(base_dir + '/scripts/waypoints.json') as f:
         try:

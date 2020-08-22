@@ -1,8 +1,8 @@
 <launch>
     <node pkg="load_waypoints" type="get_gps_msgs.py" name="gps_values" output="screen">
     </node>
-    <node pkg="load_waypoints" type="gps_transform_listener.py" name="listener" output="screen">
-    </node>
+    <!-- <node pkg="load_waypoints" type="gps_transform_listener.py" name="listener" output="screen">
+    </node> -->
     <node pkg="load_waypoints" type="load_waypoints_server.py" name="waypoints_service" output="screen">
     </node>
 </launch> 
