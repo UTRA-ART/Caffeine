@@ -99,7 +99,7 @@
         <sensor type="multicamera" name="stereo_camera">
             <update_rate>${ZED_image_refresh}</update_rate>
             <camera name="left">
-            <horizontal_fov>${ZED_image_hfov * (3.14/180)}</horizontal_fov>
+            <horizontal_fov>${ZED_image_hfov}</horizontal_fov>
             <image>
                 <width>${ZED_image_width}</width>
                 <height>${ZED_image_height}</height>
@@ -112,7 +112,7 @@
             </camera>
             <camera name="right">
             <pose>0 ${-ZED_camera_length} 0 0 0 0</pose>
-            <horizontal_fov>${ZED_image_hfov * (3.14/180)}</horizontal_fov>
+            <horizontal_fov>${ZED_image_hfov}</horizontal_fov>
             <image>
                 <width>${ZED_image_width}</width>
                 <height>${ZED_image_height}</height>
@@ -127,7 +127,6 @@
                 <cameraName>${ZED_name}</cameraName>
                 <alwaysOn>${ZED_always_on}</alwaysOn>
                 <updateRate>${ZED_update_rate}</updateRate>
-                <cameraName></cameraName>
                 <imageTopicName>${ZED_image_topicName}</imageTopicName>
                 <cameraInfoTopicName>${ZED_image_info_topicName}</cameraInfoTopicName>
                 <depthImageTopicName>${ZED_depth_topicName}</depthImageTopicName>
