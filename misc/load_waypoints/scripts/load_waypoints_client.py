@@ -29,18 +29,16 @@ if __name__ == "__main__":
         rospy.loginfo(usage())
         sys.exit(1)
 
-    rospy.loginfo("Requesting waypoint #%s"%(x))
-    rospy.loginfo("Waypoint #%s is %s"%(x, load_waypoint_client(x)))
+    # rospy.loginfo("Requesting waypoint #%s"%(x))
+    # rospy.loginfo("Waypoint #%s is %s"%(x, load_waypoint_client(x)))
 
     print("Requesting waypoint #{}".format(x))
     print("Waypoint #{} is {}".format(x, load_waypoint_client(x)))
 
 
 # Notes:
-# What is the format of the GPS coordinates ? 
 # Regarding the acceptance criteria for the issue, this issue is not able to do that. 
 # Must integrate with the rest of the gps issues. 
-# Need to account for GPS start up time. Need to read in the init gps coordinate. 
 # Double check that the other waypoints are given @ competition time. 
 
 # caffeine/gps/
