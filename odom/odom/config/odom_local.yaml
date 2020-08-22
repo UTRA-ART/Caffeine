@@ -3,7 +3,7 @@ frequency: 50
 # Specify planar environment
 two_d_mode: true
 
-map_frame: map
+map_frame: caffeine/map
 odom_frame: caffeine/odom
 base_link_frame: caffeine/base_link
 world_frame: caffeine/odom
@@ -14,7 +14,7 @@ publish_tf: true
 transform_time_offset: 0.05
 
 # See /diagnostics topic for debug
-print_diagnostics: true
+print_diagnostics: false
 
 ## Odometry Sensor(s) ##
 
