@@ -1,13 +1,17 @@
 #!/usr/bin/env python
 
-import rospy, os, json 
+import rospy, os, json, sys 
 from load_waypoints.srv import *
+import os, rospkg
 
 all_waypoints = list()
 
 def populate_waypoint_table():
-    base_dir = rospy.get_param('~arg_name') # ~ added to arg_name because private param 
-    
+    # latitude, longitude = get_gps_msgs()
+    # base_dir = rospy.get_param('~arg_name') # ~ added to arg_name because private param 
+    # base_dir = rospy.get_param('waypoint_dir') # ~ added to arg_name because private param 
+    rospack = rospkg.RosPack()
+    base_dir = rospack.get_path('load_waypoints')
     with open(base_dir + '/scripts/waypoints.json') as f:
         try:
             waypoint_data = json.load(f)
@@ -15,12 +19,25 @@ def populate_waypoint_table():
             rospy.loginfo("Invalid JSON")
             sys.exit(1)
 
+    # Get first waypoints 
+    with open(base_dir + '/scripts/sample_waypoints.json') as f:
+        try:
+            first_coords = json.load(f)
+        except:
+            rospy.loginfo("Invalid JSON")
+            sys.exit(1)
+
     # Parse through dictionary and create list of lists holding all waypoints
+    for first_coord in first_coords["waypoints"]:
+        all_waypoints.append([first_coord['coordinate 1'], first_coord['coordinate 2']])
+
     for waypoint in waypoint_data["waypoints"]:
         all_waypoints.append([waypoint['coordinate 1'], waypoint['coordinate 2']])
 
     # Add the initial waypoint as the final waypoint 
-    all_waypoints.append([waypoint_data["waypoints"][0]['coordinate 1'], waypoint_data["waypoints"][0]['coordinate 2']])
+    # all_waypoints.append([waypoint_data["waypoints"][0]['coordinate 1'], waypoint_data["waypoints"][0]['coordinate 2']])
+    for first_coord in first_coords["waypoints"]:
+        all_waypoints.append([first_coord['coordinate 1'], first_coord['coordinate 2']])
 
     rospy.loginfo("Loaded waypoints: %s", all_waypoints)
     return 

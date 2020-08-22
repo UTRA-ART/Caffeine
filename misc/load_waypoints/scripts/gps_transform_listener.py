@@ -30,12 +30,13 @@ if __name__ == '__main__':
     # rospy.loginfo('fsdas')
 
     available = False 
-    listener.waitForTransform("/caffeine/map", "/utm", rospy.Time(), rospy.Duration(4.0))
+    rospy.sleep(2)
+    listener.waitForTransform("/caffeine/map", "/utm", rospy.Time(), rospy.Duration(50.0))
     while not rospy.is_shutdown():
         print(available)
         try:
             now = rospy.Time.now()
-            listener.waitForTransform("/caffeine/map", "/utm", now, rospy.Duration(4.0))
+            listener.waitForTransform("/caffeine/map", "/utm", now, rospy.Duration(50.0))
             (trans,rot) = listener.lookupTransform("/caffeine/map", "/utm", now)
             available = True 
             print(trans,rot,rospy.Time.now())
