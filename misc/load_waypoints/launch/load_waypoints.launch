@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="load_waypoints" type="get_gps_msgs.py" name="gps_values" output="screen">
+        
+    </node>
+</launch>
