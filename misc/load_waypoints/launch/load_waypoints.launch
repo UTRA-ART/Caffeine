@@ -5,6 +5,4 @@
     </node>
     <node pkg="load_waypoints" type="load_waypoints_server.py" name="waypoints_service" output="screen">
     </node>
-    <!-- <arg name="waypoint_file"  default="$(find load_waypoints)/scripts/waypoints.json" /> -->
-    <arg name="waypoint_dir"  default="$(find load_waypoints)" />
 </launch> 

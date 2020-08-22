@@ -40,7 +40,6 @@ def populate_waypoint_table():
         all_waypoints.append([waypoint['longitude'], waypoint['latitude']])
 
     # Add the initial waypoint as the final waypoint 
-    # all_waypoints.append([waypoint_data["waypoints"][0]['coordinate 1'], waypoint_data["waypoints"][0]['coordinate 2']])
     for first_coord in first_coords["waypoints"]:
         all_waypoints.append([first_coord['longitude'], first_coord['latitude']])
 

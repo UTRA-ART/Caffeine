@@ -2,9 +2,7 @@
 
 import sys
 import rospy, os, json 
-# from WaypointRequest.srv import *
 from load_waypoints.srv import *
-# import WaypointRequest.srv
 from sensor_msgs.msg import NavSatFix
 
 

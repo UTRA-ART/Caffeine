@@ -6,20 +6,10 @@ import json
 import std_msgs.msg
 
 def callback(msg):
-    # print((msg.latitude))
-    # print((msg.longitude))
     global latitude 
     global longitude 
     latitude = msg.latitude
     longitude = msg.longitude
-    # print(msg['latitude'])
-
-def callback1(msg):
-    # while msg:
-    #     rospy.spin() 
-    #     rospy.loginfo(msg)
-
-    return msg
 
 
 if __name__ == "__main__":
@@ -27,16 +17,12 @@ if __name__ == "__main__":
     start_time = rospy.Time.now()
 
     gps_info = rospy.wait_for_message('gps_ready', std_msgs.msg.Bool)
-    print(gps_info.data)
     print(gps_info)
     while gps_info.data == False:
         continue
 
     print(rospy.Time.now() - start_time)
-    # sub1 =  rospy.Subscriber('gps_ready', std_msgs.msg.Bool, callback1)
-    # print(sub1)
-    # while sub1:
-    #     rospy.spin()
+
     sub = rospy.Subscriber('/caffeine/gps/fix', NavSatFix, callback)
     rospy.sleep(1)
 
@@ -48,8 +34,7 @@ if __name__ == "__main__":
             "description"  : "Start point"
         }
     ]}
-    # json_waypoint = json.dumps(data, indent=4)
-    # base_dir = rospy.get_param('~arg_name') # ~ added to arg_name because private param 
+
     base_dir = '/home/trudie/caffeine-ws/src/Caffeine/misc/load_waypoints'
     
     with open(base_dir + '/scripts/first_gps_coords.json', 'w') as outfile:
