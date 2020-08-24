@@ -1,3 +1,3 @@
 <launch>
-    <node pkg="load_waypoints" type="load_waypoints_server.py" name="waypoints_service" output="screen"></node>
+    <node pkg="load_waypoints" type="load_waypoints_server.py" name="load_waypoints_server" output="screen"></node>
 </launch> 
