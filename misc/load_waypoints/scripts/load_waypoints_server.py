@@ -62,7 +62,7 @@ class load_waypoints:
                 now = rospy.Time.now()
                 # Wait for transform from /caffeine/map to /utm
                 listener.waitForTransform("/caffeine/map", "/utm", now, rospy.Duration(4.0))
-                rospy.loginfo("Time to wait for transform: %s s"%(rospy.get_time() - start_time))
+                rospy.loginfo("Time waited for transform: %s s"%(rospy.get_time() - start_time))
                 break
 
             except:
