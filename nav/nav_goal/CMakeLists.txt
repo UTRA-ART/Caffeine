@@ -17,5 +17,5 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_python_setup()
 
 ## Sets up Python package and installs it in the correct location
-catkin_install_python(PROGRAMS src/__init__.py DESTINATION ${PROJECT_NAME}/src)
+catkin_install_python(PROGRAMS src/movebase_client.py DESTINATION ${PROJECT_NAME}/src)
 
