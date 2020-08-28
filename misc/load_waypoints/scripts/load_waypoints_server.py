@@ -102,8 +102,14 @@ class load_waypoints:
             valid_request_flag = True
             request_description = "Request Successful"
             waypoint_description = str(self.all_waypoints[waypoint_request.waypoint_number]['description'])
+
+        # Determine the next valid waypoint number 
+        if (waypoint_request.waypoint_number >= len(self.all_waypoints) - 1) or (waypoint_request.waypoint_number < 0):
+            next_waypoint_number = -1 
+        else:
+            next_waypoint_number = waypoint_request.waypoint_number + 1
             
-        return WaypointRequestResponse(waypoint_coord, valid_request_flag, request_description, waypoint_description)
+        return WaypointRequestResponse(next_waypoint_number, waypoint_coord, valid_request_flag, request_description, waypoint_description)
 
 if __name__ == "__main__":
     LoadWaypoints = load_waypoints()

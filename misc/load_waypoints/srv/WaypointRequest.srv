@@ -1,5 +1,6 @@
 int8 waypoint_number
 ---
+int8 next_waypoint_number
 float32[2] waypoint_coord
 bool valid_request_flag 
 string request_description
