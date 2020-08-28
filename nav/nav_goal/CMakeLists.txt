@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib
   move_base_msgs
   rospy
+  tf
 )
 
 ## Find catkin macros and libraries
@@ -16,6 +17,5 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_python_setup()
 
 ## Sets up Python package and installs it in the correct location
-catkin_install_python(PROGRAMS bin/movebase_client DESTINATION ${PROJECT_NAME}/bin)
-catkin_install_python(PROGRAMS bin/movebase_client_map DESTINATION ${PROJECT_NAME}/bin)
+catkin_install_python(PROGRAMS src/__init__.py DESTINATION ${PROJECT_NAME}/src)
 
