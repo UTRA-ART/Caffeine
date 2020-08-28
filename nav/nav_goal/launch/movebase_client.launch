@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="movebase_client" type="movebase_client.py" name="movebase_client" output="screen" ns="caffeine"/>
+</launch>
+ 
