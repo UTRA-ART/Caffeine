@@ -8,9 +8,9 @@ import tf
 from sensor_msgs.msg import NavSatFix
 
 class load_waypoints:
-    def __init__(self):
+    def __init__(self, static_waypoint_file):
         self.all_waypoints = dict()
-        
+        self.static_waypoint_file = static_waypoint_file
         rospy.init_node('load_waypoint_server')
         self.populate_waypoint_dict()
 
@@ -21,9 +21,9 @@ class load_waypoints:
             ii) the first gps coordinate that acts as the final waypoint. 
         '''
         base_dir = rospkg.RosPack().get_path('load_waypoints')
-        
+
         # Load in static waypoints (provided at competition time) 
-        with open(base_dir + '/scripts/static_waypoints.json') as f:
+        with open(base_dir + '/scripts/'+ self.static_waypoint_file) as f:
             try:
                 waypoint_data = json.load(f)
             except:
@@ -93,7 +93,7 @@ class load_waypoints:
         rospy.loginfo("Returning request for waypoint #%s "%(waypoint_request.waypoint_number))
 
         # Handle invalid requests 
-        if (waypoint_request.waypoint_number > (len(self.all_waypoints) - 1)) or (waypoint_request.waypoint_number < 0):
+        if (waypoint_request.waypoint_number not in self.all_waypoints.keys()):
             waypoint_coord = None 
             valid_request_flag = False
             request_description = "Request error: Invalid waypoint number"
@@ -107,13 +107,15 @@ class load_waypoints:
             waypoint_description = self.all_waypoints[waypoint_request.waypoint_number]['description']
 
         # Determine the next valid waypoint number 
-        if (waypoint_request.waypoint_number >= len(self.all_waypoints) - 1) or (waypoint_request.waypoint_number < 0):
+        if (waypoint_request.waypoint_number not in self.all_waypoints.keys()) or (waypoint_request.waypoint_number == (len(self.all_waypoints) - 1)):
             next_waypoint_number = -1 
         else:
             next_waypoint_number = waypoint_request.waypoint_number + 1
             
-        return WaypointRequestResponse(next_waypoint_number, waypoint_coord, valid_request_flag, request_description, waypoint_description)
+        return WaypointRequestResponse(waypoint_coord, valid_request_flag, request_description, waypoint_description, next_waypoint_number)
 
 if __name__ == "__main__":
-    LoadWaypoints = load_waypoints()
+    static_waypoint_file = 'static_waypoints.json'
+
+    LoadWaypoints = load_waypoints(static_waypoint_file)
     LoadWaypoints.load_waypoint_server()
