@@ -98,12 +98,13 @@
     <xacro:property name="ZED_camera_length" value="0.175"/>
     <xacro:property name="ZED_camera_width" value="0.03"/>
     <xacro:property name="ZED_camera_height" value="0.033"/>
+    <xacro:property name="ZED_camera_pitch" value="${15 * pi/180}"/>
     <!-- ZED image height/width corresponds to image size for 60Hz refresh-->
     <xacro:property name="ZED_image_refresh" value="60"/>
     <xacro:property name="ZED_image_width" value="3840"/>
     <xacro:property name="ZED_image_height" value="1080"/>
     <xacro:property name="ZED_image_format" value="R8G8B8"/>
-    <xacro:property name="ZED_image_hfov" value="90"/>
+    <xacro:property name="ZED_image_hfov" value="${90 * pi/180}"/>
 
     <xacro:property name="ZED_name" value="zed/zed_node"/>
     <xacro:property name="ZED_always_on" value="true"/>
