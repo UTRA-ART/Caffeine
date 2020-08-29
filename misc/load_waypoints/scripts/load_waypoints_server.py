@@ -10,6 +10,9 @@ from sensor_msgs.msg import NavSatFix
 class load_waypoints:
     def __init__(self):
         self.all_waypoints = dict()
+        
+        rospy.init_node('load_waypoint_server')
+        self.populate_waypoint_dict()
 
     def populate_waypoint_dict(self):
         '''
@@ -101,7 +104,7 @@ class load_waypoints:
             waypoint_coord = [float(self.all_waypoints[waypoint_request.waypoint_number]['longitude']), float(self.all_waypoints[waypoint_request.waypoint_number]['latitude'])]
             valid_request_flag = True
             request_description = "Request Successful"
-            waypoint_description = str(self.all_waypoints[waypoint_request.waypoint_number]['description'])
+            waypoint_description = self.all_waypoints[waypoint_request.waypoint_number]['description']
 
         # Determine the next valid waypoint number 
         if (waypoint_request.waypoint_number >= len(self.all_waypoints) - 1) or (waypoint_request.waypoint_number < 0):
@@ -113,8 +116,4 @@ class load_waypoints:
 
 if __name__ == "__main__":
     LoadWaypoints = load_waypoints()
-
-    rospy.init_node('load_waypoint_server')
-    LoadWaypoints.populate_waypoint_dict()
-
     LoadWaypoints.load_waypoint_server()

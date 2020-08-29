@@ -1,9 +1,17 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(load_waypoints)
 
+catkin_install_python(
+  PROGRAMS scripts/load_waypoints_server.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
 find_package(catkin REQUIRED COMPONENTS
   rospy
   message_generation
+  tf
+  std_msgs
+  sensor_msgs
 )
 
 ## Generate services in the 'srv' folder
