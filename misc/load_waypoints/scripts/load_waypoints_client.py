@@ -28,5 +28,7 @@ if __name__ == "__main__":
         rospy.loginfo(usage())
         sys.exit(1)
 
-    rospy.loginfo("Requesting waypoint #%s"%(x))
-    rospy.loginfo("Waypoint #%s is %s"%(x, load_waypoint_client(x)))
+    waypoint_info = load_waypoint_client(x)
+
+    print("Requesting waypoint #%s"%(x))
+    print("Waypoint #%s is %s"%(x, waypoint_info))
