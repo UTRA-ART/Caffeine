@@ -12,7 +12,8 @@ class load_waypoints:
     def __init__(self, static_waypoint_file, max_time_to_wait):
         self.all_waypoints = dict()
         self.static_waypoint_file = static_waypoint_file
-        self.max_time_to_wait = max_time_to_wait
+        self.max_time_to_wait = max_time_to_wait 
+        self.waited_for_transform = False # Initialize the boolean for whether or waiting has timed out 
 
         rospy.init_node('load_waypoint_server')
         self.populate_waypoint_dict()
@@ -38,11 +39,11 @@ class load_waypoints:
             self.all_waypoints[waypoint['id']] = waypoint
 
         # Call method to wait for transform 
-        waited_for_transform = self.wait_for_utm_transform()
+        self.waited_for_transform = self.wait_for_utm_transform()
 
-        if waited_for_transform:
+        if self.waited_for_transform:
             # After waiting UTM transform, capture a message from the /gps/fix topic
-            gps_info = rospy.wait_for_message('/gps/fix', NavSatFix)
+            gps_info = rospy.wait_for_message('caffeine/gps/fix', NavSatFix)
 
             # Append the starting gps coordinate to the waypoints dict as the final waypoint
             last_coord_idx = len(self.all_waypoints) 
@@ -68,9 +69,9 @@ class load_waypoints:
         start_time = rospy.get_time()
         while not rospy.is_shutdown():
             time_waited = rospy.get_time() - start_time
-            if time_waited >= self.max_time_to_wait:
+            if (time_waited) >= self.max_time_to_wait:
+                rospy.loginfo("Waiting for transform timed out. Time waited for transform: %s s"%(time_waited))
                 waited_for_transform = False
-                rospy.loginfo("Waiting for transform timed out. Time waited for transform: %s s"%(rospy.get_time() - start_time))
                 break
             else:
                 try:
@@ -93,9 +94,12 @@ class load_waypoints:
             Used to declare a service called 'load_waypoint'. 
         '''
         rospy.Service('load_waypoint', WaypointRequest, self.handle_waypoint_request)
-        
-        rospy.loginfo("Ready to load waypoints.")
-        rospy.spin() # Keeps code from exiting until the service is shutdown
+        # Check if we successfully waited for the transform. If not, the node shuts down. 
+        if (not self.waited_for_transform):
+            rospy.loginfo("Populating waypoint failed.")
+        else:
+            rospy.loginfo("Ready to load waypoints.")
+            rospy.spin() # Keeps code from exiting until the service is shutdown
 
     def handle_waypoint_request(self,waypoint_request):
         '''
