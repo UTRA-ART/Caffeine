@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import rospy, os, json, sys 
+# import os, json, sys 
 from load_waypoints.srv import *
 import rospkg
 import std_msgs.msg
@@ -8,9 +9,11 @@ import tf
 from sensor_msgs.msg import NavSatFix
 
 class load_waypoints:
-    def __init__(self, static_waypoint_file):
+    def __init__(self, static_waypoint_file, max_time_to_wait):
         self.all_waypoints = dict()
         self.static_waypoint_file = static_waypoint_file
+        self.max_time_to_wait = max_time_to_wait
+
         rospy.init_node('load_waypoint_server')
         self.populate_waypoint_dict()
 
@@ -35,17 +38,20 @@ class load_waypoints:
             self.all_waypoints[waypoint['id']] = waypoint
 
         # Call method to wait for transform 
-        self.wait_for_utm_transform()
+        waited_for_transform = self.wait_for_utm_transform()
 
-        # After waiting UTM transform, capture a message from the /gps/fix topic
-        gps_info = rospy.wait_for_message('/gps/fix', NavSatFix)
+        if waited_for_transform:
+            # After waiting UTM transform, capture a message from the /gps/fix topic
+            gps_info = rospy.wait_for_message('/gps/fix', NavSatFix)
 
-        # Append the starting gps coordinate to the waypoints dict as the final waypoint
-        last_coord_idx = len(self.all_waypoints) 
-        self.all_waypoints[last_coord_idx] = {'id': last_coord_idx,'longitude':gps_info.longitude, 'latitude':gps_info.latitude, 'description': 'Initial start location'}
+            # Append the starting gps coordinate to the waypoints dict as the final waypoint
+            last_coord_idx = len(self.all_waypoints) 
+            self.all_waypoints[last_coord_idx] = {'id': last_coord_idx,'longitude':gps_info.longitude, 'latitude':gps_info.latitude, 'description': 'Initial start location'}
 
-        # Show waypoints 
-        rospy.loginfo("Loaded waypoints dictionary:\n %s", self.all_waypoints)
+            # Show waypoints 
+            rospy.loginfo("Loaded waypoints dictionary:\n %s", self.all_waypoints)
+        else:
+            rospy.loginfo("Waiting for transform from /map to /utm timed out!")
         return 
 
     def wait_for_utm_transform(self):
@@ -61,18 +67,25 @@ class load_waypoints:
         
         start_time = rospy.get_time()
         while not rospy.is_shutdown():
-            try:
-                now = rospy.Time.now()
-                # Wait for transform from /caffeine/map to /utm
-                listener.waitForTransform("/caffeine/map", "/utm", now, rospy.Duration(4.0))
-                rospy.loginfo("Time waited for transform: %s s"%(rospy.get_time() - start_time))
+            time_waited = rospy.get_time() - start_time
+            if time_waited >= self.max_time_to_wait:
+                waited_for_transform = False
+                rospy.loginfo("Waiting for transform timed out. Time waited for transform: %s s"%(rospy.get_time() - start_time))
                 break
+            else:
+                try:
+                    now = rospy.Time.now()
+                    # Wait for transform from /caffeine/map to /utm
+                    listener.waitForTransform("/caffeine/map", "/utm", now, rospy.Duration(4.0))
+                    rospy.loginfo("Transform found. Time waited for transform: %s s"%(rospy.get_time() - start_time))
+                    waited_for_transform = True
+                    break
 
-            except:
-                pass
+                except:
+                    pass
 
             rate.sleep()
-        return 
+        return waited_for_transform
 
     def load_waypoint_server(self):
         '''
@@ -80,6 +93,7 @@ class load_waypoints:
             Used to declare a service called 'load_waypoint'. 
         '''
         rospy.Service('load_waypoint', WaypointRequest, self.handle_waypoint_request)
+        
         rospy.loginfo("Ready to load waypoints.")
         rospy.spin() # Keeps code from exiting until the service is shutdown
 
@@ -116,6 +130,7 @@ class load_waypoints:
 
 if __name__ == "__main__":
     static_waypoint_file = 'static_waypoints.json'
+    max_time_to_wait = 60.0
 
-    LoadWaypoints = load_waypoints(static_waypoint_file)
+    LoadWaypoints = load_waypoints(static_waypoint_file, max_time_to_wait)
     LoadWaypoints.load_waypoint_server()
