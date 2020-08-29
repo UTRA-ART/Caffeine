@@ -1,11 +1,6 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(load_waypoints)
 
-catkin_install_python(
-  PROGRAMS scripts/load_waypoints_server.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
 find_package(catkin REQUIRED COMPONENTS
   rospy
   message_generation
@@ -29,4 +24,9 @@ find_package(catkin REQUIRED COMPONENTS
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+)
+
+catkin_install_python(
+  PROGRAMS scripts/load_waypoints_server.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
