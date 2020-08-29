@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import rospy, os, json, sys 
-# import os, json, sys 
 from load_waypoints.srv import *
 import rospkg
 import std_msgs.msg
@@ -41,9 +40,10 @@ class load_waypoints:
         # Call method to wait for transform 
         self.waited_for_transform = self.wait_for_utm_transform()
 
+        # Check if successfully waited for the transform within the time limit. If successful, continue populating the waypoint dict. 
         if self.waited_for_transform:
             # After waiting UTM transform, capture a message from the /gps/fix topic
-            gps_info = rospy.wait_for_message('caffeine/gps/fix', NavSatFix)
+            gps_info = rospy.wait_for_message('/gps/fix', NavSatFix)
 
             # Append the starting gps coordinate to the waypoints dict as the final waypoint
             last_coord_idx = len(self.all_waypoints) 
@@ -77,7 +77,7 @@ class load_waypoints:
                 try:
                     now = rospy.Time.now()
                     # Wait for transform from /caffeine/map to /utm
-                    listener.waitForTransform("/caffeine/map", "/utm", now, rospy.Duration(4.0))
+                    listener.waitForTransform("/caffeine/map", "/utm", now, rospy.Duration(5.0))
                     rospy.loginfo("Transform found. Time waited for transform: %s s"%(rospy.get_time() - start_time))
                     waited_for_transform = True
                     break
@@ -94,6 +94,7 @@ class load_waypoints:
             Used to declare a service called 'load_waypoint'. 
         '''
         rospy.Service('load_waypoint', WaypointRequest, self.handle_waypoint_request)
+
         # Check if we successfully waited for the transform. If not, the node shuts down. 
         if (not self.waited_for_transform):
             rospy.loginfo("Populating waypoint failed.")
@@ -133,8 +134,8 @@ class load_waypoints:
         return WaypointRequestResponse(waypoint_coord, valid_request_flag, request_description, waypoint_description, next_waypoint_number)
 
 if __name__ == "__main__":
-    static_waypoint_file = 'static_waypoints.json'
-    max_time_to_wait = 60.0
+    static_waypoint_file = 'static_waypoints.json' # File name for static waypoints (provided at competition-time) 
+    max_time_to_wait = 60.0 # Maximum time to wait for the transform. The node times out and shut down if this limit is exceeded.
 
     LoadWaypoints = load_waypoints(static_waypoint_file, max_time_to_wait)
-    LoadWaypoints.load_waypoint_server()
+    LoadWaypoints.load_waypoint_server() # Start service node 
