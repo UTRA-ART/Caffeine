@@ -43,8 +43,7 @@ class load_waypoints:
         # Check if successfully waited for the transform within the time limit. If successful, continue populating the waypoint dict. 
         if self.waited_for_transform:
             # After waiting UTM transform, capture a message from the /gps/fix topic
-            gps_info = rospy.wait_for_message('/gps/fix', NavSatFix)
-
+            gps_info = rospy.wait_for_message('gps/fix', NavSatFix)
             # Append the starting gps coordinate to the waypoints dict as the final waypoint
             last_coord_idx = len(self.all_waypoints) 
             self.all_waypoints[last_coord_idx] = {'id': last_coord_idx,'longitude':gps_info.longitude, 'latitude':gps_info.latitude, 'description': 'Initial start location'}
