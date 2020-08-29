@@ -42,7 +42,7 @@ class load_waypoints:
 
         # Check if successfully waited for the transform within the time limit. If successful, continue populating the waypoint dict. 
         if self.waited_for_transform:
-            # After waiting UTM transform, capture a message from the /gps/fix topic
+            # After waiting UTM transform, capture a message from the gps/fix topic
             gps_info = rospy.wait_for_message('gps/fix', NavSatFix)
             # Append the starting gps coordinate to the waypoints dict as the final waypoint
             last_coord_idx = len(self.all_waypoints) 
@@ -65,6 +65,8 @@ class load_waypoints:
 
         rate = rospy.Rate(10.0)
         
+        ns = rospy.get_namespace()
+
         start_time = rospy.get_time()
         while not rospy.is_shutdown():
             time_waited = rospy.get_time() - start_time
@@ -76,7 +78,7 @@ class load_waypoints:
                 try:
                     now = rospy.Time.now()
                     # Wait for transform from /caffeine/map to /utm
-                    listener.waitForTransform("/caffeine/map", "/utm", now, rospy.Duration(5.0))
+                    listener.waitForTransform(ns+"map", "/utm", now, rospy.Duration(5.0))
                     rospy.loginfo("Transform found. Time waited for transform: %s s"%(rospy.get_time() - start_time))
                     waited_for_transform = True
                     break
