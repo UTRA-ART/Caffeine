@@ -20,6 +20,12 @@ def init_node(arguments):
             pitch = float(arguments[5])
             yaw = float(arguments[6])
             frame = str(arguments[7])
+            
+            # Checks if the frame inputted is valid, more frames can be added below if necessary
+            if (frame != "caffeine/map") or (frame != "caffeine/base_link"):
+               rospy.logger("Invalid frame")
+               rospy.shutdown("Invalid frame")
+               return 'Failure'
 
             return (x, y, z, roll, pitch, yaw, frame)
         except:
@@ -73,8 +79,13 @@ if __name__ == '__main__':
     if response != 'Failure':
         try:
             x, y, z, roll, pitch, yaw, frame = response
-            if frame[0:9] == "caffeine/":
-                frame = frame[9:]
+
+            # If the user inputs the frame under namespace "caffeine/" or "/caffeine/" which is still valid, remove it for error checking and consistency reasons.
+            if frame[0:9].lower() == "caffeine/":
+                frame = frame[9:].lower()
+            elif frame[0:10].lower() == "/caffeine/":
+                frame = frame[10:].lower()
+
             result = movebase_client(x, y, z, roll, pitch, yaw, f"caffeine/{frame}")
             rospy.loginfo(result)
         except:
