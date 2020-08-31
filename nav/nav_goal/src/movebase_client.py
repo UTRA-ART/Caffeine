@@ -8,8 +8,8 @@ def init_node(arguments):
     rospy.init_node('movebase_client_py')
 
     if len(arguments) < 8:
-        rospy.logerr("Error: Insufficient Arguments - Usage is 'rosrun nav_goal Movebase_client x y z roll pitch yaw frame' where x is distance to move in x, y is distance to move in y, z is distance to move in z, roll, pitch, & yaw are rotations in radians, and frame is the frame of reference.")
-        rospy.signal_shutdown("Error: Insufficient Arguments - Usage is 'rosrun nav_goal movebase_client x y z roll pitch yaw frame' where x is distance to move in x, y is distance to move in y, z is distance to move in z, roll, pitch, & yaw are rotations in radians, and frame is the frame of reference.")
+        rospy.logerr("Error: Insufficient Arguments - Usage is 'rosrun nav_goal movebase_client.py x y z roll pitch yaw frame' where x is distance to move in x, y is distance to move in y, z is distance to move in z, roll, pitch, & yaw are rotations in radians, and frame is the frame of reference.")
+        rospy.signal_shutdown("Error: Insufficient Arguments - Usage is 'rosrun nav_goal movebase_client.py x y z roll pitch yaw frame' where x is distance to move in x, y is distance to move in y, z is distance to move in z, roll, pitch, & yaw are rotations in radians, and frame is the frame of reference.")
         return 'Failure'
     else:
         try:
@@ -73,8 +73,6 @@ if __name__ == '__main__':
     if response != 'Failure':
         try:
             x, y, z, roll, pitch, yaw, frame = response
-            if frame[0:9] == "caffeine/":
-                frame = frame[9:]
             result = movebase_client(x, y, z, roll, pitch, yaw, f"caffeine/{frame}")
             rospy.loginfo(result)
         except:
