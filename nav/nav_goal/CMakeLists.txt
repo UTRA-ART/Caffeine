@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   move_base_msgs
   rospy
   tf
+  gazebo_msgs
 )
 
 ## Find catkin macros and libraries
