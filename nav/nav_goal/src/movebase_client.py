@@ -2,9 +2,16 @@ import rospy
 import sys
 from gazebo_msgs.msg import ModelStates
 import actionlib
-from tolerance_parameters import *
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from tf.transformations import quaternion_from_euler
+
+ # parameters for tolerance (xyz in meters and orientation in radians)
+ X_TOL = 1.0
+ Y_TOL = 1.0
+ Z_TOL = 1.0
+ YAW_TOL = 3.14
+ PITCH_TOL = 3.14
+ ROLL_TOL = 3.14
 
 def init_node(arguments):
     rospy.init_node('movebase_client_py')
@@ -71,20 +78,20 @@ def movebase_client(x, y, z, roll, pitch, yaw, frame):
             # Result of executing the action
             return client.get_goal_status_text()
         else:
-            # subscribe to the ModelStates topic to get the position and orientation of robot. Reference: https://answers.ros.org/question/271661/pythonhow-to-know-pose-of-turtlebot/ 
+            # subscribe to the ModelStates topic to get the position and orientation of robot. Reference: https://answers.ros.org/question/271661/pythonhow-to-know-pose-of-turtlebot/
             sub = rospy.Subscriber('/gazebo/model_states', ModelStates, callback)
             # calculates distance of robot to goal
             inc_x = goal.target_pose.pose.position.x - cur_x
             inc_y = goal.target_pose.pose.position.y - cur_y
             inc_z = goal.target_pose.pose.position.z - cur_z
 
-            # calculates the orientation difference between current and goal 
+            # calculates the orientation difference between current and goal
             inc_roll = goal.target_pose.pose.orientation.roll - cur_roll
             inc_pitch = goal.target_pose.pose.orientation.pitch - cur_pitch
             inc_yaw = goal.target_pose.pose.orientation.yaw - cur_yaw
 
             # check if difference is within the tolerance
-            if (abs(inc_x) < x_tol) and (abs(inc_y) < y_tol) and (abs(inc_z) < z_tol) and (abs(inc_roll) < roll_tol) and (abs(inc_pitch) < pitch_tol) and (abs(inc_yaw) < yaw_tol):
+            if (abs(inc_x) < X_TOL) and (abs(inc_y) < Y_TOL) and (abs(inc_z) < Z_TOL) and (abs(inc_roll) < ROLL_TOL) and (abs(inc_pitch) < PITCH_TOL) and (abs(inc_yaw) < YAW_TOL):
                 rospy.loginfo("You have reached the destination within the tolerance")
             else:
                 rospy.loginfo("The robot failed to reach the destination")
@@ -117,4 +124,4 @@ if __name__ == '__main__':
         except:
             rospy.logerr("Error - Navigation failed for unknown reasons. Exiting...")
             rospy.signal_shutdown("Error - Navigation failed for unknown reasons. Exiting...")
-~                                                                                              
+~
