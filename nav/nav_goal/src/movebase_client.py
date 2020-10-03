@@ -1,6 +1,5 @@
 import rospy
 import sys
-from gazebo_msgs.msg import ModelStates
 import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from tf.transformations import quaternion_from_euler
@@ -29,6 +28,12 @@ def init_node(arguments):
             pitch = float(arguments[5])
             yaw = float(arguments[6])
             frame = str(arguments[7])
+
+            # Checks if the frame inputted is valid, more frames can be added below if necessary
+            if (frame != "caffeine/map") or (frame != "caffeine/base_link"):
+               rospy.logger("Invalid frame")
+               rospy.shutdown("Invalid frame")
+               return 'Failure'
 
             return (x, y, z, roll, pitch, yaw, frame)
         except:
@@ -73,6 +78,8 @@ def movebase_client(x, y, z, roll, pitch, yaw, frame):
         rospy.logerr("Error in retrieving action resolution! Exiting...")
         rospy.signal_shutdown("Error in retrieving action resolution! Exiting...")
     else:
+    # Result of executing the action
+        return client.get_goal_status_text()
         if (client.get_state() ==  GoalStatus.SUCCEEDED):
             rospy.loginfo("You have reached the destination")
             # Result of executing the action
@@ -112,6 +119,8 @@ def callback(msg):
     cur_z = msg.pose[1].position.z
     cur_ort = msg.pose[1].orientation
     (cur_roll, cur_pitch, cur_yaw, cur_w) = euler_from_quaternion([ort.x, ort.y, ort.z, ort.w])
+    # Result of executing the action
+        return client.get_goal_status_text()
 
 if __name__ == '__main__':
     response = init_node(sys.argv)
@@ -120,6 +129,14 @@ if __name__ == '__main__':
         try:
             x, y, z, roll, pitch, yaw, frame = response
             result = movebase_client(x, y, z, roll, pitch, yaw, frame)
+
+            # If the user inputs the frame under namespace "caffeine/" or "/caffeine/" which is still valid, remove it for error checking and consistency reasons.
+            if frame[0:9].lower() == "caffeine/":
+                frame = frame[9:].lower()
+            elif frame[0:10].lower() == "/caffeine/":
+                frame = frame[10:].lower()
+
+            result = movebase_client(x, y, z, roll, pitch, yaw, f"caffeine/{frame}")
             rospy.loginfo(result)
         except:
             rospy.logerr("Error - Navigation failed for unknown reasons. Exiting...")
