@@ -2,7 +2,12 @@ import rospy
 import sys
 import actionlib
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+from nav_msgs.msg import Odometry
 from tf.transformations import quaternion_from_euler
+
+#TODO:
+# - Put in class structure
+# - Avoid reliance on global variables
 
  # parameters for tolerance (xyz in meters and orientation in radians)
  X_TOL = 1.0
@@ -85,8 +90,8 @@ def movebase_client(x, y, z, roll, pitch, yaw, frame):
             # Result of executing the action
             return client.get_goal_status_text()
         else:
-            # subscribe to the ModelStates topic to get the position and orientation of robot. Reference: https://answers.ros.org/question/271661/pythonhow-to-know-pose-of-turtlebot/
-            sub = rospy.Subscriber('/gazebo/model_states', ModelStates, callback)
+            # Subscribe to local odometry to extract pose
+            sub = rospy.Subscriber('/caffeine/odometry/local', Odometry, callback)
             # calculates distance of robot to goal
             inc_x = goal.target_pose.pose.position.x - cur_x
             inc_y = goal.target_pose.pose.position.y - cur_y
@@ -114,10 +119,10 @@ def callback(msg):
     global cur_w
 
     # gets the current position/orientation of the robot
-    cur_x = msg.pose[1].position.x
-    cur_y = msg.pose[1].position.y
-    cur_z = msg.pose[1].position.z
-    cur_ort = msg.pose[1].orientation
+    cur_x = msg.pose.pose.position.x
+    cur_y = msg.pose.pose.position.y
+    cur_z = msg.pose.pose.position.z
+    cur_ort = msg.pose.pose.orientation
     (cur_roll, cur_pitch, cur_yaw, cur_w) = euler_from_quaternion([ort.x, ort.y, ort.z, ort.w])
     # Result of executing the action
         return client.get_goal_status_text()
