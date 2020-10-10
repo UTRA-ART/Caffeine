@@ -9,16 +9,12 @@ find_package(catkin REQUIRED COMPONENTS
   move_base_msgs
   rospy
   tf
-<<<<<<< HEAD
-=======
-  gazebo_msgs
->>>>>>> 1c1d669bbb7c9891cbfc9eed134f64aee6a5605c
 )
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-catkin_python_setup()
+# catkin_python_setup()
 
 ## Sets up Python package and installs it in the correct location
 catkin_install_python(PROGRAMS src/movebase_client.py DESTINATION ${PROJECT_NAME}/src)
