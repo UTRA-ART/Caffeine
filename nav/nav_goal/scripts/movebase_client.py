@@ -5,10 +5,6 @@ from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from nav_msgs.msg import Odometry
 from tf.transformations import quaternion_from_euler
 
-#TODO:
-# - Put in class structure
-# - Avoid reliance on global variables
-
  # parameters for tolerance (xyz in meters and orientation in radians)
  X_TOL = 1.0
  Y_TOL = 1.0
