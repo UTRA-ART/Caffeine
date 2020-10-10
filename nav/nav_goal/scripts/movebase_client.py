@@ -12,10 +12,7 @@ from tf.transformations import quaternion_from_euler
  # parameters for tolerance (xyz in meters and orientation in radians)
  X_TOL = 1.0
  Y_TOL = 1.0
- Z_TOL = 1.0
  YAW_TOL = 3.14
- PITCH_TOL = 3.14
- ROLL_TOL = 3.14
 
 def init_node(arguments):
     rospy.init_node('movebase_client_py')
@@ -103,7 +100,7 @@ def movebase_client(x, y, z, roll, pitch, yaw, frame):
             inc_yaw = goal.target_pose.pose.orientation.yaw - cur_yaw
 
             # check if difference is within the tolerance
-            if (abs(inc_x) < X_TOL) and (abs(inc_y) < Y_TOL) and (abs(inc_z) < Z_TOL) and (abs(inc_roll) < ROLL_TOL) and (abs(inc_pitch) < PITCH_TOL) and (abs(inc_yaw) < YAW_TOL):
+            if (abs(inc_x) < X_TOL) and (abs(inc_y) < Y_TOL) and (abs(inc_yaw) < YAW_TOL):
                 rospy.loginfo("You have reached the destination within the tolerance")
             else:
                 rospy.loginfo("The robot failed to reach the destination")
