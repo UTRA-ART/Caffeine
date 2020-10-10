@@ -1,9 +1,10 @@
 <launch>
    <arg name="use_gui" default="false"/>
    <arg name="debug_mode" default="false"/>
-   <arg name="world" default="full"/>
+   <arg name="world" default="test"/>
 
    <!-- IGVC worlds -->
+   <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_test.world"   if="$(eval arg('world') == 'test')"/>
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_plain.world"  if="$(eval arg('world') == 'plain')"/>
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_ramp.world"   if="$(eval arg('world') == 'ramp')"/>
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_walls.world"  if="$(eval arg('world') == 'walls')"/>
@@ -11,19 +12,19 @@
 
    <!-- Spawn at course start -->
    
-   <arg name="x"     value="0"/>
+   <!-- <arg name="x"     value="0"/>
    <arg name="y"     value="-21.5"/>
    <arg name="z"     value="0.25"/>
    <arg name="roll"  value="0"/>
    <arg name="pitch" value="0"/>
-   <arg name="yaw"   value="3.14"/>
+   <arg name="yaw"   value="3.14"/> -->
 
-   <!-- <arg name="x"     value="0"/>
+   <arg name="x"     value="0"/>
    <arg name="y"     value="0"/>
    <arg name="z"     value="0"/>
    <arg name="roll"  value="0"/>
    <arg name="pitch" value="0"/>
-   <arg name="yaw"   value="3.14"/> -->
+   <arg name="yaw"   value="3.14"/>
 
    <!-- Open a world in Gazebo -->
    <include file="$(find gazebo_ros)/launch/empty_world.launch">

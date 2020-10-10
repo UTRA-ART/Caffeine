@@ -9,18 +9,18 @@
     </node>
 
     <!-- Compute global odometry: publish map frame -->
-    <!-- <node pkg="robot_localization" type="ekf_localization_node" name="ekf_global" clear_params="true" output="screen">
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_global" clear_params="true" output="screen">
         <remap from="odometry/filtered" to="$(arg robot)/odometry/global"/>
 
         <rosparam command="load" file="$(find odom)/config/odom_global.yaml"/>
-    </node> -->
+    </node>
 
     <!-- Establish transform b/w Earth reference and Robot reference -->
-    <!-- <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" respawn="true" ns="$(arg robot)">
+    <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" respawn="true" ns="$(arg robot)">
         <remap from="odometry/filtered" to="odometry/global"/>
 
         <rosparam command="load" file="$(find odom)/config/navsat.yaml"/>
-    </node> -->
+    </node>
 
 </launch>
 
