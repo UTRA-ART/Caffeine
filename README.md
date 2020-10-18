@@ -29,13 +29,6 @@ sudo rosdep init
 rosdep update
 ```
 
-### Install husky-desktop and husky-simulator Packages ###
-Husky is a robot that can be simulated in Gazebo and provides us with a few pre-built worlds.
-```
-sudo apt-get install ros-melodic-husky-desktop
-sudo apt-get install ros-melodic-husky-simulator
-```
-
 ### Install the Navigation Package ###
 Provides the [Navigation Stack](http://wiki.ros.org/navigation) which is used for autonomous navigation.
 ```
