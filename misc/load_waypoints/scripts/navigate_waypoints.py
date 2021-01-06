@@ -49,7 +49,8 @@ class NavigateWaypoints:
             gps_info = rospy.wait_for_message('gps/fix', NavSatFix)
             # Append the starting gps coordinate to the waypoints dict as the final waypoint
             last_coord_idx = len(self.waypoints) 
-            self.waypoints[last_coord_idx] = {'id': last_coord_idx,'longitude':gps_info.longitude, 'latitude':gps_info.latitude, 'description': 'Initial start location'}
+            self.waypoints[last_coord_idx] = {
+                'id': last_coord_idx, 'longitude': gps_info.longitude, 'latitude': gps_info.latitude, 'description': 'Initial start location'}
 
             # Show waypoints 
             rospy.loginfo("Successfully loaded waypoints dict")
@@ -71,6 +72,7 @@ class NavigateWaypoints:
         ns = rospy.get_namespace()
 
         start_time = rospy.get_time()
+
         while not rospy.is_shutdown():
             time_waited = rospy.get_time() - start_time
             if (time_waited) >= self.max_time_for_transform:
@@ -88,6 +90,7 @@ class NavigateWaypoints:
                 except:
                     pass
             rate.sleep()
+        
         return waited_for_transform
     
     def get_next_waypoint(self):
@@ -95,9 +98,11 @@ class NavigateWaypoints:
         self.curr_waypoint_idx += 1
         return waypoint
             
-    def get_pose_from_gps(self, longitude, latitude, frame):
+    def get_pose_from_gps(self, longitude, latitude, frame, pose_test_var = None):
         # Awaiting For Issue #12's Completion
-        return None
+
+        # ==> TESTING CODE
+        return pose_(pose_test_var[0], pose_test_var[1], pose_test_var[2], pose_test_var[3], pose_test_var[4], pose_test_var[5])
         
     def send_and_wait_goal_to_move_base(self, pose, frame):
         # Create an action client called "move_base" with action definition file "MoveBaseAction"
@@ -106,8 +111,11 @@ class NavigateWaypoints:
         # Waits until the action server has started up and started listening for goals.
         action_client.wait_for_server()
 
+        # ==> UNSUPPORTED CODE, WAITING ON OTHER CODE SUBMISSION
+        # pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
+
         # ==> TESTING CODE
-        pose = pose_(pose[0], pose[1], pose[2], pose[3], pose[4], pose[5])
+        pose = self.get_pose_from_gps(None, None, None, pose_test_var = pose)
 
         # Creates a new goal with the MoveBaseGoal constructor
         goal = MoveBaseGoal()
@@ -132,12 +140,11 @@ class NavigateWaypoints:
         # Waits for the server to finish performing the action.
         wait = action_client.wait_for_result()
 
+        rospy.loginfo("Reached nav goal")
+
     def navigate_waypoints(self):
         while True:
             curr_waypoint = self.get_next_waypoint()
-
-            # ==> UNSUPPORTED CODE, WAITING ON OTHER CODE SUBMISSION
-            # pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
 
             # ==> TESTING CODE
             pose = curr_waypoint["pose_test"]

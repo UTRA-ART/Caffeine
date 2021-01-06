@@ -3,7 +3,7 @@ NavfnROS:
   # Specifies whether or not to allow navfn to create plans that traverse unknown space.
   allow_unknown: true
   # A tolerance on the goal point for the planner.
-  default_tolerance: 0.3
+  default_tolerance: 0.1
 
 # Plans robot movement
 TrajectoryPlannerROS:
@@ -21,3 +21,7 @@ TrajectoryPlannerROS:
 
   # Sets distances in cost function to meters instead of cells (allows different map resolutions)
   meter_scoring: true
+
+  # Tolerances
+  xy_goal_tolerance:  0.5
+  yaw_goal_tolerance: 3.14

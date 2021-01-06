@@ -1,5 +1,5 @@
 <launch>
-   <arg name="use_gui" default="false"/>
+   <arg name="use_gui" default="true"/>
    <arg name="debug_mode" default="false"/>
    <arg name="world" default="full"/>
 
