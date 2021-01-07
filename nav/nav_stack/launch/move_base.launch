@@ -2,7 +2,7 @@
 
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
         <remap from="scan" to="caffeine/scan"/>
-        <remap from="odom" to="caffeine/odometry/loca"/>
+        <remap from="odom" to="caffeine/odometry/local"/>
         <remap from="cmd_vel" to="caffeine/nav_vel"/>
 
         <!-- Load common parameters for both the global and local costmaps -->
