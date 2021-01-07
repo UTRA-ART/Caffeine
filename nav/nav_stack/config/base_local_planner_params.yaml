@@ -21,3 +21,7 @@ TrajectoryPlannerROS:
 
   # Sets distances in cost function to meters instead of cells (allows different map resolutions)
   meter_scoring: true
+
+  # Tolerances
+  xy_goal_tolerance:  0.5
+  yaw_goal_tolerance: 3.14

@@ -7,13 +7,8 @@ find_package(catkin REQUIRED COMPONENTS
   tf
   std_msgs
   sensor_msgs
+  move_base_msgs
 )
-
-## Generate services in the 'srv' folder
-  add_service_files(
-    FILES
-    WaypointRequest.srv
-  )
 
 ## Generate added messages and services with any dependencies listed here
   generate_messages(
@@ -27,6 +22,6 @@ include_directories(
 )
 
 catkin_install_python(
-  PROGRAMS scripts/load_waypoints_server.py
+  PROGRAMS scripts/navigate_waypoints.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
