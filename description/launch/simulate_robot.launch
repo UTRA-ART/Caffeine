@@ -1,0 +1,29 @@
+<launch>
+    <arg name="use_gui" default="false"/>
+    <arg name="debug_mode" default="false"/>
+    <arg name="world" default="full"/>
+
+    <!-- IGVC worlds -->
+    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_test.world"   if="$(eval arg('world') == 'test')"/>
+    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_plain.world"  if="$(eval arg('world') == 'plain')"/>
+    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_ramp.world"   if="$(eval arg('world') == 'ramp')"/>
+    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_walls.world"  if="$(eval arg('world') == 'walls')"/>
+    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_full.world"   if="$(eval arg('world') == 'full')"/>
+ 
+    <!-- Open a world in Gazebo -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+       <arg name="world_name" value="$(arg world_file)"/>
+ 
+       <arg name="paused" value="false"/>
+       <arg name="verbose" value="false"/>
+       <arg name="use_sim_time" value="true"/>
+ 
+       <arg name="gui" value="$(arg use_gui)"/>
+       <arg name="gui_required" value="$(arg use_gui)"/>
+ 
+       <arg name="debug" value="$(arg debug_mode)"/>
+       <arg name="server_required" value="$(arg debug_mode)"/>
+    </include>
+
+    <include file="$(find description)/launch/spawn_robot.launch"/>
+</launch>

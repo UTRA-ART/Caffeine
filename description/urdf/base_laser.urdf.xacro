@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<robot name="caffeine_lidar" xmlns:xacro="http://ros.org/wiki/xacro">
+
+   <!-- Includes -->
+   <xacro:include filename="$(find description)/urdf/constants.xacro"/>
+   <xacro:include filename="$(find description)/urdf/inertias.xacro"/>
+
+   <!-- LIDAR link -->
+   <link name="base_laser">
+        <inertial>
+            <mass value="${laser_mass}"/>
+            <xacro:box_inertia mass="${laser_mass}" length="${laser_length}" width="${laser_width}" height="${laser_height}"/>
+        </inertial>
+
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+            <mesh filename="package://description/urdf/meshes/hokuyo.dae"/>
+         </geometry>
+      </visual>
+
+      <collision>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry>
+           <mesh filename="package://description//urdf/meshes/hokuyo.dae"/>
+         </geometry>
+      </collision>
+   </link>
+</robot>

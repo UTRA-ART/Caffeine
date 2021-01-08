@@ -7,9 +7,9 @@ inflation_radius: 0.4
 observation_sources: laser_scan_sensor point_cloud_sensor
 
 laser_scan_sensor: {
-  sensor_frame: caffeine/base_laser, 
+  sensor_frame: base_laser, 
   data_type: LaserScan, 
-  topic: caffeine/scan, 
+  topic: scan, 
   marking: true, 
   clearing: true,
   obstacle_range: 1.3,
@@ -23,7 +23,7 @@ laser_scan_sensor: {
 #       with the lidar!
 
 point_cloud_sensor: {
-  sensor_frame: caffeine/zed_camera_link, 
+  sensor_frame: zed_camera_link, 
   data_type: PointCloud2, 
   topic: zed/zed_node/point_cloud/cloud_registered, 
   marking: true, 
