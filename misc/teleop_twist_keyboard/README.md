@@ -2,7 +2,7 @@
 Generic Keyboard Teleop for ROS
 
 # Launch
-Run and publish to caffeine/cmd_vel.
+Run and publish to key_vel.
 ```
 roslaunch teleop_twist_keyboard keyboard_teleop.launch
 ```
