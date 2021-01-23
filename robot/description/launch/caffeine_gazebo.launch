@@ -11,12 +11,12 @@
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_full.world"   if="$(eval arg('world') == 'full')"/>
 
    <!-- Spawn at course start -->
-   <arg name="x"     value="0"/>
-   <arg name="y"     value="-21.5"/>
-   <arg name="z"     value="0.25"/>
-   <arg name="roll"  value="0"/>
-   <arg name="pitch" value="0"/>
-   <arg name="yaw"   value="3.14"/>
+   <arg name="x"     value="7.33393186321e-06"/>
+   <arg name="y"     value="1.15379149261e-06"/>
+   <arg name="z"     value=" 0.0585270407289"/>
+   <arg name="roll"  value="1.49193243097e-06"/>
+   <arg name="pitch" value="-2.1694564458e-06"/>
+   <arg name="yaw"   value="-5.19616619248e-06"/>
 
    <!-- Open a world in Gazebo -->
    <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -62,5 +62,11 @@
    <include file="$(find odom)/launch/odom.launch">
       <arg name="robot" value="caffeine"/>
    </include>
+
+<!-- RQT steering -->
+   <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+        <param name="default_topic" value="/caffeine/rqt_steer"/> 
+    </node>
+
 
 </launch>
