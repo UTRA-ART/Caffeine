@@ -28,8 +28,10 @@
             <remap from="right/camera_info"     to="right/camera_info"/>
 
             <remap from="depth"                 to="depth/depth_registered"/>
-
-            <param name="Odom/ResetCountdown"   value="1"/>
+            
+            <!-- Resets vis odom to last value after being reset. Works as long as vis odom isn't lost for too long -->
+            <param name="Odom/ResetCountdown"   value="1"/> 
+            
             <param name="frame_id"              type="string" value="caffeine/base_link"/>
             <param name="odom_frame_id"         value="caffeine/odom"/>
             <param name="approx_sync"           value="false"/>
