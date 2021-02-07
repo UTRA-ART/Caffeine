@@ -1,4 +1,4 @@
-frequency: 50
+frequency: 30
 
 # Specify planar environment
 two_d_mode: false
