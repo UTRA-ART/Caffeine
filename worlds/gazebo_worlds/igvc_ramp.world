@@ -7,7 +7,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>50 50</size>
+              <size>66 68</size>
             </plane>
           </geometry>
           <surface>
@@ -32,7 +32,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>50 50</size>
+              <size>66 68</size>
             </plane>
           </geometry>
           <material>
@@ -113,6 +113,11 @@
               <size>4.5 2 0.1</size>
             </box>
           </geometry>
+          <material>
+            <ambient>0.8 1 0.8 1</ambient>
+            <specular>0.2 0.2 0.2 64</specular>
+            <diffuse>0.4 0.4 0.4 1</diffuse>
+          </material>
         </visual>
         <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
