@@ -19,7 +19,7 @@ laser_scan_sensor: {
 # NOTE: due to the incline of Caffeine (uneven front/back casters),
 #       the point clouds are not parallel with the ground! Hence
 #       everything is detected as an obstacle. Moreover, the stereo
-#       cam should be angled downwavvrds, to have an overlapping FOV
+#       cam should be angled downwards, to have an overlapping FOV
 #       with the lidar!
 
 point_cloud_sensor: {
