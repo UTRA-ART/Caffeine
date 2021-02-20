@@ -12,8 +12,8 @@ laser_scan_sensor: {
   topic: caffeine/scan, 
   marking: true, 
   clearing: true,
-  obstacle_range: 1.3,
-  raytrace_range: 1.5
+  obstacle_range: 100,
+  raytrace_range: 100
 }
 
 # NOTE: due to the incline of Caffeine (uneven front/back casters),
