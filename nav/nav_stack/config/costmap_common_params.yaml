@@ -1,19 +1,18 @@
-max_obstacle_height: 5.0
-min_obstacle_height: -5
-
+max_obstacle_height: 3.3 #can be a large number, I matched it to obstacle range
 footprint: [[-0.734, -0.582], [-0.734, 0.582], [0.734, 0.582], [0.734, -0.582]]
 inflation_radius: 0.4
 
 observation_sources: laser_scan_sensor point_cloud_sensor
 
 laser_scan_sensor: {
+  min_obstacle_height: 0.5
   sensor_frame: caffeine/base_laser, 
   data_type: LaserScan, 
   topic: caffeine/scan, 
   marking: true, 
   clearing: true,
-  obstacle_range: 100,
-  raytrace_range: 100
+  obstacle_range: 3.3,  #decide how far we should see obstacles, should be less than raytrace range
+  raytrace_range: 3.5  #call the lidar range 3.5, max is about 4 but this is safe
 }
 
 # NOTE: due to the incline of Caffeine (uneven front/back casters),
@@ -23,11 +22,12 @@ laser_scan_sensor: {
 #       with the lidar!
 
 point_cloud_sensor: {
+  min_obstacle_height: 0.5
   sensor_frame: caffeine/zed_camera_link, 
   data_type: PointCloud2, 
   topic: zed/zed_node/point_cloud/cloud_registered, 
   marking: true, 
-  clearing: true,
+  clearing: true, #doesn't point cloud doesnt see most of ramp, so it clears it
   obstacle_range: 15.0,  # 15.0,
   raytrace_range: 16.0   # 16.0
 }
