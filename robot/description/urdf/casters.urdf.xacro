@@ -6,7 +6,7 @@
     <xacro:include filename="$(find description)/urdf/inertias.xacro"/>
 
     <!-- Front caster definition -->
-    <link name="${tf_prefix}/front_caster_link">
+    <!-- <link name="${tf_prefix}/front_caster_link">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -39,7 +39,7 @@
         <mu2 value="0.3"/>
         <kp value="10000000.0" />
         <kd value="1.0" />
-    </gazebo>
+    </gazebo> -->
 
     <!-- Back caster definition -->
     <link name="${tf_prefix}/back_caster_link">
@@ -78,7 +78,7 @@
     </gazebo>
 
     <!-- Front caster wheel definition -->
-    <link name="${tf_prefix}/front_caster_wheel">
+    <!-- <link name="${tf_prefix}/front_caster_wheel">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -112,7 +112,7 @@
         <mu2 value="0.1"/>
         <kp value="10000000.0" />
         <kd value="1.0" />
-    </gazebo>
+    </gazebo> -->
 
     <!-- Back caster wheel definition -->
     <link name="${tf_prefix}/back_caster_wheel">

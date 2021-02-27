@@ -1,5 +1,4 @@
-max_obstacle_height: 2.0
-min_obstacle_height: 0.5
+max_obstacle_height: 3.0
 
 footprint: [[-0.734, -0.582], [-0.734, 0.582], [0.734, 0.582], [0.734, -0.582]]
 inflation_radius: 0.4
@@ -7,6 +6,7 @@ inflation_radius: 0.4
 observation_sources: laser_scan_sensor point_cloud_sensor
 
 laser_scan_sensor: {
+  min_obstacle_height: 0.05,
   sensor_frame: caffeine/base_laser, 
   data_type: LaserScan, 
   topic: caffeine/scan, 
@@ -23,6 +23,7 @@ laser_scan_sensor: {
 #       with the lidar!
 
 point_cloud_sensor: {
+  min_obstacle_height: 0.2,
   sensor_frame: caffeine/zed_camera_link, 
   data_type: PointCloud2, 
   topic: zed/zed_node/point_cloud/cloud_registered, 
