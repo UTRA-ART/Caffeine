@@ -72,9 +72,9 @@
    </include>
 
 <!-- RQT steering -->
-   <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+   <!-- <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
         <param name="default_topic" value="/caffeine/rqt_steer"/> 
-    </node>
+    </node> -->
 
 
 </launch>
