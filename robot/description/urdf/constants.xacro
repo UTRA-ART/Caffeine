@@ -27,10 +27,18 @@
     <xacro:property name="casters_separation" value="1.12"/>
     <xacro:property name="caster_vertical_offset" value="-0.619167561"/>
      
-    <xacro:property name="caster_wheel_mass" value="20.7"/> <!-- CHANGED -->
+    <xacro:property name="caster_wheel_mass" value="0.7"/>
      
     <xacro:property name="caster_link_to_wheel_dist_x" value="0.03621719"/>
     <xacro:property name="caster_link_to_wheel_dist_z" value="-0.04361749"/>
+
+    <!-- Battery -->
+    <xacro:property name="battery_width" value="0.05"/>
+    <xacro:property name="battery_length" value="0.1"/>
+    <xacro:property name="battery_height" value="0.05"/>
+    <xacro:property name="battery_mass" value="33"/>
+
+    <xacro:property name="battery_back_offset" value="0.17"/>
 
     <!-- Wheels -->
     <!-- TODO: Update acceleration and torque parameters when known -->
