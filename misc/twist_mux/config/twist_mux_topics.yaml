@@ -16,9 +16,17 @@ topics:
   topic   : key_vel
   timeout : 0.5
   priority: 90
+<<<<<<< HEAD
 -
   name    : rqtSTEER
   topic   : rqt_steer
   timeout : 0.5
   priority: 100
+=======
+# -
+  # name    : rqtSTEER
+  # topic   : rqt_steer
+  # timeout : 0.5
+  # priority: 100
+>>>>>>> fb4b41812e340b3dd4d168202e554ca1c381e73c
   
