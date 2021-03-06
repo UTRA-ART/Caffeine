@@ -1,4 +1,4 @@
-max_obstacle_height: 1.5
+max_obstacle_height: 1.4
 footprint: [[-0.734, -0.582], [-0.734, 0.582], [0.734, 0.582], [0.734, -0.582]]
 inflation_radius: 0.4
 
