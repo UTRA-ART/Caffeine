@@ -1,5 +1,5 @@
 <launch>
-   <arg name="use_gui" default="false"/>
+   <arg name="use_gui" default="true"/>
    <arg name="debug_mode" default="false"/>
    <arg name="world" default="full"/>
 
@@ -11,20 +11,20 @@
    <arg name="world_file" value="$(find worlds)/gazebo_worlds/igvc_full.world"   if="$(eval arg('world') == 'full')"/>
 
    <!-- Spawn at course start -->
-   <arg name="x"     value="0"/>
+   <!-- <arg name="x"     value="0"/>
    <arg name="y"     value="-21.5"/>
    <arg name="z"     value="0.25"/>
    <arg name="roll"  value="0"/>
    <arg name="pitch" value="0"/>
-   <arg name="yaw"   value="3.14"/>
+   <arg name="yaw"   value="3.14"/> -->
   
     <!-- ramp -->
-   <!-- <arg name="x"     value="17.757063"/>
+   <arg name="x"     value="17.757063"/>
    <arg name="y"     value="-11.192396"/>
    <arg name="z"     value="0.240479"/>
    <arg name="roll"  value="0.000073"/>
    <arg name="pitch" value="-0.072369"/>
-   <arg name="yaw"   value="1.104146"/> -->
+   <arg name="yaw"   value="1.104146"/>
 
    <!-- Open a world in Gazebo -->
    <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -72,9 +72,9 @@
    </include>
 
 <!-- RQT steering -->
-   <!-- <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+   <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
         <param name="default_topic" value="/caffeine/rqt_steer"/> 
-    </node> -->
+    </node>
 
 
 </launch>

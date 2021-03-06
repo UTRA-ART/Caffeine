@@ -6,7 +6,7 @@ inflation_radius: 0.4
 observation_sources: laser_scan_sensor point_cloud_sensor
 
 laser_scan_sensor: {
-  min_obstacle_height: 0.05,
+  min_obstacle_height: 0.005, #probably needs a change
   sensor_frame: caffeine/base_laser, 
   data_type: LaserScan, 
   topic: caffeine/scan, 
@@ -22,7 +22,7 @@ laser_scan_sensor: {
 #       with the lidar!
 
 point_cloud_sensor: {
-  min_obstacle_height: 0.2,
+  min_obstacle_height: 0.1, #probably needs a change
   sensor_frame: caffeine/zed_camera_link, 
   data_type: PointCloud2, 
   topic: zed/zed_node/point_cloud/cloud_registered, 
