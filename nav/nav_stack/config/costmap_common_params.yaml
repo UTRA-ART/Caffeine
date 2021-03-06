@@ -1,19 +1,11 @@
-max_obstacle_height: 3.3 #can be a large number, I matched it to obstacle range
-<<<<<<< HEAD
-
-=======
->>>>>>> fb4b41812e340b3dd4d168202e554ca1c381e73c
+max_obstacle_height: 3.3 #can be a large number, I matched it to obstacle rang
 footprint: [[-0.734, -0.582], [-0.734, 0.582], [0.734, 0.582], [0.734, -0.582]]
 inflation_radius: 0.4
 
 observation_sources: laser_scan_sensor point_cloud_sensor
 
 laser_scan_sensor: {
-<<<<<<< HEAD
   min_obstacle_height: 0.005, #probably needs a change
-=======
-  min_obstacle_height: 0,
->>>>>>> fb4b41812e340b3dd4d168202e554ca1c381e73c
   sensor_frame: caffeine/base_laser, 
   data_type: LaserScan, 
   topic: caffeine/scan, 
@@ -29,11 +21,7 @@ laser_scan_sensor: {
 #       with the lidar!
 
 point_cloud_sensor: {
-<<<<<<< HEAD
   min_obstacle_height: 0.1, #probably needs a change
-=======
-  min_obstacle_height: 0.2,
->>>>>>> fb4b41812e340b3dd4d168202e554ca1c381e73c
   sensor_frame: caffeine/zed_camera_link, 
   data_type: PointCloud2, 
   topic: zed/zed_node/point_cloud/cloud_registered, 
