@@ -31,3 +31,16 @@ point_cloud_sensor: {
   obstacle_range: 15.0,  # 15.0,
   raytrace_range: 16.0   # 16.0
 }
+
+plugins:
+    - {name: obstacles, type: "costmap_2d::VoxelLayer"}
+    - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
+    - {name: simple_layer, type: "simple_layer_namespace::SimpleLayer"} 
+
+obstacles:
+    observation_sources: base_scan
+    base_scan: {data_type: LaserScan, sensor_frame: /base_laser_link, clearing: true, marking: true, topic: /base_scan}
+
+
+
+

@@ -1,5 +1,5 @@
 global_costmap:
-  global_frame: caffeine/odom   # Because we don't have a map to load in, we use the odom frame as our global frame (rather than /map)
+  global_frame: caffeine/map   # Because we don't have a map to load in, we use the odom frame as our global frame (rather than /map)
   robot_base_frame: caffeine/base_link
   update_frequency: 2.0 # Set update rate lower for large maps
   rolling_window: true  # Set this to true bc static map == false (this makes setting 2D nav goals in rviz work)
@@ -8,3 +8,6 @@ global_costmap:
   # Full width and height of IGVC map
   width: 50
   height: 50
+  #plugins:
+      # - {name: simple_layer, type: "simple_layer_namespace::SimpleLayer" }
+      # - {name: inflation_layer, type: "costmap_2d::InflationLayer"} 
