@@ -36,6 +36,7 @@
     <xacro:property name="battery_width" value="0.05"/>
     <xacro:property name="battery_length" value="0.1"/>
     <xacro:property name="battery_height" value="0.05"/>
+    <!-- HACK/FIX: Left very heavy to ensure for 3-wheel drive, caffeine doesn't tilt forward-->
     <xacro:property name="battery_mass" value="33"/>
 
     <xacro:property name="battery_back_offset" value="0.17"/>
