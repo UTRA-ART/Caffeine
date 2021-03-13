@@ -1,4 +1,6 @@
+
 max_obstacle_height: 3.3 #can be a large number, I matched it to obstacle range
+
 footprint: [[-0.734, -0.582], [-0.734, 0.582], [0.734, 0.582], [0.734, -0.582]]
 inflation_radius: 0.4
 
@@ -11,8 +13,10 @@ laser_scan_sensor: {
   topic: caffeine/scan, 
   marking: true, 
   clearing: true,
+
   obstacle_range: 3.7,   # decide how far we should see obstacles, should be less than raytrace range
   raytrace_range: 4      # max lidar is rated for is 4m
+
 }
 # NOTE: due to the incline of Caffeine (uneven front/back casters),
 # the point clouds are not parallel with the ground! Hence
