@@ -1,4 +1,4 @@
-max_obstacle_height: 3.3 #can be a large number, I matched it to obstacle rang
+max_obstacle_height: 3.3 #can be a large number, I matched it to obstacle range
 footprint: [[-0.734, -0.582], [-0.734, 0.582], [0.734, 0.582], [0.734, -0.582]]
 inflation_radius: 0.4
 
