@@ -44,17 +44,20 @@ void GridLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, d
   if (!enabled_)
     return;
 
-  double mark_x = robot_x + cos(robot_yaw), mark_y = robot_y + sin(robot_yaw);
-  unsigned int mx;
-  unsigned int my;
-  if(worldToMap(mark_x, mark_y, mx, my)){
-    setCost(mx, my, LETHAL_OBSTACLE);
-  }
-  
-  *min_x = std::min(*min_x, mark_x);
-  *min_y = std::min(*min_y, mark_y);
-  *max_x = std::max(*max_x, mark_x);
-  *max_y = std::max(*max_y, mark_y);
+  std::vector<std::vector<double>> coord = { {1.0, 2.0}, {-3.0, 1.0} };
+  for (int i = 0; i < coord.size(); i++) { 
+      double mark_x = coord[i][0] + robot_x, mark_y = coord[i][1] + robot_y;
+      unsigned int mx;
+      unsigned int my;
+      if(worldToMap(mark_x + COSTMAP_OFFSET_X, mark_y + COSTMAP_OFFSET_Y, mx, my)){
+        setCost(mx, my, LETHAL_OBSTACLE);
+      }
+      
+      *min_x = std::min(*min_x, mark_x);
+      *min_y = std::min(*min_y, mark_y);
+      *max_x = std::max(*max_x, mark_x);
+      *max_y = std::max(*max_y, mark_y);
+    }
 }
 
 void GridLayer::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, int min_j, int max_i,

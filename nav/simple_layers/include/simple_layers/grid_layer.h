@@ -5,6 +5,7 @@
 #include <costmap_2d/layered_costmap.h>
 #include <costmap_2d/GenericPluginConfig.h>
 #include <dynamic_reconfigure/server.h>
+#include <vector> 
 
 namespace simple_layer_namespace
 {
@@ -26,6 +27,8 @@ public:
   virtual void matchSize();
 
 private:
+  const double COSTMAP_OFFSET_X = 3.0;
+  const double COSTMAP_OFFSET_Y = 3.0;
   void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv_;
 };

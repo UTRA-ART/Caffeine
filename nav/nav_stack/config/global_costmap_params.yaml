@@ -8,6 +8,5 @@ global_costmap:
   # Full width and height of IGVC map
   width: 50
   height: 50
-  #plugins:
-      # - {name: simple_layer, type: "simple_layer_namespace::SimpleLayer" }
-      # - {name: inflation_layer, type: "costmap_2d::InflationLayer"} 
+  plugins:
+     - {name: obstacles, type: "costmap_2d::VoxelLayer", output: "screen"}
