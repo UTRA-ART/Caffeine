@@ -11,8 +11,8 @@ laser_scan_sensor: {
   topic: caffeine/scan, 
   marking: true, 
   clearing: true,
-  obstacle_range: 3.7, #decide how far we should see obstacles, should be less than raytrace range
-  raytrace_range: 4 #max lidar is rated for is 4m
+  obstacle_range: 3.7,   # decide how far we should see obstacles, should be less than raytrace range
+  raytrace_range: 4      # max lidar is rated for is 4m
 }
 # NOTE: due to the incline of Caffeine (uneven front/back casters),
 # the point clouds are not parallel with the ground! Hence
@@ -27,7 +27,7 @@ point_cloud_sensor: {
   topic: zed/zed_node/point_cloud/cloud_registered, 
 
   marking: true, 
-  clearing: true, #doesn't point cloud doesnt see most of ramp, so it clears it
+  clearing: true, 
   obstacle_range: 15.0, # 15.0,
   raytrace_range: 16.0 # 16.0
 }
