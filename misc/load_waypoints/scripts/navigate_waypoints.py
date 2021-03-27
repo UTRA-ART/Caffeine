@@ -3,12 +3,14 @@
 from sensor_msgs.msg import NavSatFix
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from tf.transformations import quaternion_from_euler
+from geometry_msgs.msg import PoseStamped
 
 import rospy, os, json, sys 
 import rospkg
 import std_msgs.msg
 import actionlib
 import tf
+
 
 class NavigateWaypoints:
     def __init__(self, static_waypoint_file, max_time_for_transform):
@@ -98,11 +100,24 @@ class NavigateWaypoints:
         self.curr_waypoint_idx += 1
         return waypoint
             
+            #converts gps coordinated to frame (odom,map,etc)
     def get_pose_from_gps(self, longitude, latitude, frame, pose_test_var = None):
-        # Awaiting For Issue #12's Completion
+        utm_coords = utm.from_latlon(latitude, longitude)
 
-        # ==> TESTING CODE
-        return pose_(pose_test_var[0], pose_test_var[1], pose_test_var[2], pose_test_var[3], pose_test_var[4], pose_test_var[5])
+        # create PoseStamped message to set up for do_transform_pose 
+        utm_pose = PoseStamped()
+        utm_pose.header.frame_id = 'utm'
+        utm_pose.position.x = utm_coords[0]
+        utm_pose.position.y = utm_coords[1]
+
+        # get the utm->frame transform using tf2_ros
+        tfbuffer = tf2_ros.Buffer() 
+        tflistener = tf2_ros.TransformListener(tfbuffer)
+        T = tfbuffer.lookup_transform(frame, 'utm', rospy.Time())
+
+        # apply the transform
+        return tf2_geometry_msgs.do_transform_pose(utm_pose, T)
+        
         
     def send_and_wait_goal_to_move_base(self, pose, frame):
         # Create an action client called "move_base" with action definition file "MoveBaseAction"
@@ -112,10 +127,10 @@ class NavigateWaypoints:
         action_client.wait_for_server()
 
         # ==> UNSUPPORTED CODE, WAITING ON OTHER CODE SUBMISSION
-        # pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
+        pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
 
         # ==> TESTING CODE
-        pose = self.get_pose_from_gps(None, None, None, pose_test_var = pose)
+        #pose = self.get_pose_from_gps(None, None, None, pose_test_var = pose)
 
         # Creates a new goal with the MoveBaseGoal constructor
         goal = MoveBaseGoal()
