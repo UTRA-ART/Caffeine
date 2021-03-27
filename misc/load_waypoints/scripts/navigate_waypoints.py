@@ -10,6 +10,7 @@ import rospkg
 import std_msgs.msg
 import actionlib
 import tf
+import utm
 
 
 class NavigateWaypoints:
@@ -119,14 +120,13 @@ class NavigateWaypoints:
         return tf2_geometry_msgs.do_transform_pose(utm_pose, T)
         
         
-    def send_and_wait_goal_to_move_base(self, pose, frame):
+    def send_and_wait_goal_to_move_base(self, curr_waypoint):
         # Create an action client called "move_base" with action definition file "MoveBaseAction"
         action_client = actionlib.SimpleActionClient('/move_base', MoveBaseAction)
 
         # Waits until the action server has started up and started listening for goals.
         action_client.wait_for_server()
 
-        # ==> UNSUPPORTED CODE, WAITING ON OTHER CODE SUBMISSION
         pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
 
         # ==> TESTING CODE
@@ -161,10 +161,7 @@ class NavigateWaypoints:
         while True:
             curr_waypoint = self.get_next_waypoint()
 
-            # ==> TESTING CODE
-            pose = curr_waypoint["pose_test"]
-
-            self.send_and_wait_goal_to_move_base(pose, curr_waypoint["frame_id"])
+            self.send_and_wait_goal_to_move_base(curr_waypoint)
    
             if (self.curr_waypoint_idx >= len(self.waypoints)):
                 break
