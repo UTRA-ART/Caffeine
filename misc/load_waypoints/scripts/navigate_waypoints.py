@@ -11,6 +11,7 @@ import std_msgs.msg
 import actionlib
 import tf
 import utm
+import tf2_ros
 
 
 class NavigateWaypoints:
@@ -108,8 +109,8 @@ class NavigateWaypoints:
         # create PoseStamped message to set up for do_transform_pose 
         utm_pose = PoseStamped()
         utm_pose.header.frame_id = 'utm'
-        utm_pose.position.x = utm_coords[0]
-        utm_pose.position.y = utm_coords[1]
+        utm_pose.pose.position.x = utm_coords[0]
+        utm_pose.pose.position.y = utm_coords[1]
 
         # get the utm->frame transform using tf2_ros
         tfbuffer = tf2_ros.Buffer() 
