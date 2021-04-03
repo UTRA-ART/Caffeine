@@ -8,12 +8,37 @@
     <!-- Stand link definition. Note: purposely left blank -->
     <link name="${tf_prefix}/stand_link"/> 
 
+    <!-- Battery Link -->
+    <link name="${tf_prefix}/battery_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="${battery_width} ${battery_length} ${battery_height}"/>
+            </geometry>
+        </visual>  
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="${battery_width} ${battery_length} ${battery_height}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <xacro:box_inertia mass="${battery_mass}" length="${battery_length}" width="${battery_width}" height="${battery_height}"/>
+            <mass value="${battery_mass}"/>
+        </inertial>
+    </link>
+    <joint name="${tf_prefix}/battery_joint" type="fixed">
+        <origin xyz="${-1*(stand_length/2 + battery_width + battery_back_offset)} 0 ${wheel_diameter - (3*battery_height/2) - stand_height/2}" rpy="0 0 0"/>
+        <parent link="${tf_prefix}/chassis_link"/>
+        <child link="${tf_prefix}/battery_link"/>
+    </joint>
+
     <!-- ZED Camera -->
     <link name="${tf_prefix}/zed_camera_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry>
-            <box size="${ZED_camera_width} ${ZED_camera_length} ${ZED_camera_height}"/>
+                <box size="${ZED_camera_width} ${ZED_camera_length} ${ZED_camera_height}"/>
             </geometry>
         </visual>  
         <collision>

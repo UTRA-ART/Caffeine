@@ -5,29 +5,43 @@
     <xacro:include filename="$(find description)/urdf/constants.xacro"/>
     <xacro:include filename="$(find description)/urdf/inertias.xacro"/>
 
+    <!-- 
+        ************************* HACK/FIX *************************
+        Previously, we had spheres in sim that would allow
+        our drive system to go over ramps, at the cost of a tilted 
+        robot. A proposed hack/fix is to remove the front caster,
+        making Caffeine a 3-wheel drive robot, and adding a
+        counterweight at the back, representative of a battery, for 
+        example.
+
+        *Leave Front Caster+Wheel Definitions Commented Out*
+    -->
+
+
     <!-- Front caster definition -->
-    <link name="${tf_prefix}/front_caster_link">
+    <!-- <link name="${tf_prefix}/front_caster_link">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <sphere radius="${caster_link_radius}"/>
+                <mesh filename="package://description/urdf/meshes/front_caster.dae"/>
             </geometry>
         </visual>
 
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <sphere radius="${caster_link_radius}"/>
+                <mesh filename="package://description/urdf/meshes/front_caster.dae"/>
             </geometry>
         </collision>
 
         <inertial>
             <mass value="${caster_link_mass}"/>
-            <xacro:sphere_inertia mass="${caster_link_mass}" radius="${caster_link_radius}"/>
+            <xacro:caster_link_inertia/>
         </inertial>
     </link>
 
-    <joint name="${tf_prefix}/front_caster_link_joint" type="fixed">
+    <joint name="${tf_prefix}/front_caster_link_joint" type="continuous">
+        <axis xyz="0 0 1"/>
         <parent link="${tf_prefix}/chassis_link"/>
         <child link="${tf_prefix}/front_caster_link"/>
         <origin rpy="0 0 0" xyz="${casters_separation / 2.0} 0 ${caster_vertical_offset}"/>
@@ -38,31 +52,69 @@
         <mu2 value="0.3"/>
         <kp value="10000000.0" />
         <kd value="1.0" />
-    </gazebo>
+    </gazebo> -->
 
-    <!-- Back caster definition -->
-    <link name="${tf_prefix}/back_caster_link">
+    <!-- Front caster wheel definition -->
+    <!-- <link name="${tf_prefix}/front_caster_wheel">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <sphere radius="${caster_link_radius}"/> 
+                <mesh filename="package://description/urdf/meshes/front_caster_wheel.dae"/>
             </geometry>
         </visual>
 
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <sphere radius="${caster_link_radius}"/>
+                <mesh filename="package://description/urdf/meshes/front_caster_wheel.dae"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <mass value="${caster_wheel_mass}"/>
+            <xacro:caster_wheel_inertia/>
+        </inertial>
+
+    </link>
+
+    <joint name="${tf_prefix}/front_caster_wheel_joint" type="continuous">
+        <parent link="${tf_prefix}/front_caster_link"/>
+        <child link="${tf_prefix}/front_caster_wheel"/>
+        <origin rpy="0 0 0" xyz="${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
+        <axis xyz="0 1 0"/>
+    </joint>
+
+    <gazebo reference="${tf_prefix}/front_caster_wheel">
+        <mu1 value="0.1"/>
+        <mu2 value="0.1"/>
+        <kp value="10000000.0" />
+        <kd value="1.0" />
+    </gazebo> -->
+
+    <!-- Back caster definition -->
+    <link name="${tf_prefix}/back_caster_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/back_caster.dae"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/back_caster.dae"/>
             </geometry>
         </collision>
 
         <inertial>
             <mass value="${caster_link_mass}"/>
-            <xacro:sphere_inertia mass="${caster_link_mass}" radius="${caster_link_radius}"/>
+            <xacro:caster_link_inertia/>
         </inertial>
     </link>
 
-    <joint name="${tf_prefix}/back_caster_link_joint" type="fixed">
+    <joint name="${tf_prefix}/back_caster_link_joint" type="continuous">
+        <axis xyz="0 0 1"/>
         <parent link="${tf_prefix}/chassis_link"/>
         <child link="${tf_prefix}/back_caster_link"/>
         <origin rpy="0 0 0" xyz="-${casters_separation / 2.0} 0 ${caster_vertical_offset}"/>
@@ -74,5 +126,41 @@
         <kp value="10000000.0" />
         <kd value="1.0" />
     </gazebo>
-</robot>
 
+    <!-- Back caster wheel definition -->
+    <link name="${tf_prefix}/back_caster_wheel">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/back_caster_wheel.dae"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/back_caster_wheel.dae"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <mass value="${caster_wheel_mass}"/>
+            <xacro:caster_wheel_inertia/>
+        </inertial>
+    </link>
+        
+    <joint name="${tf_prefix}/back_caster_wheel_joint" type="continuous">
+        <parent link="${tf_prefix}/back_caster_link"/>
+        <child link="${tf_prefix}/back_caster_wheel"/>
+        <origin rpy="0 0 0" xyz="-${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
+        <axis xyz="0 1 0"/>
+    </joint>
+
+    <gazebo reference="${tf_prefix}/back_caster_wheel">
+        <mu1 value="0.1"/>
+        <mu2 value="0.1"/>
+        <kp value="10000000.0" />
+        <kd value="1.0" />
+    </gazebo>
+
+</robot>
