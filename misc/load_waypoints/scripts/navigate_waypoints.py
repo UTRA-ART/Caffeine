@@ -57,7 +57,7 @@ class NavigateWaypoints:
             # Append the starting gps coordinate to the waypoints dict as the final waypoint
             last_coord_idx = len(self.waypoints) 
             self.waypoints[last_coord_idx] = {
-                'id': last_coord_idx, 'longitude': gps_info.longitude, 'latitude': gps_info.latitude, 'description': 'Initial start location'}
+                'id': last_coord_idx, 'longitude': gps_info.longitude, 'latitude': gps_info.latitude, 'description': 'Initial start location', 'frame_id': 'caffeine/odom'}
 
             # Show waypoints 
             rospy.loginfo("Successfully loaded waypoints dict")
@@ -133,14 +133,14 @@ class NavigateWaypoints:
         # Waits until the action server has started up and started listening for goals.
         action_client.wait_for_server()
 
-        pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], "caffeine/odom")
+        pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
 
         # ==> TESTING CODE
         #pose = self.get_pose_from_gps(None, None, None, pose_test_var = pose)
 
         # Creates a new goal with the MoveBaseGoal constructor
         goal = MoveBaseGoal()
-        goal.target_pose.header.frame_id = "caffeine/odom"
+        goal.target_pose.header.frame_id = curr_waypoint["frame_id"]
         goal.target_pose.header.stamp = rospy.Time.now()
 
         # Set goal position and orientation
@@ -150,9 +150,13 @@ class NavigateWaypoints:
         action_client.send_goal(goal)
 
         # Waits for the server to finish performing the action.
-        wait = action_client.wait_for_result()
+        finished_within_time = action_client.wait_for_result(rospy.Duration(60))
 
-        rospy.loginfo("Reached nav goal")
+        if not finished_within_time:  
+            action_client.cancel_goal()  
+            rospy.loginfo("Timed out achieving goal")  
+        else:  
+            rospy.loginfo("Reached nav goal")
 
     def navigate_waypoints(self):
         while True:
