@@ -102,25 +102,27 @@ class NavigateWaypoints:
     
     def get_next_waypoint(self):
         waypoint = self.waypoints[self.curr_waypoint_idx]
+        print self.curr_waypoint_idx
         self.curr_waypoint_idx += 1
         return waypoint
             
             #converts gps coordinated to frame (odom,map,etc)
     def get_pose_from_gps(self, longitude, latitude, frame, pose_test_var = None):
         utm_coords = utm.from_latlon(latitude, longitude)
-
+        
         # create PoseStamped message to set up for do_transform_pose 
         utm_pose = PoseStamped()
         utm_pose.header.frame_id = 'utm'
         utm_pose.pose.position.x = utm_coords[0]
         utm_pose.pose.position.y = utm_coords[1]
+        utm_pose.pose.orientation.w = 1.0 #make sure its right side up
 
-        # get the utm->frame transform using tf
-        if self.tf.frameExists(frame) and self.tf.frameExists("utm"):
-            t = self.tf.getLatestCommonTime(frame, "utm")
-            return self.tf.lookupTransform(frame, "utm", t)
+        #t = self.tf.getLatestCommonTime("/"+frame, "utm")
+        p_in_frame = self.tf.transformPose("/"+frame, utm_pose)
+        #print p_in_frame
 
-        assert False
+        return p_in_frame
+
         
         
         
@@ -131,26 +133,18 @@ class NavigateWaypoints:
         # Waits until the action server has started up and started listening for goals.
         action_client.wait_for_server()
 
-        position,quaternion = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
+        pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], "caffeine/odom")
 
         # ==> TESTING CODE
         #pose = self.get_pose_from_gps(None, None, None, pose_test_var = pose)
 
         # Creates a new goal with the MoveBaseGoal constructor
         goal = MoveBaseGoal()
-        goal.target_pose.header.frame_id = curr_waypoint["frame_id"]
+        goal.target_pose.header.frame_id = "caffeine/odom"
         goal.target_pose.header.stamp = rospy.Time.now()
 
-        # Set goal position (x, y, and z are in meters)
-        goal.target_pose.pose.position.x = position[0]
-        goal.target_pose.pose.position.y = position[1]
-        goal.target_pose.pose.position.z = position[2]
-
-        # Set goal quaternion
-        goal.target_pose.pose.orientation.x = quaternion[0]
-        goal.target_pose.pose.orientation.y = quaternion[1]
-        goal.target_pose.pose.orientation.z = quaternion[2]
-        goal.target_pose.pose.orientation.w = quaternion[3]
+        # Set goal position and orientation
+        goal.target_pose.pose = pose.pose
 
         # Sends goal and waits until the action is completed (or aborted if it is impossible)
         action_client.send_goal(goal)

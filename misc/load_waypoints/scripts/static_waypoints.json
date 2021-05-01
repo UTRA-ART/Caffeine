@@ -2,8 +2,8 @@
     "waypoints" : [
         {
             "id" : 0,
-            "longitude" : -79.3900485119,
-            "latitude" : 43.6568810201,
+            "longitude" : -79.390052417,
+            "latitude" : 43.6568926611,
             "description"  : "Entrance of No-Man's Land",
             "frame_id" : "caffeine/odom",
             "pose_test" : [11.2,0,0,0,0,0],
@@ -11,8 +11,8 @@
         },
         {
             "id" : 1,
-            "longitude" : -79.3900680677,
-            "latitude" : 43.6569857282,
+            "longitude" : -79.390020164,
+            "latitude" : 43.6569534526, 
             "description"  : "Exit of No-Man's Land",
             "frame_id" : "caffeine/odom",
             "pose_test" : [15.7,-4.06,0,0,0,-0.547],
