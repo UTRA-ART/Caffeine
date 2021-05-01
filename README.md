@@ -47,6 +47,13 @@ Provides the [rtabmap_ros](http://wiki.ros.org/rtabmap_ros) package which is use
 sudo apt-get install ros-melodic-rtabmap-ros
 ```
 
+### Install Hector Gazebo Plugins ###
+Provides the [Hector Gazebo Plugins](http://wiki.ros.org/hector_gazebo_plugins) package for our GPS
+```
+sudo apt-get install ros-melodic-hector-gazebo-plugins
+```
+
+
 ## Cloning this repository ##
 Before cloning this repository, create a ROS workspace:
 ```
