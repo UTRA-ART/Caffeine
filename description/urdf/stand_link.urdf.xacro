@@ -94,7 +94,6 @@
     <!-- ZED camera lenses -->
     <!-- NOTE: I'm only defining one and not visually showing any-->
     <!-- I only need one for purposes of using the plugin -->
-    <!-- TODO: check if it's fine to call the left lense camera_link (rtabmap doesn't specify whether it wants the lense frame or the camera frame itself) -->
     <link name="${tf_prefix}/camera_link"> 
         <!-- Inertial tag here to ensure that link does not phase through robot-->
         <inertial>
