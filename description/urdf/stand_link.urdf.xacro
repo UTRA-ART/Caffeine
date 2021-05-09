@@ -7,6 +7,11 @@
     <!-- Stand link; this is a dummy link that is used to make camera placement and other sensors on the stand more convenient -->
     <!-- Stand link definition. Note: purposely left blank -->
     <link name="${tf_prefix}/stand_link"/> 
+    <joint name="${tf_prefix}/stand_link_joint" type="fixed">
+        <parent link="${tf_prefix}/chassis_link"/>
+        <child link="${tf_prefix}/stand_link"/>
+        <origin xyz="0 0 ${chassis_to_stand_link_dist}" rpy="0 0 0" />
+    </joint>
 
     <!-- ZED Camera -->
     <link name="${tf_prefix}/zed_camera_link">

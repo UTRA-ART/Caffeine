@@ -7,10 +7,10 @@
 
    <!-- LIDAR link -->
    <link name="${tf_prefix}/base_laser">
-        <inertial>
+      <inertial>
             <mass value="${laser_mass}"/>
             <xacro:box_inertia mass="${laser_mass}" length="${laser_length}" width="${laser_width}" height="${laser_height}"/>
-        </inertial>
+      </inertial>
 
       <visual>
          <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -26,4 +26,12 @@
          </geometry>
       </collision>
    </link>
+
+   <joint name="${tf_prefix}/base_laser_joint" type="fixed">
+      <parent link="${tf_prefix}/base_link"/>
+      <child link="${tf_prefix}/base_laser"/>
+      <origin xyz="${laser_x_dist} 0 ${laser_z_dist}" rpy="0 0 0"/>
+   </joint>
+
+
 </robot>
