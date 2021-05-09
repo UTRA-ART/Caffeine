@@ -21,6 +21,31 @@
     <xacro:include filename="$(find description)/urdf/casters.urdf.xacro"/>
 
     <!-- base_laser: LIDAR at front of Caffeine -->
-    <xacro:include filename="$(find description)/urdf/base_laser.urdf.xacro"/>
+    <link name="${tf_prefix}/base_laser">
+        <inertial>
+            <mass value="${laser_mass}"/>
+            <xacro:box_inertia mass="${laser_mass}" length="${laser_length}" width="${laser_width}" height="${laser_height}"/>
+        </inertial>
+
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+            <mesh filename="package://description/urdf/meshes/hokuyo.dae"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+            <mesh filename="package://description//urdf/meshes/hokuyo.dae"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="${tf_prefix}/base_laser_joint" type="fixed">
+        <parent link="${tf_prefix}/base_link"/>
+        <child link="${tf_prefix}/base_laser"/>
+        <origin xyz="${laser_x_dist} 0 ${laser_z_dist}" rpy="0 0 0"/>
+    </joint>
 
 </robot>
