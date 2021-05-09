@@ -20,6 +20,8 @@ laser_scan_sensor: {
 # cam should be angled downwards, to have an overlapping FOV
 # with the lidar!
 
+# NOTE: Caffeine may be parallel with ground with 3-wheel drive. Decision pending
+
 point_cloud_sensor: {
   min_obstacle_height: -0.05, 
   sensor_frame: caffeine/zed_camera_link, 
