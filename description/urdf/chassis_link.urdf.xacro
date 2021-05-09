@@ -26,6 +26,12 @@
         </inertial>
     </link>
 
+    <joint name="${tf_prefix}/chassis_link_joint" type="fixed">
+        <parent link="${tf_prefix}/base_link"/>
+        <child link="${tf_prefix}/chassis_link"/>
+        <origin xyz="0 0 ${chassis_to_base_link_dist}" rpy="0 0 0"/>
+    </joint>
+
     <!-- Battery Link -->
     <link name="${tf_prefix}/battery_link">
         <visual>
