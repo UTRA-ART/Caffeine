@@ -53,6 +53,10 @@ Provides the [Hector Gazebo Plugins](http://wiki.ros.org/hector_gazebo_plugins) 
 sudo apt-get install ros-melodic-hector-gazebo-plugins
 ```
 
+### Install IGVC World ###
+Custom built world(s) representing the IGVC competition can be found in the [`/worlds`](./worlds) package. To install them for use in the Gazebo simulator, run the `install_models.sh` script found in the `/worlds/models` folder.
+> **NOTE:** The install script copies specific contents of `/worlds/models` to `~/.gazebo/models`
+
 ## Cloning this repository ##
 Before cloning this repository, create a ROS workspace:
 ```
