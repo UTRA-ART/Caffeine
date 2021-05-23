@@ -44,9 +44,7 @@
             -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)" />
 
    <!-- Set up TF Tree -->
-   <include file="$(find description)/launch/setup_tf_tree.launch">
-      <arg name="robot" value="caffeine"/>
-   </include>
+   <include file="$(find description)/launch/setup_tf_tree.launch"/>
 
    <!-- Emulate ZED stereo camera image processing -->
    <include file="$(find description)/launch/zed_emulation.launch">
@@ -54,13 +52,11 @@
    </include>
 
    <!-- Run Twist Multiplexer -->
-   <include file="$(find twist_mux)/launch/twist_mux.launch" ns="caffeine">
+   <include file="$(find twist_mux)/launch/twist_mux.launch">
       <arg name="cmd_vel_out" value="cmd_vel"/>
    </include>
    
    <!-- Compute Odometry from Sensor Fusion -->
-   <include file="$(find odom)/launch/odom.launch">
-      <arg name="robot" value="caffeine"/>
-   </include>
+   <include file="$(find odom)/launch/odom.launch"/>
 
 </launch>

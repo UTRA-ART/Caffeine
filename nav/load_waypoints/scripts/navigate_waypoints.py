@@ -61,15 +61,13 @@ class NavigateWaypoints:
     def wait_for_utm_transform(self):
         '''
         Description: 
-            Used to wait for a transform from the /caffeine/map frame to /utm frame (which indicates that the GPS is ready). This accounts/simulates for gps start-up time. 
+            Used to wait for a transform from the /map frame to /utm frame (which indicates that the GPS is ready). This accounts/simulates for gps start-up time. 
             Once the transform is detected, this function will exit. 
         '''        
         # Initialize transform listener 
         listener = tf.TransformListener()
 
         rate = rospy.Rate(10.0)
-        
-        ns = rospy.get_namespace()
 
         start_time = rospy.get_time()
 
@@ -82,8 +80,8 @@ class NavigateWaypoints:
             else:
                 try:
                     now = rospy.Time.now()
-                    # Wait for transform from /caffeine/map to /utm
-                    listener.waitForTransform(ns+"map", "/utm", now, rospy.Duration(5.0))
+                    # Wait for transform from /map to /utm
+                    listener.waitForTransform("map", "/utm", now, rospy.Duration(5.0))
                     rospy.loginfo("Transform found. Time waited for transform: %s s"%(rospy.get_time() - start_time))
                     waited_for_transform = True
                     break

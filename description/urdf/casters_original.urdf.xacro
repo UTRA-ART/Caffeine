@@ -39,7 +39,7 @@
     <xacro:include filename="$(find description)/urdf/inertias.xacro"/>
 
     <!-- Front caster definition -->
-    <link name="${tf_prefix}/front_caster_link">
+    <link name="front_caster_link">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -60,14 +60,14 @@
         </inertial>
     </link>
 
-    <joint name="${tf_prefix}/front_caster_link_joint" type="continuous">
+    <joint name="front_caster_link_joint" type="continuous">
         <axis xyz="0 0 1"/>
-        <parent link="${tf_prefix}/chassis_link"/>
-        <child link="${tf_prefix}/front_caster_link"/>
+        <parent link="chassis_link"/>
+        <child link="front_caster_link"/>
         <origin rpy="0 0 0" xyz="${casters_separation / 2.0} 0 ${caster_vertical_offset}"/>
     </joint>
 
-    <gazebo reference="${tf_prefix}/front_caster_link">
+    <gazebo reference="front_caster_link">
         <mu1 value="0.3"/>
         <mu2 value="0.3"/>
         <kp value="10000000.0" />
@@ -75,7 +75,7 @@
     </gazebo>
 
     <!-- Back caster definition -->
-    <link name="${tf_prefix}/back_caster_link">
+    <link name="back_caster_link">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -96,14 +96,14 @@
         </inertial>
     </link>
 
-    <joint name="${tf_prefix}/back_caster_link_joint" type="continuous">
+    <joint name="back_caster_link_joint" type="continuous">
         <axis xyz="0 0 1"/>
-        <parent link="${tf_prefix}/chassis_link"/>
-        <child link="${tf_prefix}/back_caster_link"/>
+        <parent link="chassis_link"/>
+        <child link="back_caster_link"/>
         <origin rpy="0 0 0" xyz="-${casters_separation / 2.0} 0 ${caster_vertical_offset}"/>
     </joint>
 
-    <gazebo reference="${tf_prefix}/back_caster_link">
+    <gazebo reference="/back_caster_link">
         <mu1 value="0.3"/>
         <mu2 value="0.3"/>
         <kp value="10000000.0" />
@@ -111,7 +111,7 @@
     </gazebo>
 
     <!-- Front caster wheel definition -->
-    <link name="${tf_prefix}/front_caster_wheel">
+    <link name="front_caster_wheel">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -133,14 +133,14 @@
 
     </link>
 
-    <joint name="${tf_prefix}/front_caster_wheel_joint" type="continuous">
-        <parent link="${tf_prefix}/front_caster_link"/>
-        <child link="${tf_prefix}/front_caster_wheel"/>
+    <joint name="front_caster_wheel_joint" type="continuous">
+        <parent link="front_caster_link"/>
+        <child link="front_caster_wheel"/>
         <origin rpy="0 0 0" xyz="${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
         <axis xyz="0 1 0"/>
     </joint>
 
-    <gazebo reference="${tf_prefix}/front_caster_wheel">
+    <gazebo reference="front_caster_wheel">
         <mu1 value="0.1"/>
         <mu2 value="0.1"/>
         <kp value="10000000.0" />
@@ -148,7 +148,7 @@
     </gazebo>
 
     <!-- Back caster wheel definition -->
-    <link name="${tf_prefix}/back_caster_wheel">
+    <link name="back_caster_wheel">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -169,14 +169,14 @@
         </inertial>
     </link>
         
-    <joint name="${tf_prefix}/back_caster_wheel_joint" type="continuous">
-        <parent link="${tf_prefix}/back_caster_link"/>
-        <child link="${tf_prefix}/back_caster_wheel"/>
+    <joint name="back_caster_wheel_joint" type="continuous">
+        <parent link="back_caster_link"/>
+        <child link="back_caster_wheel"/>
         <origin rpy="0 0 0" xyz="-${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
         <axis xyz="0 1 0"/>
     </joint>
 
-    <gazebo reference="${tf_prefix}/back_caster_wheel">
+    <gazebo reference="back_caster_wheel">
         <mu1 value="0.1"/>
         <mu2 value="0.1"/>
         <kp value="10000000.0" />

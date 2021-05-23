@@ -33,8 +33,8 @@
             <!-- Refer to rtabmap_ros wiki, advanced parameter tuning, section 3.2-->
             <param name="Odom/ResetCountdown"   value="1"/> 
             
-            <param name="frame_id"              type="string" value="caffeine/base_link"/>
-            <param name="odom_frame_id"         value="caffeine/odom"/>
+            <param name="frame_id"              type="string" value="base_link"/>
+            <param name="odom_frame_id"         value="odom"/>
             <param name="approx_sync"           value="false"/>
             <param name="queue_size"            value="5"/>
             <param name="publish_tf"            value="false"/>

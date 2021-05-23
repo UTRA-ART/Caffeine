@@ -1,13 +1,10 @@
 <?xml version="1.0"?>
 <robot name="caffeine_constants" xmlns:xacro="http://ros.org/wiki/xacro">
-    <!-- Caffeine -->
-    <xacro:property name="robotNamespace" value="caffeine"/>
-    <xacro:property name="tf_prefix" value="caffeine"/>
 
     <!-- Drivebase -->
-   <xacro:property name="base_length" value="1.268"/>
-   <xacro:property name="base_width" value="0.764"/>
-   <xacro:property name="base_height" value="0.01"/>
+    <xacro:property name="base_length" value="1.268"/>
+    <xacro:property name="base_width" value="0.764"/>
+    <xacro:property name="base_height" value="0.01"/>
 
     <!-- Chassis --> 
     <xacro:property name="chassis_to_base_link_dist" value="0.501747"/>
@@ -23,12 +20,12 @@
 
     <!-- Casters -->
     <xacro:property name="caster_link_mass" value="1.2"/>
-     
+        
     <xacro:property name="casters_separation" value="1.12"/>
     <xacro:property name="caster_vertical_offset" value="-0.619167561"/>
-     
+        
     <xacro:property name="caster_wheel_mass" value="0.7"/>
-     
+        
     <xacro:property name="caster_link_to_wheel_dist_x" value="0.03621719"/>
     <xacro:property name="caster_link_to_wheel_dist_z" value="-0.04361749"/>
 
@@ -44,7 +41,7 @@
     <!-- Wheels -->
     <!-- TODO: Update acceleration and torque parameters when known -->
     <xacro:property name="wheel_vertical_offset" value="-0.61759696"/>
-    
+
     <xacro:property name="wheel_left_joint" value="left_wheel_joint"/>
     <xacro:property name="wheel_right_joint" value="right_wheel_joint"/>
 
@@ -58,7 +55,7 @@
 
     <!-- Gazebo Motor -->
     <xacro:property name="diff_drive_update_rate" value="30.0"/>
-    
+
     <xacro:property name="diff_drive_commandTopic" value="cmd_vel"/>
     <xacro:property name="diff_drive_odometryTopic" value="odom"/>
 
@@ -134,7 +131,7 @@
     <xacro:property name="gps_diam" value="0.061"/>
     <xacro:property name="gps_length" value="0.0195"/>
     <xacro:property name="gps_mass" value="0.165"/>
-    
+
     <xacro:property name="gps_frame" value="gps_link"/>
     <xacro:property name="gps_topic" value="gps/fix"/>
     <xacro:property name="gps_vel_topic" value="gps/fix_velocity"/>
@@ -149,13 +146,13 @@
     <xacro:property name="gps_vel_drift" value="0.00 0.00 0.00"/>
 
     <!-- Phidget IMU -->
-   <xacro:property name="phidget_length" value="0.04"/>
-   <xacro:property name="phidget_width" value="0.0375"/>
-   <xacro:property name="phidget_height" value="0.01"/>
-   <xacro:property name="phidget_mass" value="0.04"/>
+    <xacro:property name="phidget_length" value="0.04"/>
+    <xacro:property name="phidget_width" value="0.0375"/>
+    <xacro:property name="phidget_height" value="0.01"/>
+    <xacro:property name="phidget_mass" value="0.04"/>
 
-   <xacro:property name="imu_frame" value="imu_link"/>
-   <xacro:property name="imu_topic" value="imu/data"/>
-   <xacro:property name="imu_update_rate" value="128.0"/>
+    <xacro:property name="imu_frame" value="imu_link"/>
+    <xacro:property name="imu_topic" value="imu/data"/>
+    <xacro:property name="imu_update_rate" value="128.0"/>
 </robot>
 

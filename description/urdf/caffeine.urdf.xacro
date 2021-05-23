@@ -6,7 +6,7 @@
     <xacro:include filename="$(find description)/urdf/caffeine.gazebo.xacro"/>
 
     <!-- base_link: origin of the robot; located in the middle, on the top of the base plate -->
-    <link name="${tf_prefix}/base_link"/>
+    <link name="base_link"/>
 
     <!-- chassis_link: geometric center of the robot; used as the parent in which all other links connect to -->
     <xacro:include filename="$(find description)/urdf/chassis_link.urdf.xacro"/>
@@ -21,7 +21,7 @@
     <xacro:include filename="$(find description)/urdf/casters.urdf.xacro"/>
 
     <!-- base_laser: LIDAR at front of Caffeine -->
-    <link name="${tf_prefix}/base_laser">
+    <link name="base_laser">
         <inertial>
             <mass value="${laser_mass}"/>
             <xacro:box_inertia mass="${laser_mass}" length="${laser_length}" width="${laser_width}" height="${laser_height}"/>
@@ -42,9 +42,9 @@
         </collision>
     </link>
 
-    <joint name="${tf_prefix}/base_laser_joint" type="fixed">
-        <parent link="${tf_prefix}/base_link"/>
-        <child link="${tf_prefix}/base_laser"/>
+    <joint name="base_laser_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="base_laser"/>
         <origin xyz="${laser_x_dist} 0 ${laser_z_dist}" rpy="0 0 0"/>
     </joint>
 

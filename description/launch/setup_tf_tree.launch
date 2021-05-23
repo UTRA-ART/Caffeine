@@ -1,15 +1,14 @@
 <launch>
-    <arg name="robot" default="caffeine"/>
 
-    <group ns="$(arg robot)">
-        <!-- Parse URDF with xacro -->
-        <param name="robot_description" command="xacro '$(find description)/urdf/$(arg robot).urdf.xacro'"/>
+    <!-- Parse URDF with xacro -->
+    <param name="robot_description" command="xacro '$(find description)/urdf/caffeine.urdf.xacro'"/>
 
-        <!-- Set up TF Tree -->
-        <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-            <param name="rate" value="50"/>
-        </node>
-        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
-    </group>
+    <!-- Set up TF Tree -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <param name="rate" value="50"/>
+    </node>
+    
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
 </launch>
 
