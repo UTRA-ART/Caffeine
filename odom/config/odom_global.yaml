@@ -50,4 +50,3 @@ imu0_queue_size: 10
 imu0_differential: false
 imu0_relative: true
 imu0_remove_gravitational_acceleration: true
-

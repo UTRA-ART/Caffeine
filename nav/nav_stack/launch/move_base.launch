@@ -16,6 +16,6 @@
         <rosparam file="$(find nav_stack)/config/base_local_planner_params.yaml" command="load" />
     </node>
 
-    <node name="teleop_twist_keyboard" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py"/>
+    <!-- TODO: always have a manual override available when doing autonomous navigation -->
 
 </launch> 
