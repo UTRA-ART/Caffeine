@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="caffeine_sim" xmlns:xacro="http://ros.org/wiki/xacro">
+<robot name="plugins" xmlns:xacro="http://ros.org/wiki/xacro">
     
     <!-- Constants -->
     <xacro:include filename="$(find description)/urdf/constants.xacro"/>
@@ -90,7 +90,7 @@
     </gazebo>
     
     <!-- Gazebo multicamera plugin -->
-    <gazebo reference="camera_link">
+    <gazebo reference="left_camera_link">
         <sensor type="multicamera" name="stereo_camera">
             <update_rate>${ZED_image_refresh}</update_rate>
             <camera name="left">
@@ -106,7 +106,7 @@
             </clip>
             </camera>
             <camera name="right">
-            <pose>0 ${-ZED_camera_length} 0 0 0 0</pose>
+            <pose>0 -${ZED_camera_length} 0 0 0 0</pose>
             <horizontal_fov>${ZED_image_hfov}</horizontal_fov>
             <image>
                 <width>${ZED_image_width}</width>
@@ -164,5 +164,6 @@
             <pose>0 0 0 0 0 0</pose>
         </sensor>
     </gazebo>
+    
 </robot>
 

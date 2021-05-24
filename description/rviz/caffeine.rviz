@@ -88,10 +88,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        camera_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         chassis_link:
           Alpha: 1
           Show Axes: false
@@ -107,6 +103,14 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        left_camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        left_camera_link_optical:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         left_wheel_link:
           Alpha: 1
           Show Axes: false
@@ -126,10 +130,6 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        zed_camera_link_optical:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
@@ -151,14 +151,16 @@ Visualization Manager:
           Value: true
         battery_link:
           Value: false
-        camera_link:
-          Value: false
         chassis_link:
           Value: false
         gps_link:
           Value: true
         imu_link:
           Value: true
+        left_camera_link:
+          Value: false
+        left_camera_link_optical:
+          Value: false
         left_wheel_link:
           Value: false
         map:
@@ -173,8 +175,6 @@ Visualization Manager:
           Value: true
         zed_camera_link:
           Value: true
-        zed_camera_link_optical:
-          Value: false
       Marker Scale: 1
       Name: TF
       Show Arrows: true
@@ -202,10 +202,9 @@ Visualization Manager:
                   imu_link:
                     {}
                   zed_camera_link:
-                    camera_link:
-                      {}
-                    zed_camera_link_optical:
-                      {}
+                    left_camera_link:
+                      left_camera_link_optical:
+                        {}
           utm:
             {}
       Update Interval: 0

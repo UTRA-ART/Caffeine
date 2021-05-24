@@ -124,7 +124,7 @@
     <xacro:property name="ZED_depth_topicName" value="depth/image_raw"/>
     <xacro:property name="ZED_depth_info_topicName" value="depth/camera_info"/>
     <xacro:property name="ZED_depth_points_topicName" value="depth/points"/>
-    <xacro:property name="ZED_frameName" value="zed_camera_link_optical"/>
+    <xacro:property name="ZED_frameName" value="left_camera_link_optical"/>
 
     <!-- Garmin GPS -->
     <!-- NOTE: approx. as a cylinder, Garmin itself is similar to a hockey puck -->
@@ -154,5 +154,5 @@
     <xacro:property name="imu_frame" value="imu_link"/>
     <xacro:property name="imu_topic" value="imu/data"/>
     <xacro:property name="imu_update_rate" value="128.0"/>
-</robot>
 
+</robot>

@@ -39,13 +39,15 @@
             <geometry>
                 <box size="${battery_width} ${battery_length} ${battery_height}"/>
             </geometry>
-        </visual>  
+        </visual>
+
         <collision>
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry>
                 <box size="${battery_width} ${battery_length} ${battery_height}"/>
             </geometry>
         </collision>
+
         <inertial>
             <xacro:box_inertia mass="${battery_mass}" length="${battery_length}" width="${battery_width}" height="${battery_height}"/>
             <mass value="${battery_mass}"/>

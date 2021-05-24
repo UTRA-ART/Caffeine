@@ -3,7 +3,7 @@
     
     <!-- Includes -->
     <xacro:include filename="$(find description)/urdf/constants.xacro"/>
-    <xacro:include filename="$(find description)/urdf/caffeine.gazebo.xacro"/>
+    <xacro:include filename="$(find description)/urdf/plugins.gazebo.xacro"/>
 
     <!-- base_link: origin of the robot; located in the middle, on the top of the base plate -->
     <link name="base_link"/>
