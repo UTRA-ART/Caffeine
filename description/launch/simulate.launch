@@ -1,0 +1,42 @@
+<launch>
+
+    <arg name="use_gui" default="false"/>
+    <arg name="rqt_steer" default="false"/>
+    <arg name="rviz" default="false"/>
+
+    <!-- IGVC worlds: full, walls, ramp, plain, test -->
+    <arg name="world" default="full"/>
+
+    <!-- Simulate 'world' in Gazebo -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find worlds)/gazebo_worlds/igvc_$(arg world).world"/>
+
+        <arg name="paused" value="false"/>
+        <arg name="verbose" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+
+        <arg name="gui" value="$(arg use_gui)"/>
+        <arg name="gui_required" value="$(arg use_gui)"/>
+
+        <arg name="debug" value="false"/>
+        <arg name="server_required" value="false"/>
+    </include>
+
+    <!-- Spawn the robot -->
+    <include file="$(find description)/launch/spawn.launch"/>
+
+    <!-- MISCALLANEOUS -->
+
+    <!-- rqt robot steering GUI -->
+    <group if="$(arg rqt_steer)">
+        <node pkg="rqt_robot_steering" type="rqt_robot_steering" name="rqt_robot_steering">
+            <param name="default_topic" value="/man_vel"/>
+        </node>
+    </group>
+
+    <!-- RViz -->
+    <group if="$(arg rviz)">
+        <include file="$(find description)/launch/view.launch"/>
+    </group>
+
+</launch>

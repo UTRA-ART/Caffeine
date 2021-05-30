@@ -3,10 +3,10 @@ frequency: 50
 # Specify planar environment
 two_d_mode: false
 
-map_frame: caffeine/map
-odom_frame: caffeine/odom
-base_link_frame: caffeine/base_link
-world_frame: caffeine/odom
+map_frame: map
+odom_frame: odom
+base_link_frame: base_link
+world_frame: odom
 
 # publish transform: world_frame --> base_link_frame
 publish_tf: true
@@ -18,7 +18,7 @@ print_diagnostics: true
 
 ## Odometry Sensor(s) ##
 
-odom0: caffeine/odom
+odom0: odom
 odom0_config: [true , true , false,
                false, false, false,
                true , true , false,
@@ -40,7 +40,7 @@ odom1_relative: false
 
 ## IMU Sensor(s) ## 
 
-imu0: caffeine/imu/data 
+imu0: imu/data 
 imu0_config: [false, false, false, 
               true , true , true ,
               false, false, false,

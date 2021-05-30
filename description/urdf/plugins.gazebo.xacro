@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="caffeine_sim" xmlns:xacro="http://ros.org/wiki/xacro">
+<robot name="plugins" xmlns:xacro="http://ros.org/wiki/xacro">
     
     <!-- Constants -->
     <xacro:include filename="$(find description)/urdf/constants.xacro"/>
@@ -7,10 +7,9 @@
     <!-- differential drive control support -->
     <gazebo>
         <plugin name="caffeine_drive_controller" filename="libgazebo_ros_diff_drive.so">
-            <robotNamespace>${robotNamespace}</robotNamespace>
             <updateRate>${diff_drive_update_rate}</updateRate>
-            <leftJoint>${tf_prefix}/${wheel_left_joint}</leftJoint>
-            <rightJoint>${tf_prefix}/${wheel_right_joint}</rightJoint>
+            <leftJoint>${wheel_left_joint}</leftJoint>
+            <rightJoint>${wheel_right_joint}</rightJoint>
             <wheelSeparation>${wheels_separation}</wheelSeparation>
             <wheelDiameter>${wheel_diameter}</wheelDiameter>
             <wheelAcceleration>${wheel_acceleration}</wheelAcceleration>
@@ -31,13 +30,11 @@
     
     <!-- lets all the transmission tags be read -->
     <gazebo>
-        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-            <robotNamespace>${robotNamespace}</robotNamespace>
-        </plugin>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
     </gazebo>
 
     <!-- LIDAR -->
-    <gazebo reference="${tf_prefix}/base_laser">
+    <gazebo reference="base_laser">
         <sensor type="ray" name="gpu_hokuyo_sensor">
             <pose>0 0 0 0 0 0</pose>
             <visualize>${laser_visualize}</visualize>
@@ -66,7 +63,6 @@
                 </noise>
             </ray>
             <plugin name="gazebo_ros_hokuyo_controller" filename="libgazebo_ros_laser.so">
-                <robotNamespace>${robotNamespace}</robotNamespace>
                 <topicName>${laser_topicName}</topicName>
                 <frameName>${laser_frameName}</frameName>
             </plugin>
@@ -76,10 +72,9 @@
     <!-- GPS -->
     <gazebo>
         <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
-            <robotNamespace>${robotNamespace}</robotNamespace>
             <updateRate>${gps_update_rate}</updateRate>
-            <bodyName>${tf_prefix}/${gps_frame}</bodyName>
-            <frameId>${tf_prefix}/${gps_frame}</frameId>
+            <bodyName>${gps_frame}</bodyName>
+            <frameId>${gps_frame}</frameId>
 
             <topicName>${gps_topic}</topicName>
             <velocityTopicName>${gps_vel_topic}</velocityTopicName>
@@ -95,7 +90,7 @@
     </gazebo>
     
     <!-- Gazebo multicamera plugin -->
-    <gazebo reference="${tf_prefix}/camera_link">
+    <gazebo reference="left_camera_link">
         <sensor type="multicamera" name="stereo_camera">
             <update_rate>${ZED_image_refresh}</update_rate>
             <camera name="left">
@@ -111,7 +106,7 @@
             </clip>
             </camera>
             <camera name="right">
-            <pose>0 ${-ZED_camera_length} 0 0 0 0</pose>
+            <pose>0 -${ZED_camera_length} 0 0 0 0</pose>
             <horizontal_fov>${ZED_image_hfov}</horizontal_fov>
             <image>
                 <width>${ZED_image_width}</width>
@@ -132,7 +127,7 @@
                 <depthImageTopicName>${ZED_depth_topicName}</depthImageTopicName>
                 <depthImageInfoTopicName>${ZED_depth_info_topicName}</depthImageInfoTopicName>
                 <pointCloudTopicName>${ZED_depth_points_topicName}</pointCloudTopicName>
-                <frameName>${tf_prefix}/${ZED_frameName}</frameName>
+                <frameName>${ZED_frameName}</frameName>
                 <hackBaseline>${ZED_camera_length}</hackBaseline>
                 <!-- TODO: Get distortion parameters from real camera -->
                 <distortionK1>0.0</distortionK1>
@@ -145,7 +140,7 @@
     </gazebo>
 
     <!-- IMU -->
-    <gazebo reference="${tf_prefix}/imu_link">
+    <gazebo reference="imu_link">
         <material>Gazebo/Black</material>
 
         <gravity>true</gravity>
@@ -156,9 +151,9 @@
             <!-- TODO: add Drift based on Phidget IMU -->
 
             <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
-                <topicName>${robotNamespace}/${imu_topic}</topicName>
-                <bodyName>${tf_prefix}/${imu_frame}</bodyName>
-                <frameName>${tf_prefix}/${imu_frame}</frameName>
+                <topicName>${imu_topic}</topicName>
+                <bodyName>${imu_frame}</bodyName>
+                <frameName>${imu_frame}</frameName>
                 <updateRateHZ>${imu_update_rate}</updateRateHZ>
                 <gaussianNoise>0.0</gaussianNoise>  <!-- TODO: set Gaussian noise based on Phidget IMU -->
                 <xyzOffset>0 0 0</xyzOffset>
@@ -169,5 +164,6 @@
             <pose>0 0 0 0 0 0</pose>
         </sensor>
     </gazebo>
+    
 </robot>
 

@@ -16,7 +16,7 @@
     </xacro:macro>
 
     <!-- left wheel -->
-    <link name="${tf_prefix}/left_wheel_link">
+    <link name="left_wheel_link">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -37,25 +37,25 @@
         </inertial>
     </link>
 
-    <joint name="${tf_prefix}/left_wheel_joint" type="continuous">
-        <parent link="${tf_prefix}/chassis_link"/>
-        <child link="${tf_prefix}/left_wheel_link"/>
+    <joint name="left_wheel_joint" type="continuous">
+        <parent link="chassis_link"/>
+        <child link="left_wheel_link"/>
         <origin xyz= "0 ${wheels_separation / 2.0} ${wheel_vertical_offset}"/>
 
         <axis xyz="0 1 0"/>
     </joint>
 
-    <gazebo reference="${tf_prefix}/left_wheel_link">
+    <gazebo reference="left_wheel_link">
         <mu1 value="1.0"/>
         <mu2 value="1.0"/>
         <kp value="10000000.0" />
         <kd value="1.0" />
     </gazebo>
 
-    <xacro:Transmission joint="${tf_prefix}/left_wheel_joint"/>
+    <xacro:Transmission joint="left_wheel_joint"/>
 
     <!-- right wheel -->
-    <link name="${tf_prefix}/right_wheel_link">
+    <link name="right_wheel_link">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -76,21 +76,20 @@
         </inertial>
     </link>
 
-    <joint name="${tf_prefix}/right_wheel_joint" type="continuous">
-        <parent link="${tf_prefix}/chassis_link"/>
-        <child link="${tf_prefix}/right_wheel_link"/>
+    <joint name="right_wheel_joint" type="continuous">
+        <parent link="chassis_link"/>
+        <child link="right_wheel_link"/>
         <origin xyz= "0 -${wheels_separation / 2.0} ${wheel_vertical_offset}"/>
 
         <axis xyz="0 1 0"/>
     </joint>
 
-    <gazebo reference="${tf_prefix}/right_wheel_link">
+    <gazebo reference="right_wheel_link">
         <mu1 value="1.0"/>
         <mu2 value="1.0"/>
         <kp value="10000000.0" />
         <kd value="1.0" />
     </gazebo>
 
-    <xacro:Transmission joint="${tf_prefix}/right_wheel_joint"/>
+    <xacro:Transmission joint="right_wheel_joint"/>
 </robot>
-
