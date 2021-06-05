@@ -1,0 +1,44 @@
+<launch>
+
+    <arg name="camera_ns" default="zed/zed_node"/>
+
+    <group ns="$(arg camera_ns)">
+        <!-- Image Rectification + Stereo Processing -->
+        <node pkg="stereo_image_proc" type="stereo_image_proc" name="stereo_image_proc">
+            <remap from="points2"               to="point_cloud/cloud_registered"/>
+            <remap from="disparity"             to="disparity/disparity_registered"/>
+            <remap from="left/image_raw"        to="left/image_raw_color"/>
+            <remap from="right/image_raw"       to="right/image_raw_color"/>
+            <param name="speckle_size"          value="400"/>
+        </node>
+
+        <!-- Disparity to depth -->
+        <node pkg="nodelet" type="nodelet" name="disparity2depth" args="standalone rtabmap_ros/disparity_to_depth">
+            <remap from="depth"                 to="depth/depth_registered"/>
+            <remap from="disparity"             to="disparity/disparity_registered"/>
+        </node>
+
+        <!-- Visual Odometry using rtabmap_ros's stereo_odometry wrapper -->
+        <node pkg="rtabmap_ros" type="stereo_odometry" name="stereo_odometry">
+            <remap from="left/image_rect"       to="left/image_rect_color"/>
+            <remap from="left/camera_info"      to="left/camera_info"/>
+
+            <remap from="right/image_rect"      to="right/image_rect_color"/>
+            <remap from="right/camera_info"     to="right/camera_info"/>
+
+            <remap from="depth"                 to="depth/depth_registered"/>
+            
+            <!-- Resets vis odom to last value after being reset. Works as long as vis odom isn't lost for too long -->
+            <!-- Refer to rtabmap_ros wiki, advanced parameter tuning, section 3.2-->
+            <param name="Odom/ResetCountdown"   value="1"/> 
+            
+            <param name="frame_id"              type="string" value="base_link"/>
+            <param name="odom_frame_id"         value="odom"/>
+            <param name="approx_sync"           value="false"/>
+            <param name="queue_size"            value="5"/>
+            <param name="publish_tf"            value="false"/>
+        </node>
+
+    </group>
+
+</launch>

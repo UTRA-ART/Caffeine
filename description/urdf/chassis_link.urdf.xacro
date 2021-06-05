@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<robot name="chassis" xmlns:xacro="http://ros.org/wiki/xacro">
+    <!-- Includes -->
+    <xacro:include filename="$(find description)/urdf/constants.xacro"/>
+    <xacro:include filename="$(find description)/urdf/inertias.xacro"/>
+
+    <!-- Chassis link definition; chassis link is associated with the centroid of the bounding box of the robot and the chassis_link.dae file-->
+    <link name="chassis_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/chassis_link.dae"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://description/urdf/meshes/chassis_link.dae"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <mass value="${chassis_link_mass}"/>
+            <xacro:chassis_link_inertia/>
+        </inertial>
+    </link>
+
+    <joint name="chassis_link_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="chassis_link"/>
+        <origin xyz="0 0 ${chassis_to_base_link_dist}" rpy="0 0 0"/>
+    </joint>
+
+    <!-- Battery Link -->
+    <link name="battery_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="${battery_width} ${battery_length} ${battery_height}"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="${battery_width} ${battery_length} ${battery_height}"/>
+            </geometry>
+        </collision>
+
+        <inertial>
+            <xacro:box_inertia mass="${battery_mass}" length="${battery_length}" width="${battery_width}" height="${battery_height}"/>
+            <mass value="${battery_mass}"/>
+        </inertial>
+    </link>
+
+    <joint name="battery_joint" type="fixed">
+        <origin xyz="${-1*(stand_length/2 + battery_width + battery_back_offset)} 0 ${wheel_diameter - (3*battery_height/2) - stand_height/2}" rpy="0 0 0"/>
+        <parent link="chassis_link"/>
+        <child link="battery_link"/>
+    </joint>
+
+</robot>

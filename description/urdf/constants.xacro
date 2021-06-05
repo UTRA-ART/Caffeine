@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<robot name="caffeine_constants" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <!-- Drivebase -->
+    <xacro:property name="base_length" value="1.268"/>
+    <xacro:property name="base_width" value="0.764"/>
+    <xacro:property name="base_height" value="0.01"/>
+
+    <!-- Chassis --> 
+    <xacro:property name="chassis_to_base_link_dist" value="0.501747"/>
+    <xacro:property name="chassis_to_stand_link_dist" value="0.698253"/>
+
+    <xacro:property name="chassis_link_mass" value="33.9"/>
+
+    <!-- Stand -->
+    <xacro:property name="stand_length" value="0.412"/>
+    <xacro:property name="stand_width" value="0.254"/>
+    <xacro:property name="stand_height" value="1.324"/>
+    <xacro:property name="stand_mass" value="1.0"/>
+
+    <!-- Casters -->
+    <xacro:property name="caster_link_mass" value="1.2"/>
+        
+    <xacro:property name="casters_separation" value="1.12"/>
+    <xacro:property name="caster_vertical_offset" value="-0.619167561"/>
+        
+    <xacro:property name="caster_wheel_mass" value="0.7"/>
+        
+    <xacro:property name="caster_link_to_wheel_dist_x" value="0.03621719"/>
+    <xacro:property name="caster_link_to_wheel_dist_z" value="-0.04361749"/>
+
+    <!-- Battery -->
+    <xacro:property name="battery_width" value="0.05"/>
+    <xacro:property name="battery_length" value="0.1"/>
+    <xacro:property name="battery_height" value="0.05"/>
+    <!-- HACK/FIX: Left very heavy to ensure for 3-wheel drive, caffeine doesn't tilt forward-->
+    <xacro:property name="battery_mass" value="33"/>
+
+    <xacro:property name="battery_back_offset" value="0.17"/>
+
+    <!-- Wheels -->
+    <!-- TODO: Update acceleration and torque parameters when known -->
+    <xacro:property name="wheel_vertical_offset" value="-0.61759696"/>
+
+    <xacro:property name="wheel_left_joint" value="left_wheel_joint"/>
+    <xacro:property name="wheel_right_joint" value="right_wheel_joint"/>
+
+    <xacro:property name="wheels_separation" value="0.875"/>
+    <xacro:property name="wheel_diameter" value="0.25"/>
+
+    <xacro:property name="wheel_acceleration" value="1.0"/>
+    <xacro:property name="wheel_torque" value="20"/>
+
+    <xacro:property name="wheel_mass" value="4.45"/>
+
+    <!-- Gazebo Motor -->
+    <xacro:property name="diff_drive_update_rate" value="30.0"/>
+
+    <xacro:property name="diff_drive_commandTopic" value="cmd_vel"/>
+    <xacro:property name="diff_drive_odometryTopic" value="odom"/>
+
+    <xacro:property name="diff_drive_odometryFrame" value="odom"/>
+    <xacro:property name="diff_drive_robotBaseFrame" value="base_link"/>
+
+    <xacro:property name="diff_drive_odometrySource" value="encoder"/>
+
+    <xacro:property name="diff_drive_publishWheelTF" value="false"/>
+    <xacro:property name="diff_drive_publishOdomTF" value="false"/>
+    <xacro:property name="diff_drive_publishTf" value="true"/>
+    <xacro:property name="diff_drive_publishWheelJointState" value="true"/>
+
+    <xacro:property name="diff_drive_legacymode" value="false"/>
+    <xacro:property name="diff_drive_rosDebugLevel" value="na"/>
+
+    <!-- Hokuyo 2D LIDAR sensor -->
+    <xacro:property name="laser_visualize" value="false"/>
+    <xacro:property name="laser_update_rate" value="10"/>
+
+    <xacro:property name="laser_horizontal_samples" value="1080"/>
+    <xacro:property name="laser_horizontal_resolution" value="1"/>
+    <xacro:property name="laser_field_of_view" value="270"/>
+    <xacro:property name="laser_horizontal_min_angle" value="${-0.5*laser_field_of_view*pi/180}"/>
+    <xacro:property name="laser_horizontal_max_angle" value="${0.5*laser_field_of_view*pi/180}"/>
+
+    <xacro:property name="laser_range_min" value="0.06"/>
+    <xacro:property name="laser_range_max" value="4.095"/>
+    <xacro:property name="laser_resolution_angle" value="0.36"/> 
+    <xacro:property name="laser_range_resolution" value="${laser_resolution_angle*pi/180}"/>
+
+    <xacro:property name="laser_noise_type" value="gaussian"/>
+    <xacro:property name="laser_noise_mean" value="0.0"/>
+    <xacro:property name="laser_noise_stddev" value="0.01/3"/>
+
+    <xacro:property name="laser_topicName" value="scan"/>
+    <xacro:property name="laser_frameName" value="base_laser"/>
+
+    <xacro:property name="laser_length" value="0.05"/>
+    <xacro:property name="laser_width" value="0.05"/>
+    <xacro:property name="laser_height" value="0.07"/>
+    <xacro:property name="laser_mass" value="0.16"/>
+
+    <xacro:property name="laser_x_dist" value="${base_length/2 - 2*laser_length}"/>
+    <xacro:property name="laser_z_dist" value="${laser_height/2}"/>
+
+    <!-- ZED camera -->
+    <!-- NOTE: approx as a rectangular prism -->
+    <xacro:property name="ZED_camera_mass" value="0.1587573"/>
+    <xacro:property name="ZED_camera_length" value="0.175"/>
+    <xacro:property name="ZED_camera_width" value="0.03"/>
+    <xacro:property name="ZED_camera_height" value="0.033"/>
+    <xacro:property name="ZED_camera_pitch" value="${15 * pi/180}"/>
+    <!-- ZED image height/width corresponds to image size for 60Hz refresh-->
+    <xacro:property name="ZED_image_refresh" value="60"/>
+    <xacro:property name="ZED_image_width" value="3840"/>
+    <xacro:property name="ZED_image_height" value="1080"/>
+    <xacro:property name="ZED_image_format" value="R8G8B8"/>
+    <xacro:property name="ZED_image_hfov" value="${90 * pi/180}"/>
+
+    <xacro:property name="ZED_name" value="zed/zed_node"/>
+    <xacro:property name="ZED_always_on" value="true"/>
+    <xacro:property name="ZED_update_rate" value="0"/>
+    <xacro:property name="ZED_image_topicName" value="image_raw_color"/>
+    <xacro:property name="ZED_image_info_topicName" value="camera_info"/>
+    <xacro:property name="ZED_depth_topicName" value="depth/image_raw"/>
+    <xacro:property name="ZED_depth_info_topicName" value="depth/camera_info"/>
+    <xacro:property name="ZED_depth_points_topicName" value="depth/points"/>
+    <xacro:property name="ZED_frameName" value="left_camera_link_optical"/>
+
+    <!-- Garmin GPS -->
+    <!-- NOTE: approx. as a cylinder, Garmin itself is similar to a hockey puck -->
+    <xacro:property name="gps_diam" value="0.061"/>
+    <xacro:property name="gps_length" value="0.0195"/>
+    <xacro:property name="gps_mass" value="0.165"/>
+
+    <xacro:property name="gps_frame" value="gps_link"/>
+    <xacro:property name="gps_topic" value="gps/fix"/>
+    <xacro:property name="gps_vel_topic" value="gps/fix_velocity"/>
+    <xacro:property name="gps_update_rate" value="5.0"/>
+
+    <!-- NOTE: GPS coordinates for UofT St. George Campus -->
+    <xacro:property name="ref_lat" value="43.6570"/>
+    <xacro:property name="ref_lon" value="-79.3903"/>
+    <xacro:property name="ref_alt" value="76.0000"/>
+
+    <xacro:property name="gps_drift" value="1.5 1.5 1.5"/>
+    <xacro:property name="gps_vel_drift" value="0.00 0.00 0.00"/>
+
+    <!-- Phidget IMU -->
+    <xacro:property name="phidget_length" value="0.04"/>
+    <xacro:property name="phidget_width" value="0.0375"/>
+    <xacro:property name="phidget_height" value="0.01"/>
+    <xacro:property name="phidget_mass" value="0.04"/>
+
+    <xacro:property name="imu_frame" value="imu_link"/>
+    <xacro:property name="imu_topic" value="imu/data"/>
+    <xacro:property name="imu_update_rate" value="128.0"/>
+
+</robot>
