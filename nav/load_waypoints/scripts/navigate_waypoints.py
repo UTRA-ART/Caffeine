@@ -3,12 +3,17 @@
 from sensor_msgs.msg import NavSatFix
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from tf.transformations import quaternion_from_euler
+from geometry_msgs.msg import PoseStamped
+from tf import TransformListener
 
 import rospy, os, json, sys 
 import rospkg
 import std_msgs.msg
 import actionlib
 import tf
+import utm
+import tf2_ros
+
 
 class NavigateWaypoints:
     def __init__(self, static_waypoint_file, max_time_for_transform):
@@ -19,6 +24,8 @@ class NavigateWaypoints:
 
         self.populate_waypoint_dict() 
         self.curr_waypoint_idx = 0 
+        self.tf = TransformListener()
+
 
     def populate_waypoint_dict(self):
         '''
@@ -50,7 +57,7 @@ class NavigateWaypoints:
             # Append the starting gps coordinate to the waypoints dict as the final waypoint
             last_coord_idx = len(self.waypoints) 
             self.waypoints[last_coord_idx] = {
-                'id': last_coord_idx, 'longitude': gps_info.longitude, 'latitude': gps_info.latitude, 'description': 'Initial start location'}
+                'id': last_coord_idx, 'longitude': gps_info.longitude, 'latitude': gps_info.latitude, 'description': 'Initial start location', 'frame_id': 'odom'}
 
             # Show waypoints 
             rospy.loginfo("Successfully loaded waypoints dict")
@@ -93,73 +100,72 @@ class NavigateWaypoints:
     
     def get_next_waypoint(self):
         waypoint = self.waypoints[self.curr_waypoint_idx]
+        print self.curr_waypoint_idx
         self.curr_waypoint_idx += 1
         return waypoint
             
+            #converts gps coordinated to frame (odom,map,etc)
     def get_pose_from_gps(self, longitude, latitude, frame, pose_test_var = None):
-        # Awaiting For Issue #12's Completion
-
-        # ==> TESTING CODE
-        return pose_(pose_test_var[0], pose_test_var[1], pose_test_var[2], pose_test_var[3], pose_test_var[4], pose_test_var[5])
+        utm_coords = utm.from_latlon(latitude, longitude)
         
-    def send_and_wait_goal_to_move_base(self, pose, frame):
+        # create PoseStamped message to set up for do_transform_pose 
+        utm_pose = PoseStamped()
+        utm_pose.header.frame_id = 'utm'
+        utm_pose.pose.position.x = utm_coords[0]
+        utm_pose.pose.position.y = utm_coords[1]
+        utm_pose.pose.orientation.w = 1.0 #make sure its right side up
+
+        #t = self.tf.getLatestCommonTime("/"+frame, "utm")
+        p_in_frame = self.tf.transformPose("/"+frame, utm_pose)
+        #print p_in_frame
+
+        return p_in_frame
+
+        
+        
+        
+    def send_and_wait_goal_to_move_base(self, curr_waypoint):
         # Create an action client called "move_base" with action definition file "MoveBaseAction"
         action_client = actionlib.SimpleActionClient('/move_base', MoveBaseAction)
 
         # Waits until the action server has started up and started listening for goals.
         action_client.wait_for_server()
 
-        # ==> UNSUPPORTED CODE, WAITING ON OTHER CODE SUBMISSION
-        # pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
+        pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
 
         # ==> TESTING CODE
-        pose = self.get_pose_from_gps(None, None, None, pose_test_var = pose)
+        #pose = self.get_pose_from_gps(None, None, None, pose_test_var = pose)
 
         # Creates a new goal with the MoveBaseGoal constructor
         goal = MoveBaseGoal()
-        goal.target_pose.header.frame_id = frame
+        goal.target_pose.header.frame_id = curr_waypoint["frame_id"]
         goal.target_pose.header.stamp = rospy.Time.now()
 
-        # Set goal position (x, y, and z are in meters)
-        goal.target_pose.pose.position.x = pose.x
-        goal.target_pose.pose.position.y = pose.y
-        goal.target_pose.pose.position.z = pose.z
-
-        # Convert roll, pitch, yaw to quaternion and set pose with roll, pitch and yaw in radians
-        q = quaternion_from_euler(pose.roll, pose.pitch, pose.yaw)
-        goal.target_pose.pose.orientation.x = q[0]
-        goal.target_pose.pose.orientation.y = q[1]
-        goal.target_pose.pose.orientation.z = q[2]
-        goal.target_pose.pose.orientation.w = q[3]
+        # Set goal position and orientation
+        goal.target_pose.pose = pose.pose
 
         # Sends goal and waits until the action is completed (or aborted if it is impossible)
         action_client.send_goal(goal)
 
         # Waits for the server to finish performing the action.
-        wait = action_client.wait_for_result()
+        finished_within_time = action_client.wait_for_result(rospy.Duration(60))
 
-        rospy.loginfo("Reached nav goal")
+        if not finished_within_time:  
+            action_client.cancel_goal()  
+            rospy.loginfo("Timed out achieving goal")  
+        else:  
+            rospy.loginfo("Reached nav goal")
 
     def navigate_waypoints(self):
         while True:
             curr_waypoint = self.get_next_waypoint()
 
-            # ==> TESTING CODE
-            pose = curr_waypoint["pose_test"]
-
-            self.send_and_wait_goal_to_move_base(pose, curr_waypoint["frame_id"])
+            self.send_and_wait_goal_to_move_base(curr_waypoint)
    
             if (self.curr_waypoint_idx >= len(self.waypoints)):
                 break
 
-class pose_:
-    def __init__(self, x, y, z, roll, pitch, yaw):
-        self.x = x
-        self.y = y
-        self.z = z
-        self.roll = roll
-        self.pitch = pitch
-        self.yaw = yaw
+
 
 if __name__ == "__main__":
     static_waypoint_file = 'static_waypoints.json' # File name for static waypoints (provided at competition-time) 
