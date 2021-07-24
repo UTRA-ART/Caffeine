@@ -22,6 +22,8 @@ include_directories(
 )
 
 catkin_install_python(
-  PROGRAMS scripts/navigate_waypoints.py
+  PROGRAMS 
+  scripts/test_gps
+  scripts/navigate_waypoints.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
