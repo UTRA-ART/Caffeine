@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="load_waypoints" type="navigate_waypoints.py" name="load_waypoints_server" output="screen"/>
+</launch> 
