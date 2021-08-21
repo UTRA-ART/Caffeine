@@ -10,3 +10,4 @@ global_costmap:
   height: 50
   plugins:
      - {name: obstacles, type: "costmap_2d::VoxelLayer", output: "screen"}
+     - {name: inflation_layer, type: "costmap_2d::InflationLayer", output: "screen"}

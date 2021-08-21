@@ -26,6 +26,8 @@ public:
 
   virtual void matchSize();
 
+  double counter = 0.0;
+
 private:
   const double COSTMAP_OFFSET_X = 3.0;
   const double COSTMAP_OFFSET_Y = 3.0;
