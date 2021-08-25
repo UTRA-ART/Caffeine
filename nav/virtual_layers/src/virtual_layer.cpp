@@ -1,17 +1,17 @@
-#include <simple_layers/grid_layer.h>
+#include <virtual_layers/virtual_layer.h>
 #include <pluginlib/class_list_macros.h>
 
-PLUGINLIB_EXPORT_CLASS(simple_layer_namespace::GridLayer, costmap_2d::Layer)
+PLUGINLIB_EXPORT_CLASS(virtual_layers::VirtualLayer, costmap_2d::Layer)
 
 using costmap_2d::LETHAL_OBSTACLE;
 using costmap_2d::NO_INFORMATION;
 
-namespace simple_layer_namespace
+namespace virtual_layers
 {
 
-GridLayer::GridLayer() {}
+VirtualLayer::VirtualLayer() {}
 
-void GridLayer::onInitialize()
+void VirtualLayer::onInitialize()
 {
   ros::NodeHandle nh("~/" + name_);
   current_ = true;
@@ -20,12 +20,11 @@ void GridLayer::onInitialize()
 
   dsrv_ = new dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>(nh);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>::CallbackType cb = boost::bind(
-      &GridLayer::reconfigureCB, this, _1, _2);
+      &VirtualLayer::reconfigureCB, this, _1, _2);
   dsrv_->setCallback(cb);
 }
 
-
-void GridLayer::matchSize()
+void VirtualLayer::matchSize()
 {
   Costmap2D* master = layered_costmap_->getCostmap();
   resizeMap(master->getSizeInCellsX(), master->getSizeInCellsY(), master->getResolution(),
@@ -33,20 +32,28 @@ void GridLayer::matchSize()
 }
 
 
-void GridLayer::reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level)
+void VirtualLayer::reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level)
 {
   enabled_ = config.enabled;
 }
 
-void GridLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x,
+void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x,
                                            double* min_y, double* max_x, double* max_y)
 {
   if (!enabled_)
     return;
 
-  std::vector<std::vector<double>> coord = { {2.0, counter}, {-3.0, 1.0} };
-  for (int i = 0; i < coord.size(); i++) { 
-      double mark_x = coord[i][0] + robot_x, mark_y = coord[i][1] + robot_y;
+  double x_point = counter;
+  double y_point = 0.0;
+
+  double x_transform = robot_x*cos(robot_yaw);
+  double y_transform = robot_y*sin(robot_yaw);
+
+  std::vector<std::vector<double>> coord = { {x_point, y_point} };
+  for (int i = 0; i < coord.size(); i++) {
+      double magnitude = sqrt(pow(coord[i][0],2) + pow(coord[i][1],2));
+      double mark_x = magnitude*cos(robot_yaw) + robot_x, mark_y = magnitude*sin(robot_yaw) + robot_y;
+      // double mark_x = coord[i][0] + robot_x, mark_y = coord[i][1] + robot_y;
       unsigned int mx;
       unsigned int my;
       if(worldToMap(mark_x + COSTMAP_OFFSET_X, mark_y + COSTMAP_OFFSET_Y, mx, my)){
@@ -62,7 +69,7 @@ void GridLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, d
   counter += 0.1;
 }
 
-void GridLayer::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, int min_j, int max_i,
+void VirtualLayer::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, int min_j, int max_i,
                                           int max_j)
 {
   if (!enabled_)
@@ -80,5 +87,4 @@ void GridLayer::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, int m
   }
 }
 
-} // end namespace
-
+}  // namespace virtual_layers

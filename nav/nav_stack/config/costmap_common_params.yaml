@@ -27,9 +27,3 @@ obstacles:
       obstacle_range: 15.0,
       raytrace_range: 16.0
     }
-
-    # plugins:
-    #    - {name: obstacle_layer, type: "costmap_2d::ObstacleLayer", output: "screen"}
-        # - {name: simple_layer, type: "simple_layer_namespace::SimpleLayer", output: "screen"}
-        #    - {name: grid_layer, type: "simple_layer_namespace::GridLayer", output: "screen"}
-        # - {name: inflation_layer, type: "costmap_2d::InflationLayer", output: "screen"}
