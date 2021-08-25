@@ -46,9 +46,6 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
   double x_point = counter;
   double y_point = 0.0;
 
-  double x_transform = robot_x*cos(robot_yaw);
-  double y_transform = robot_y*sin(robot_yaw);
-
   std::vector<std::vector<double>> coord = { {x_point, y_point} };
   for (int i = 0; i < coord.size(); i++) {
       double magnitude = sqrt(pow(coord[i][0],2) + pow(coord[i][1],2));
