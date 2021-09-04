@@ -42,11 +42,62 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
 {
   if (!enabled_)
     return;
+  //random points
+  int n = 2;
+  int point_x;
+  int point_y;
+  std::vector<std::vector<int>> points;
+  
+  for (int xy = 0; xy < n ; xy++){
+    point_x = rand() % 639;
+    point_y = rand() % 479;
+    points.push_back({point_x, point_y});
+    cout << point_x << ", " << point_y << endl
+  }
 
-  double x_point = counter;
-  double y_point = 0.0;
+  std::vector<std::vector<int>> coord;
 
-  std::vector<std::vector<double>> coord = { {x_point, y_point} };
+  //brensenham's algorithm
+  for (int j = 0; j != n; j++){
+    int x1 = points[j][0];
+    int x2 = points[j+1][0];
+    int y1 = points[j][1];
+    int y2 = points[j+1][1];
+    int h = abs(y2 - y1);
+    int w = abs(x2 - x1);
+    int dy = (y2 > y1) ? 1 : -1;
+    int dx = (x2 > x1) ? 1 : -1;
+
+    if (w > h){
+      int y_point = y1;
+      int D1 = (2 * h) - w;
+      for (int x_point = x1; x_point != x2; x_point += dx){
+        if(D1 < 0){
+          D1 += 2 * h;
+        }
+        else{
+          y_point += dy;
+          D1 += (2 * h) - (2 * w);
+          coord.push_back({x_point, y_point});
+        }
+      }
+    }
+    else{
+      int x_point = x1;
+      int D2 = (2 * w) - h;
+      for (int y_point = y1; y_point != y2; y_point += dy){
+        if (D2 < 0){
+          D2 += 2 * w;
+        }
+        else{
+          x_point += dx;
+          D2 += (2 * w) - (2 * h);
+          coord.push_back({x_point, y_point});
+        }
+      }
+    }
+  }
+
   for (int i = 0; i < coord.size(); i++) {
       double magnitude = sqrt(pow(coord[i][0],2) + pow(coord[i][1],2));
       double mark_x = magnitude*cos(robot_yaw) + robot_x, mark_y = magnitude*sin(robot_yaw) + robot_y;
@@ -63,7 +114,6 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
       *max_y = std::max(*max_y, mark_y);
     }
   
-  counter += 0.1;
 }
 
 void VirtualLayer::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, int min_j, int max_i,
