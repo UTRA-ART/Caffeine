@@ -1,6 +1,8 @@
 #include <virtual_layers/virtual_layer.h>
 #include <pluginlib/class_list_macros.h>
 
+#include <random>
+
 PLUGINLIB_EXPORT_CLASS(virtual_layers::VirtualLayer, costmap_2d::Layer)
 
 using costmap_2d::LETHAL_OBSTACLE;
@@ -37,66 +39,48 @@ void VirtualLayer::reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32
   enabled_ = config.enabled;
 }
 
+std::vector<std::vector<double>> getRandomPoints() {
+  int n = 2;
+  double point_x;
+  double point_y;
+  std::vector<std::vector<double>> points;
+  std::uniform_real_distribution<double> rand_x(-1, 1);
+  std::uniform_real_distribution<double> rand_y(-1, 1);
+  std::default_random_engine x;
+  std::default_random_engine y;
+
+  for (int xy = 0; xy < n ; xy++){
+    point_x = rand_x(x);
+    point_y = rand_y(y);
+    points.push_back({point_x, point_y});
+    //std::cout << point_x << ", " << point_y << std::endl;
+  }
+  return points;
+}
+
 void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x,
                                            double* min_y, double* max_x, double* max_y)
 {
   if (!enabled_)
     return;
-  //random points
-  int n = 2;
-  int point_x;
-  int point_y;
-  std::vector<std::vector<int>> points;
-  
-  for (int xy = 0; xy < n ; xy++){
-    point_x = rand() % 639;
-    point_y = rand() % 479;
-    points.push_back({point_x, point_y});
-    cout << point_x << ", " << point_y << endl
-  }
 
-  std::vector<std::vector<int>> coord;
-
-  //brensenham's algorithm
-  for (int j = 0; j != n; j++){
-    int x1 = points[j][0];
-    int x2 = points[j+1][0];
-    int y1 = points[j][1];
-    int y2 = points[j+1][1];
-    int h = abs(y2 - y1);
-    int w = abs(x2 - x1);
-    int dy = (y2 > y1) ? 1 : -1;
-    int dx = (x2 > x1) ? 1 : -1;
-
-    if (w > h){
-      int y_point = y1;
-      int D1 = (2 * h) - w;
-      for (int x_point = x1; x_point != x2; x_point += dx){
-        if(D1 < 0){
-          D1 += 2 * h;
-        }
-        else{
-          y_point += dy;
-          D1 += (2 * h) - (2 * w);
-          coord.push_back({x_point, y_point});
-        }
-      }
+  std::vector<std::vector<double>> coord;
+  std::vector<std::vector<double>> points = getRandomPoints();
+  int m = points.size();
+  coord.push_back({points[0][0], points[0][1]});
+  for (int j = 0; j < m-1; j++) {
+    double x1 = points[j][0];
+    double x2 = points[j+1][0];
+    double y1 = points[j][1];
+    double y2 = points[j+1][1];
+    double t = 0.1;
+    for (double k = t; k < 1; k += t){
+      double x_point = x1 + k * (x2 - x1);
+      double y_point = y1 + k * (y2 - y1);
+      coord.push_back({x_point, y_point});
     }
-    else{
-      int x_point = x1;
-      int D2 = (2 * w) - h;
-      for (int y_point = y1; y_point != y2; y_point += dy){
-        if (D2 < 0){
-          D2 += 2 * w;
-        }
-        else{
-          x_point += dx;
-          D2 += (2 * w) - (2 * h);
-          coord.push_back({x_point, y_point});
-        }
-      }
-    }
-  }
+    coord.push_back({x2, y2});
+  } 
 
   for (int i = 0; i < coord.size(); i++) {
       double magnitude = sqrt(pow(coord[i][0],2) + pow(coord[i][1],2));
