@@ -40,7 +40,7 @@ void VirtualLayer::reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32
 }
 
 std::vector<std::vector<double>> getRandomPoints() {
-  int n = 2;
+  int n = 3;
   double point_x;
   double point_y;
   std::vector<std::vector<double>> points;
@@ -55,7 +55,28 @@ std::vector<std::vector<double>> getRandomPoints() {
     points.push_back({point_x, point_y});
     //std::cout << point_x << ", " << point_y << std::endl;
   }
+
   return points;
+}
+
+std::vector<std::vector<double>> pointsToLine(std::vector<std::vector<double>> points, double t) {
+  std::vector<std::vector<double>> coord;
+  coord.push_back({points[0][0], points[0][1]});
+  int m = points.size() - 2;
+  for (int j = 0; j < m; j++) {
+    double x1 = points[j][0];
+    double x2 = points[j+1][0];
+    double y1 = points[j][1];
+    double y2 = points[j+1][1];
+    double t = 0.1;
+    for (double k = t; k <= 1; k += t){
+      double x_point = x1 + k * (x2 - x1);
+      double y_point = y1 + k * (y2 - y1);
+      coord.push_back({x_point, y_point});
+    }
+  } 
+  
+  return coord;
 }
 
 void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x,
@@ -63,25 +84,10 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
 {
   if (!enabled_)
     return;
-
-  std::vector<std::vector<double>> coord;
+  
   std::vector<std::vector<double>> points = getRandomPoints();
-  int m = points.size();
-  coord.push_back({points[0][0], points[0][1]});
-  for (int j = 0; j < m-1; j++) {
-    double x1 = points[j][0];
-    double x2 = points[j+1][0];
-    double y1 = points[j][1];
-    double y2 = points[j+1][1];
-    double t = 0.1;
-    for (double k = t; k < 1; k += t){
-      double x_point = x1 + k * (x2 - x1);
-      double y_point = y1 + k * (y2 - y1);
-      coord.push_back({x_point, y_point});
-    }
-    coord.push_back({x2, y2});
-  } 
-
+  std::vector<std::vector<double>> coord = pointsToLine(points, 0.1);
+  
   for (int i = 0; i < coord.size(); i++) {
       double magnitude = sqrt(pow(coord[i][0],2) + pow(coord[i][1],2));
       double mark_x = magnitude*cos(robot_yaw) + robot_x, mark_y = magnitude*sin(robot_yaw) + robot_y;
