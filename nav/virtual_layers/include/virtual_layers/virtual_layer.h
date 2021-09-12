@@ -23,14 +23,16 @@ public:
   {
     return true;
   }
-
+  bool initialize = false;
+  std::vector<std::vector<double>> points;
+  
   virtual void matchSize();
 
   double counter = 0.0;
 
 private:
-  const double COSTMAP_OFFSET_X = 3.0;
-  const double COSTMAP_OFFSET_Y = 3.0;
+  const double COSTMAP_OFFSET_X = 4.0;
+  const double COSTMAP_OFFSET_Y = 4.0;
   void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv_;
 };

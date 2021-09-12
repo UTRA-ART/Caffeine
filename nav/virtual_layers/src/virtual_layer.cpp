@@ -44,8 +44,8 @@ std::vector<std::vector<double>> getRandomPoints() {
   double point_x;
   double point_y;
   std::vector<std::vector<double>> points;
-  std::uniform_real_distribution<double> rand_x(-1, 1);
-  std::uniform_real_distribution<double> rand_y(-1, 1);
+  std::uniform_real_distribution<double> rand_x(-4, 4);
+  std::uniform_real_distribution<double> rand_y(-4, 4);
   std::default_random_engine x;
   std::default_random_engine y;
 
@@ -53,7 +53,7 @@ std::vector<std::vector<double>> getRandomPoints() {
     point_x = rand_x(x);
     point_y = rand_y(y);
     points.push_back({point_x, point_y});
-    //std::cout << point_x << ", " << point_y << std::endl;
+    ROS_INFO("%f %f" , point_x, point_y);
   }
 
   return points;
@@ -62,7 +62,7 @@ std::vector<std::vector<double>> getRandomPoints() {
 std::vector<std::vector<double>> pointsToLine(std::vector<std::vector<double>> points, double t) {
   std::vector<std::vector<double>> coord;
   coord.push_back({points[0][0], points[0][1]});
-  int m = points.size() - 2;
+  int m = points.size() - 1;
   for (int j = 0; j < m; j++) {
     double x1 = points[j][0];
     double x2 = points[j+1][0];
@@ -85,13 +85,19 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
   if (!enabled_)
     return;
   
-  std::vector<std::vector<double>> points = getRandomPoints();
-  std::vector<std::vector<double>> coord = pointsToLine(points, 0.1);
+  if (initialize != true) {
+    initialize = true;
+    points = getRandomPoints();
+  }
+
+  //points = {{-8, 8}, {0, 5}};
+  std::vector<std::vector<double>> coord = pointsToLine(points, 0.05);
   
   for (int i = 0; i < coord.size(); i++) {
       double magnitude = sqrt(pow(coord[i][0],2) + pow(coord[i][1],2));
-      double mark_x = magnitude*cos(robot_yaw) + robot_x, mark_y = magnitude*sin(robot_yaw) + robot_y;
-      // double mark_x = coord[i][0] + robot_x, mark_y = coord[i][1] + robot_y;
+      //double mark_x = magnitude*cos(robot_yaw) + robot_x, 
+            // mark_y = magnitude*sin(robot_yaw) + robot_y;
+      double mark_x = coord[i][0] - robot_x, mark_y = coord[i][1] - robot_y;
       unsigned int mx;
       unsigned int my;
       if(worldToMap(mark_x + COSTMAP_OFFSET_X, mark_y + COSTMAP_OFFSET_Y, mx, my)){
