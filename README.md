@@ -41,6 +41,12 @@ Provides the [Navigation Stack](http://wiki.ros.org/navigation) package which is
 sudo apt-get install ros-melodic-navigation
 ```
 
+### Install RVIZ Plugins ###
+Provides the [RVIZ Sensor Plugins](http://wiki.ros.org/rviz_imu_plugin) package which is used for RVIZ data visualization
+```
+sudo apt-get install ros-melodic-rviz-imu-plugin
+```
+
 ### Install Robot Localization ###
 Provides the [Robot Localization](http://docs.ros.org/en/melodic/api/robot_localization/html/index.html) package which is used for localizing the robot.
 ```
@@ -99,8 +105,7 @@ roslaunch description view.launch
 # Terminal 3: move_base (Navigation Stack)
 roslaunch nav_stack move_base.launch
 ```
-After running all 3 commands, set a goal pose in RVIZ, and if your robot moves in both Gazebo and RVIZ, you are good
-
+After running all 3 commands, set a 2d Nav Goal in RVIZ, and if your robot moves in both Gazebo and RVIZ, you are good
 
 ## Notes ##
 
