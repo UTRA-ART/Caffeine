@@ -86,9 +86,25 @@ To delete logs run:
 ```
 rosclean purge
 ``` 
+
+## Verification ##
+Here are the common commands we run that will verify that your setup is correct (after performing ```catkin_make``` in any terminal once and ```source devel/setup.bash``` in every terminal you use)
+```
+# Terminal 1: Gazebo (World+Robot Simulation With GUI)
+roslaunch description simulate.launch use_gui:=true
+
+# Terminal 2: RVIZ (Data Visualization)
+roslaunch description view.launch
+
+# Terminal 3: move_base (Navigation Stack)
+roslaunch nav_stack move_base.launch
+```
+After running all 3 commands, set a goal pose in RVIZ, and if your robot moves in both Gazebo and RVIZ, you are good
+
+
 ## Notes ##
 
-When running `caffeine_gazebo.launch`, an error saying that the `spawn_model` node failed will appear. This occurs because both the gazebo world and the urdf are loaded in the same `roslaunch` file (IGVC takes too long to load before model is spawned). The spawner will automatically retry and spawn Caffeine properly, so this error can be safely ignored.
+When running `simulate.launch`, an error saying that the `spawn_model` node failed will appear. This occurs because both the gazebo world and the urdf are loaded in the same `roslaunch` file (IGVC takes too long to load before model is spawned). The spawner will automatically retry and spawn Caffeine properly, so this error can be safely ignored.
 > A solution is to spawn Caffeine only once the gazebo (IGVC) world has been loaded, but this requires a new `roslaunch` file and thus a new terminal - which is excessive at this point.
 
 ---
