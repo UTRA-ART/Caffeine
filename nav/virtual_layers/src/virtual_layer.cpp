@@ -46,14 +46,16 @@ std::vector<std::vector<double>> getRandomPoints() {
   double point_x;
   double point_y;
   std::vector<std::vector<double>> points;
+  std::random_device rd_x;
+  std::random_device rd_y;
+  std::mt19937 gen_x(rd_x());
+  std::mt19937 gen_y(rd_y());
   std::uniform_real_distribution<double> rand_x(-4, 4);
   std::uniform_real_distribution<double> rand_y(-4, 4);
-  std::default_random_engine x;
-  std::default_random_engine y;
 
   for (int xy = 0; xy < n ; xy++){
-    point_x = rand_x(x);
-    point_y = rand_y(y);
+    point_x = rand_x(rd_x);
+    point_y = rand_y(rd_y);
     points.push_back({point_x, point_y});
     ROS_INFO("%f %f" , point_x, point_y);
   }
@@ -70,8 +72,9 @@ std::vector<std::vector<double>> pointsToLine(std::vector<std::vector<double>> p
     double x2 = points[j+1][0];
     double y1 = points[j][1];
     double y2 = points[j+1][1];
-    double t = 0.1;
-    for (double k = t; k <= 1; k += t){
+    double dis = sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
+    double alpha = t / dis;
+    for (double k = alpha; k <= 1; k += alpha){
       double x_point = x1 + k * (x2 - x1);
       double y_point = y1 + k * (y2 - y1);
       coord.push_back({x_point, y_point});
