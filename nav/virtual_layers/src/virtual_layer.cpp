@@ -1,7 +1,9 @@
 #include <virtual_layers/virtual_layer.h>
 #include <pluginlib/class_list_macros.h>
-
+#include <iostream>
 #include <random>
+
+using namespace std;
 
 PLUGINLIB_EXPORT_CLASS(virtual_layers::VirtualLayer, costmap_2d::Layer)
 
@@ -79,8 +81,8 @@ std::vector<std::vector<double>> pointsToLine(std::vector<std::vector<double>> p
   return coord;
 }
 
-void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x,
-                                           double* min_y, double* max_x, double* max_y)
+void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x, double* min_y,
+                                double* max_x, double* max_y)
 {
   if (!enabled_)
     return;
@@ -90,14 +92,30 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
     points = getRandomPoints();
   }
 
+  cout << "------------------" << endl;
+  cout << "robot_x:   " << robot_x << endl;
+  cout << "robot_y:   " << robot_y << endl;
+  cout << "robot_yaw: " << robot_yaw << endl;
+  cout << "min_x:     " << *min_x << endl;
+  cout << "min_y:     " << *min_y << endl;
+  cout << "max_x:     " << *max_x << endl;
+  cout << "max_y:     " << *max_y << endl;
+
   //points = {{-8, 8}, {0, 5}};
-  std::vector<std::vector<double>> coord = pointsToLine(points, 0.05);
-  
+  //std::vector<std::vector<double>> coord = pointsToLine(points, 0.05);
+  std::vector<std::vector<double>> coord = {{2, 2}};
+
   for (int i = 0; i < coord.size(); i++) {
       double magnitude = sqrt(pow(coord[i][0],2) + pow(coord[i][1],2));
       //double mark_x = magnitude*cos(robot_yaw) + robot_x, 
             // mark_y = magnitude*sin(robot_yaw) + robot_y;
-      double mark_x = coord[i][0] - robot_x, mark_y = coord[i][1] - robot_y;
+      double mark_x = coord[i][0] + robot_x, mark_y = coord[i][1] + robot_y;
+      cout << "coord_x:   " << coord[i][0] << endl;
+      cout << "coord_y:   " << coord[i][1] << endl;
+      cout << "mark_x:    " << mark_x << endl;
+      cout << "mark_y:    " << mark_y << endl;
+      cout << "COSTMAP_OFFSET_X: " << COSTMAP_OFFSET_X << endl;
+      cout << "COSTMAP_OFFSET_X: " << COSTMAP_OFFSET_X << endl;
       unsigned int mx;
       unsigned int my;
       if(worldToMap(mark_x + COSTMAP_OFFSET_X, mark_y + COSTMAP_OFFSET_Y, mx, my)){
@@ -124,7 +142,9 @@ void VirtualLayer::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, in
     {
       int index = getIndex(i, j);
       if (costmap_[index] == NO_INFORMATION)
+      {
         continue;
+      }
       master_grid.setCost(i, j, costmap_[index]); 
     }
   }
