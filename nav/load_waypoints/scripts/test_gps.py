@@ -45,7 +45,6 @@ def callback(data):
         plt.show()
     try:
         #compute the delta and give it to publisher
-<<<<<<< HEAD
         #p_in_frame = get_pose_from_gps(data.longitude, data.latitude, "odom").pose.position
         
         data_coor = data.pose.pose.position
@@ -69,14 +68,7 @@ def callback(data):
         print(delta)
         delta = "Global: deltaX= "+ str(p_in_frame.x+odometryToComp2.x) + ", deltaY = " +str(p_in_frame.y+odometryToComp2.y+21.5)+ ", deltaZ = " +str(p_in_frame.z-odometryToComp2.z)
         globalPt.append(math.sqrt((p_in_frame.x+odometryToComp2.x) ** 2+(p_in_frame.y+odometryToComp2.y+21.5) ** 2))
-=======
         p_in_frame = get_pose_from_gps(data.longitude, data.latitude, "odom").pose.position
-        delta = "Local: deltaX= "+ str(p_in_frame.x-odometryToComp.x) + ", deltaY = " +str(p_in_frame.y-odometryToComp.y)+ ", deltaZ = " +str(p_in_frame.z-odometryToComp.z)
-        localPt.append(math.sqrt((p_in_frame.x-odometryToComp.x) ** 2+(p_in_frame.y-odometryToComp.y) ** 2))
-        print(delta)
-        delta = "Global: deltaX= "+ str(p_in_frame.x-odometryToComp2.x) + ", deltaY = " +str(p_in_frame.y-odometryToComp2.y)+ ", deltaZ = " +str(p_in_frame.z-odometryToComp2.z)
-        globalPt.append(math.sqrt((p_in_frame.x-odometryToComp2.x) ** 2+(p_in_frame.y-odometryToComp2.y) ** 2))
->>>>>>> 067e594 (cleaned up test_gps launcher)
         print(delta)
     except rospy.ROSInterruptException:
         pass
