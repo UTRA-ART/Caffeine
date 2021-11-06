@@ -164,6 +164,20 @@
             <pose>0 0 0 0 0 0</pose>
         </sensor>
     </gazebo>
-    
+
+    <!-- Get ground truth position of rover -->
+    <gazebo>
+	<plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+	    <alwaysOn>true</alwaysOn>
+	    <updateRate>50.0</updateRate>
+	    <bodyName>base_link</bodyName>
+	    <topicName>ground_truth/state</topicName>
+	    <gaussianNoise>0.0</gaussianNoise>
+	    <frameName>map</frameName>
+	    <xyzOffsets>0 0 0</xyzOffsets>
+	    <rpyOffsets>0 0 0</rpyOffsets>
+        </plugin>
+    </gazebo>
+
 </robot>
 
