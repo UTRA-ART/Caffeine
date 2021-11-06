@@ -45,9 +45,24 @@ def callback(data):
         plt.show()
     try:
         #compute the delta and give it to publisher
-        p_in_frame = get_pose_from_gps(data.longitude, data.latitude, "odom").pose.position
+        #p_in_frame = get_pose_from_gps(data.longitude, data.latitude, "odom").pose.position
+        
+        data_coor = data.pose.pose.position
+        
+        # create PoseStamped message to set up for do_transform_pose 
+        utm_pose = PoseStamped()
+        utm_pose.header.frame_id = '/map'
+        utm_pose.pose.position.x = data_coor.x
+        utm_pose.pose.position.y = data_coor.y
+        utm_pose.pose.orientation.w = 1.0 #make sure its right side up
+
+        p_in_frame = tfListener.transformPose("/odom", utm_pose).pose.position
+        # To check what frame p_in_frame is, just print p_in_frame without .pose.position
+        # print(p_in_frame)
+
         delta = "Local: deltaX= "+ str(p_in_frame.x-odometryToComp.x) + ", deltaY = " +str(p_in_frame.y-odometryToComp.y)+ ", deltaZ = " +str(p_in_frame.z-odometryToComp.z)
         localPt.append(math.sqrt((p_in_frame.x-odometryToComp.x) ** 2+(p_in_frame.y-odometryToComp.y) ** 2))
+        print("Ground Truth Position: ({x}, {y})".format(x=p_in_frame.x, y=p_in_frame.y))
         print(delta)
         delta = "Global: deltaX= "+ str(p_in_frame.x-odometryToComp2.x) + ", deltaY = " +str(p_in_frame.y-odometryToComp2.y)+ ", deltaZ = " +str(p_in_frame.z-odometryToComp2.z)
         globalPt.append(math.sqrt((p_in_frame.x-odometryToComp2.x) ** 2+(p_in_frame.y-odometryToComp2.y) ** 2))
@@ -72,7 +87,8 @@ def listener():
     # run simultaneously.
     rospy.Subscriber("odometry/local", Odometry, callback2)
     rospy.Subscriber("odometry/global", Odometry, callback3)
-    rospy.Subscriber("gps/fix", NavSatFix, callback)
+    #rospy.Subscriber("gps/fix", NavSatFix, callback)
+    rospy.Subscriber("ground_truth/state", Odometry, callback)
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
