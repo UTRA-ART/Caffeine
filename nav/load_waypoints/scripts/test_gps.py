@@ -68,7 +68,6 @@ def callback(data):
         print(delta)
         delta = "Global: deltaX= "+ str(p_in_frame.x+odometryToComp2.x) + ", deltaY = " +str(p_in_frame.y+odometryToComp2.y+21.5)+ ", deltaZ = " +str(p_in_frame.z-odometryToComp2.z)
         globalPt.append(math.sqrt((p_in_frame.x+odometryToComp2.x) ** 2+(p_in_frame.y+odometryToComp2.y+21.5) ** 2))
-        p_in_frame = get_pose_from_gps(data.longitude, data.latitude, "odom").pose.position
         print(delta)
     except rospy.ROSInterruptException:
         pass
