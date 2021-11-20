@@ -57,15 +57,17 @@ def callback(data):
         utm_pose.pose.orientation.w = 1.0 #make sure its right side up
 
         p_in_frame = tfListener.transformPose("/odom", utm_pose).pose.position
+        #odoemtryToComp = tfListener.transformPose("/odom", odometryToComp).pose.position
         # To check what frame p_in_frame is, just print p_in_frame without .pose.position
         # print(p_in_frame)
 
-        delta = "Local: deltaX= "+ str(p_in_frame.x-odometryToComp.x) + ", deltaY = " +str(p_in_frame.y-odometryToComp.y)+ ", deltaZ = " +str(p_in_frame.z-odometryToComp.z)
-        localPt.append(math.sqrt((p_in_frame.x-odometryToComp.x) ** 2+(p_in_frame.y-odometryToComp.y) ** 2))
+        delta = "Local: deltaX= "+ str(p_in_frame.x+odometryToComp.x) + ", deltaY = " +str(p_in_frame.y+odometryToComp.y+21.5)+ ", deltaZ = " +str(p_in_frame.z-odometryToComp.z)
+        localPt.append(math.sqrt((p_in_frame.x+odometryToComp.x) ** 2+(p_in_frame.y+odometryToComp.y+21.5) ** 2))
+        print("Local Position: ({x}, {y})".format(x=odometryToComp.x, y=odometryToComp.y))
         print("Ground Truth Position: ({x}, {y})".format(x=p_in_frame.x, y=p_in_frame.y))
         print(delta)
-        delta = "Global: deltaX= "+ str(p_in_frame.x-odometryToComp2.x) + ", deltaY = " +str(p_in_frame.y-odometryToComp2.y)+ ", deltaZ = " +str(p_in_frame.z-odometryToComp2.z)
-        globalPt.append(math.sqrt((p_in_frame.x-odometryToComp2.x) ** 2+(p_in_frame.y-odometryToComp2.y) ** 2))
+        delta = "Global: deltaX= "+ str(p_in_frame.x+odometryToComp2.x) + ", deltaY = " +str(p_in_frame.y+odometryToComp2.y+21.5)+ ", deltaZ = " +str(p_in_frame.z-odometryToComp2.z)
+        globalPt.append(math.sqrt((p_in_frame.x+odometryToComp2.x) ** 2+(p_in_frame.y+odometryToComp2.y+21.5) ** 2))
         print(delta)
     except rospy.ROSInterruptException:
         pass
