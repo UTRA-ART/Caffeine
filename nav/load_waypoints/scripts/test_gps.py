@@ -68,7 +68,6 @@ def callback(data):
         print(delta)
         delta = "Global: deltaX= "+ str(p_in_frame.x+odometryToComp2.x) + ", deltaY = " +str(p_in_frame.y+odometryToComp2.y+21.5)+ ", deltaZ = " +str(p_in_frame.z-odometryToComp2.z)
         globalPt.append(math.sqrt((p_in_frame.x+odometryToComp2.x) ** 2+(p_in_frame.y+odometryToComp2.y+21.5) ** 2))
-        p_in_frame = get_pose_from_gps(data.longitude, data.latitude, "odom").pose.position
         print(delta)
     except rospy.ROSInterruptException:
         pass
@@ -90,17 +89,8 @@ def listener():
     # run simultaneously.
     rospy.Subscriber("odometry/local", Odometry, callback2)
     rospy.Subscriber("odometry/global", Odometry, callback3)
-<<<<<<< HEAD
-<<<<<<< HEAD
     #rospy.Subscriber("gps/fix", NavSatFix, callback)
     rospy.Subscriber("ground_truth/state", Odometry, callback)
-=======
-    rospy.Subscriber("gps/fix", NavSatFix, callback)
->>>>>>> 067e594 (cleaned up test_gps launcher)
-=======
-    #rospy.Subscriber("gps/fix", NavSatFix, callback)
-    rospy.Subscriber("ground_truth/state", Odometry, callback)
->>>>>>> 3a64f91 (Added ground truth position topic)
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
