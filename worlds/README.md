@@ -2,7 +2,7 @@
 
 ### Steps to configure
 1. Install the models into the gazebo models folder.
- - `cd ~/caffeine-ws/src/Caffeine/worlds/gazebo_worlds/models`
+ - `cd ~/caffeine-ws/src/Caffeine/worlds/models`
  - `./install_models.sh`
 2. Build src
  - `cd ~/caffeine-ws`
