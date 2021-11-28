@@ -12,8 +12,8 @@ namespace virtual_layers
 {
 
 VirtualLayer::VirtualLayer() {
-  ros::Time last_updated_ = ros::Time::now();
-  ROS_INFO("Start");
+  // ros::Time last_updated_ = ros::Time::now();
+  // ROS_INFO("Start");
 }
 
 void VirtualLayer::onInitialize()
@@ -133,10 +133,7 @@ void VirtualLayer::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, in
       master_grid.setCost(i, j, costmap_[index]); 
     }
   }
-}
 
-void VirtualLayer::resetLastUpdated()
-{
   bool next = (ros::Time::now() - last_updated_) >= ros::Duration(10);
   if (next) 
   {
@@ -145,4 +142,5 @@ void VirtualLayer::resetLastUpdated()
     ROS_INFO("Next Points");
   }
 }
+
 }  // namespace virtual_layers
