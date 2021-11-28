@@ -30,9 +30,12 @@ public:
 
   double counter = 0.0;
 
+  void resetLastUpdated();
+
 private:
-  const double COSTMAP_OFFSET_X = 4.0;
-  const double COSTMAP_OFFSET_Y = 4.0;
+  const double COSTMAP_OFFSET_X = 25.0; //4.0;
+  const double COSTMAP_OFFSET_Y = 25.0; //4.0;
+  ros::Time last_updated_; //= ros::Time::now();
   void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv_;
 };

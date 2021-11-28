@@ -9,3 +9,6 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   tf
 )
+
+add_definitions(-DROSCPP_USE_TCP_NODELAY)
+
