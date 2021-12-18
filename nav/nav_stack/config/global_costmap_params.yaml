@@ -10,11 +10,3 @@ global_costmap:
   height: 50
   origin_x: -50
   origin_y: -50
-
-# global_costmap:
-#   global_frame: /map
-#   robot_base_frame: base_link
-#   update_frequency: 5.0
-#   static_map: true
-#   width: 50
-#   height: 50
