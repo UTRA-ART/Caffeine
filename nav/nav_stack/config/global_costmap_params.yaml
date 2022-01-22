@@ -6,9 +6,11 @@ global_costmap:
   static_map: false     # Not supplying a static map
 
   # Full width and height of IGVC map
-  width: 200 # Arbitrary large values used for now because I'm not sure if 50 x 50 is actually large enough
-  height: 200
+  # TODO: Update size if needed
+  width: 50
+  height: 50
 
+  # Parameters are the same as local cost map, but is kept separate for future adjustments of the global cost map
   obstacle_layer:
     observation_sources: laser_scan_sensor point_cloud_sensor
     enabled: true
@@ -43,4 +45,3 @@ global_costmap:
   plugins:
     - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}
     - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}
-  
