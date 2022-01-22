@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>nav_rtab</name>
+  <version>0.0.0</version>
+  <description>The nav_rtab package</description>
+  <maintainer email="kajanan@todo.todo">kajanan</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>rtabmap_ros</build_depend>
+
+  <build_export_depend>rtabmap_ros</build_export_depend>
+
+  <exec_depend>rtabmap_ros</exec_depend>
+
+</package>

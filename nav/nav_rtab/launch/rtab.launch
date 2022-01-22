@@ -1,0 +1,28 @@
+<launch>
+
+    <arg name="robot_model" default="caffeine"/>
+
+    <group if="$(eval arg('robot_model') == 'husky_gazebo')">
+
+        <!-- Unimplemented for husky_gazebo -->
+
+    </group>
+    <group if="$(eval arg('robot_model') == 'caffeine')">
+
+        <!-- Visual SLAM -->
+        <!-- Remove "delete_db_on_start" to build on an existing map, saved in ~/.ros/rtabmap.db-->
+        <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="--delete_db_on_start">
+            <remap from="rgb/image" to="zed/zed_node/left/image_rect_color"/>
+            <remap from="rgb/camera_info" to="zed/zed_node/left/camera_info"/>
+            <remap from="depth/image" to="zed/zed_node/depth/depth_registered"/>
+	    <remap from="scan" to="odometry/local"/>
+	    <remap from="odom" to="odometry/local"/>
+
+            <!-- Load rtabmap parameters -->
+            <rosparam file="$(find nav_rtab)/config/rtab_config.yaml" command="load"/>
+
+        </node>
+        
+    </group>
+
+</launch>

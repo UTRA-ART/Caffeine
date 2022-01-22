@@ -1,0 +1,25 @@
+<launch>
+    <arg name="robot_model" default="husky_gazebo"/>
+
+    <group if="$(eval arg('robot_model') == 'husky_gazebo')">
+
+        <!-- Unimplemented for husky_gazebo -->
+
+    </group>
+    <group if="$(eval arg('robot_model') == 'caffeine')">
+
+        <!--- Run Move Base -->
+        <include file="$(find nav_stack)/launch/move_base.launch">
+            <arg name="robot_model" value="$(arg robot_model)" />
+            <arg name="global_costmap_params" value="$(find gmap)/config/global_costmap_params.yaml"/>
+
+        </include>
+
+        <!-- Run Rtabmap-->
+        <include file="$(find nav_rtab)/launch/rtab.launch">
+            <arg name="robot_model" value="$(arg robot_model)" />
+        </include>
+
+    </group>  
+    
+</launch>

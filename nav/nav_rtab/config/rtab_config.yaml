@@ -1,0 +1,16 @@
+subscibe_depth: true
+subscribe_scan: true
+frame_id: /base_link
+queue_size: 30
+
+# Deals with the "large angular variance error". Loop closure would essentially fail and map will be useless
+# Hard coded solution from rtab creator. Tune later
+
+odom_tf_linear_variance: 0.0001    # adjust depending on real odom error
+odom_tf_angular_variance: 0.0005   # adjust depending on real odom error
+
+Vis:
+  MinInliers: 12
+
+RGBD:
+  CreateOccupancyGrid: true
