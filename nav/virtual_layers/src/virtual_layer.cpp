@@ -1,6 +1,6 @@
 #include <virtual_layers/virtual_layer.h>
 #include <pluginlib/class_list_macros.h>
-
+//cv_pkg/cv_publisher
 #include <random>
 
 PLUGINLIB_EXPORT_CLASS(virtual_layers::VirtualLayer, costmap_2d::Layer)
@@ -22,7 +22,7 @@ void VirtualLayer::onInitialize()
   current_ = true;
   default_value_ = NO_INFORMATION;
   matchSize();
-
+//subscriber update
   dsrv_ = new dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>(nh);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>::CallbackType cb = boost::bind(
       &VirtualLayer::reconfigureCB, this, _1, _2);

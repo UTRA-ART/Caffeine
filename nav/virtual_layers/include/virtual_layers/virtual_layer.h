@@ -34,8 +34,8 @@ public:
   //void resetLastUpdated();
 
 private:
-  const double COSTMAP_OFFSET_X = 4.0; //25.0; //4.0;
-  const double COSTMAP_OFFSET_Y = 4.0; //25.0; //4.0;
+  const double COSTMAP_OFFSET_X = 25.0; //4.0;
+  const double COSTMAP_OFFSET_Y = 25.0; //4.0;
   ros::Time last_updated_ = ros::Time::now();
   //ROS_INFO("Start");
 
