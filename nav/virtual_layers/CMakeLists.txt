@@ -17,4 +17,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+
 add_library(virtual_layers src/virtual_layer.cpp)
+add_definitions(-DROSCPP_USE_TCP_NODELAY)
+

@@ -11,5 +11,9 @@ local_costmap:
   
   plugins:
      - {name: obstacles, type: "costmap_2d::VoxelLayer", output: "screen"}
+<<<<<<< HEAD
      - {name: virtual_layer, type: "virtual_layers::VirtualLayer", output: "screen"}
+=======
+     #- {name: virtual_layer, type: "virtual_layers::VirtualLayer", output: "screen"}
+>>>>>>> b5185079ff545e32dd7dba1ca59314c72db8f181
      - {name: inflation_layer, type: "costmap_2d::InflationLayer", output: "screen"}
