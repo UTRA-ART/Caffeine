@@ -5,11 +5,42 @@ local_costmap:
   publish_frequency: 2.0
   static_map: false
   rolling_window: true
-  width: 8.0
-  height: 8.0
+  # TODO: Update size if needed
+  width: 30.0 # cost map size needs to be large enough to encompass the point cloud range
+  height: 30.0 # This size is arbitary for now so it may need to be adjusted
   resolution: 0.05
 
+  obstacle_layer:
+    observation_sources: laser_scan_sensor point_cloud_sensor
+    enabled: true
+    track_unknown_space: true
+
+    laser_scan_sensor: {
+      min_obstacle_height: -0.125, # half wheel diameter
+      sensor_frame: base_laser, 
+      data_type: LaserScan, 
+      topic: scan, 
+      marking: true, 
+      clearing: true,
+      obstacle_range: 3.7,   # Decide how far we should see obstacles, should be less than raytrace range
+      raytrace_range: 4      # max lidar is rated for is 4m
+    }
+
+    point_cloud_sensor: {
+      min_obstacle_height: -0.05, 
+      sensor_frame: zed_camera_link, 
+      data_type: PointCloud2, 
+      topic: zed/zed_node/point_cloud/cloud_registered, 
+      marking: true, 
+      clearing: true, 
+      obstacle_range: 15.0,
+      raytrace_range: 16.0
+    }
+
+  inflation_layer:
+    enabled:              true
+    inflation_radius:     0.4
+
   plugins:
-    - {name: obstacle_layer,      type: "costmap_2d::VoxelLayer"}
+    - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}
     - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}
-    
