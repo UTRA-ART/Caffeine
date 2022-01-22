@@ -8,6 +8,9 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   tf
+
+  geometry_msgs #for topic subscription
+  cv_pkg
 )
 
 catkin_package()
@@ -21,3 +24,9 @@ include_directories(
 add_library(virtual_layers src/virtual_layer.cpp)
 add_definitions(-DROSCPP_USE_TCP_NODELAY)
 
+## Mark cpp header files for installation
+install(DIRECTORY include/${cv_pkg}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h"
+  PATTERN ".svn" EXCLUDE
+)
