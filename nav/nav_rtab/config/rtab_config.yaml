@@ -1,5 +1,5 @@
 subscibe_depth: true
-subscribe_scan: true
+subscribe_stereo: true
 frame_id: /base_link
 queue_size: 30
 
