@@ -5,11 +5,13 @@
     <arg name="rviz" default="false"/>
 
     <!-- IGVC worlds: full, walls, ramp, plain, test -->
+    <!-- IGVC world types: pavement, grass -->
     <arg name="world" default="full"/>
+    <arg name="world_type" default="grass"/>
 
     <!-- Simulate 'world' in Gazebo -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <arg name="world_name" value="$(find worlds)/gazebo_worlds/igvc_$(arg world).world"/>
+        <arg name="world_name" value="$(find worlds)/gazebo_worlds/$(arg world_type)/igvc_$(arg world).world"/>
 
         <arg name="paused" value="false"/>
         <arg name="verbose" value="false"/>

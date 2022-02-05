@@ -1,4 +1,4 @@
-material igvc_basic_ground/Image
+material igvc_pavement/Image
 {
     technique
     {
@@ -10,7 +10,7 @@ material igvc_basic_ground/Image
 
             texture_unit
             {
-                texture IGVC_basic.png
+                texture IGVC_pavement.png
                 filtering trilinear
             }
         }
