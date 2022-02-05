@@ -1,0 +1,3 @@
+[submodule "misc/kindr_ros"]
+	path = misc/kindr_ros
+	url = https://github.com/ANYbotics/kindr_ros.git
