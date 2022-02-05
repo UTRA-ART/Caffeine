@@ -1,3 +1,11 @@
+planners:
+  - name: navfn/NavfnROS
+    type: navfn/NavfnROS
+
+controllers:
+  - name: base_local_planner/TrajectoryPlannerROS
+    type: base_local_planner/TrajectoryPlannerROS
+
 # Navigation Function (navigation path)
 NavfnROS:
   # Specifies whether or not to allow navfn to create plans that traverse unknown space.
@@ -7,14 +15,14 @@ NavfnROS:
 
 # Plans robot movement
 TrajectoryPlannerROS:
-  max_vel_x: 2.0
+  max_vel_x: 1.0
   min_vel_x: 0.2
   max_vel_theta: 0.5
   min_in_place_vel_theta: 0.3
 
-  acc_lim_theta: 2.0
-  acc_lim_x: 2.5
-  acc_lim_y: 2.5
+  acc_lim_theta: 1.0
+  acc_lim_x: 1.5
+  acc_lim_y: 1.5
 
   # Caffeine is not Holonomic
   holonomic_robot: false
@@ -25,3 +33,15 @@ TrajectoryPlannerROS:
   # Tolerances
   xy_goal_tolerance:  0.5
   yaw_goal_tolerance: 3.14
+
+  # Parameters that adjust the degree to which the local planner follows the global path and the
+  # how far the robot should stay away from obstacles. These might need to be played with after we
+  # get the global cost map to work with rtabmaps
+
+  #pdist_scale: 0.005
+  #occdist_scale: 0.04
+
+# Lower the robot controller and path planner frequency because caffeine doesn't have enough
+# computation power to do so at higher rates.
+controller_frequency: 6.0
+planner_frequency: 6.0
