@@ -101,7 +101,7 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
     unsigned int my;
     if(worldToMap(mark_x + COSTMAP_OFFSET_X, mark_y + COSTMAP_OFFSET_Y, mx, my)){
       setCost(mx, my, LETHAL_OBSTACLE);
-  }
+    }
       
   *min_x = std::min(*min_x, mark_x);
   *min_y = std::min(*min_y, mark_y);

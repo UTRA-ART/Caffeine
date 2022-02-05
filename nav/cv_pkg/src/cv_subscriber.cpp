@@ -5,8 +5,10 @@
 #include <vector>
 
 std::vector<std::vector<double>> coords;
+using namespace std;
 
 void clbk(const cv_pkg::cv_msg::ConstPtr& msg) {
+  cout << "HI" << msg << endl;
   ROS_INFO("%d", msg->another_field);
   ROS_INFO("first point: x=%.2f, y=%.2f", msg->points[0].x, msg->points[0].y);
   coords.push_back({msg->points[0].x, msg->points[0].y});

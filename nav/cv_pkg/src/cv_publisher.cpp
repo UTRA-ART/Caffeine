@@ -15,7 +15,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "cv_publisher");
     ros::NodeHandle n;
     ros::Publisher cv_pub = n.advertise<cv_pkg::cv_msg>("update", 1);
-    ros::Rate loop_rate(0.5);
+    ros::Rate loop_rate(1);
 
     // define message to publish
     cv_pkg::cv_msg msg;
