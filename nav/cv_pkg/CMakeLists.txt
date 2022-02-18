@@ -10,6 +10,7 @@ project(cv_pkg)
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   roscpp
+  rospy
   std_msgs
   message_generation
 )
@@ -73,8 +74,8 @@ add_message_files(
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
-  geometry_msgs 
-  #   std_msgs
+  geometry_msgs
+  cv_pkg
 )
 
 
@@ -136,8 +137,6 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(cv_publisher src/cv_publisher.cpp)
-add_executable(cv_subscriber src/cv_subscriber.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -150,10 +149,6 @@ add_executable(cv_subscriber src/cv_subscriber.cpp)
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(cv_publisher
-  ${catkin_LIBRARIES}
-)
-target_link_libraries(cv_subscriber ${catkin_LIBRARIES})
 #############
 ## Install ##s
 #############
@@ -163,10 +158,10 @@ target_link_libraries(cv_subscriber ${catkin_LIBRARIES})
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# catkin_install_python(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+catkin_install_python(PROGRAMS
+  src/cv_publisher.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html

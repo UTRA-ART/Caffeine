@@ -5,7 +5,7 @@
 #include <costmap_2d/layered_costmap.h>
 #include <costmap_2d/GenericPluginConfig.h>
 #include <dynamic_reconfigure/server.h>
-#include <cv_pkg/cv_msg.h>
+//#include <cv_pkg/cv_msg.h>
 #include <vector> 
 
 
@@ -16,7 +16,7 @@ class VirtualLayer : public costmap_2d::Layer, public costmap_2d::Costmap2D
 {
 public:
   VirtualLayer();
-  void clbk(const cv_pkg::cv_msg::ConstPtr& msg);
+  //void clbk(const cv_pkg::cv_msg::ConstPtr& msg);
 
   virtual void onInitialize();
   virtual void updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x, double* min_y,

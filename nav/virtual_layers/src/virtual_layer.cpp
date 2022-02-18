@@ -40,14 +40,16 @@ void VirtualLayer::onInitialize()
   current_ = true;
   default_value_ = NO_INFORMATION;
   matchSize();
+  //ros::NodeHandle nh("~/" + name_);
 
-  //subscribe
+  
   cv_sub=nh.subscribe("update", 1, &VirtualLayer::clbk, this);
-
+  /*
   dsrv_ = new dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>(nh);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>::CallbackType cb = boost::bind(
       &VirtualLayer::reconfigureCB, this, _1, _2);
   dsrv_->setCallback(cb);
+  */
 }
 
 void VirtualLayer::matchSize()
