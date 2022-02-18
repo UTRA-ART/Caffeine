@@ -4,8 +4,8 @@ import math
 # PURPOSE: To calculate where the next wall to generate for the igvc 
 # wall based on the last wall desired yaw, and new box dimensions
 
-# Notes: No roll or pitch or height for any wall for xyzrpy, 
-# and no need for yz for dimensions
+# Notes: No roll or pitch or height for any wall for xyzrpy. 
+# New yz dimensions are irrelevant in new dimension wall calcs
 
 # Sample input: python connecting_box.py [6,2.0,0.1] [1.2,-22.6,0,0,0,0.07] [1.5,0.1,1] [0.36]
 # --> No spaces                           (Old dims)        (Old pose)      (New dims) (New Yaw)

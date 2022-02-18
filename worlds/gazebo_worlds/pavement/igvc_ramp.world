@@ -2135,6 +2135,88 @@
         <kinematic>0</kinematic>
       </link>
     </model>
+    <model name='ramp_up'>
+      <static>1</static>
+      <pose frame=''>17 -2 0.15 0.2612 -0 0</pose>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <box>
+              <size>3 6 0.1</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <box>
+              <size>3 6 0.1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.8 1 0.8 1</ambient>
+            <specular>0.2 0.2 0.2 64</specular>
+            <diffuse>0.4 0.4 0.4 1</diffuse>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name='ramp_down'>
+      <static>1</static>
+      <pose frame=''>17 3.75 0.15 0.2612 -0 3.14</pose>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <box>
+              <size>3 6 0.1</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <box>
+              <size>3 6 0.1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.8 1 0.8 1</ambient>
+            <specular>0.2 0.2 0.2 64</specular>
+            <diffuse>0.4 0.4 0.4 1</diffuse>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
     <state world_name='default'>
       <sim_time>665 618000000</sim_time>
       <real_time>27 482566913</real_time>
