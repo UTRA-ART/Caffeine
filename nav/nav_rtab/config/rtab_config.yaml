@@ -3,7 +3,7 @@ subscribe_stereo: true
 frame_id: /base_link
 queue_size: 30
 odom_frame_id: odom
-subscribe_scan: true
+subscribe_scan: false
 
 # Deals with the "large angular variance error". Loop closure would essentially fail and map will be useless
 # Hard coded solution from rtab creator. Tune later

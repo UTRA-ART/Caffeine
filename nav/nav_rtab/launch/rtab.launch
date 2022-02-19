@@ -14,10 +14,11 @@
         <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="--delete_db_on_start">
             <remap from="left/image_rect" to="zed/zed_node/left/image_rect_color"/>
             <remap from="left/camera_info" to="zed/zed_node/left/camera_info"/>
-	    <remap from="right/image_rect" to="zed/zed_node/right/image_rect_color"/>
+	        <remap from="right/image_rect" to="zed/zed_node/right/image_rect_color"/>
             <remap from="right/camera_info" to="zed/zed_node/right/camera_info"/>
-            <remap from="depth/image" to="zed/zed_node/depth/depth_registered"/>
-	    <remap from="odom" to="odometry/local"/>
+	        <remap from="odom" to="odometry/local"/>
+
+            <remap from="grid_map" to="/move_base/global_costmap/costmap"/>
 
             <!-- Load rtabmap parameters -->
             <rosparam file="$(find nav_rtab)/config/rtab_config.yaml" command="load"/>
