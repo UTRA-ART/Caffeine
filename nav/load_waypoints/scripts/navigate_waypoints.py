@@ -56,8 +56,11 @@ class NavigateWaypoints:
             gps_info = rospy.wait_for_message('gps/fix', NavSatFix)
             # Append the starting gps coordinate to the waypoints dict as the final waypoint
             last_coord_idx = len(self.waypoints) 
-            self.waypoints[last_coord_idx] = {
-                'id': last_coord_idx, 'longitude': gps_info.longitude, 'latitude': gps_info.latitude, 'description': 'Initial start location', 'frame_id': 'odom'}
+ 
+            # If waypoints are reported in longitudes and latitudes, append a final waypoint to return to the start
+            if self.waypoints[0].get("longitude"):
+                self.waypoints[last_coord_idx] = {
+                    'id': last_coord_idx, 'longitude': gps_info.longitude, 'latitude': gps_info.latitude, 'description': 'Initial start location', 'frame_id': 'odom'}
 
             # Show waypoints 
             rospy.loginfo("Successfully loaded waypoints dict")
@@ -121,8 +124,18 @@ class NavigateWaypoints:
 
         return p_in_frame
 
-        
-        
+    def get_pose_from_xy(self, x, y):
+
+        # Convert (x,y) coordinate to pose
+        # (x,y) coordinate follows the coordinate system used in spawn.launch
+
+        xy_pose = PoseStamped()
+        xy_pose.header.frame_id = 'odom' # not sure what the proper frame is
+        xy_pose.pose.position.x = y - 0 # subtract starting y-coordinate
+        xy_pose.pose.position.y = x + 19.5 # subtract starting x-coordinate
+        xy_pose.pose.orientation.w = 1.0 #make sure its right side up
+
+        return xy_pose
         
     def send_and_wait_goal_to_move_base(self, curr_waypoint):
         # Create an action client called "move_base" with action definition file "MoveBaseAction"
@@ -131,7 +144,10 @@ class NavigateWaypoints:
         # Waits until the action server has started up and started listening for goals.
         action_client.wait_for_server()
 
-        pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
+        if curr_waypoint.get("longitdue"):
+            pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
+        else:
+            pose = self.get_pose_from_xy(curr_waypoint["x"], curr_waypoint["y"])
 
         # ==> TESTING CODE
         #pose = self.get_pose_from_gps(None, None, None, pose_test_var = pose)
@@ -168,7 +184,7 @@ class NavigateWaypoints:
 
 
 if __name__ == "__main__":
-    static_waypoint_file = 'static_waypoints.json' # File name for static waypoints (provided at competition-time) 
+    static_waypoint_file = 'static_waypoints_xy.json' # File name for static waypoints (provided at competition-time) 
     max_time_for_transform = 60.0 # Maximum time to wait for the transform. The node times out and shut down if this limit is exceeded.
     
     rospy.init_node('navigate_waypoints')
