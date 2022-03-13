@@ -5,7 +5,6 @@
 #include <costmap_2d/layered_costmap.h>
 #include <costmap_2d/GenericPluginConfig.h>
 #include <dynamic_reconfigure/server.h>
-#include <cv_pkg/cv_msg.h>
 #include <vector> 
 
 
@@ -16,7 +15,6 @@ class VirtualLayer : public costmap_2d::Layer, public costmap_2d::Costmap2D
 {
 public:
   VirtualLayer();
-  void clbk(const cv_pkg::cv_msg::ConstPtr& msg);
 
   virtual void onInitialize();
   virtual void updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x, double* min_y, double* max_x,
@@ -38,9 +36,6 @@ public:
 private:
   const double COSTMAP_OFFSET_X = 25.0; //4.0;
   const double COSTMAP_OFFSET_Y = 25.0; //4.0;
-  
-  ros::NodeHandle nh;
-  ros::Subscriber cv_sub;
 
   void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv_;

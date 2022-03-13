@@ -15,6 +15,6 @@ public:
 
 };
 
-
 }
 #endif //CV_MSG_H_
+
