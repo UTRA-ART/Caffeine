@@ -35,7 +35,7 @@ void VirtualLayer::reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32
   enabled_ = config.enabled;
 }
 
-std::vector<std::vector<double>> pointsToLine(std::vector<std::vector<double>> points, double t) {
+std::vector<std::vector<double>> pointsToLine(std::vector<std::vector<double>> points) {
   std::vector<std::vector<double>> coord;
   coord.push_back({points[0][0], points[0][1]});
   int m = points.size() - 1;
@@ -45,7 +45,7 @@ std::vector<std::vector<double>> pointsToLine(std::vector<std::vector<double>> p
     double y1 = points[j][1];
     double y2 = points[j+1][1];
     double dis = sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
-    double alpha = t / dis;
+    double alpha = 0.05 / dis;
     for (double k = alpha; k <= 1; k += alpha){
       double x_point = x1 + k * (x2 - x1);
       double y_point = y1 + k * (y2 - y1);
@@ -63,7 +63,7 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
     return;
 
   points = {{-1, 1}, {-1,-1}};
-  std::vector<std::vector<double>> coord = pointsToLine(points, 10);
+  std::vector<std::vector<double>> coord = pointsToLine(points);
   
   for (int i = 0; i < coord.size(); i++) {
     double magnitude = sqrt(pow(coord[i][0],2) + pow(coord[i][1],2));
