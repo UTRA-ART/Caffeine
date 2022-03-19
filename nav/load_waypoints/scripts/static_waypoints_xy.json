@@ -2,8 +2,8 @@
     "waypoints" : [
         {
             "id" : 0,
-            "x" : 18.25,
-            "y" : 18,
+            "x" : -19.5,
+            "y" : 10,
             "description"  : "Entrance of No-Man's Land",
             "test_loc_description": "wall protrusion",
             "frame_id" : "odom",
