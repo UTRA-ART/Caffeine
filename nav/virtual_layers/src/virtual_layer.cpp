@@ -2,7 +2,7 @@
 #include <pluginlib/class_list_macros.h>
 #include <iostream>
 //cv_pkg/cv_publisher
-#include <cv_pkg/cv_msg.h>
+//#include <cv_pkg/cv_msg.h>
 #include <geometry_msgs/Point.h>
 #include <random>
 
@@ -17,13 +17,13 @@ namespace virtual_layers
 {
 
 VirtualLayer::VirtualLayer() {
-  // ros::Time last_updated_ = ros::Time::now();
-  // ROS_INFO("Start");
+  ROS_INFO("Start");
 }
 
 std::vector<geometry_msgs::Point> cv_points; //save points from cv here
 
-void VirtualLayer::clbk(const cv_pkg::cv_msg::ConstPtr& msg) {
+
+void VirtualLayer::lanes_clbk(const cv_pkg::cv_msg::ConstPtr& msg) {
   ROS_INFO("points retrieved");
   int size = msg->points.size();
   for (int i = 0; i < size; i++) {
@@ -40,16 +40,13 @@ void VirtualLayer::onInitialize()
   current_ = true;
   default_value_ = NO_INFORMATION;
   matchSize();
-  //ros::NodeHandle nh("~/" + name_);
 
+  //cv_sub=nh.subscribe("update", 1, &VirtualLayer::lanes_clbk, this);
   
-  cv_sub=nh.subscribe("update", 1, &VirtualLayer::clbk, this);
-  /*
   dsrv_ = new dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>(nh);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>::CallbackType cb = boost::bind(
       &VirtualLayer::reconfigureCB, this, _1, _2);
   dsrv_->setCallback(cb);
-  */
 }
 
 void VirtualLayer::matchSize()
