@@ -3,6 +3,7 @@
     <arg name="use_gui" default="false"/>
     <arg name="rqt_steer" default="false"/>
     <arg name="rviz" default="false"/>
+    <arg name="rtab" default="false"/>
 
     <!-- IGVC worlds: full, walls, ramp, plain, test -->
     <arg name="world" default="full"/>
@@ -37,6 +38,11 @@
     <!-- RViz -->
     <group if="$(arg rviz)">
         <include file="$(find description)/launch/view.launch"/>
+    </group>
+
+    <!-- rtab -->
+    <group if="$(arg rtab)">
+        <include file="$(find nav_rtab)/launch/rtab.launch"/>
     </group>
 
 </launch>
