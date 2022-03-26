@@ -11,6 +11,9 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  elevation_mapping
+  grid_map_rviz_plugin
+  rviz
 )
 
 ## System dependencies are found with CMake's conventions
@@ -107,6 +110,11 @@ catkin_package(
 #  LIBRARIES caffeine_elevation_map
 #  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
+  #LIBRARIES
+  CATKIN_DEPENDS
+    elevation_mapping
+    grid_map_rviz_plugin
+    rviz
 )
 
 ###########
@@ -191,6 +199,14 @@ include_directories(
 #   # myfile2
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
+
+install(DIRECTORY config doc launch rviz sample_data
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+install(PROGRAMS scripts/tf_to_pose_publisher.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 #############
 ## Testing ##

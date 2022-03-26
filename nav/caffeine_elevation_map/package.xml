@@ -58,6 +58,10 @@
   <exec_depend>roscpp</exec_depend>
   <exec_depend>rospy</exec_depend>
   <exec_depend>std_msgs</exec_depend>
+  
+  <depend>elevation_mapping</depend>
+  <depend>grid_map_rviz_plugin</depend>
+  <depend>rviz</depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
