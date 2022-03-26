@@ -1,5 +1,8 @@
 <launch>
-
+    <remap from="openni_points" to="/planner_cloud"/>
+    <remap from="map" to="/rtabmap/proj_map"/>
+    <remap from="move_base_simple/goal" to="/planner_goal"/>
+    
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
         <remap from="odom" to="odometry/local"/>
         <remap from="cmd_vel" to="nav_vel"/>

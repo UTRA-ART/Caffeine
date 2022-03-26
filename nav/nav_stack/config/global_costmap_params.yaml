@@ -1,47 +1,70 @@
+# The parameters and sensors for the global costmap are commented out because the plan is to
+# use rtabmap for the gobal costmap.
+
 global_costmap:
-  global_frame: odom   # Because we don't have a map to load in, we use the odom frame as our global frame (rather than /map)
+  global_frame: map   # Because we don't have a map to load in, we use the odom frame as our global frame (rather than /map)
   robot_base_frame: base_link
-  update_frequency: 2.0 # Set update rate lower for large maps
-  rolling_window: true  # Set this to true bc static map == false (this makes setting 2D nav goals in rviz work)
-  static_map: false     # Not supplying a static map
+  transform_tolerance: 0.5
+  update_frequency: 1 # Set update rate lower for large maps
+  publish_frequency: 1
+  rolling_window: false  # Set this to true bc static map == false (this makes setting 2D nav goals in rviz work)
+  static_map: true     # Not supplying a static map
+  #always_send_full_costmap: true
+  map_type: costmap
+  track_unknown_space: false
+  lethal_cost_threshold: 50
 
   # Full width and height of IGVC map
   # TODO: Update size if needed
-  width: 50
-  height: 50
+  # width: 30
+  # height: 30
 
-  # Parameters are the same as local cost map, but is kept separate for future adjustments of the global cost map
-  obstacle_layer:
-    observation_sources: laser_scan_sensor point_cloud_sensor
-    enabled: true
+  static_layer:
+    map_topic: grid_map
+    subscribe_to_updates: false
     track_unknown_space: true
 
-    laser_scan_sensor: {
-      min_obstacle_height: -0.125, # half wheel diameter
-      sensor_frame: base_laser, 
-      data_type: LaserScan, 
-      topic: scan, 
-      marking: true, 
-      clearing: true,
-      obstacle_range: 3.7,   # Decide how far we should see obstacles, should be less than raytrace range
-      raytrace_range: 4      # max lidar is rated for is 4m
-    }
+  # obstacle_layer:
+  #   observation_sources: laser_scan_sensor point_cloud_sensor
+  #   enabled: true
+  #   track_unknown_space: true
 
-    point_cloud_sensor: {
-      min_obstacle_height: -0.05, 
-      sensor_frame: zed_camera_link, 
-      data_type: PointCloud2, 
-      topic: zed/zed_node/point_cloud/cloud_registered, 
-      marking: true, 
-      clearing: true, 
-      obstacle_range: 15.0,
-      raytrace_range: 16.0
-    }
+  #   laser_scan_sensor: {
+  #     min_obstacle_height: -0.125, # half wheel diameter
+  #     sensor_frame: base_laser, 
+  #     data_type: LaserScan, 
+  #     topic: scan, 
+  #     marking: true, 
+  #     clearing: true,
+  #     obstacle_range: 3.7,   # Decide how far we should see obstacles, should be less than raytrace range
+  #     raytrace_range: 4      # max lidar is rated for is 4m
+  #   }
 
   inflation_layer:
     enabled:              true
-    inflation_radius:     0.4
+    inflation_radius:     0.1
 
   plugins:
-    - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}
-    - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}
+  - {name: static_layer,     type: "costmap_2d::StaticLayer"}
+  #- {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}
+  - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}
+
+    # point_cloud_sensor: {
+    #   min_obstacle_height: -0.05, 
+    #   sensor_frame: zed_camera_link, 
+    #   data_type: PointCloud2, 
+    #   topic: zed/zed_node/point_cloud/cloud_registered, 
+    #   marking: true, 
+    #   clearing: true, 
+    #   obstacle_range: 15.0,
+    #   raytrace_range: 16.0
+    # }
+
+  # inflation_layer:
+  #   enabled:              true
+  #   inflation_radius:     0.4
+
+  # plugins:
+  #   - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}
+  #   - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}
+  

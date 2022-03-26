@@ -1,29 +1,31 @@
 <launch>
 
     <arg name="robot_model" default="caffeine"/>
-
-    <group if="$(eval arg('robot_model') == 'husky_gazebo')">
-
-        <!-- Unimplemented for husky_gazebo -->
-
-    </group>
     <group if="$(eval arg('robot_model') == 'caffeine')">
-
         <!-- Visual SLAM -->
         <!-- Remove "delete_db_on_start" to build on an existing map, saved in ~/.ros/rtabmap.db-->
         <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="--delete_db_on_start">
             <remap from="left/image_rect" to="zed/zed_node/left/image_rect_color"/>
             <remap from="left/camera_info" to="zed/zed_node/left/camera_info"/>
-	    <remap from="right/image_rect" to="zed/zed_node/right/image_rect_color"/>
+	        <remap from="right/image_rect" to="zed/zed_node/right/image_rect_color"/>
             <remap from="right/camera_info" to="zed/zed_node/right/camera_info"/>
             <remap from="depth/image" to="zed/zed_node/depth/depth_registered"/>
-	    <remap from="odom" to="odometry/local"/>
+	        <!--remap from="odom" to="zed/zed_node/odom"/-->
+            <!--remap from="grid_map" to="move_base/global_costmap/costmap"/-->
+            <!--remap from="scan" to="scan"/-->
+
+            <!-- Costmap Size -->
+            <param name="grid_size" type="double" value="20"/>
+            <param name="Grid/RangeMax" type="double" value="20"/>
+
+            <param name="Reg/Force3DoF"    value="true" />
+            <param name="Optimizer/Slam2D" value="true" />
+
+            <param name="Grid/3D" value="false"/>
 
             <!-- Load rtabmap parameters -->
             <rosparam file="$(find nav_rtab)/config/rtab_config.yaml" command="load"/>
-
         </node>
-        
     </group>
 
 </launch>
