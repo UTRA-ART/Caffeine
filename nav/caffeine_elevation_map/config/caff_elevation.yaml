@@ -1,24 +1,22 @@
 # Robot.
 map_frame_id:                               odom
 robot_base_frame_id:                        base_link
-robot_pose_with_covariance_topic:           /base_link_pose
+robot_pose_topic:                           base_link_pose
 robot_pose_cache_size:                      200
-#input_sources:
-#  front: # A name to identify the input source
-#    type: pointcloud # Supported types: pointcloud
-#    topic: /zed/zed_node/point_cloud/cloud_registered 
-#    queue_size: 1
-#    publish_on_update: true # Whether to publish the elevation map after a callback from this source.
-#    sensor_processor:
-#      type: perfect
-#  rear: [] 
+input_sources:
+  front: # A name to identify the input source
+    type: pointcloud # Supported types: pointcloud
+    topic: /zed/zed_node/point_cloud/cloud_registered
+    queue_size: 1
+    publish_on_update: true # Whether to publish the elevation map after a callback from this source.
+    sensor_processor:
+      type: perfect
 
-point_cloud_topic:                          /zed/zed_node/point_cloud/cloud_registered
 track_point_frame_id:                       base_link
 track_point_x:                              0.0
 track_point_y:                              0.0
 track_point_z:                              0.0
-min_update_rate:                            2.0
+min_update_rate:                            5
 time_tolerance:                             1.0
 time_offset_for_point_cloud:                0.0
 sensor_processor/ignore_points_above:       inf
@@ -36,12 +34,12 @@ mahalanobis_distance_threshold:             2.5
 multi_height_noise:                         0.001
 surface_normal_positive_axis:               z
 fused_map_publishing_rate:                  0.5
-enable_visibility_cleanup:                  false
+enable_visibility_cleanup:                  true
 visibility_cleanup_rate:                    1.0
 scanning_duration:                          1.0
 
 # Init submap
-initialize_elevation_map:                   false
+initialize_elevation_map:                   true
 initialization_method:                      0
 length_in_x_init_submap:                    2.0
 length_in_y_init_submap:                    2.0
