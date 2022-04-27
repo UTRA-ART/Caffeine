@@ -8,3 +8,6 @@
 
 # VSCode
 .vscode
+
+# CV models (too big) 
+*.onnx

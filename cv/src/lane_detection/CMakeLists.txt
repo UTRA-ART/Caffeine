@@ -218,4 +218,4 @@ include_directories(
 
 
 add_executable(model_wrapper src/model_wrapper.cpp)
-target_link_libraries(model_wrapper ${catkin_LIBRARIES} ${onnxruntime_LIBRARIES})
+target_link_libraries(model_wrapper ${catkin_LIBRARIES} ${onnxruntime_LIBRARIES} ${OpenCV_LIBRARIES})

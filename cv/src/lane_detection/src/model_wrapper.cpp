@@ -1,16 +1,16 @@
 // #include "ros/ros.h"
 // #include "std_msgs/Float64.h"
 
-// #include <opencv2/imgproc/imgproc.hpp>
-// #include <opencv2/highgui/highgui.hpp>
-
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/core.hpp>
 // #include <opencv2/dnn/dnn.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 
-// #include <image_transport/image_transport.h>
-// #include <cv_bridge/cv_bridge.h>
-// #include <sensor_msgs/image_encodings.h>
+#include <image_transport/image_transport.h>
+#include <cv_bridge/cv_bridge.h>
+#include <sensor_msgs/image_encodings.h>
 
 #include <onnxruntime_cxx_api.h>
 
@@ -172,11 +172,7 @@ std::pair<cv::Mat, cv::Mat> find_edge_channel(cv::Mat img) {
     cv::Mat edges_mask_inv = cv::Mat::zeros(cv::Size(180,330), CV_8UC1);
     cv::Mat gray_im = cv::Mat::zeros(cv::Size(180,330), CV_8UC1);
 
-    std::cout << width << " " << height << " " << depth << " "  << "SIZE"<<  std::endl;
-
     cv::cvtColor(img,gray_im,cv::COLOR_BGR2GRAY);
-
-    std::cout << "Made it here." << std::endl;
 
     // gray_im = cv2.GaussianBlur(gray_im,(3,3),0)
     // Separate into quadrants
@@ -195,7 +191,6 @@ std::pair<cv::Mat, cv::Mat> find_edge_channel(cv::Mat img) {
     double med2 = static_cast<double>(getMedian(quad2));
     double med3 = static_cast<double>(getMedian(quad3));
     double med4 = static_cast<double>(getMedian(quad4));
-
 
 
     double l1 = std::max(0.,std::floor((1-0.205)*med1));
@@ -230,21 +225,15 @@ std::pair<cv::Mat, cv::Mat> find_edge_channel(cv::Mat img) {
     cv::Mat e4;
     cv::Canny(quad4_mat,e4,l4,u4);
 
-
-    std::cout << "Made it here3." << std::endl;
     // Stitch the edges together
     int new_rows = std::max(e1.rows+e3.rows,e2.rows+e4.rows);
     int new_cols = std::max(e1.cols+e2.cols,e3.cols+e4.cols);
     edges_mask = cv::Mat::zeros(new_rows, new_cols, CV_8UC1);
 
-    std::cout << "Made it here4." << std::endl;
-
     e1.copyTo(edges_mask(cv::Rect(0,0,e1.cols,e1.rows)));
     e2.copyTo(edges_mask(cv::Rect(e1.cols,0,e2.cols,e2.rows)));
     e4.copyTo(edges_mask(cv::Rect(0,e1.rows,e3.cols,e3.rows)));
     e3.copyTo(edges_mask(cv::Rect(e1.cols,e1.rows,e4.cols,e4.rows)));
-
-    std::cout << "Made it here5." << std::endl;
 
     cv::bitwise_not(edges_mask,edges_mask_inv);
 
@@ -265,28 +254,44 @@ int main(int argc, char **argv)
     // std_msgs::Float64 data;
     // data.data = 64.2;
 
-    cv::Mat img = cv::imread("/home/utra-art/Desktop/Cone_test_3.png", cv::IMREAD_COLOR);
+    cv::Mat img = cv::imread("/home/utra-art/Desktop/road.jpg", cv::IMREAD_COLOR);
     cv::Mat cropped_raw_image;
+    // cv::resize(img, cropped_raw_image, cv::Size(1280, 720), cv::INTER_AREA);
     cv::resize(img, cropped_raw_image, cv::Size(330, 180), cv::INTER_LINEAR);
 
     // cv::Mat cropped_raw_image = cv::Mat::zeros(cv::Size(330,180), CV_8UC3);
     std::pair<cv::Mat, cv::Mat> edges = find_edge_channel(cropped_raw_image);
 
+    cv::Mat edges_reg;
+    cv::Mat edges_inv;
+
+    cv::imwrite("/home/utra-art/Desktop/spencer_workspace/caffeine-ws/src/cv/src/lane_detection/edge.png", std::get<0>(edges));
+    cv::imwrite("/home/utra-art/Desktop/spencer_workspace/caffeine-ws/src/cv/src/lane_detection/edge_inv.png", std::get<1>(edges));
+
+    std::get<0>(edges).convertTo(edges_reg, CV_32F, 1.0 / 255, 0);
+    std::get<1>(edges).convertTo(edges_inv, CV_32F, 1.0 / 255, 0);
+
+    // cv::resize(img, cropped_raw_image, cv::Size(330, 180), cv::INTER_LINEAR);
+    // cv::resize(img, cropped_raw_image, cv::Size(330, 180), cv::INTER_LINEAR);
+
+    cv::Mat normalized_image;
+    cropped_raw_image.convertTo(normalized_image, CV_32F, 1.0 / 255, 0);
+
     cv::Mat R; 
     cv::Mat G;
     cv::Mat B; 
+    cv::extractChannel(normalized_image, B, 0);
+    cv::extractChannel(normalized_image, G, 1);
+    cv::extractChannel(normalized_image, R, 2);
 
-    cv::extractChannel(cropped_raw_image, B, 0);
-    cv::extractChannel(cropped_raw_image, G, 1);
-    cv::extractChannel(cropped_raw_image, R, 2);
-
-    cv::Mat test_stack[5] = {B, G, R, std::get<0>(edges), std::get<1>(edges)};
+    cv::Mat input_stack[5] = {B, G, R, edges_reg, edges_inv};
     cv::Mat input_image; 
-    cv::merge(test_stack, 5, input_image);
-
+    cv::merge(input_stack, 5, input_image);
+ 
+    std::cout << input_image.size() << input_image.depth() << std::endl;
 
     string instance_name{"unet_inference"};
-    string model_path{"/home/utra-art/Desktop/spencer_workspace/caffeine-ws/src/cv/src/lane_detection/models/unet.onnx"};
+    string model_path{"/home/utra-art/Desktop/spencer_workspace/caffeine-ws/src/cv/src/lane_detection/models/unet_with_sigmoid.onnx"};
 
     Ort::Env env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, instance_name.c_str());
     Ort::SessionOptions sessionOptions;
@@ -329,33 +334,15 @@ int main(int argc, char **argv)
     std::cout << "Output Dimensions: " << outputDims << std::endl;
 
     size_t inputTensorSize = vectorProduct(inputDims);
-    std::vector<float> inputTensorValues(inputTensorSize);
-    inputTensorValues.assign(input_image.begin<float>(),
-                             input_image.end<float>());
-
-
     size_t outputTensorSize = vectorProduct(outputDims);
     std::vector<float> outputTensorValues(outputTensorSize);
 
     std::vector<const char*> inputNames{inputName};
     std::vector<const char*> outputNames{outputName};
-    std::vector<Ort::Value> inputTensors;
-    std::vector<Ort::Value> outputTensors;
-
 
     Ort::MemoryInfo memoryInfo = Ort::MemoryInfo::CreateCpu(
         OrtAllocatorType::OrtArenaAllocator, OrtMemType::OrtMemTypeDefault);
-    inputTensors.push_back(Ort::Value::CreateTensor<float>(
-        memoryInfo, inputTensorValues.data(), inputTensorSize, inputDims.data(),
-        inputDims.size()));
-    outputTensors.push_back(Ort::Value::CreateTensor<float>(
-        memoryInfo, outputTensorValues.data(), outputTensorSize,
-        outputDims.data(), outputDims.size()));
 
-
-    session.Run(Ort::RunOptions{nullptr}, inputNames.data(),
-                inputTensors.data(), 1, outputNames.data(),
-                outputTensors.data(), 1);
 
     // Measure latency
     int numTests{100};
@@ -363,10 +350,42 @@ int main(int argc, char **argv)
         std::chrono::steady_clock::now();
     for (int i = 0; i < numTests; i++)
     {
+        
+        std::vector<float> inputTensorValues(inputTensorSize);
+        inputTensorValues.assign(input_image.begin<float>(),
+                             input_image.end<float>());
+
         // std::cout << i << std::endl;
+        std::vector<Ort::Value> inputTensors;
+        std::vector<Ort::Value> outputTensors;
+
+        inputTensors.push_back(Ort::Value::CreateTensor<float>(
+            memoryInfo, inputTensorValues.data(), inputTensorSize, inputDims.data(),
+            inputDims.size()));
+        outputTensors.push_back(Ort::Value::CreateTensor<float>(
+            memoryInfo, outputTensorValues.data(), outputTensorSize,
+            outputDims.data(), outputDims.size()));
+
+
         session.Run(Ort::RunOptions{nullptr}, inputNames.data(),
                     inputTensors.data(), 1, outputNames.data(),
                     outputTensors.data(), 1);
+
+        // outputTensors.data() = outputTensors.data() * 255;
+        cv::Mat raw_output = cv::Mat(180,330,CV_32FC1,(float*)outputTensorValues.data());
+        cv::Mat scaled_output;
+        
+        
+        raw_output.convertTo(scaled_output, CV_8UC1, 1, 0);
+        scaled_output = scaled_output * 255;
+        // std::cout << scaled_output << std::endl;
+        std::cout << outputTensorValues << std::endl;
+        cv::imshow("Model input", cropped_raw_image);
+        cv::imshow("Model output", scaled_output);
+        int k = cv::waitKey(0);
+        if (k == 'q'){
+            break;
+        }
     }
     std::chrono::steady_clock::time_point end =
         std::chrono::steady_clock::now();
