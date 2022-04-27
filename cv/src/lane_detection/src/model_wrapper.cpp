@@ -1,5 +1,11 @@
-// #include "ros/ros.h"
-// #include "std_msgs/Float64.h"
+/*
+TODO:
+    - setup zed stereo cam package 
+    - read single image from stereo cam 
+    - publish result to ros friendly format 
+*/
+#include "ros/ros.h"
+
 
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui.hpp>
@@ -163,6 +169,10 @@ std::vector<unsigned char> convertToQuadrant(cv::Mat input, int r_min, int r_max
 }
 
 std::pair<cv::Mat, cv::Mat> find_edge_channel(cv::Mat img) {
+    /*
+        find_edge_channel finds the canny edge detections and its inverse using a 4 quadrant algorithm. 
+        Doing this allows the model to be more robust against changing light conditions throughout the image. 
+    */
 
     int width = img.cols;
     int height = img.rows;
@@ -172,6 +182,7 @@ std::pair<cv::Mat, cv::Mat> find_edge_channel(cv::Mat img) {
     cv::Mat edges_mask_inv = cv::Mat::zeros(cv::Size(180,330), CV_8UC1);
     cv::Mat gray_im = cv::Mat::zeros(cv::Size(180,330), CV_8UC1);
 
+    // convert to grayscale 
     cv::cvtColor(img,gray_im,cv::COLOR_BGR2GRAY);
 
     // gray_im = cv2.GaussianBlur(gray_im,(3,3),0)
@@ -192,7 +203,7 @@ std::pair<cv::Mat, cv::Mat> find_edge_channel(cv::Mat img) {
     double med3 = static_cast<double>(getMedian(quad3));
     double med4 = static_cast<double>(getMedian(quad4));
 
-
+    // Find edges for each of the quadrants
     double l1 = std::max(0.,std::floor((1-0.205)*med1));
     double u1 = std::min(255.,std::floor((1+0.205)*med1));
     std::vector<unsigned char> quad1_int(quad1.begin(),quad1.end());
@@ -241,55 +252,35 @@ std::pair<cv::Mat, cv::Mat> find_edge_channel(cv::Mat img) {
 }
 
 
+cv::Mat hwc2chw(const cv::Mat &image){
+    // permutes image data from HWC to CHW 
+    std::vector<cv::Mat> rgb_images;
+    cv::split(image, rgb_images);
+
+    cv::Mat m_flat_r = rgb_images[0].reshape(1, 1); 
+    cv::Mat m_flat_g = rgb_images[1].reshape(1, 1); 
+    cv::Mat m_flat_b = rgb_images[2].reshape(1, 1); 
+    cv::Mat m_flat_e1 = rgb_images[3].reshape(1, 1); 
+    cv::Mat m_flat_e2 = rgb_images[4].reshape(1, 1); 
+
+    cv::Mat matArray[] = { m_flat_r, m_flat_g, m_flat_b, m_flat_e1, m_flat_e2};
+
+    cv::Mat flat_image; 
+
+    cv::hconcat(matArray, 5, flat_image );
+    return flat_image;
+}
+
 
 int main(int argc, char **argv)
 {
-    // ros::init(argc, argv, "cv_model");
-    
-    // ros::NodeHandle n;
-    // ros::Publisher model_pub = n.advertise<std_msgs::Float64>("/cv_model/output", 1);
-    
-    // ros::Rate loop_rate(30);
+    // Initialize ROS node 
+    ros::init(argc, argv, "cv_model");
+    ros::NodeHandle n;
+    // ros::Publisher model_pub = n.advertise<???>("/cv_model/output", 1);
+    ros::Rate loop_rate(30);
 
-    // std_msgs::Float64 data;
-    // data.data = 64.2;
-
-    cv::Mat img = cv::imread("/home/utra-art/Desktop/road.jpg", cv::IMREAD_COLOR);
-    cv::Mat cropped_raw_image;
-    // cv::resize(img, cropped_raw_image, cv::Size(1280, 720), cv::INTER_AREA);
-    cv::resize(img, cropped_raw_image, cv::Size(330, 180), cv::INTER_LINEAR);
-
-    // cv::Mat cropped_raw_image = cv::Mat::zeros(cv::Size(330,180), CV_8UC3);
-    std::pair<cv::Mat, cv::Mat> edges = find_edge_channel(cropped_raw_image);
-
-    cv::Mat edges_reg;
-    cv::Mat edges_inv;
-
-    cv::imwrite("/home/utra-art/Desktop/spencer_workspace/caffeine-ws/src/cv/src/lane_detection/edge.png", std::get<0>(edges));
-    cv::imwrite("/home/utra-art/Desktop/spencer_workspace/caffeine-ws/src/cv/src/lane_detection/edge_inv.png", std::get<1>(edges));
-
-    std::get<0>(edges).convertTo(edges_reg, CV_32F, 1.0 / 255, 0);
-    std::get<1>(edges).convertTo(edges_inv, CV_32F, 1.0 / 255, 0);
-
-    // cv::resize(img, cropped_raw_image, cv::Size(330, 180), cv::INTER_LINEAR);
-    // cv::resize(img, cropped_raw_image, cv::Size(330, 180), cv::INTER_LINEAR);
-
-    cv::Mat normalized_image;
-    cropped_raw_image.convertTo(normalized_image, CV_32F, 1.0 / 255, 0);
-
-    cv::Mat R; 
-    cv::Mat G;
-    cv::Mat B; 
-    cv::extractChannel(normalized_image, B, 0);
-    cv::extractChannel(normalized_image, G, 1);
-    cv::extractChannel(normalized_image, R, 2);
-
-    cv::Mat input_stack[5] = {B, G, R, edges_reg, edges_inv};
-    cv::Mat input_image; 
-    cv::merge(input_stack, 5, input_image);
- 
-    std::cout << input_image.size() << input_image.depth() << std::endl;
-
+    // Load in .onnx model 
     string instance_name{"unet_inference"};
     string model_path{"/home/utra-art/Desktop/spencer_workspace/caffeine-ws/src/cv/src/lane_detection/models/unet_with_sigmoid.onnx"};
 
@@ -297,6 +288,7 @@ int main(int argc, char **argv)
     Ort::SessionOptions sessionOptions;
     sessionOptions.SetIntraOpNumThreads(1);
 
+    // Set GPU settings. To switch to TensorRT accelerator at some point. 
     OrtCUDAProviderOptions cuda_options{};
     sessionOptions.AppendExecutionProvider_CUDA(cuda_options);
     // Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_Tensorrt(sessionOptions, 0));
@@ -306,32 +298,31 @@ int main(int argc, char **argv)
     GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
 
     Ort::Session session(env, model_path.c_str(), sessionOptions);
-
     Ort::AllocatorWithDefaultOptions allocator;
 
+    // Get input and output infromation for .onnx pipeline
     size_t numInputNodes = session.GetInputCount();
     size_t numOutputNodes = session.GetOutputCount();
-
-    std::cout << "Number of Input Nodes: " << numInputNodes << std::endl;
-    std::cout << "Number of Output Nodes: " << numOutputNodes << std::endl;
+    // std::cout << "Number of Input Nodes: " << numInputNodes << std::endl;
+    // std::cout << "Number of Output Nodes: " << numOutputNodes << std::endl;
 
     const char* inputName = session.GetInputName(0, allocator);
-    std::cout << "Input Name: " << inputName << std::endl;
+    // std::cout << "Input Name: " << inputName << std::endl;
     Ort::TypeInfo inputTypeInfo = session.GetInputTypeInfo(0);
     auto inputTensorInfo = inputTypeInfo.GetTensorTypeAndShapeInfo();
     ONNXTensorElementDataType inputType = inputTensorInfo.GetElementType();
-    std::cout << "Input Type: " << inputType << std::endl;
+    // std::cout << "Input Type: " << inputType << std::endl;
     std::vector<int64_t> inputDims = inputTensorInfo.GetShape();
-    std::cout << "Input Dimensions: " << inputDims << std::endl;
+    // std::cout << "Input Dimensions: " << inputDims << std::endl;
 
     const char* outputName = session.GetOutputName(0, allocator);
-    std::cout << "Output Name: " << outputName << std::endl;
+    // std::cout << "Output Name: " << outputName << std::endl;
     Ort::TypeInfo outputTypeInfo = session.GetOutputTypeInfo(0);
     auto outputTensorInfo = outputTypeInfo.GetTensorTypeAndShapeInfo();
     ONNXTensorElementDataType outputType = outputTensorInfo.GetElementType();
-    std::cout << "Output Type: " << outputType << std::endl;
+    // std::cout << "Output Type: " << outputType << std::endl;
     std::vector<int64_t> outputDims = outputTensorInfo.GetShape();
-    std::cout << "Output Dimensions: " << outputDims << std::endl;
+    // std::cout << "Output Dimensions: " << outputDims << std::endl;
 
     size_t inputTensorSize = vectorProduct(inputDims);
     size_t outputTensorSize = vectorProduct(outputDims);
@@ -344,18 +335,55 @@ int main(int argc, char **argv)
         OrtAllocatorType::OrtArenaAllocator, OrtMemType::OrtMemTypeDefault);
 
 
-    // Measure latency
-    int numTests{100};
-    std::chrono::steady_clock::time_point begin =
-        std::chrono::steady_clock::now();
-    for (int i = 0; i < numTests; i++)
+    std::cout << "ros node starting" << std::endl;
+
+    while(n.ok())
     {
+        ros::spinOnce();
+
+
+        // <--- TODO: subscribe to ZED stereo cam image in plave of cv::imread ---> 
+
+        cv::Mat img = cv::imread("/home/utra-art/Desktop/road.jpg", cv::IMREAD_COLOR);
+        cv::Mat cropped_raw_image;
+        // cv::resize(img, cropped_raw_image, cv::Size(1280, 720), cv::INTER_AREA)
+        cv::resize(img, cropped_raw_image, cv::Size(330, 180), cv::INTER_LINEAR);
+
+        // cv::Mat cropped_raw_image = cv::Mat::zeros(cv::Size(330,180), CV_8UC3);
+        std::pair<cv::Mat, cv::Mat> edges = find_edge_channel(cropped_raw_image);
+
+        cv::Mat edges_reg;
+        cv::Mat edges_inv;
+
+        // cv::imwrite("/home/utra-art/Desktop/spencer_workspace/caffeine-ws/src/cv/src/lane_detection/edge.png", std::get<0>(edges));
+        // cv::imwrite("/home/utra-art/Desktop/spencer_workspace/caffeine-ws/src/cv/src/lane_detection/edge_inv.png", std::get<1>(edges));
+
+        std::get<0>(edges).convertTo(edges_reg, CV_32F, 1.0 / 255, 0);
+        std::get<1>(edges).convertTo(edges_inv, CV_32F, 1.0 / 255, 0);
+
+        // cv::resize(img, cropped_raw_image, cv::Size(330, 180), cv::INTER_LINEAR);
+        // cv::resize(img, cropped_raw_image, cv::Size(330, 180), cv::INTER_LINEAR);
+
+        cv::Mat normalized_image;
+        cropped_raw_image.convertTo(normalized_image, CV_32F, 1.0 / 255, 0);
+
+        cv::Mat R; 
+        cv::Mat G;
+        cv::Mat B; 
+        cv::extractChannel(normalized_image, B, 0);
+        cv::extractChannel(normalized_image, G, 1);
+        cv::extractChannel(normalized_image, R, 2);
+
+        cv::Mat input_stack[5] = {B, G, R, edges_reg, edges_inv};
+        cv::Mat input_merged; 
+        cv::Mat input_permuted; 
+        cv::merge(input_stack, 5, input_merged);
+        input_permuted = hwc2chw(input_merged);
         
         std::vector<float> inputTensorValues(inputTensorSize);
-        inputTensorValues.assign(input_image.begin<float>(),
-                             input_image.end<float>());
+        inputTensorValues.assign(input_permuted.begin<float>(),
+                             input_permuted.end<float>());
 
-        // std::cout << i << std::endl;
         std::vector<Ort::Value> inputTensors;
         std::vector<Ort::Value> outputTensors;
 
@@ -373,56 +401,28 @@ int main(int argc, char **argv)
 
         // outputTensors.data() = outputTensors.data() * 255;
         cv::Mat raw_output = cv::Mat(180,330,CV_32FC1,(float*)outputTensorValues.data());
+        // raw_output can likely be used directly for next steps, either vectorization or projection 
+        // into cost maps. Only need to scale with CV_8UC1 for visualization purposes. 
+
+        // <--- TODO: publish model output to model output topic for cost maps ---> 
+
         cv::Mat scaled_output;
-        
-        
         raw_output.convertTo(scaled_output, CV_8UC1, 1, 0);
         scaled_output = scaled_output * 255;
-        // std::cout << scaled_output << std::endl;
-        std::cout << outputTensorValues << std::endl;
+
+        // Visualizes data 
         cv::imshow("Model input", cropped_raw_image);
         cv::imshow("Model output", scaled_output);
-        int k = cv::waitKey(0);
+        int k = cv::waitKey(1);
         if (k == 'q'){
             break;
         }
+
+        // model_pub.publish(data);
+        loop_rate.sleep();
     }
-    std::chrono::steady_clock::time_point end =
-        std::chrono::steady_clock::now();
-    std::cout << "Minimum Inference Latency: "
-              << std::chrono::duration_cast<std::chrono::milliseconds>(end -
-                                                                       begin)
-                         .count() /
-                     static_cast<float>(numTests)
-              << " ms" << std::endl;
-
-
-    std::cout << "ros node starting" << std::endl;
-
-    // while(n.ok())
-    // {
-    //     ros::spinOnce();
-
-    //     model_pub.publish(data);
-
-    //     loop_rate.sleep();
-    // }
 
 
     return 0;
 }
 
-
-
-/*
-TODO:
-    - setup zed stereo cam package 
-    - read single image from stereo cam 
-    - load onnx model --- done 
-    - run inference using image from stereo cam --- done 
-    - convert results to robot coordinate frame 
-        - current system uses ros/tf package 
-    - publish result to ros friendly format 
-
-    - run speedtest 
-*/
