@@ -1,0 +1,3 @@
+<launch>
+    <node name="cv_model" pkg="lane_detection" type="lane_detection_inferencer" output="screen"/>
+</launch>
