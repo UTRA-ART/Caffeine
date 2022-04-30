@@ -1,17 +1,14 @@
 #include <boost/bind/placeholders.hpp>
 #include <string>
 
-#include "lane_detection/lane_detection_inference_node.h"
-
 #include "cv_bridge/cv_bridge.h"
+#include "lane_detection/lane_detection_inference_node.h"
 
 LaneDetectionInferenceNode::LaneDetectionInferenceNode(ros::NodeHandle nh)
     : nh_{nh}, it_{nh_}, inferencer_{[&]() {
-          nh_.param<std::string>("instance_name", instance_name_,
-                                 "unet_inference");
+          nh_.param<std::string>("instance_name", instance_name_, "");
           ROS_INFO("Instance name: %s", instance_name_.c_str());
-          nh_.param<std::string>("model_path", model_path_,
-                                 "/tmp/unet_with_sigmoid.onnx");
+          nh_.param<std::string>("model_path", model_path_, "");
           ROS_INFO("Model path: %s", model_path_.c_str());
           return LaneDetectionInferencer(instance_name_, model_path_);
       }()},
@@ -44,7 +41,7 @@ void LaneDetectionInferenceNode::imageCallback(
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "lane_detection_inference_node");
-    ros::NodeHandle nh;
+    ros::NodeHandle nh("~");
     LaneDetectionInferenceNode lane_detection_inference_node{nh};
     ros::spin();
     return 0;
