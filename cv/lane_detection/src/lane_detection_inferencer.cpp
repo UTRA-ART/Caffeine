@@ -158,8 +158,8 @@ Ort::SessionOptions getOrtSessionOptions(int intra_op_num_threads,
 
 LaneDetectionInferencer::LaneDetectionInferencer(std::string instance_name,
                                                  std::string model_path)
-    : instance_name_{std::move(instance_name)}, model_path_{std::move(
-                                                    model_path)},
+    : instance_name_{std::move(instance_name)}, 
+      model_path_{std::move(model_path)},
       env_{OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, instance_name_.c_str()},
       cuda_options_{OrtCUDAProviderOptions()},
       session_options_{getOrtSessionOptions(1, cuda_options_)},
