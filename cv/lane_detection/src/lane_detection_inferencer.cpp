@@ -1,3 +1,5 @@
+#include "lane_detection/lane_detection_inferencer.h"
+
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -6,43 +8,18 @@
 #include <stdexcept>
 #include <vector>
 
+#include "onnxruntime_c_api.h"
+#include "onnxruntime_cxx_api.h"
 #include "opencv2/opencv.hpp"
-
-// DELETE UNDER:
-
-#include "ros/ros.h"
-
-#include <opencv2/core.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-// #include <opencv2/dnn/dnn.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/imgproc.hpp>
-
-#include <cv_bridge/cv_bridge.h>
-#include <image_transport/image_transport.h>
-#include <sensor_msgs/image_encodings.h>
-
-#include <onnxruntime_cxx_api.h>
-
-#include <chrono>
-#include <cmath>
-#include <exception>
-#include <fstream>
-#include <iostream>
-#include <limits>
-#include <numeric>
-#include <string>
-#include <vector>
 
 namespace
 {
 
-constexpr int NETWORK_INPUT_WIDTH{180};
-constexpr int NETWORK_INPUT_HEIGHT{330};
+constexpr int NETWORK_INPUT_WIDTH{330};
+constexpr int NETWORK_INPUT_HEIGHT{180};
 constexpr int NETWORK_INPUT_CHANNEL{5};
-constexpr int NETWORK_OUTPUT_WIDTH{180};
-constexpr int NETWORK_OUTPUT_HEIGHT{330};
+constexpr int NETWORK_OUTPUT_WIDTH{330};
+constexpr int NETWORK_OUTPUT_HEIGHT{180};
 
 template <typename T> T vectorProduct(const std::vector<T> &v)
 {
@@ -134,6 +111,23 @@ cv::Mat getInverseEdgeChannel(cv::Mat edge_channel)
     return inverse_edge_channel;
 }
 
+cv::Mat combineImages(cv::Mat normalized_img, cv::Mat normalized_edges,
+                      cv::Mat normalized_edges_inv)
+{
+
+    cv::Mat R, G, B;
+    cv::extractChannel(normalized_img, B, 0);
+    cv::extractChannel(normalized_img, G, 1);
+    cv::extractChannel(normalized_img, R, 2);
+
+    cv::Mat input_stacked[NETWORK_INPUT_CHANNEL] = {B, G, R, normalized_edges,
+                                                    normalized_edges_inv};
+
+    cv::Mat input_merged;
+    cv::merge(input_stacked, NETWORK_INPUT_CHANNEL, input_merged);
+    return input_merged;
+}
+
 cv::Mat convertHWC2CHW(cv::Mat input_image)
 {
     std::vector<cv::Mat> rgb_images;
@@ -149,176 +143,101 @@ cv::Mat convertHWC2CHW(cv::Mat input_image)
     return flat_image;
 }
 
+Ort::SessionOptions getOrtSessionOptions(int intra_op_num_threads,
+                                         OrtCUDAProviderOptions cuda_options)
+{
+    Ort::SessionOptions session_options;
+    session_options.SetIntraOpNumThreads(intra_op_num_threads);
+    session_options.AppendExecutionProvider_CUDA(cuda_options);
+    session_options.SetGraphOptimizationLevel(
+        GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
+    return session_options;
+}
+
 } // namespace
 
-int main(int argc, char **argv)
+LaneDetectionInferencer::LaneDetectionInferencer(std::string instance_name,
+                                                 std::string model_path)
+    : instance_name_{std::move(instance_name)}, model_path_{std::move(
+                                                    model_path)},
+      env_{OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, instance_name_.c_str()},
+      cuda_options_{OrtCUDAProviderOptions()},
+      session_options_{getOrtSessionOptions(1, cuda_options_)},
+      session_{env_, model_path_.c_str(), session_options_},
+      allocator_{Ort::AllocatorWithDefaultOptions()},
+      input_names_{session_.GetInputName(0, allocator_)},
+      output_names_{session_.GetOutputName(0, allocator_)},
+      input_dims_{
+          session_.GetInputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape()},
+      output_dims_{
+          session_.GetOutputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape()},
+      input_tensor_size_(vectorProduct(input_dims_)),
+      output_tensor_size_(vectorProduct(output_dims_)),
+      output_tensor_values_{std::vector<float>(output_tensor_size_)},
+      memory_info_{Ort::MemoryInfo::CreateCpu(
+          OrtAllocatorType::OrtArenaAllocator, OrtMemType::OrtMemTypeDefault)}
 {
-    // Initialize ROS node
-    ros::init(argc, argv, "cv_model");
-    ros::NodeHandle n;
-    // ros::Publisher model_pub = n.advertise<???>("/cv_model/output", 1);
-    ros::Rate loop_rate(30);
+}
 
-    // Load in .onnx model
-    std::string instance_name{"unet_inference"};
-    std::string model_path{"/home/kajanan/Downloads/unet_with_sigmoid.onnx"};
+cv::Mat LaneDetectionInferencer::getLaneDetectionMask(cv::Mat input_image)
+{
+    return postprocessImage(performInference(preprocessImage(input_image)));
+}
 
-    Ort::Env env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING,
-                 instance_name.c_str());
-    Ort::SessionOptions sessionOptions;
-    sessionOptions.SetIntraOpNumThreads(1);
+cv::Mat LaneDetectionInferencer::preprocessImage(cv::Mat input_img)
+{
+    cv::Mat resized_img;
+    cv::resize(input_img, resized_img,
+               cv::Size(NETWORK_INPUT_WIDTH, NETWORK_INPUT_HEIGHT),
+               cv::INTER_LINEAR);
 
-    // Set GPU settings. To switch to TensorRT accelerator at some point.
-    OrtCUDAProviderOptions cuda_options{};
-    sessionOptions.AppendExecutionProvider_CUDA(cuda_options);
-    // Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_Tensorrt(sessionOptions,
-    // 0));
-    // Ort::ThrowOnError(OrtSessionOptionsAppendExecutionProvider_CUDA(sessionOptions,
-    // 0));
+    cv::Mat input_gray_img;
+    cv::cvtColor(resized_img, input_gray_img, cv::COLOR_BGR2GRAY);
+    cv::Mat edges = getEdgeChannel(input_gray_img);
+    cv::Mat edges_inv = getInverseEdgeChannel(edges);
 
-    sessionOptions.SetGraphOptimizationLevel(
-        GraphOptimizationLevel::ORT_ENABLE_EXTENDED);
+    cv::Mat normalized_edges;
+    cv::Mat normalized_edges_inv;
+    edges.convertTo(normalized_edges, CV_32F, 1.0f / 255.0f, 0.0f);
+    edges_inv.convertTo(normalized_edges_inv, CV_32F, 1.0f / 255.0f, 0.0f);
 
-    Ort::Session session(env, model_path.c_str(), sessionOptions);
-    Ort::AllocatorWithDefaultOptions allocator;
+    cv::Mat normalized_img;
+    resized_img.convertTo(normalized_img, CV_32F, 1.0f / 255.0f, 0.0f);
 
-    // Get input and output infromation for .onnx pipeline
-    size_t numInputNodes = session.GetInputCount();
-    size_t numOutputNodes = session.GetOutputCount();
-    // std::cout << "Number of Input Nodes: " << numInputNodes << std::endl;
-    // std::cout << "Number of Output Nodes: " << numOutputNodes << std::endl;
+    return convertHWC2CHW(
+        combineImages(normalized_img, normalized_edges, normalized_edges_inv));
+}
 
-    const char *inputName = session.GetInputName(0, allocator);
-    // std::cout << "Input Name: " << inputName << std::endl;
-    Ort::TypeInfo inputTypeInfo = session.GetInputTypeInfo(0);
-    auto inputTensorInfo = inputTypeInfo.GetTensorTypeAndShapeInfo();
-    ONNXTensorElementDataType inputType = inputTensorInfo.GetElementType();
-    // std::cout << "Input Type: " << inputType << std::endl;
-    std::vector<int64_t> inputDims = inputTensorInfo.GetShape();
-    // std::cout << "Input Dimensions: " << inputDims << std::endl;
+cv::Mat LaneDetectionInferencer::performInference(cv::Mat preprocessed_img)
+{
+    std::vector<float> input_tensor_values(input_tensor_size_);
+    input_tensor_values.assign(preprocessed_img.begin<float>(),
+                               preprocessed_img.end<float>());
 
-    const char *outputName = session.GetOutputName(0, allocator);
-    // std::cout << "Output Name: " << outputName << std::endl;
-    Ort::TypeInfo outputTypeInfo = session.GetOutputTypeInfo(0);
-    auto outputTensorInfo = outputTypeInfo.GetTensorTypeAndShapeInfo();
-    ONNXTensorElementDataType outputType = outputTensorInfo.GetElementType();
-    // std::cout << "Output Type: " << outputType << std::endl;
-    std::vector<int64_t> outputDims = outputTensorInfo.GetShape();
-    // std::cout << "Output Dimensions: " << outputDims << std::endl;
+    std::vector<Ort::Value> input_tensors;
+    std::vector<Ort::Value> output_tensors;
 
-    size_t inputTensorSize = vectorProduct(inputDims);
-    size_t outputTensorSize = vectorProduct(outputDims);
-    std::vector<float> outputTensorValues(outputTensorSize);
+    input_tensors.push_back(Ort::Value::CreateTensor<float>(
+        memory_info_, input_tensor_values.data(), input_tensor_size_,
+        input_dims_.data(), input_dims_.size()));
 
-    std::vector<const char *> inputNames{inputName};
-    std::vector<const char *> outputNames{outputName};
+    output_tensors.push_back(Ort::Value::CreateTensor<float>(
+        memory_info_, output_tensor_values_.data(), output_tensor_size_,
+        output_dims_.data(), output_dims_.size()));
 
-    Ort::MemoryInfo memoryInfo = Ort::MemoryInfo::CreateCpu(
-        OrtAllocatorType::OrtArenaAllocator, OrtMemType::OrtMemTypeDefault);
+    session_.Run(Ort::RunOptions{nullptr}, input_names_.data(),
+                 input_tensors.data(), 1, output_names_.data(),
+                 output_tensors.data(), 1);
 
-    std::cout << "ros node starting" << std::endl;
+    // TODO: do not use C style cast, look for safer way to do this
+    return cv::Mat(NETWORK_OUTPUT_HEIGHT, NETWORK_OUTPUT_WIDTH, CV_32FC1,
+                   (float *)output_tensor_values_.data());
+}
 
-    while (n.ok()) {
-        ros::spinOnce();
-
-        // <--- TODO: subscribe to ZED stereo cam image in plave of cv::imread
-        // --->
-
-        cv::Mat img =
-            cv::imread("/home/kajanan/Downloads/road.jpg", cv::IMREAD_COLOR);
-        cv::Mat cropped_raw_image;
-        // cv::resize(img, cropped_raw_image, cv::Size(1280, 720),
-        // cv::INTER_AREA)
-        cv::resize(img, cropped_raw_image, cv::Size(330, 180),
-                   cv::INTER_LINEAR);
-
-        // cv::Mat cropped_raw_image = cv::Mat::zeros(cv::Size(330,180),
-        // CV_8UC3);
-
-        cv::Mat gray_image;
-        cv::cvtColor(cropped_raw_image, gray_image, cv::COLOR_BGR2GRAY);
-        cv::Mat edges = getEdgeChannel(gray_image);
-        cv::Mat inv_edges = getInverseEdgeChannel(edges);
-
-        cv::Mat edges_reg;
-        cv::Mat edges_inv;
-
-        //
-        // cv::imwrite("/home/utra-art/Desktop/spencer_workspace/caffeine-ws/src/cv/src/lane_detection/edge.png",
-        // std::get<0>(edges));
-        //
-        // cv::imwrite("/home/utra-art/Desktop/spencer_workspace/caffeine-ws/src/cv/src/lane_detection/edge_inv.png",
-        // std::get<1>(edges));
-
-        edges.convertTo(edges_reg, CV_32F, 1.0 / 255, 0);
-        inv_edges.convertTo(edges_inv, CV_32F, 1.0 / 255, 0);
-
-        // cv::resize(mg, cropped_raw_image, cv::Size(330, 180),
-        // cv::INTER_LINEAR); cv::resize(img, cropped_raw_image, cv::Size(330,
-        // 180), cv::INTER_LINEAR);
-
-        cv::Mat normalized_image;
-        cropped_raw_image.convertTo(normalized_image, CV_32F, 1.0 / 255, 0);
-
-        cv::Mat R;
-        cv::Mat G;
-        cv::Mat B;
-        cv::extractChannel(normalized_image, B, 0);
-        cv::extractChannel(normalized_image, G, 1);
-        cv::extractChannel(normalized_image, R, 2);
-
-        cv::Mat input_stack[5] = {B, G, R, edges_reg, edges_inv};
-        cv::Mat input_merged;
-        cv::Mat input_permuted;
-
-        cv::imwrite("/tmp/edge.png", edges);
-        cv::imwrite("/tmp/inv_edge.png", inv_edges);
-        cv::merge(input_stack, 5, input_merged);
-
-        input_permuted = convertHWC2CHW(input_merged);
-
-        std::vector<float> inputTensorValues(inputTensorSize);
-        inputTensorValues.assign(input_permuted.begin<float>(),
-                                 input_permuted.end<float>());
-
-        std::vector<Ort::Value> inputTensors;
-        std::vector<Ort::Value> outputTensors;
-
-        inputTensors.push_back(Ort::Value::CreateTensor<float>(
-            memoryInfo, inputTensorValues.data(), inputTensorSize,
-            inputDims.data(), inputDims.size()));
-        outputTensors.push_back(Ort::Value::CreateTensor<float>(
-            memoryInfo, outputTensorValues.data(), outputTensorSize,
-            outputDims.data(), outputDims.size()));
-
-        session.Run(Ort::RunOptions{nullptr}, inputNames.data(),
-                    inputTensors.data(), 1, outputNames.data(),
-                    outputTensors.data(), 1);
-
-        // outputTensors.data() = outputTensors.data() * 255;
-        cv::Mat raw_output =
-            cv::Mat(180, 330, CV_32FC1, (float *)outputTensorValues.data());
-        // raw_output can likely be used directly for next steps, either
-        // vectorization or projection into cost maps. Only need to scale with
-        // CV_8UC1 for visualization purposes.
-
-        // <--- TODO: publish model output to model output topic for cost maps
-        // --->
-
-        cv::Mat scaled_output;
-        raw_output.convertTo(scaled_output, CV_8UC1, 1, 0);
-        scaled_output = scaled_output * 255;
-
-        // Visualizes data
-        cv::imshow("Model input", cropped_raw_image);
-        cv::imshow("Model output", scaled_output);
-        int k = cv::waitKey(1);
-        if (k == 'q') {
-            break;
-        }
-
-        // model_pub.publish(data);
-        loop_rate.sleep();
-    }
-    return 0;
+cv::Mat LaneDetectionInferencer::postprocessImage(cv::Mat raw_inference_output)
+{
+    cv::Mat scaled_output;
+    raw_inference_output.convertTo(scaled_output, CV_8UC1, 1, 0);
+    cv::Mat tmp = scaled_output * 255;
+    return tmp;
 }

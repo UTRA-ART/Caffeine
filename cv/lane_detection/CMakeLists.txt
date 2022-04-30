@@ -29,15 +29,14 @@ include_directories(include ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS}
                     ${onnxruntime_INCLUDE_DIRS})
 
 # Build executables
+add_library(lane_detection_inferencer src/lane_detection_inferencer.cpp)
+target_link_libraries(lane_detection_inferencer ${onnxruntime_LIBRARIES}
+                      ${OpenCV_LIBRARIES})
+
 add_executable(lane_detection_inference_node
                src/lane_detection_inference_node.cpp)
 target_link_libraries(lane_detection_inference_node ${catkin_LIBRARIES}
-                      ${onnxruntime_LIBRARIES} ${OpenCV_LIBRARIES})
-
-add_executable(lane_detection_inferencer src/lane_detection_inferencer.cpp)
-target_link_libraries(lane_detection_inferencer ${catkin_LIBRARIES}
-                      ${onnxruntime_LIBRARIES} ${OpenCV_LIBRARIES})
-
+                      ${OpenCV_LIBRARIES} lane_detection_inferencer)
 
 # Install
 install(TARGETS lane_detection_inference_node lane_detection_inferencer
