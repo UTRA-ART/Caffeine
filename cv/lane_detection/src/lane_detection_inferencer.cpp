@@ -238,6 +238,5 @@ cv::Mat LaneDetectionInferencer::postprocessImage(cv::Mat raw_inference_output)
 {
     cv::Mat scaled_output;
     raw_inference_output.convertTo(scaled_output, CV_8UC1, 1, 0);
-    cv::Mat tmp = scaled_output * 255;
-    return tmp;
+    return scaled_output * 255;
 }
