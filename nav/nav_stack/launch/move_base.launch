@@ -16,7 +16,7 @@
         <rosparam file="$(find nav_stack)/config/base_local_planner_params.yaml" command="load" />
 
         <!-- Global Planner -->
-        <param name="base_global_planner" value="carrot_planner/CarrotPlanner"/>
+        <param name="base_global_planner" value="navfn/NavfnROS"/>
     </node>
 
 

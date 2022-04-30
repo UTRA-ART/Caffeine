@@ -108,7 +108,7 @@
     <xacro:property name="ZED_camera_length" value="0.175"/>
     <xacro:property name="ZED_camera_width" value="0.03"/>
     <xacro:property name="ZED_camera_height" value="0.033"/>
-    <xacro:property name="ZED_camera_pitch" value="${25 * pi/180}"/>
+    <xacro:property name="ZED_camera_pitch" value="${19.66 * pi/180}"/> <!-- 19.66 degrees ensures the camera's field of view overlaps with the end of the lidar readings-->
     <!-- ZED image height/width corresponds to image size for 60Hz refresh-->
     <xacro:property name="ZED_image_refresh" value="60"/>
     <xacro:property name="ZED_image_width" value="3840"/>
