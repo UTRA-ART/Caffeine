@@ -8,7 +8,7 @@ local_costmap:
   # TODO: Update size if needed
   width: 30.0 # cost map size needs to be large enough to encompass the point cloud range
   height: 30.0 # This size is arbitary for now so it may need to be adjusted
-  resolution: 0.05
+  resolution: 0.1
 
   obstacle_layer:
     observation_sources: laser_scan_sensor point_cloud_sensor

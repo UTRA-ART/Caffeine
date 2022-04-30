@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 from sensor_msgs.msg import NavSatFix
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
@@ -103,7 +103,7 @@ class NavigateWaypoints:
     
     def get_next_waypoint(self):
         waypoint = self.waypoints[self.curr_waypoint_idx]
-        print self.curr_waypoint_idx
+        print(self.curr_waypoint_idx)
         self.curr_waypoint_idx += 1
         return waypoint
             

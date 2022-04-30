@@ -9,6 +9,8 @@ global_costmap:
   # TODO: Update size if needed
   width: 50
   height: 50
+  resolution: 0.1
+
 
   # Parameters are the same as local cost map, but is kept separate for future adjustments of the global cost map
   obstacle_layer:
