@@ -69,6 +69,23 @@ sudo apt-get install ros-melodic-hector-gazebo-plugins
 Custom built world(s) representing the IGVC competition can be found in the [`/worlds`](./worlds) package. To install them for use in the Gazebo simulator, run the `./install_models.sh` script found in the `/worlds/models` folder.
 > **NOTE:** The install script copies specific contents of `/worlds/models` to `~/.gazebo/models`
 
+### Install ONNXRuntime ###
+To perform inference, we leverage the onnxruntime's C++ API. To run inference,
+a NVIDIA card capable of using CUDA is required.
+
+First install NVIDIA drivers and CUDA.
+
+Afterwards, install onnxruntime by following a comment on an GitHub issue
+[here](https://github.com/microsoft/onnxruntime/issues/3124#issuecomment-676239644).
+This is required because onnxruntime currently does not have good CMake
+integration merged yet.
+
+Also, make sure you have cuDNN installed. This can be installed using:
+```
+sudo apt install libcudnn8-dev
+
+```
+
 ## Cloning this repository ##
 Before cloning this repository, create a ROS workspace:
 ```
@@ -91,7 +108,7 @@ To delete logs run:
 
 ```
 rosclean purge
-``` 
+```
 
 ## Verification ##
 Here are the common commands we run that will verify that your setup is correct (after performing ```catkin_make``` in any terminal once and ```source devel/setup.bash``` in every terminal you use)
@@ -118,4 +135,3 @@ When running `simulate.launch`, an error saying that the `spawn_model` node fail
 </p>
 <p align = "center"><b>University of Toronto Robotics Association</b></p>
 <p align = "center">Autonomous Rover Team</p>
-
