@@ -5,7 +5,9 @@
 #include "lane_detection/lane_detection_inference_node.h"
 
 LaneDetectionInferenceNode::LaneDetectionInferenceNode(ros::NodeHandle nh)
-    : nh_{nh}, it_{nh_}, inferencer_{[&]() {
+    : nh_{nh}, 
+      it_{nh_},
+      inferencer_{[&]() {
           nh_.param<std::string>("instance_name", instance_name_, "");
           ROS_INFO("Instance name: %s", instance_name_.c_str());
           nh_.param<std::string>("model_path", model_path_, "");
