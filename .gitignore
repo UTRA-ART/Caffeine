@@ -9,5 +9,5 @@
 # VSCode
 .vscode
 
-# CV models (too big) 
+# CV models (too big)
 *.onnx
