@@ -7,7 +7,7 @@
     <!-- IGVC worlds: full, walls, ramp, plain -->
     <!-- IGVC world types: pavement (2022 IGVC), grass (<2021 IGVC)-->
     <arg name="world" default="ramp"/>
-    <arg name="world_type" default="grass"/>
+    <arg name="world_type" default="pavement"/>
 
     <!-- Simulate 'world' in Gazebo -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
