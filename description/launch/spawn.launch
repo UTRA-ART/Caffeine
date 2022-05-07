@@ -8,7 +8,7 @@
    <arg name="roll"  value="0"/>
    <arg name="pitch" value="0"/>
    <arg name="yaw"   value="3.14"/>
-   -->
+   
 
 
     <arg name="x"     value="-19.4"/>
@@ -18,6 +18,23 @@
     <arg name="pitch" value="0"/>
     <arg name="yaw"   value="0.986"/>
 
+    -->
+
+    <arg name="world_type" default="grass"/>
+
+    <arg name="x" default="0" unless="$(eval arg('world_type') =='pavement')"/>
+    <arg name="y" default="-21.5" unless="$(eval arg('world_type') =='pavement')"/>
+    <arg name="z" default="0.25" unless="$(eval arg('world_type') =='pavement')"/>
+    <arg name="roll" default="0" unless="$(eval arg('world_type') =='pavement')"/>
+    <arg name="pitch" default="0" unless="$(eval arg('world_type') =='pavement')"/>
+    <arg name="yaw" default="3.14" unless="$(eval arg('world_type') =='pavement')"/>
+    
+    <arg name="x" value="-19.5" if="$(eval arg('world_type') =='pavement')" />
+    <arg name="y" value="0" if="$(eval arg('world_type') =='pavement')" />
+    <arg name="z" value="0" if="$(eval arg('world_type') =='pavement')" />
+    <arg name="roll" value="0" if="$(eval arg('world_type') =='pavement')" />
+    <arg name="pitch" value="0" if="$(eval arg('world_type') =='pavement')" />
+    <arg name="yaw" value="1.57" if="$(eval arg('world_type') =='pavement')" />
 
     <!-- Parse URDF with xacro -->
     <param name="robot_description" command="xacro '$(find description)/urdf/caffeine.urdf.xacro'"/>

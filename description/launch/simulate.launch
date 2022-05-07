@@ -4,12 +4,14 @@
     <arg name="rqt_steer" default="false"/>
     <arg name="rviz" default="false"/>
 
-    <!-- IGVC worlds: full, walls, ramp, plain, test -->
+    <!-- IGVC worlds: full, walls, ramp, plain -->
+    <!-- IGVC world types: pavement (2022 IGVC), grass (<2021 IGVC)-->
     <arg name="world" default="ramp"/>
+    <arg name="world_type" default="grass"/>
 
     <!-- Simulate 'world' in Gazebo -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <arg name="world_name" value="$(find worlds)/gazebo_worlds/igvc_$(arg world).world"/>
+        <arg name="world_name" value="$(find worlds)/gazebo_worlds/$(arg world_type)/igvc_$(arg world).world"/>
 
         <arg name="paused" value="false"/>
         <arg name="verbose" value="false"/>
@@ -23,7 +25,9 @@
     </include>
 
     <!-- Spawn the robot -->
-    <include file="$(find description)/launch/spawn.launch"/>
+    <include file="$(find description)/launch/spawn.launch">
+        <arg name="world_type" value="$(arg world_type)"/>
+    </include>
 
     <!-- MISCALLANEOUS -->
 
