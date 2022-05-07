@@ -30,7 +30,7 @@
     -->
     <rosparam command="load" file="$(find elevation_mapping)/config/sensor_processors/perfect.yaml" />
     <rosparam command="load" file="$(find caffeine_elevation_map)/config/caff_postprocessor_pipeline.yaml" />
-    <remap from="points" to="/zed/zed_node/point_cloud/cloud_registered_downsampled"/>
+    <remap from="points" to="/zed/zed_node/point_cloud/cloud_registered"/>
     <remap from="pose" to="/base_link_pose"/>
   </node>
   
