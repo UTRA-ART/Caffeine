@@ -73,7 +73,37 @@ Custom built world(s) representing the IGVC competition can be found in the [`/w
 To perform inference, we leverage the onnxruntime's C++ API. To run inference,
 a NVIDIA card capable of using CUDA is required.
 
-First install NVIDIA drivers and CUDA.
+First install NVIDIA drivers and CUDA. The steps roughly from the steps from [here](https://gist.github.com/mcvarer/30041141c8fe70ea5fe13f839330bc5a). We assume that there is no NVIDIA driver installation on the system.
+```
+sudo apt update && sudo apt upgrade
+sudo apt-get install g++ freeglut3-dev build-essential libx11-dev libxmu-dev libxi-dev libglu1-mesa libglu1-mesa-dev
+sudo add-apt-repository ppa:graphics-drivers/ppa
+
+# Distro = ubuntu1804 or ubuntu2004 (depends on version installed)
+# Arch = x86_64
+sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/$distro/$arch/3bf863cc.pub
+# Example: sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
+
+# Variables follow from above
+echo "deb https://developer.download.nvidia.com/compute/cuda/repos/$distro/$arch /" | sudo tee /etc/apt/sources.list.d/cuda.list
+sudo apt-get update
+
+# Pick CUDA version; for example CUDA 11.X, where X is the version
+sudo apt install cuda-11-X
+
+# Prepare paths, where X is the version
+echo 'export PATH=/usr/local/cuda-11.X/bin:$PATH' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=/usr/local/cuda-11.X/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
+source ~/.bashrc
+sudo ldconfig
+
+# Reboot machine
+
+# Verify install
+nvidia-smi
+nvcc -V
+```
+
 
 Afterwards, install onnxruntime by following a comment on an GitHub issue
 [here](https://github.com/microsoft/onnxruntime/issues/3124#issuecomment-676239644).
@@ -83,7 +113,6 @@ integration merged yet.
 Also, make sure you have cuDNN installed. This can be installed using:
 ```
 sudo apt install libcudnn8-dev
-
 ```
 
 ## Cloning this repository ##
