@@ -73,7 +73,7 @@ Custom built world(s) representing the IGVC competition can be found in the [`/w
 To perform inference, we leverage the onnxruntime's C++ API. To run inference,
 a NVIDIA card capable of using CUDA is required.
 
-First install NVIDIA drivers and CUDA. The steps roughly from the steps from [here](https://gist.github.com/mcvarer/30041141c8fe70ea5fe13f839330bc5a). We assume that there is no NVIDIA driver installation on the system.
+First install NVIDIA drivers and CUDA. The steps roughly from the steps from [here](https://gist.github.com/mcvarer/30041141c8fe70ea5fe13f839330bc5a). We assume that there is no NVIDIA driver installation on the system. We highly recommend following an online guide as the specific details may vary.
 ```
 sudo apt update && sudo apt upgrade
 sudo apt-get install g++ freeglut3-dev build-essential libx11-dev libxmu-dev libxi-dev libglu1-mesa libglu1-mesa-dev
@@ -89,7 +89,7 @@ echo "deb https://developer.download.nvidia.com/compute/cuda/repos/$distro/$arch
 sudo apt-get update
 
 # Pick CUDA version; for example CUDA 11.X, where X is the version
-sudo apt install cuda-11-X
+sudo apt install cuda-11-X cuda-drivers
 
 # Prepare paths, where X is the version
 echo 'export PATH=/usr/local/cuda-11.X/bin:$PATH' >> ~/.bashrc
