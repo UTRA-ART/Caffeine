@@ -1,0 +1,11 @@
+<launch>
+    <node
+        name="cv_model"
+        pkg="lane_detection"
+        type="lane_detection_inference_node"
+        output="screen"
+    >
+        <param name="instance_name" value="unet_inference"/>
+        <param name="model_path" value="/tmp/unet_with_sigmoid.onnx"/>
+    </node>
+</launch>
