@@ -5,6 +5,8 @@
         type="lane_detection_inference_node"
         output="screen"
     >
+        <remap from="image" to="/zed/zed_node/rgb/image_rect_color"/>
+
         <param name="instance_name" value="unet_inference"/>
         <param name="model_path" value="/tmp/unet_with_sigmoid.onnx"/>
     </node>
