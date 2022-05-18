@@ -1,0 +1,33 @@
+<launch>
+    <!-- Launch server for ZED data. Uploads rectified image to UDP server -->
+    <node
+        name="zed_wrapper_server"
+        pkg="lane_detection"
+        type="zed_wrapper_server.py"
+        output="screen"
+    >
+        <remap from="image" to="/zed/zed_node/rgb/image_rect_color"/>
+    </node>
+
+    <!-- Runs CV pipeline in python3 communicating with UDP pipeline -->
+    <node
+        name="cv_model_inference"
+        pkg="lane_detection"
+        type="cv_model_inference.py"
+        output="screen"
+    >
+        <remap from="image" to="/zed/zed_node/rgb/image_rect_color"/>
+        <param name="model_path" value="/tmp/unet_with_sigmoid.onnx"/>
+    </node>
+
+    <!-- Launch zed camera -->
+    <include file="$(find zed_wrapper)/launch/zed.launch"/>
+
+    <!-- Dummy zed node for testing without zed camera -->
+    <!-- <node
+        name="dummy_zed"
+        pkg="lane_detection"
+        type="dummy_zed.py"
+        output="screen"
+    /> -->
+</launch>
