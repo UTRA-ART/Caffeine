@@ -3,12 +3,12 @@
 #include "../include/ignore_lidar_node.h"
 
 IgnoreLidarNode::IgnoreLidarNode(ros::NodeHandle nh)
-    : nh_{nh}, timeSync_(lidar_sub_, odom_sub_, 1)
+    : nh_{nh}, time_sync_(time_sync_policy(10), lidar_sub_, odom_sub_)
 {
-    lidar_sub_.subscribe(nh_, "/scan", 1);
-    odom_sub_.subscribe(nh_, "/odom", 1);
+    lidar_sub_.subscribe(nh_, "/scan", 10);
+    odom_sub_.subscribe(nh_, "/odom", 10);
 
-    timeSync_.registerCallback(boost::bind(&IgnoreLidarNode::lidarCallback, this, _1, _2));
+    time_sync_.registerCallback(boost::bind(&IgnoreLidarNode::lidarCallback, this, _1, _2));
 
     ignore_lidar_pub_ = nh_.advertise<sensor_msgs::LaserScan>("/scan_modified", 1);
     
@@ -18,9 +18,9 @@ IgnoreLidarNode::IgnoreLidarNode(ros::NodeHandle nh)
 void IgnoreLidarNode::lidarCallback(const sensor_msgs::LaserScanConstPtr& lidar_msg, 
                                     const nav_msgs::OdometryConstPtr &odom_msg)
 {
-    if ((odom_msg->pose).pose.position.x >= -4.74  && 
+    if ((odom_msg->pose).pose.position.x >= -7.0  && 
         (odom_msg->pose).pose.position.x <= 5.74   && 
-        (odom_msg->pose).pose.position.y >= -40.85 && 
+        (odom_msg->pose).pose.position.y >= -42.0 && 
         (odom_msg->pose).pose.position.y <= -36.85) {       
         
         ROS_INFO("At Second Waypoint");
