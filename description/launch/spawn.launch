@@ -1,25 +1,6 @@
 <launch>
 
     <!-- Spawn at course start -->
-    <!--
-   <arg name="x"     value="0"/>
-   <arg name="y"     value="-21.5"/>
-   <arg name="z"     value="0.25"/>
-   <arg name="roll"  value="0"/>
-   <arg name="pitch" value="0"/>
-   <arg name="yaw"   value="3.14"/>
-   
-
-
-    <arg name="x"     value="-19.4"/>
-    <arg name="y"     value="-12.7"/>
-    <arg name="z"     value="0.24"/>
-    <arg name="roll"  value="0"/>
-    <arg name="pitch" value="0"/>
-    <arg name="yaw"   value="0.986"/>
-
-    -->
-
     <arg name="world_type" default="grass"/>
 
     <arg name="x" default="0" unless="$(eval arg('world_type') =='pavement')"/>
@@ -34,7 +15,18 @@
     <arg name="z" value="0" if="$(eval arg('world_type') =='pavement')" />
     <arg name="roll" value="0" if="$(eval arg('world_type') =='pavement')" />
     <arg name="pitch" value="0" if="$(eval arg('world_type') =='pavement')" />
-    <arg name="yaw" value="1.57" if="$(eval arg('world_type') =='pavement')" />
+    <arg name="yaw" value="1.57" if="$(eval arg('world_type') =='pavement')" /> 
+
+    <!-- Spawn at Second waypoint
+
+    <arg name="x" value="18.25" if="$(eval arg('world_type') =='pavement')" />
+    <arg name="y" value="6.74" if="$(eval arg('world_type') =='pavement')" />
+    <arg name="z" value="0.24" if="$(eval arg('world_type') =='pavement')" />
+    <arg name="roll" value="0.000015" if="$(eval arg('world_type') =='pavement')" />
+    <arg name="pitch" value="-0.0076" if="$(eval arg('world_type') =='pavement')" />
+    <arg name="yaw" value="-1.65" if="$(eval arg('world_type') =='pavement')" />
+    
+    -->
 
     <!-- Parse URDF with xacro -->
     <param name="robot_description" command="xacro '$(find description)/urdf/caffeine.urdf.xacro'"/>
