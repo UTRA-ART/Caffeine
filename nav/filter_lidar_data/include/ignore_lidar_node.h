@@ -1,15 +1,11 @@
 #include <array>
+#include <optional>
 
 #include "ros/ros.h"
 #include "sensor_msgs/LaserScan.h"
 #include "sensor_msgs/NavSatFix.h"
 
-#include <message_filters/subscriber.h>
-#include <message_filters/synchronizer.h>
-#include <message_filters/sync_policies/approximate_time.h>
-
 using namespace sensor_msgs;
-using namespace message_filters;
 
 class IgnoreLidarNode
 {
@@ -21,23 +17,22 @@ class IgnoreLidarNode
         ros::Publisher ignore_lidar_pub_;
 
         struct GpsCoord {
-            
+
             double latitude{};
             double longitude{};
         };
-
         
         GpsCoord second_waypoint_ = {10, 20};
         GpsCoord third_waypoint_ = {10, 20};
 
         std::array<GpsCoord, 2> bounds_;
 
-        message_filters::Subscriber<LaserScan> lidar_sub_;
-        message_filters::Subscriber<NavSatFix> odom_sub_;
+        GpsCoord cur_gps_;
+        bool is_gps_init = false;
 
-        typedef sync_policies::ApproximateTime<LaserScan, NavSatFix> time_sync_policy;
+        ros::Subscriber lidar_sub_;
+        ros::Subscriber gps_sub_;
 
-        Synchronizer<time_sync_policy> time_sync_; 
-
-        void lidarCallback(const sensor_msgs::LaserScanConstPtr &lidar_msg, const sensor_msgs::NavSatFixConstPtr &gps_msg);
+        void lidarCallback(const sensor_msgs::LaserScanConstPtr &lidar_msg);
+        void gpsCallback(const sensor_msgs::NavSatFixConstPtr &gps_msg);
 };
