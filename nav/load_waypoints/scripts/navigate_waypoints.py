@@ -193,4 +193,4 @@ if __name__ == "__main__":
     
     rospy.init_node('navigate_waypoints')
     waypoints = NavigateWaypoints(static_waypoint_file, max_time_for_transform)
-    waypoints.navigate_waypoints()
+    waypoints.navigate_waypoints() 
