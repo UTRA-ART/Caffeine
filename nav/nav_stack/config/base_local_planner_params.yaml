@@ -12,7 +12,7 @@ NavfnROS:
   allow_unknown: true
   # A tolerance on the goal point for the planner.
   default_tolerance: 0.1
-    #planner_frequency: 100
+  planner_frequency: 100
 
 # Plans robot movement
 TrajectoryPlannerROS:

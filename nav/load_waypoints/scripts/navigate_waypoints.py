@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 import json
 import os
@@ -106,7 +106,7 @@ class NavigateWaypoints:
     
     def get_next_waypoint(self):
         waypoint = self.waypoints[self.curr_waypoint_idx]
-        print self.curr_waypoint_idx
+        print(self.curr_waypoint_idx)
         self.curr_waypoint_idx += 1
         return waypoint
             
@@ -167,7 +167,7 @@ class NavigateWaypoints:
         action_client.send_goal(goal)
 
         # Waits for the server to finish performing the action.
-        finished_within_time = action_client.wait_for_result(rospy.Duration(60))
+        finished_within_time = action_client.wait_for_result(rospy.Duration(6000))
 
         if not finished_within_time:  
             action_client.cancel_goal()  
@@ -193,4 +193,4 @@ if __name__ == "__main__":
     
     rospy.init_node('navigate_waypoints')
     waypoints = NavigateWaypoints(static_waypoint_file, max_time_for_transform)
-    waypoints.navigate_waypoints() 
+    waypoints.navigate_waypoints()

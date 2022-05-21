@@ -9,6 +9,9 @@ global_costmap:
   publish_frequency: 1
   rolling_window: false  # Set this to true bc static map == false (this makes setting 2D nav goals in rviz work)
   static_map: true     # Not supplying a static map
+  resolution: 0.1
+  height: 150
+  width: 150
   #always_send_full_costmap: true
   map_type: costmap
   track_unknown_space: false
