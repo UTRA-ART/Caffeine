@@ -1,17 +1,12 @@
 #include <boost/bind/placeholders.hpp>
 
-#include "../include/ignore_lidar_node.h"
+#include "../include/ignore_lidar_node2.h"
 
 IgnoreLidarNode::IgnoreLidarNode(ros::NodeHandle nh)
-    : nh_{nh}, time_sync_(time_sync_policy(10), lidar_sub_, gps_sub_)
+    : nh_{nh}, time_sync_(time_sync_policy(10), lidar_sub_, odom_sub_)
 {
-    bounds_[0].latitude = second_waypoint_.latitude + 0.00002;
-    bounds_[0].longitude = second_waypoint_.longitude - 0.000025;
-    bounds_[1].latitude = third_waypoint_.latitude - 0.00002;
-    bounds_[1].longitude = third_waypoint_.longitude + 0.00002;
-
     lidar_sub_.subscribe(nh_, "/scan", 10);
-    gps_sub_.subscribe(nh_, "/gps/filtered", 10);
+    odom_sub_.subscribe(nh_, "/odom", 10);
 
     time_sync_.registerCallback(boost::bind(&IgnoreLidarNode::lidarCallback, this, _1, _2));
 
@@ -21,12 +16,12 @@ IgnoreLidarNode::IgnoreLidarNode(ros::NodeHandle nh)
 }    
 
 void IgnoreLidarNode::lidarCallback(const sensor_msgs::LaserScanConstPtr& lidar_msg, 
-                                    const sensor_msgs::NavSatFixConstPtr& gps_msg)
+                                    const nav_msgs::OdometryConstPtr &odom_msg)
 {
-    if (gps_msg->latitude <= bounds_[0].latitude && 
-        gps_msg->latitude >= bounds_[1].latitude && 
-        gps_msg->longitude >= bounds_[0].longitude && 
-        gps_msg->longitude <= bounds_[1].longitude) {       
+    if ((odom_msg->pose).pose.position.x >= -7.0  && 
+        (odom_msg->pose).pose.position.x <= 5.74   && 
+        (odom_msg->pose).pose.position.y >= -42.0 && 
+        (odom_msg->pose).pose.position.y <= -36.85) {       
         
         ROS_INFO("At Second Waypoint");
         sensor_msgs::LaserScan output_msg;
@@ -46,3 +41,4 @@ int main(int argc, char **argv)
     ros::spin();
     return 0;
 }
+
