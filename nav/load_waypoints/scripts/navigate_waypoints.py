@@ -1,18 +1,21 @@
 #!/usr/bin/env python2
 
-from sensor_msgs.msg import NavSatFix
-from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
-from tf.transformations import quaternion_from_euler
-from geometry_msgs.msg import PoseStamped
-from tf import TransformListener
+import json
+import os
+import sys
 
-import rospy, os, json, sys 
-import rospkg
-import std_msgs.msg
 import actionlib
+import rospkg
+import rospy
+import std_msgs.msg
 import tf
-import utm
 import tf2_ros
+import utm
+from geometry_msgs.msg import PoseStamped
+from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+from sensor_msgs.msg import NavSatFix
+from tf import TransformListener
+from tf.transformations import quaternion_from_euler
 
 
 class NavigateWaypoints:
@@ -144,7 +147,7 @@ class NavigateWaypoints:
         # Waits until the action server has started up and started listening for goals.
         action_client.wait_for_server()
 
-        if curr_waypoint.get("longitdue"):
+        if curr_waypoint.get("longitude"):
             pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
         else:
             pose = self.get_pose_from_xy(curr_waypoint["x"], curr_waypoint["y"])
@@ -164,7 +167,7 @@ class NavigateWaypoints:
         action_client.send_goal(goal)
 
         # Waits for the server to finish performing the action.
-        finished_within_time = action_client.wait_for_result(rospy.Duration(60))
+        finished_within_time = action_client.wait_for_result(rospy.Duration(6000))
 
         if not finished_within_time:  
             action_client.cancel_goal()  
@@ -184,9 +187,10 @@ class NavigateWaypoints:
 
 
 if __name__ == "__main__":
-    static_waypoint_file = 'static_waypoints_xy.json' # File name for static waypoints (provided at competition-time) 
+    static_waypoint_file = 'static_waypoints.json' # File name for static waypoints (provided at competition-time) 
+    #static_waypoint_file = 'static_waypoints_xy.json' # File name for static waypoints as x-y coordinates
     max_time_for_transform = 60.0 # Maximum time to wait for the transform. The node times out and shut down if this limit is exceeded.
     
     rospy.init_node('navigate_waypoints')
     waypoints = NavigateWaypoints(static_waypoint_file, max_time_for_transform)
-    waypoints.navigate_waypoints() 
+    waypoints.navigate_waypoints()

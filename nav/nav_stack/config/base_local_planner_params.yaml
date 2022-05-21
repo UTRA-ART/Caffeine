@@ -4,17 +4,18 @@ NavfnROS:
   allow_unknown: true
   # A tolerance on the goal point for the planner.
   default_tolerance: 0.1
+  planner_frequency: 100
 
 # Plans robot movement
 TrajectoryPlannerROS:
-  max_vel_x: 2.0
+  max_vel_x: 0.5
   min_vel_x: 0.2
   max_vel_theta: 0.5
   min_in_place_vel_theta: 0.3
 
   acc_lim_theta: 2.0
-  acc_lim_x: 2.5
-  acc_lim_y: 2.5
+  acc_lim_x: 1.5
+  acc_lim_y: 1.5
 
   # Caffeine is not Holonomic
   holonomic_robot: false
