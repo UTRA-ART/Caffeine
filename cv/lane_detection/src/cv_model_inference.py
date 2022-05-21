@@ -8,8 +8,7 @@ import cv2
 import numpy as np
 import redis
 import onnx
-import onnxruntime as ort
-import rospy 
+import onnxruntime as ort 
 
 from line_fitting import fit_lanes
 
@@ -26,8 +25,8 @@ class CVModelInferencer:
         self.ort_session = ort.InferenceSession(MODEL_PATH, providers=['CUDAExecutionProvider'])
 
     def run(self):
-        img = self._fromRedis("zed/preprocessed")
-        img = get_input(img)
+        raw = self._fromRedis("zed/preprocessed")
+        img = get_input(raw.copy())
 
         # Do model inference 
         output = self.ort_session.run(None, {'Inputs': img.astype(np.float32)})[0][0][0]
@@ -37,8 +36,9 @@ class CVModelInferencer:
         if lanes is not None:
             self._toRedis(lanes, "lane_detection")
 
-        # cv2.imshow("image", img)
-        # cv2.waitKey(1)
+        toshow = np.concatenate([cv2.resize(raw, (330, 180)), np.tile(mask[...,np.newaxis]*255, (1, 1, 3))], axis=1).astype(np.uint8)
+        cv2.imshow("image", toshow)
+        cv2.waitKey(1)
 
     def _toRedis(self,lanes,name):
         """Store given Numpy array 'img' in Redis under key 'name'"""

@@ -21,13 +21,13 @@
     </node>
 
     <!-- Launch zed camera -->
-    <include file="$(find zed_wrapper)/launch/zed.launch"/>
+    <!-- <include file="$(find zed_wrapper)/launch/zed.launch"/> -->
 
     <!-- Dummy zed node for testing without zed camera -->
-    <!-- <node
+    <node
         name="dummy_zed"
         pkg="lane_detection"
         type="dummy_zed.py"
         output="screen"
-    /> -->
+    />
 </launch>
