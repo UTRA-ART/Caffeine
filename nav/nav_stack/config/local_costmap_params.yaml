@@ -1,14 +1,14 @@
 local_costmap:
   global_frame: odom
   robot_base_frame: base_link
-  update_frequency: 10.0 # 50
-  publish_frequency: 5.0 # 20
+  update_frequency: 5.0 # 50
+  publish_frequency: 2.0 # 20
   static_map: false
   rolling_window: true
-  always_send_full_costmap: true
+  # always_send_full_costmap: true
   # TODO: Update size if needed
-  width: 5 # cost map size needs to be large enough to encompass the point cloud range
-  height: 5 # This size is arbitary for now so it may need to be adjusted
+  width: 20 # cost map size needs to be large enough to encompass the point cloud range
+  height: 20 # This size is arbitary for now so it may need to be adjusted
   resolution: 0.1 # 0.05
 
   obstacle_layer:

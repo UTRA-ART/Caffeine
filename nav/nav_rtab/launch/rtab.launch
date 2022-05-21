@@ -15,8 +15,8 @@
             <!--remap from="scan" to="scan"/-->
 
             <!-- Costmap Size -->
-            <param name="grid_size" type="double" value="20"/>
-            <param name="Grid/RangeMax" type="double" value="20"/>
+            <param name="grid_size" type="double" value="100"/>
+            <param name="Grid/RangeMax" type="double" value="100"/>
 
             <param name="Reg/Force3DoF"    value="true" />
             <param name="Optimizer/Slam2D" value="true" />

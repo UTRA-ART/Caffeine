@@ -1,7 +1,6 @@
 max_obstacle_height: 3.3 # Can be a large number, currently matched to the obstacle range
 footprint: [[-0.734, -0.582], [-0.734, 0.582], [0.734, 0.582], [0.734, -0.582]]
 # footprint: [[1.5, -1.5], [-1.5, 1.5], [1.5, 1.5], [1.5, -1.5]]
-observation_sources: laser_scan_sensor point_cloud_sensor
 
 # NOTE: Caffeine is generally parallel to the ground with 3-wheel drive + battery HACK
 observation_sources: laser_scan_sensor point_cloud_sensor

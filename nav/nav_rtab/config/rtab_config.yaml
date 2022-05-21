@@ -5,7 +5,7 @@ frame_id: /base_link
 map_frame_id: /map
 # odom_frame_id: /odom
 queue_size: 30
-grid_size: 20
+grid_size: 100
 use_action_for_goal: true
 ignore_variance: true
 tf_delay: 0.025
