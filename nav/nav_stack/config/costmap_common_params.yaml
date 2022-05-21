@@ -4,3 +4,4 @@ footprint: [[-0.734, -0.582], [-0.734, 0.582], [0.734, 0.582], [0.734, -0.582]]
 observation_sources: laser_scan_sensor point_cloud_sensor
 
 # NOTE: Caffeine is generally parallel to the ground with 3-wheel drive + battery HACK
+observation_sources: laser_scan_sensor point_cloud_sensor

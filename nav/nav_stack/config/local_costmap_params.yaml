@@ -1,14 +1,14 @@
 local_costmap:
   global_frame: odom
   robot_base_frame: base_link
-  update_frequency: 5.0 # 50
-  publish_frequency: 2.0 # 20
+  update_frequency: 10.0 # 50
+  publish_frequency: 5.0 # 20
   static_map: false
   rolling_window: true
-  always_send_full_costmap: false
+  always_send_full_costmap: true
   # TODO: Update size if needed
-  width: 20.0 # 30 # cost map size needs to be large enough to encompass the point cloud range
-  height: 20.0 # 30 # This size is arbitary for now so it may need to be adjusted
+  width: 5 # cost map size needs to be large enough to encompass the point cloud range
+  height: 5 # This size is arbitary for now so it may need to be adjusted
   resolution: 0.1 # 0.05
 
   obstacle_layer:
@@ -17,7 +17,7 @@ local_costmap:
     track_unknown_space: true
 
     laser_scan_sensor: {
-      min_obstacle_height: 0.0, # half wheel diameter
+      min_obstacle_height: -0.1, # half wheel diameter
       sensor_frame: base_laser,
       data_type: LaserScan,
       topic: scan,
@@ -26,8 +26,8 @@ local_costmap:
       obstacle_range: 3.7,   # Decide how far we should see obstacles, should be less than raytrace range
       raytrace_range: 4,      # max lidar is rated for is 4m
       inf_is_valid: true,
-      expected_update_rate: 5
-  }
+      expected_update_rate: 10
+    }
 
     # point_cloud_sensor: {
     #   min_obstacle_height: -0.05, 
