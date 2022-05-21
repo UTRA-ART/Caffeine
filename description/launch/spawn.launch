@@ -1,12 +1,12 @@
 <launch>
 
     <!-- Spawn at course start -->
-   <arg name="x"     value="0"/>
-   <arg name="y"     value="-21.5"/>
+   <arg name="x"     value="-12.79"/>
+   <arg name="y"     value="18.79"/>
    <arg name="z"     value="0.25"/>
    <arg name="roll"  value="0"/>
    <arg name="pitch" value="0"/>
-   <arg name="yaw"   value="3.14"/>
+   <arg name="yaw"   value="0"/>
 
     <!-- Parse URDF with xacro -->
     <param name="robot_description" command="xacro '$(find description)/urdf/caffeine.urdf.xacro'"/>
