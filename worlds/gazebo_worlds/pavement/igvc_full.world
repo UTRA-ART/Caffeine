@@ -1882,7 +1882,7 @@
         <gravity>1</gravity>
         <enable_wind>0</enable_wind>
       </link>
-      <pose frame=''>-8.2 21 0 0 -0 0</pose>
+      <pose frame=''>-8.3 21.1 0 0 -0 0</pose>
       <static>0</static>
     </model>
     <model name='Construction Barrel_35'>
@@ -3921,10 +3921,10 @@
         </link>
       </model>
       <model name='Construction Barrel_34'>
-        <pose frame=''>-8.2 21 -4e-06 -5e-06 -7e-06 -0.000625</pose>
+        <pose frame=''>-8.3 21.1 -4e-06 -5e-06 -7e-06 -0.000625</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>-8.2 21 -4e-06 -5e-06 -7e-06 -0.000625</pose>
+          <pose frame=''>-8.3 21.1 -4e-06 -5e-06 -7e-06 -0.000625</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>-2.87891 1.29703 -4.81657 3.03995 -0.913116 0.001287</acceleration>
           <wrench>-1439.45 648.517 -2408.28 0 -0 0</wrench>

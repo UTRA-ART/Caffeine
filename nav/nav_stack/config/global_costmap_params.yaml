@@ -48,7 +48,7 @@ global_costmap:
 
   inflation_layer:
     enabled:              true
-    inflation_radius:     1.4
+    inflation_radius:     0.8
 
   plugins:
     - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}
