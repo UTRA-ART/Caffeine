@@ -1,0 +1,7 @@
+<launch>
+  <!-- Launch keyboard teleop node -->
+  <node name="teleop_twist_keyboard" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py">
+    <!-- Remap cmd_vel topic name from keyboard teleop -->
+    <remap from="cmd_vel" to="cmd_vel"/>
+  </node>
+</launch>
