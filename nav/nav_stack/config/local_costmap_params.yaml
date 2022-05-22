@@ -9,7 +9,7 @@ local_costmap:
   # TODO: Update size if needed
   width: 5 # cost map size needs to be large enough to encompass the point cloud range
   height: 5 # This size is arbitary for now so it may need to be adjusted
-  resolution: 0.1 # 0.05
+  resolution: 0.1
 
   obstacle_layer:
     observation_sources: laser_scan_sensor #point_cloud_sensor
@@ -43,7 +43,7 @@ local_costmap:
 
   inflation_layer:
     enabled:              true
-    inflation_radius:     0.8
+    inflation_radius:     0.4
 
   plugins:
     - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}

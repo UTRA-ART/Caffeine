@@ -1776,7 +1776,7 @@
         <gravity>1</gravity>
         <enable_wind>0</enable_wind>
       </link>
-      <pose frame=''>1 19.75 0 0 -0 0</pose>
+      <pose frame=''>1 20.00 0 0 -0 0</pose>
       <static>0</static>
     </model>
     <model name='Construction Barrel_33'>
@@ -2281,12 +2281,12 @@
     </model>
     <model name='outer_wall_9'>
       <static>1</static>
-      <pose frame=''>-6.41 21.6 0 0 -0 -4.25</pose>
+      <pose frame=''>-6.3 21.7 0 0 -0 -4.15</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
             <box>
-              <size>2 0.1 1</size>
+              <size>1.8 0.1 1</size>
             </box>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2306,7 +2306,7 @@
         <visual name='visual'>
           <geometry>
             <box>
-              <size>2 0.1 1</size>
+              <size>1.8 0.1 1</size>
             </box>
           </geometry>
         </visual>
@@ -2317,12 +2317,12 @@
     </model>
     <model name='outer_wall_10'>
       <static>1</static>
-      <pose frame=''>-0.22 20.55 0 0 -0 -3.17</pose>
+      <pose frame=''>-0.18 20.65 0 0 -0 -3.20</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
             <box>
-              <size>11.5 0.1 1</size>
+              <size>11.25 0.1 1</size>
             </box>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -2342,7 +2342,7 @@
         <visual name='visual'>
           <geometry>
             <box>
-              <size>11.5 0.1 1</size>
+              <size>11.25 0.1 1</size>
             </box>
           </geometry>
         </visual>
@@ -3901,10 +3901,10 @@
         </link>
       </model>
       <model name='Construction Barrel_32'>
-        <pose frame=''>1 19.75 -4e-06 -5e-06 -7e-06 -0.000719</pose>
+        <pose frame=''>1 20.00 -4e-06 -5e-06 -7e-06 -0.000719</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>1 19.75 -4e-06 -5e-06 -7e-06 -0.000719</pose>
+          <pose frame=''>1 20.00 -4e-06 -5e-06 -7e-06 -0.000719</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>-2.8788 1.29723 -4.81663 3.03945 -0.91283 0.001288</acceleration>
           <wrench>-1439.4 648.616 -2408.31 0 -0 0</wrench>
