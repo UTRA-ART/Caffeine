@@ -6,7 +6,7 @@
     <xacro:property name="base_width" value="0.764"/>
     <xacro:property name="base_height" value="0.01"/>
 
-    <!-- Chassis -->
+    <!-- Chassis --> 
     <xacro:property name="chassis_to_base_link_dist" value="0.501747"/>
     <xacro:property name="chassis_to_stand_link_dist" value="0.698253"/>
 
@@ -82,9 +82,9 @@
     <xacro:property name="laser_horizontal_min_angle" value="${-0.5*laser_field_of_view*pi/180}"/>
     <xacro:property name="laser_horizontal_max_angle" value="${0.5*laser_field_of_view*pi/180}"/>
 
-    <xacro:property name="laser_range_min" value="0.1"/>
+    <xacro:property name="laser_range_min" value="0.06"/>
     <xacro:property name="laser_range_max" value="4.095"/>
-    <xacro:property name="laser_resolution_angle" value="0.36"/>
+    <xacro:property name="laser_resolution_angle" value="0.36"/> 
     <xacro:property name="laser_range_resolution" value="${laser_resolution_angle*pi/180}"/>
 
     <xacro:property name="laser_noise_type" value="gaussian"/>

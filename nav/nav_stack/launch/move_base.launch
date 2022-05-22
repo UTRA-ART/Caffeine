@@ -20,9 +20,6 @@
     </node>
 
 
-    <node pkg="amcl" type="amcl" name="amcl">
-        <param name="use_map_topic" value="true"/>
-    </node>
     <!-- TODO: always have a manual override available when doing autonomous navigation -->
 
 </launch>

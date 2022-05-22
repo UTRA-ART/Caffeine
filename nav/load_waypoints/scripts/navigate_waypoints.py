@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 import json
 import os
@@ -187,8 +187,8 @@ class NavigateWaypoints:
 
 
 if __name__ == "__main__":
-    static_waypoint_file = 'static_waypoints.json' # File name for static waypoints (provided at competition-time) 
-    #static_waypoint_file = 'static_waypoints_xy.json' # File name for static waypoints as x-y coordinates
+    static_waypoint_file = 'static_waypoints.json'  # File name for static waypoints (provided at competition-time); 
+                                                    # static_waypoints_xy.json for x-y version
     max_time_for_transform = 60.0 # Maximum time to wait for the transform. The node times out and shut down if this limit is exceeded.
     
     rospy.init_node('navigate_waypoints')

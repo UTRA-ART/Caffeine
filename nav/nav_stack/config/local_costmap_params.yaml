@@ -17,8 +17,8 @@ local_costmap:
     track_unknown_space: true
 
     laser_scan_sensor: {
-      min_obstacle_height: -10.0, #-0.1, half wheel diameter
-      max_obstacle_height: 10.0,
+      min_obstacle_height: -10.0, # In case odometry z-estimate goes too high/low,
+      max_obstacle_height: 10.0,  # we still add lidar scans to costmap
       sensor_frame: base_laser,
       data_type: LaserScan,
       topic: scan,
@@ -43,7 +43,7 @@ local_costmap:
 
   inflation_layer:
     enabled:              true
-    inflation_radius:     0.4
+    inflation_radius:     0.4  # Tunable parameter (affect navigation plan)
 
   plugins:
     - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}

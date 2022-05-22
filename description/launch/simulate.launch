@@ -5,7 +5,7 @@
     <arg name="rviz" default="false"/>
 
     <!-- IGVC worlds: full, walls, ramp, plain -->
-    <!-- IGVC world types: pavement (2022 IGVC), grass (<2021 IGVC), plain (pavement testing)-->
+    <!-- IGVC world types: pavement (2022 IGVC), grass (<2021 IGVC)-->
     <arg name="world" default="full"/>
     <arg name="world_type" default="pavement"/>
 
