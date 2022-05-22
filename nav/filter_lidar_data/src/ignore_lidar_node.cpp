@@ -5,10 +5,19 @@
 IgnoreLidarNode::IgnoreLidarNode(ros::NodeHandle nh)
     : nh_{nh}
 {
-    bounds_[0].latitude = second_waypoint_.latitude + 0.00002;
-    bounds_[0].longitude = second_waypoint_.longitude - 0.000025;
-    bounds_[1].latitude = third_waypoint_.latitude - 0.00002;
-    bounds_[1].longitude = third_waypoint_.longitude + 0.00002;
+    if (is_sim) {
+        /* In SIM Commands (Map is rotated 90 deg CW compared to IRL) */
+        bounds_[0].latitude = second_waypoint_.latitude - 0.000025;
+        bounds_[0].longitude = second_waypoint_.longitude - 0.00002;
+        bounds_[1].latitude = third_waypoint_.latitude + 0.00002;
+        bounds_[1].longitude = third_waypoint_.longitude;
+    } else {
+        /* IRL Commands */
+        bounds_[0].latitude = second_waypoint_.latitude + 0.00002;
+        bounds_[0].longitude = second_waypoint_.longitude - 0.000025;
+        bounds_[1].latitude = third_waypoint_.latitude; //Want to turn lidar back on asap
+        bounds_[1].longitude = third_waypoint_.longitude + 0.00002;
+    }
 
     lidar_sub_ = nh_.subscribe("/scan", 10, &IgnoreLidarNode::lidarCallback, this);
     gps_sub_ = nh_.subscribe("/gps/filtered", 10, &IgnoreLidarNode::gpsCallback, this);
@@ -24,18 +33,37 @@ void IgnoreLidarNode::lidarCallback(const sensor_msgs::LaserScanConstPtr& lidar_
         return;
     }
 
-    if (cur_gps_.latitude <= bounds_[0].latitude && 
-        cur_gps_.latitude >= bounds_[1].latitude && 
-        cur_gps_.longitude >= bounds_[0].longitude && 
-        cur_gps_.longitude <= bounds_[1].longitude) {       
+    if (is_sim) {
+        /* SIM Commands */
+        if (cur_gps_.latitude >= bounds_[0].latitude && 
+            cur_gps_.latitude <= bounds_[1].latitude && 
+            cur_gps_.longitude >= bounds_[0].longitude && 
+            cur_gps_.longitude <= bounds_[1].longitude) {
+
+            ROS_INFO("At Second Waypoint");
+            sensor_msgs::LaserScan output_msg;
+            output_msg.header = lidar_msg->header;
+            ignore_lidar_pub_.publish(output_msg);
         
-        ROS_INFO("At Second Waypoint");
-        sensor_msgs::LaserScan output_msg;
-        output_msg.header = lidar_msg->header;
-        ignore_lidar_pub_.publish(output_msg);
+        } else {
+            ROS_INFO("NOT at Second Waypoint");
+            ignore_lidar_pub_.publish(lidar_msg);
+        }
     } else {
-        ROS_INFO("NOT at Second Waypoint");
-        ignore_lidar_pub_.publish(lidar_msg);
+        /* IRL Commands */
+        if (cur_gps_.latitude <= bounds_[0].latitude && 
+            cur_gps_.latitude >= bounds_[1].latitude && 
+            cur_gps_.longitude >= bounds_[0].longitude && 
+            cur_gps_.longitude <= bounds_[1].longitude) {       
+            
+            ROS_INFO("At Second Waypoint");
+            sensor_msgs::LaserScan output_msg;
+            output_msg.header = lidar_msg->header;
+            ignore_lidar_pub_.publish(output_msg);
+        } else {
+            ROS_INFO("NOT at Second Waypoint");
+            ignore_lidar_pub_.publish(lidar_msg);
+        }
     }
 }
 

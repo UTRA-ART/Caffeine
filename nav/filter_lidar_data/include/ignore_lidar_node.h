@@ -22,13 +22,15 @@ class IgnoreLidarNode
             double longitude{};
         };
         
-        GpsCoord second_waypoint_ = {10, 20};
-        GpsCoord third_waypoint_ = {10, 20};
+        GpsCoord second_waypoint_ = {43.65716861, -79.3903337}; //Temporarily set to in SIM Gps coordinates. CHANGE HERE LATER
+        GpsCoord third_waypoint_ = {43.65717098, -79.39020002};
 
         std::array<GpsCoord, 2> bounds_;
 
         GpsCoord cur_gps_;
         bool is_gps_init = false;
+
+        bool is_sim = true; //SWITCH AT COMP OR DELETE EXTRA CODE
 
         ros::Subscriber lidar_sub_;
         ros::Subscriber gps_sub_;
