@@ -5,7 +5,7 @@
     <arg name="rviz" default="true"/>
 
     <!-- IGVC worlds: full, walls, ramp, plain, test -->
-    <arg name="world" default="full"/>
+    <arg name="world" default="plain"/>
 
     <!-- Simulate 'world' in Gazebo -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
