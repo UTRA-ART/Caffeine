@@ -22,7 +22,7 @@ class NavigateWaypoints:
     def __init__(self, static_waypoint_file, max_time_for_transform):
         self.waypoints = dict() 
         self.static_waypoint_file = static_waypoint_file
-        self.max_time_for_transform = max_time_for_transform
+        self.max_time_for_transform = max_time_for_transform # Maximum time to wait for the transform. Node shuts down if time limit hit
         self.waited_for_transform = False # Initialize the boolean for whether or waiting has timed out 
 
         self.populate_waypoint_dict() 
@@ -162,15 +162,16 @@ class NavigateWaypoints:
         while True:
             curr_waypoint = self.get_next_waypoint()
             self.send_and_wait_goal_to_move_base(curr_waypoint)
-            
+
             if (self.curr_waypoint_idx >= len(self.waypoints)):
                 break
 
 
 if __name__ == "__main__":
-    static_waypoint_file = 'static_waypoints.json'  # File name for static waypoints (provided at competition-time)
-    max_time_for_transform = 60.0 # Maximum time to wait for the transform. The node times out and shut down if this limit is exceeded.
-    
+    # CHANGE THIS TO GET MAP SPECIFIC GPS WAYPOINTS
+    static_waypoint_file = 'static_waypoints_pavement.json'
+    # static_waypoint_file = 'static_waypoints_grass.json'
+
     rospy.init_node('navigate_waypoints')
-    waypoints = NavigateWaypoints(static_waypoint_file, max_time_for_transform)
+    waypoints = NavigateWaypoints(static_waypoint_file, max_time_for_transform=60.0)
     waypoints.navigate_waypoints()

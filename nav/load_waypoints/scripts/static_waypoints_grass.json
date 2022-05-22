@@ -1,0 +1,44 @@
+{
+    "waypoints" : [
+        {
+            "id" : 0,
+            "longitude" : -79.3905182568,
+            "latitude" : 43.6569443389,
+            "description"  : "Entrance of No-Man's Land",
+            "test_loc_description": "wall protrusion",
+            "frame_id" : "odom",
+            "pose_test" : [11.2,0,0,0,0,0],
+            "pose_test_norm" : [10,0,0,0,0,0]
+        },
+        {
+            "id" : 1,
+            "longitude" : -79.3904506447,
+            "latitude" : 43.6569492066,
+            "description"  : "Exit of No-Man's Land",
+            "test_loc_description": "double pilone",
+            "frame_id" : "odom",
+            "pose_test" : [15.7,-4.06,0,0,0,-0.547],
+            "pose_test_norm" : [16.2, -4.46, 0, 0, 0, -0.967]
+        },
+        {
+            "id" : 2,
+            "longitude" : -79.3904467252,
+            "latitude" : 43.6570767441,
+            "description"  : "Inside of No-Man's Land",
+            "test_loc_description": "Ramp start",
+            "frame_id" : "odom",
+            "pose_test" : [18.95,-9.56,0,0,0,-2.187],
+            "pose_test_norm" : [18.028, -10.42, 0, 0, 0, -2.185676849181859]
+        },
+        {
+            "id" : 3,
+            "longitude" : -79.390539779,
+            "latitude" : 43.6570773036,
+            "description"  : "Inside of No-Man's Land",
+            "test_loc_description": "Ramp end",
+            "frame_id" : "odom",
+            "pose_test" : [14.56,-14.39,0,0,0,-1.99],
+            "pose_test_norm" : [15.115, -14.65, 0, 0, 0, -1.9989176939225397]
+        }
+    ]
+}
