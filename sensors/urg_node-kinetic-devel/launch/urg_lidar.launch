@@ -8,9 +8,9 @@
 
   <node name="urg_node" pkg="urg_node" type="urg_node" output="screen">
     <param name="ip_address" value=""/>
-    <param name="serial_port" value="/dev/ttyACM0"/>
+    <param name="serial_port" value="/dev/ttyACM1"/>
     <param name="serial_baud" value="115200"/>
-    <param name="frame_id" value="laser"/>
+    <param name="frame_id" value="base_laser"/>
     <param name="calibrate_time" value="true"/>
     <param name="publish_intensity" value="false"/>
     <param name="publish_multiecho" value="false"/>
