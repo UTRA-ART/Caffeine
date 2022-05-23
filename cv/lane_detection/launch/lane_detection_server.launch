@@ -20,14 +20,22 @@
         <param name="model_path" value="/tmp/unet_with_sigmoid.onnx"/>
     </node>
 
+    <!-- Runs CV pipeline in python3 communicating with UDP pipeline -->
+    <node
+        name="cv_wrapper_client"
+        pkg="lane_detection"
+        type="cv_wrapper_client.py"
+        output="screen"
+    />
+
     <!-- Launch zed camera -->
-    <!-- <include file="$(find zed_wrapper)/launch/zed.launch"/> -->
+    <include file="$(find zed_wrapper)/launch/zed.launch"/>
 
     <!-- Dummy zed node for testing without zed camera -->
-    <node
+    <!-- <node
         name="dummy_zed"
         pkg="lane_detection"
         type="dummy_zed.py"
         output="screen"
-    />
+    /> -->
 </launch>

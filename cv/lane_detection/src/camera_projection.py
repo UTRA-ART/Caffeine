@@ -1,4 +1,5 @@
 import json 
+import os 
 
 import cv2
 import numpy as np
@@ -9,10 +10,46 @@ class CameraProjection:
     def __init__(self):
         rospack = rospkg.RosPack()
         save_path = rospack.get_path('lane_detection') + '/config/depth_vals.json'
-        self.depth_to_y_map = self.load_depth_to_y_map(save_path)
+        if os.path.exists(save_path):
+            print("Using depth map values from", save_path)
+            self.depth_map = json.load(open(save_path, 'r'))
+        else:
+            self.depth_map = self.gen_depth_to_y_map(1.5, 4)
+
+        self.depth_values = []
+        self.keys = {}
+        for i, key in enumerate(self.depth_map):
+            self.keys[key] = i
+            self.depth_values += [self.depth_map[key]]
+        self.depth_values = np.array(self.depth_values)
 
 
-    def project_2D_to_3D_camera(self, x_array, y_array, f_x, f_y, o_x, o_y):
+        '''
+        Raw parameters (found in /usr/local/zed/settings)
+        fx = 1400.13
+        fy = 1400.13
+        cx = 1188.06
+        cy = 645.894
+
+        image size: 360, 640, 3
+
+        detination image size: 180, 330
+        ratio: 0.5, 0.515625
+
+        TODO: Remove estimates 
+        '''
+
+        self.fx = (360 + 640) / 2
+        self.fy = (360 + 640) / 2
+        self.ox = 640 / 2
+        self.oy = 360 / 2
+
+
+    def __call__(self, pts):
+        return self.project_2D_to_3D_camera(pts[0], pts[1])
+
+
+    def project_2D_to_3D_camera(self, x_array, y_array):
         ''' Given the pixel image coordinates and a constant mapping of depth to y-values,
             calculate the resulting projection of points in the camera coordinate frame.
             Requires the focal lengths in x and y and the optical centers
@@ -21,16 +58,17 @@ class CameraProjection:
         y_cam_coords = []
         z_cam_coords = []
 
-        for x,y in zip(x_array,y_array):
-            x_project = (x - o_x)/f_x*self.depth_to_y_map[y]
-            y_project = (y - o_y)/f_y*self.depth_to_y_map[y]
-            z_project = self.depth_to_y_map[y]
+        z_map_indeces = []
+        for i in range(len(x_array)):
+            z_map_indeces += [self.keys[str((x_array[i], y_array[i]))]]
+        z_map_indeces = np.array(z_map_indeces)
 
-            x_cam_coords.append(x_project)
-            y_cam_coords.append(y_project)
-            z_cam_coords.append(z_project)
+        x_cam_coords = (x_array - self.ox) / self.fx * self.depth_values[z_map_indeces]
+        y_cam_coords = (y_array - self.oy) / self.fy * self.depth_values[z_map_indeces]
+        z_cam_coords = self.depth_values[z_map_indeces]
 
         return x_cam_coords, y_cam_coords, z_cam_coords
+
 
     def transform_cam_to_world(self, M_ext, x_array, y_array, z_array):
         ''' Transform your points from camera coordinates back to world coordinates
@@ -60,18 +98,20 @@ class CameraProjection:
 
         return x_world, y_world, z_world
 
-    def gen_depth_to_y_map(self, min_z, max_z, num_y_pixels):
+
+    def gen_depth_to_y_map(self, min_z, max_z):
         ''' Create the constant depth to y map '''
 
-        depth_to_y_map = []
-        delta_z = (max_z-min_z)/num_y_pixels
+        depth_map = {}
+        delta_z = (max_z-min_z)/6
 
-        for n,y in enumerate(range(num_y_pixels-1,-1,-1),1):
-            depth_to_y_map[y] = delta_z*n
+        for i, _y in enumerate(range(150, -30, -30)):
+            for _x in range(0, 330, 30):
+                for y in range(_y, _y+30):
+                    for x in range(_x, _x+30):
+                        depth_map[str((x, y))] = delta_z*i
 
-        return depth_to_y_map
+        for n,y in enumerate(range(180-1,-1,-1),1):
+            depth_map[y] = delta_z*n
 
-    def load_depth_to_y_map(self, file_name):
-        values = json.load(open(file_name, 'r'))
-        return values
-
+        return depth_map

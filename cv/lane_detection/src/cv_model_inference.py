@@ -3,6 +3,7 @@ import struct
 import sys 
 import time
 import json
+import os
 
 import cv2
 import numpy as np
@@ -10,19 +11,21 @@ import redis
 import onnx
 import onnxruntime as ort 
 
-from line_fitting import fit_lanes
+import rospkg
 
-MODEL_PATH = '/home/spencer/Documents/ART/caffeine-ws/src/cv/lane_detection/models/unet_with_sigmoid.onnx'
+from line_fitting import fit_lanes
 
 class CVModelInferencer:
     def __init__(self):
-        self.redis_recieve = redis.Redis(host='127.0.0.1', port=6379)
-        self.redis_send = redis.Redis(host='127.0.0.1', port=6379)
+        self.redis = redis.Redis(host='127.0.0.1', port=6379)
+        
+        rospack = rospkg.RosPack()
+        model_path = rospack.get_path('lane_detection') + '/models/unet_with_sigmoid.onnx'
 
-        self.model = onnx.load(MODEL_PATH)
+        self.model = onnx.load(model_path)
         onnx.checker.check_model(self.model)
 
-        self.ort_session = ort.InferenceSession(MODEL_PATH, providers=['CUDAExecutionProvider'])
+        self.ort_session = ort.InferenceSession(model_path, providers=['CUDAExecutionProvider'])
 
     def run(self):
         raw = self._fromRedis("zed/preprocessed")
@@ -45,11 +48,11 @@ class CVModelInferencer:
 
         encoded = json.dumps(lanes)
         # Store encoded data in Redis
-        self.redis_send.set(name,encoded)
+        self.redis.set(name,encoded)
 
     def _fromRedis(self, name):
         """Retrieve Numpy array from Redis key 'n'"""
-        encoded = self.redis_recieve.get(name)
+        encoded = self.redis.get(name)
         h, w = struct.unpack('>II',encoded[:8])
         a = cv2.imdecode(np.frombuffer(encoded, dtype=np.uint8, offset=8), 1).reshape(h,w,3)
         return a
