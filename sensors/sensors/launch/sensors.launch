@@ -1,3 +1,4 @@
 <launch>
     <include file="$(find urg_node)/launch/urg_lidar.launch"/>
+    <include file="$(find phidgets_imu)/launch/imu.launch"/>
 </launch>
