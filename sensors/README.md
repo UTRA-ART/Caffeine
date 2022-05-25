@@ -1,13 +1,14 @@
-# Sensors #
+# Instructions ffor adding a new package 
 
-This folder contains packages that concern Sensors for Caffeine.
+* cd into src dir
+* run command 
+``` catkin_create_pkg package_name depdency1 dependency2 ... ```
+* cd into catkin_ws dir
+* run command
+``` catkin_make ```
+* run command
+``` source devel/setup.bash ```
+* run command 
+``` rosrun package_name file_name.py ```
 
-## Relevant Packages & Topics ##
 
-**TODO:** populate this document to facilitate interfacing with other packages.
-
-### [Package 0] ###
-[Description of the package 0]
-```
-[relevant topics of package 0]
-```
