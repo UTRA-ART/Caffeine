@@ -32,8 +32,8 @@ TrajectoryPlannerROS:
   escape_vel: -0.3
 
   # Cost function
-  pdist_scale: 0.6 # Default: 0.6
-  gdist_scale: 0.6 # Default: 0.6
+  path_distance_bias: 0.6 # Default: 0.6
+  goal_distance_bias: 0.8 # Default: 0.8
   occdist_scale: 0.01 # Default: 0.01
   heading_scoring: false # Default: false
   heading_lookahead: 0.35 # Default: 0.35
