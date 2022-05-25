@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: laser_proc
+Description: Description of laser_proc
+Version: 0.1.6
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib -llaser_proc_library -llaser_publisher -llaser_transport -llaser_proc_ROS -lLaserProcNodelet
+Requires: roscpp sensor_msgs rosconsole nodelet

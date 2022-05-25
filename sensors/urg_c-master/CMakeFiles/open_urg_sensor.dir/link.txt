@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC   -shared -Wl,-soname,libopen_urg_sensor.so -o ../devel/lib/libopen_urg_sensor.so CMakeFiles/open_urg_sensor.dir/current/samples/open_urg_sensor.c.o -Wl,-rpath,/media/art-jetson/SSD/caffeine/sensor_tests/ros_nodes/src/devel/lib: -lm ../devel/lib/libliburg_c.so -lrt -lm 

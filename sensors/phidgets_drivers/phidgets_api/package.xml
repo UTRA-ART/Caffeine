@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>phidgets_api</name>
+  <version>0.7.11</version>
+  <description>A C++ Wrapper for the Phidgets C API</description>
+
+  <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
+  <maintainer email="clalancette@openrobotics.org">Chris Lalancette</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/phidgets_api</url>
+  <url type="repository">https://github.com/ros-drivers/phidgets_drivers.git</url>
+  <url type="bugtracker">https://github.com/ros-drivers/phidgets_drivers/issues</url>
+
+  <author>Tully Foote</author>
+  <author>Ivan Dryanovski</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>libphidget21</depend>
+
+</package>

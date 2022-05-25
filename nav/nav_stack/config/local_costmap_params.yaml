@@ -1,45 +1,49 @@
 local_costmap:
   global_frame: odom
   robot_base_frame: base_link
-  update_frequency: 5.0
-  publish_frequency: 2.0
+  update_frequency: 20.0 # 50
+  publish_frequency: 10.0 # 20
   static_map: false
   rolling_window: true
+  always_send_full_costmap: false
   # TODO: Update size if needed
-  width: 30.0 # cost map size needs to be large enough to encompass the point cloud range
-  height: 30.0 # This size is arbitary for now so it may need to be adjusted
-  resolution: 0.05
+  width: 8 # cost map size needs to be large enough to encompass the point cloud range
+  height: 8 # This size is arbitary for now so it may need to be adjusted
+  resolution: 0.1
 
   obstacle_layer:
-    observation_sources: laser_scan_sensor point_cloud_sensor
+    observation_sources: laser_scan_sensor #point_cloud_sensor
     enabled: true
     track_unknown_space: true
 
     laser_scan_sensor: {
-      min_obstacle_height: -0.125, # half wheel diameter
-      sensor_frame: base_laser, 
-      data_type: LaserScan, 
-      topic: scan, 
-      marking: true, 
-      clearing: true,
+      min_obstacle_height: -10.0, # In case odometry z-estimate goes too high/low,
+      max_obstacle_height: 10.0,  # we still add lidar scans to costmap
+      sensor_frame: base_laser,
+      data_type: LaserScan,
+      topic: scan,
+      marking: true,
+      clearing: true, # true
       obstacle_range: 3.7,   # Decide how far we should see obstacles, should be less than raytrace range
-      raytrace_range: 4      # max lidar is rated for is 4m
+      raytrace_range: 4,      # max lidar is rated for is 4m
+      inf_is_valid: true,
+      expected_update_rate: 10
     }
 
     point_cloud_sensor: {
-      min_obstacle_height: -0.05, 
-      sensor_frame: zed_camera_link, 
-      data_type: PointCloud2, 
-      topic: zed/zed_node/point_cloud/cloud_registered, 
-      marking: true, 
-      clearing: true, 
+      min_obstacle_height: -0.1,
+      sensor_frame: zed_camera_link,
+      data_type: PointCloud2,
+      topic: zed/zed_node/point_cloud/cloud_registered,
+      marking: true,
+      clearing: true,
       obstacle_range: 15.0,
       raytrace_range: 16.0
     }
 
   inflation_layer:
     enabled:              true
-    inflation_radius:     0.4
+    inflation_radius:     0.4  # Tunable parameter (affect navigation plan)
 
   plugins:
     - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer", output: "screen"}

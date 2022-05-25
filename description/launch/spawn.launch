@@ -2,7 +2,7 @@
 
     <!-- Spawn at course start -->
     <arg name="world_type" default="grass"/>
-
+    
     <arg name="x" default="0" unless="$(eval arg('world_type') =='pavement')"/>
     <arg name="y" default="-21.5" unless="$(eval arg('world_type') =='pavement')"/>
     <arg name="z" default="0.25" unless="$(eval arg('world_type') =='pavement')"/>
