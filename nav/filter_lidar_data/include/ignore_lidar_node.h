@@ -1,9 +1,10 @@
 #include <array>
+#include <string.h>
 #include <optional>
 
 #include "ros/ros.h"
 #include "sensor_msgs/LaserScan.h"
-#include "sensor_msgs/NavSatFix.h"
+#include "nav_msgs/Odometry.h"
 
 using namespace sensor_msgs;
 
@@ -21,20 +22,25 @@ class IgnoreLidarNode
             double latitude{};
             double longitude{};
         };
+
+        struct odomCoord {
+
+            double x;
+            double y;
+        };
         
-        GpsCoord second_waypoint_ = {43.65716861, -79.3903337}; //Temporarily set to in SIM Gps coordinates. CHANGE HERE LATER
-        GpsCoord third_waypoint_ = {43.65717098, -79.39020002};
+        GpsCoord second_waypoint_ = {43.6571667, -79.3903788}; //Temporarily set to in SIM Gps coordinates. CHANGE HERE LATER
+        GpsCoord third_waypoint_ = {43.6571678, -79.3902588};
 
-        std::array<GpsCoord, 2> bounds_;
+        std::array<odomCoord, 2> bounds_;
 
-        GpsCoord cur_gps_;
-        bool is_gps_init = false;
-
-        bool is_sim = true; //SWITCH AT COMP OR DELETE EXTRA CODE
+        odomCoord cur_odom_;
+        bool is_odom_init = false;
 
         ros::Subscriber lidar_sub_;
-        ros::Subscriber gps_sub_;
+        ros::Subscriber odom_sub_;
 
         void lidarCallback(const sensor_msgs::LaserScanConstPtr &lidar_msg);
-        void gpsCallback(const sensor_msgs::NavSatFixConstPtr &gps_msg);
+        void odomCallback(const nav_msgs::OdometryConstPtr &odom_msg);
+        geometry_msgs::PoseStamped getPoseFromGps(double latitude, double longitude, std::string target_frame);
 };

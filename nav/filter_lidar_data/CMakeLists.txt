@@ -7,7 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
   message_filters
-)
+  geodesy)
 
 catkin_package(
     INCLUDE_DIRS include
@@ -16,7 +16,8 @@ catkin_package(
     nav_msgs
     sensor_msgs
     std_msgs
-    message_filters)
+    message_filters
+    geodesy)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
