@@ -2,6 +2,8 @@
 #include <std_msgs/Float64.h>
 // #include <std_msgs/Float64MultiArray.h>
 
+static unsigned long ros_count = 0;
+
 // ports (arbitrary numbers as placeholders)
 // right
 const int RSPEED = A0;    // outputs rotating speed as pulse frequency
@@ -99,6 +101,8 @@ int left_dir = 0;
 
 // get signed float speed command from ros, convert to magnitude and direction for right motor
 void rmotorCb(const std_msgs::Float64& control_msg){
+    ros_count = currentMillis - ros_count;
+    
     float right_input = control_msg.data;
     if(right_input >= 0){
         right_speed = (80.5*right_input);
@@ -151,6 +155,13 @@ void loop(){
     // control motors
     
     nh.spinOnce();
+    if (ros_count >= interval){
+      digitalWrite(RFR, 0);
+      digitalWrite(LFR, 0);
+      analogWrite(RSV, 0);
+      analogWrite(LSV, 0);
+    }
+    
     digitalWrite(RFR, right_dir);
     digitalWrite(LFR, left_dir);
     analogWrite(RSV, right_speed);
