@@ -25,7 +25,7 @@ TrajectoryPlannerROS:
   meter_scoring: true
 
   # Tolerances
-  xy_goal_tolerance:  0.5
+  xy_goal_tolerance:  1.0
   yaw_goal_tolerance: 3.14
 
   # Recovery
