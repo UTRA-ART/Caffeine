@@ -1,8 +1,15 @@
 #include <ros.h>
 #include <std_msgs/Float64.h>
 // #include <std_msgs/Float64MultiArray.h>
+#include <ros/ros.h>
+#include <tf/transform_broadcaster.h>
+#include <nav_msgs/Odometry.h>
 
-static unsigned long last_ros_count = 0;
+
+
+
+
+static unsigned long ros_count = 0;
 
 // ports (arbitrary numbers as placeholders)
 // right
@@ -29,7 +36,6 @@ int speed = 0;      // arbitrary placeholder
 int loops_until_cmd = 0;
 
 unsigned long current_ros = 0;
-
 
 //   TO DOOOOOOOOOOO
 //
@@ -102,8 +108,8 @@ int left_dir = 0;
 
 // get signed float speed command from ros, convert to magnitude and direction for right motor
 void rmotorCb(const std_msgs::Float64& control_msg){
-    last_ros_count = current_ros;
-    current_ros = millis();    
+    ros_count = current_ros - ros_count;
+    
     float right_input = control_msg.data;
     if(right_input >= 0){
         right_speed = (80.5*right_input);
@@ -131,8 +137,25 @@ void lmotorCb(const std_msgs::Float64& control_msg){
 ros::Subscriber<std_msgs::Float64> sub("/right_wheel/command", &rmotorCb );
 ros::Subscriber<std_msgs::Float64> sub2("/left_wheel/command", &lmotorCb );
 //ros::Publisher speed_pub("/arduino_speed_feedback", &speed_feedback);
+ ros::NodeHandle n;
+ ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom", 50);
+ tf::TransformBroadcaster odom_broadcaster;
 
 
+
+double x = 0.0;
+double y = 0.0;
+double th = 0.0;
+   
+double vx = 0.1;
+double vy = -0.1;
+double vth = 0.1;
+
+ros::Time current_time, last_time;
+current_time = ros::Time::now();
+last_time = ros::Time::now();
+  
+ ros::Rate r(1.0);
 
 void setup(){
     Serial.begin(9600);     // Serial comm begin at 9600bps
@@ -154,25 +177,86 @@ void setup(){
 
 void loop(){
     // control motors
-    nh.spinOnce();
-    if(nh.connected()){
-      if (current_ros - last_ros_count >= interval){
+//      reads motor speed feedback and publishes it to ros
+      float Lspeedread = analogRead(LSPEED);
+      float Rspeedread = analogRead(RSPEED);
+      speed_feedback.data_length = 2;
+
+      
+
+      
+    if (n.ok()){
+      nh.spinOnce();
+      if (ros_count >= interval){
         digitalWrite(RFR, 0);
         digitalWrite(LFR, 0);
         analogWrite(RSV, 0);
         analogWrite(LSV, 0);
-      }else{
-        digitalWrite(RFR, right_dir);
-        digitalWrite(LFR, left_dir);
-        analogWrite(RSV, right_speed);
-        analogWrite(LSV, left_speed);
       }
+      
+      digitalWrite(RFR, right_dir);
+      digitalWrite(LFR, left_dir);
+      analogWrite(RSV, right_speed);
+      analogWrite(LSV, left_speed);
+       current_time = ros::Time::now();
+  //start
+       //compute odometry in a typical way given the velocities of the robot
+       
+       double dt = (current_time - last_time).toSec();
+
+       float feedback_speed = (Lspeedread + Rspeedread)/2;
+       float feedback_angular_vel = (Rspeedread - Lspeedread)/0.889;
+       float th = feedback_angular_vel * dt;
+       
+       double delta_x = (feedback_speed * cos(th) - feedback_speed * sin(th)) * dt;
+       double delta_y = (feedback_speed * sin(th) + feedback_speed * cos(th)) * dt;
+       double delta_th = feedback_angular_vel * dt;
+   
+       x += delta_x;
+       y += delta_y;
+       th += delta_th;
+   
+       //since all odometry is 6DOF we'll need a quaternion created from yaw
+       geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
+   
+       //first, we'll publish the transform over tf
+       geometry_msgs::TransformStamped odom_trans;
+       odom_trans.header.stamp = current_time;
+       odom_trans.header.frame_id = "odom";
+       odom_trans.child_frame_id = "base_link";
+   
+       odom_trans.transform.translation.x = x;
+       odom_trans.transform.translation.y = y;
+       odom_trans.transform.translation.z = 0.0;
+       odom_trans.transform.rotation = odom_quat;
+   
+       //send the transform
+       odom_broadcaster.sendTransform(odom_trans);
+   
+       //next, we'll publish the odometry message over ROS
+       nav_msgs::Odometry odom;
+       odom.header.stamp = current_time;
+       odom.header.frame_id = "odom";
+   
+       //set the position
+       odom.pose.pose.position.x = x;
+       odom.pose.pose.position.y = y;
+       odom.pose.pose.position.z = 0.0;
+       odom.pose.pose.orientation = odom_quat;
+   
+       //set the velocity
+       odom.child_frame_id = "base_link";
+       odom.twist.twist.linear.x = feedback_speed;
+       odom.twist.twist.linear.y = feedback_speed;
+       odom.twist.twist.angular.z = vth;
   
-      //reads motor speed feedback and publishes it to ros
-  //    float Lspeedread = analogRead(LSPEED);
-  //    float Rspeedread = analogRead(RSPEED);
-  //    speed_feedback.data_length = 2;
-  //    
+      //publish the message
+       odom_pub.publish(odom);
+   
+       last_time = current_time;
+       r.sleep();
+     }
+
   //    speed_feedback.data[0] = Lspeedread;
   //    speed_feedback.data[1] = Rspeedread;
   
@@ -180,6 +264,7 @@ void loop(){
       // control light
       if(mode){
           unsigned long currentMillis = millis();
+          current_ros = currentMillis;
           if(currentMillis - previousMillis >= interval){
               previousMillis = currentMillis;
               if(light_state == LOW){
@@ -193,11 +278,5 @@ void loop(){
           light_state = HIGH;
       }
       digitalWrite(light_pin, light_state);
-    }else{
-        digitalWrite(RFR, 0);
-        digitalWrite(LFR, 0);
-        analogWrite(RSV, 0);
-        analogWrite(LSV, 0);
-      }
-
+      delay(1);
 }
