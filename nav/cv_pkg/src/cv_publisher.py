@@ -5,7 +5,7 @@ from cv_pkg.msg import cv_msg
 from geometry_msgs.msg import Point
 
 def talker():
-    pub = rospy.Publisher('update', cv_msg, queue_size=10)
+    pub = rospy.Publisher('lanes', cv_msg, queue_size=10)
     rospy.init_node('cv_node', anonymous=True)
     rate = rospy.Rate(2) # 2hz
     count = 0
