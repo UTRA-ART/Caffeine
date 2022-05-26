@@ -1,8 +1,12 @@
 import json
 import cv2 
 import numpy as np
+import rospkg
 
-vals = json.load(open("/home/art-jetson/Desktop/caffeine_ws/src/cv/lane_detection/config/depth_vals.json", 'r'))
+rospack = rospkg.RosPack()
+save_path = rospack.get_path('lane_detection') + '/config/depth_vals.json'
+
+vals = json.load(open(save_path, 'r'))
 
 img = np.zeros((180, 330, 1))
 
