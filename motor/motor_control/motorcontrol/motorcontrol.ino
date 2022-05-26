@@ -28,7 +28,7 @@ int speed = 0;      // arbitrary placeholder
 
 int loops_until_cmd = 0;
 
-
+unsigned long current_ros = 0;
 
 //   TO DOOOOOOOOOOO
 //
@@ -101,7 +101,7 @@ int left_dir = 0;
 
 // get signed float speed command from ros, convert to magnitude and direction for right motor
 void rmotorCb(const std_msgs::Float64& control_msg){
-    ros_count = currentMillis - ros_count;
+    ros_count = current_ros - ros_count;
     
     float right_input = control_msg.data;
     if(right_input >= 0){
@@ -179,6 +179,7 @@ void loop(){
     // control light
     if(mode){
         unsigned long currentMillis = millis();
+        current_ros = currentMillis;
         if(currentMillis - previousMillis >= interval){
             previousMillis = currentMillis;
             if(light_state == LOW){
