@@ -70,35 +70,6 @@ class CameraProjection:
         return x_cam_coords, y_cam_coords, z_cam_coords
 
 
-    def transform_cam_to_world(self, M_ext, x_array, y_array, z_array):
-        ''' Transform your points from camera coordinates back to world coordinates
-            This is done via reversing the rotation and then translating
-            M_ext = |R T|   ====> Upper 3 x 3 matrix is the rotation
-                    |0 1|   ====> Last col, first 3 rows is the translation
-            Assuming that your R matrix is orthogonal, R_inv = R_T = transpose(R)
-            The reverse of the translation is to simply add the -T vector to the points
-            You should be fine in the sense of using 3D coordinates and not homogeneous
-            (We aren't taking the inverse of M_ext)
-            So, to reverse, do R_inv(transpose([X Y Z]_cam) - T) = transpose([X Y Z]_world)
-        '''
-
-        R_inv = np.array(M_ext[0:3,0:3]).T  # Assuming orthgonality
-        T = np.array([M_ext[0:3,3]]).T
-
-        x_world = []
-        y_world = []
-        z_world = []
-
-        for x_c,y_c,z_c in zip(x_array,y_array,z_array):
-            cam_coords = np.array([[x_c,y_c,z_c]]).T
-            world_coords = np.matmul(R_inv,cam_coords - T)
-            x_world.append(world_coords[0,0])
-            y_world.append(world_coords[1,0])
-            z_world.append(world_coords[2,0])
-
-        return x_world, y_world, z_world
-
-
     def gen_depth_to_y_map(self, min_z, max_z):
         ''' Create the constant depth to y map '''
 
