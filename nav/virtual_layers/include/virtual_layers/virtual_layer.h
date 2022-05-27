@@ -30,11 +30,10 @@ public:
 
   std::vector<geometry_msgs::Point> cv_points;
   void clbk(const cv_pkg::cv_msg::ConstPtr& msg);
-  double counter = 0.0;
 
 private:
-  const double COSTMAP_OFFSET_X = 4.0; //4.0;
-  const double COSTMAP_OFFSET_Y = 4.0; //4.0;
+  const double COSTMAP_OFFSET_X = 50.0; //0.5 * global map (length/width);
+  const double COSTMAP_OFFSET_Y = 50.0; //0.5 * global map (length/width);
 
   void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv_;

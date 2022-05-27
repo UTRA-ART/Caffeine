@@ -38,9 +38,4 @@
         </node>
     </group>
 
-    <!-- RViz -->
-    <group if="$(arg rviz)">
-        <include file="$(find description)/launch/view.launch"/>
-    </group>
-
 </launch>

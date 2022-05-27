@@ -1,6 +1,5 @@
 #include <virtual_layers/virtual_layer.h>
 #include <pluginlib/class_list_macros.h>
-//cv_pkg/cv_publisher
 #include <random>
 #include <iostream>
 
@@ -62,13 +61,11 @@ std::vector<std::vector<double>> pointsToLine(std::vector<geometry_msgs::Point> 
   
   coord.push_back({points[0].x, points[0].y});
   int m = points.size() - 1;
-  //std::cout << "M: " << m << std::endl;
   for (int j = 0; j < m; j++) {
     double x1 = points[j].x;
     double x2 = points[j+1].x;
     double y1 = points[j].y;
     double y2 = points[j+1].y;
-    //std::cout << x1 << " " << x2 << " " << y1 << " " << y2 << std::endl;
     double dis = sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
     double alpha = t / dis;
     for (double k = alpha; k <= 1; k += alpha){
