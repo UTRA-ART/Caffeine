@@ -33,6 +33,7 @@ class ZedWrapperServer:
         avg_depth_vals = interpolate_nans(avg_depth_vals)
 
         output = {}
+        # Gets z values for 30x30px cell in image. Can add smoothing if this is insufficient 
         for i, _y in enumerate(range(0, 180, 30)):
             for j, _x in enumerate(range(0, 330, 30)):
                 for y in range(_y, _y+30):
