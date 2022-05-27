@@ -2,6 +2,7 @@
 #include <pluginlib/class_list_macros.h>
 //cv_pkg/cv_publisher
 #include <random>
+#include <iostream>
 
 PLUGINLIB_EXPORT_CLASS(virtual_layers::VirtualLayer, costmap_2d::Layer)
 
@@ -61,11 +62,13 @@ std::vector<std::vector<double>> pointsToLine(std::vector<geometry_msgs::Point> 
   
   coord.push_back({points[0].x, points[0].y});
   int m = points.size() - 1;
+  //std::cout << "M: " << m << std::endl;
   for (int j = 0; j < m; j++) {
     double x1 = points[j].x;
     double x2 = points[j+1].x;
     double y1 = points[j].y;
     double y2 = points[j+1].y;
+    //std::cout << x1 << " " << x2 << " " << y1 << " " << y2 << std::endl;
     double dis = sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
     double alpha = t / dis;
     for (double k = alpha; k <= 1; k += alpha){
@@ -84,24 +87,23 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
   if (!enabled_)
     return;
 
-  //points = {{-1, 1}, {-1,-1}};
   std::vector<std::vector<double>> coord = pointsToLine(cv_points, 10);
   
   for (int i = 0; i < coord.size(); i++) {
     double magnitude = sqrt(pow(coord[i][0],2) + pow(coord[i][1],2));
     //double mark_x = magnitude*cos(robot_yaw) + robot_x, 
-    // mark_y = magnitude*sin(robot_yaw) + robot_y;
+    //mark_y = magnitude*sin(robot_yaw) + robot_y;
     double mark_x = coord[i][0] - robot_x, mark_y = coord[i][1] - robot_y;
     unsigned int mx;
     unsigned int my;
     if(worldToMap(mark_x + COSTMAP_OFFSET_X, mark_y + COSTMAP_OFFSET_Y, mx, my)){
       setCost(mx, my, LETHAL_OBSTACLE);
-  }
-      
-  *min_x = std::min(*min_x, mark_x);
-  *min_y = std::min(*min_y, mark_y);
-  *max_x = std::max(*max_x, mark_x);
-  *max_y = std::max(*max_y, mark_y);
+    }
+    
+    *min_x = std::min(*min_x, mark_x);
+    *min_y = std::min(*min_y, mark_y);
+    *max_x = std::max(*max_x, mark_x);
+    *max_y = std::max(*max_y, mark_y);
   }
 }
 

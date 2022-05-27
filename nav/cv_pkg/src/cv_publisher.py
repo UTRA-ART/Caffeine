@@ -8,14 +8,14 @@ def talker():
     pub = rospy.Publisher('lanes', cv_msg, queue_size=10)
     rospy.init_node('cv_node', anonymous=True)
     rate = rospy.Rate(2) # 2hz
-    count = 0
+    count = 1.0
     while not rospy.is_shutdown():
-        count += 1
+        count += 0.1
         msg = cv_msg()
         pt = Point()
-        pt.x = 1 + count
-        pt.y = 2 + count
-        pt.z = 3 + count
+        pt.x = 0.1 + count
+        pt.y = 0.2 + count
+        pt.z = 0.3 + count
         msg.points.append(pt)
         msg.another_field = 100 + count
 
