@@ -1,0 +1,1 @@
+/usr/bin/cc   -rdynamic CMakeFiles/calculate_xy.dir/current/samples/calculate_xy.c.o  -o ../devel/lib/urg_c/calculate_xy -Wl,-rpath,/media/art-jetson/SSD/caffeine/sensor_tests/ros_nodes/src/devel/lib: ../devel/lib/libopen_urg_sensor.so ../devel/lib/libliburg_c.so -lrt -lm 
