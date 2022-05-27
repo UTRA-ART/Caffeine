@@ -4,14 +4,16 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <geographic_msgs/GeoPoint.h>
 #include <geodesy/utm.h>
+#include <limits>
 
 #include "../include/ignore_lidar_node.h"
 
 IgnoreLidarNode::IgnoreLidarNode(ros::NodeHandle nh)
     : nh_{nh}
 {
+    ROS_INFO("Connected to Node");
+
     // Transform Gps waypoints into pose
-    
     geometry_msgs::PoseStamped second_pose_stamped = getPoseFromGps(second_waypoint_.latitude, 
                                                             second_waypoint_.longitude, "/odom");
     ROS_INFO("second_waypoint transformed: x: %f, y: %f", second_pose_stamped.pose.position.x,
@@ -21,23 +23,25 @@ IgnoreLidarNode::IgnoreLidarNode(ros::NodeHandle nh)
     ROS_INFO("third_waypoint transformed: x: %f, y: %f", third_pose_stamped.pose.position.x,
                                                           third_pose_stamped.pose.position.y);
     
-    bounds_[0].x = second_pose_stamped.pose.position.x + 1.0;
-    bounds_[0].y = second_pose_stamped.pose.position.y + 2.0;
-    bounds_[1].x = third_pose_stamped.pose.position.x;
-    bounds_[1].y = third_pose_stamped.pose.position.y - 1.0;
+    // Set rectangular bounds where lidar data needs to be adjusted. Based on the 2nd and 3rd waypoint 
+    bounds_[0].x = second_pose_stamped.pose.position.x + 1.5;
+    bounds_[0].y = second_pose_stamped.pose.position.y + 4.0;
+    bounds_[1].x = third_pose_stamped.pose.position.x - 1.0;
+    bounds_[1].y = third_pose_stamped.pose.position.y - 4.0;
 
+    // Subscribe to recieve lidar data and current pose
     lidar_sub_ = nh_.subscribe("/scan", 10, &IgnoreLidarNode::lidarCallback, this);
-    odom_sub_ = nh_.subscribe("/odometry/local", 10, &IgnoreLidarNode::odomCallback, this);
+    odom_sub_ = nh_.subscribe("/odometry/global", 10, &IgnoreLidarNode::odomCallback, this);
 
+    // Publish to a new topic containing filtered lidar data
     ignore_lidar_pub_ = nh_.advertise<sensor_msgs::LaserScan>("/scan_modified", 1);
-    
-    ROS_INFO("Connected to Node");
+
 }    
 
 void IgnoreLidarNode::lidarCallback(const sensor_msgs::LaserScanConstPtr& lidar_msg)
 {
     if (!is_odom_init) {
-        return;
+        return; // Do not do calculations without a pose to work with
     }
 
     if (cur_odom_.x <= bounds_[0].x && 
@@ -46,20 +50,26 @@ void IgnoreLidarNode::lidarCallback(const sensor_msgs::LaserScanConstPtr& lidar_
         cur_odom_.y >= bounds_[1].y) {
 
         ROS_INFO("At Second Waypoint");
-        sensor_msgs::LaserScan output_msg;
-        output_msg.header = lidar_msg->header;
+        sensor_msgs::LaserScan output_msg = *lidar_msg; // Make a copy of lidar_msg
+
+        // Set each element in ranges to inf (No obstacles present) to clear costmap
+        double inf = std::numeric_limits<double>::infinity();
+        for (int i = 0; i < 1080; i++) {
+            output_msg.ranges[i] = inf;
+        }
+        
         ignore_lidar_pub_.publish(output_msg);
-    
+
     } else {
         ROS_INFO("NOT at Second Waypoint");
-        ignore_lidar_pub_.publish(lidar_msg);
+        ignore_lidar_pub_.publish(lidar_msg); // Republish the same msg. No changes to data.
     }
 }
 
 void IgnoreLidarNode::odomCallback(const nav_msgs::OdometryConstPtr &odom_msg)
 {
     if (is_odom_init == false) {
-        is_odom_init = true;
+        is_odom_init = true; // Indicates that the current pose is initialized
     }
     cur_odom_.x = odom_msg->pose.pose.position.x;
     cur_odom_.y = odom_msg->pose.pose.position.y;
@@ -68,30 +78,29 @@ void IgnoreLidarNode::odomCallback(const nav_msgs::OdometryConstPtr &odom_msg)
 geometry_msgs::PoseStamped IgnoreLidarNode::getPoseFromGps(double latitude, double longitude, 
                                             std::string target_frame)
 {
-    geographic_msgs::GeoPoint geo_pt;
+    // Prepare lat/lon for transformation by using a GeoPoint msg
+    geographic_msgs::GeoPoint geo_pt; 
     geo_pt.latitude = latitude;
     geo_pt.longitude = longitude;
     geo_pt.altitude = 0;
 
-    geodesy::UTMPoint utm_pt(geo_pt);
+    geodesy::UTMPoint utm_pt(geo_pt); // Transforms gps lat/lon to utm coordinates
+
+    ROS_INFO("Easting: %f, Northing: %f", utm_pt.easting, utm_pt.northing);
+    
     tf::TransformListener listener;
     
+    //Prepare utm coordinates for transformation using PoseStamped msg
     geometry_msgs::PoseStamped pose_stamped;
     pose_stamped.header.frame_id = "utm";
     pose_stamped.pose.position.x = utm_pt.easting;
     pose_stamped.pose.position.y = utm_pt.northing;
     pose_stamped.pose.orientation.w = 1.0;
-
-    ROS_INFO("Easting: %f, Northing: %f", utm_pt.easting, utm_pt.northing);
-
-    geometry_msgs::PoseStamped pose_stamped_out;
     
-    listener.waitForTransform(target_frame, "/utm", ros::Time(0), ros::Duration(4.0));
-    listener.transformPose(target_frame, pose_stamped, pose_stamped);
-    
+    listener.waitForTransform(target_frame, "/utm", ros::Time(0), ros::Duration(4.0)); // Wait for the transform to be uploaded
+    listener.transformPose(target_frame, pose_stamped, pose_stamped); //Transform utm coords to "odom" frame
 
     return pose_stamped;
-
 }
 
 int main(int argc, char **argv) 
