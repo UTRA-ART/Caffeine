@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>phidgets_high_speed_encoder</name>
+  <version>0.7.11</version>
+  <description>Driver for the Phidgets high speed encoder devices</description>
+
+  <maintainer email="martin.guenther@dfki.de">Martin Günther</maintainer>
+  <maintainer email="clalancette@openrobotics.org">Chris Lalancette</maintainer>
+
+  <license>BSD</license>
+
+  <author email="geoffrey.viola@asirobots.com">Geoff Viola</author>
+  <author email="jlblanco@ual.es">José-Luis Blanco Claraco</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>nodelet</depend>
+  <depend>phidgets_api</depend>
+  <depend>phidgets_msgs</depend>
+  <depend>pluginlib</depend>
+  <depend>roscpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+
+  <export>
+    <nodelet plugin="${prefix}/phidgets_high_speed_encoder_nodelet.xml" />
+  </export>
+</package>
