@@ -6,8 +6,6 @@
 #include "sensor_msgs/LaserScan.h"
 #include "nav_msgs/Odometry.h"
 
-using namespace sensor_msgs;
-
 class IgnoreLidarNode
 {
     public:
