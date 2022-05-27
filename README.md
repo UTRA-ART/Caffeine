@@ -59,6 +59,13 @@ Provides the [rtabmap_ros](http://wiki.ros.org/rtabmap_ros) package which is use
 sudo apt-get install ros-melodic-rtabmap-ros
 ```
 
+### Install IMU dependencies ###
+Provides the [phidgets_imu](http://wiki.ros.org/phidgets_imu) package dependencies which is used for publishing data from a phidget IMU.
+```
+sudo apt-get install ros-melodic-imu-transformer
+sudo apt-get install ros-melodic-imu-filter-madgwick
+```
+
 ### Install Hector Gazebo Plugins ###
 Provides the [Hector Gazebo Plugins](http://wiki.ros.org/hector_gazebo_plugins) package for our GPS
 ```
@@ -74,7 +81,6 @@ The cv pipeline has several pip dependencies that need to be installed for both 
 ```
 pip2 install opencv-python rospkg redis rospy scikit-learn scipy 
 pip3 install redis onnx onnxruntime opencv-python rospkg 
-
 ```
 
 ## Cloning this repository ##

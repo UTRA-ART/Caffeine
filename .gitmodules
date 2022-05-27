@@ -1,3 +1,9 @@
 [submodule "cv/zed-ros-wrapper"]
 	path = cv/zed-ros-wrapper
 	url = https://github.com/stereolabs/zed-ros-wrapper.git
+[submodule "misc/kindr_ros"]
+	path = misc/kindr_ros
+	url = https://github.com/ANYbotics/kindr_ros.git
+[submodule "nav/elevation_mapping"]
+	path = nav/elevation_mapping
+	url = https://github.com/ANYbotics/elevation_mapping.git
