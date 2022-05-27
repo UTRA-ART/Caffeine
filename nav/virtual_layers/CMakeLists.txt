@@ -21,7 +21,6 @@ include_directories(
 
 
 add_library(virtual_layers src/virtual_layer.cpp)
-add_definitions(-DROSCPP_USE_TCP_NODELAY)
 
 ## Mark cpp header files for installation
 

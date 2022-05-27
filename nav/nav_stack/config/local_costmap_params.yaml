@@ -46,6 +46,6 @@ local_costmap:
     inflation_radius:     0.4  # Tunable parameter (affect navigation plan)
 
   plugins:
-    - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer", output: "screen"}
-    #- {name: virtual_layer,       type: "virtual_layers::VirtualLayer", output: "screen"}
-    - {name: inflation_layer,     type: "costmap_2d::InflationLayer", output: "screen"}
+    - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}
+    #- {name: virtual_layer,       type: "virtual_layers::VirtualLayer"}
+    - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}

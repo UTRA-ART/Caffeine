@@ -13,9 +13,7 @@ namespace virtual_layers
 VirtualLayer::VirtualLayer() {}
 
 void VirtualLayer::clbk(const cv_pkg::cv_msg::ConstPtr& msg) {
-  ROS_INFO("points retrieved");
-  int size = msg->points.size();
-  for (int i = 0; i < size; i++) {
+  for (int i = 0; i < msg->points.size(); i++) {
     geometry_msgs::Point new_point = geometry_msgs::Point();
     new_point.x = msg->points[i].x;
     new_point.y = msg->points[i].y;
@@ -60,8 +58,7 @@ std::vector<std::vector<double>> pointsToLine(std::vector<geometry_msgs::Point> 
   }
   
   coord.push_back({points[0].x, points[0].y});
-  int m = points.size() - 1;
-  for (int j = 0; j < m; j++) {
+  for (int j = 0; j < points.size()-1; j++) {
     double x1 = points[j].x;
     double x2 = points[j+1].x;
     double y1 = points[j].y;
@@ -88,9 +85,11 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
   
   for (int i = 0; i < coord.size(); i++) {
     double magnitude = sqrt(pow(coord[i][0],2) + pow(coord[i][1],2));
-    //double mark_x = magnitude*cos(robot_yaw) + robot_x, 
-    //mark_y = magnitude*sin(robot_yaw) + robot_y;
-    double mark_x = coord[i][0] - robot_x, mark_y = coord[i][1] - robot_y;
+    // To account for rotation (depends on what frame CV data is in)
+    // double mark_x = magnitude*cos(robot_yaw) + robot_x, 
+    // mark_y = magnitude*sin(robot_yaw) + robot_y;
+    double mark_x = coord[i][0] - robot_x;
+    double mark_y = coord[i][1] - robot_y;
     unsigned int mx;
     unsigned int my;
     if(worldToMap(mark_x + COSTMAP_OFFSET_X, mark_y + COSTMAP_OFFSET_Y, mx, my)){
