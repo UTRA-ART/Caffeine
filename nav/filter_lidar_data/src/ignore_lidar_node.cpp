@@ -1,4 +1,3 @@
-#include <boost/bind/placeholders.hpp>
 #include <tf/transform_listener.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -23,7 +22,8 @@ IgnoreLidarNode::IgnoreLidarNode(ros::NodeHandle nh)
     ROS_INFO("third_waypoint transformed: x: %f, y: %f", third_pose_stamped.pose.position.x,
                                                           third_pose_stamped.pose.position.y);
     
-    // Set rectangular bounds where lidar data needs to be adjusted. Based on the 2nd and 3rd waypoint 
+    // Set rectangular bounds where lidar data needs to be adjusted. Based on the 2nd and 3rd waypoint
+    // TODO: Tune padding  
     bounds_[0].x = second_pose_stamped.pose.position.x + 1.5;
     bounds_[0].y = second_pose_stamped.pose.position.y + 4.0;
     bounds_[1].x = third_pose_stamped.pose.position.x - 1.0;
