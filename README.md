@@ -76,50 +76,11 @@ sudo apt-get install ros-melodic-hector-gazebo-plugins
 Custom built world(s) representing the IGVC competition can be found in the [`/worlds`](./worlds) package. To install them for use in the Gazebo simulator, run the `./install_models.sh` script found in the `/worlds/models` folder.
 > **NOTE:** The install script copies specific contents of `/worlds/models` to `~/.gazebo/models`
 
-### Install ONNXRuntime ###
-To perform inference, we leverage the onnxruntime's C++ API. To run inference,
-a NVIDIA card capable of using CUDA is required.
-
-First install NVIDIA drivers and CUDA. The steps roughly from the steps from [here](https://gist.github.com/mcvarer/30041141c8fe70ea5fe13f839330bc5a). We assume that there is no NVIDIA driver installation on the system. We highly recommend following an online guide as the specific details may vary.
+### Installing CV dependencies ###
+The cv pipeline has several pip dependencies that need to be installed for both python 2 and  python 3. Run the following commands. 
 ```
-sudo apt update && sudo apt upgrade
-sudo apt-get install g++ freeglut3-dev build-essential libx11-dev libxmu-dev libxi-dev libglu1-mesa libglu1-mesa-dev
-sudo add-apt-repository ppa:graphics-drivers/ppa
-
-# Distro = ubuntu1804 or ubuntu2004 (depends on version installed)
-# Arch = x86_64
-sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/$distro/$arch/3bf863cc.pub
-# Example: sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
-
-# Variables follow from above
-echo "deb https://developer.download.nvidia.com/compute/cuda/repos/$distro/$arch /" | sudo tee /etc/apt/sources.list.d/cuda.list
-sudo apt-get update
-
-# Pick CUDA version; for example CUDA 11.X, where X is the version
-sudo apt install cuda-11-X cuda-drivers
-
-# Prepare paths, where X is the version
-echo 'export PATH=/usr/local/cuda-11.X/bin:$PATH' >> ~/.bashrc
-echo 'export LD_LIBRARY_PATH=/usr/local/cuda-11.X/lib64:$LD_LIBRARY_PATH' >> ~/.bashrc
-source ~/.bashrc
-sudo ldconfig
-
-# Reboot machine
-
-# Verify install
-nvidia-smi
-nvcc -V
-```
-
-
-Afterwards, install onnxruntime by following a comment on an GitHub issue
-[here](https://github.com/microsoft/onnxruntime/issues/3124#issuecomment-676239644).
-This is required because onnxruntime currently does not have good CMake
-integration merged yet.
-
-Also, make sure you have cuDNN installed. This can be installed using:
-```
-sudo apt install libcudnn8-dev
+pip2 install opencv-python rospkg redis rospy scikit-learn scipy 
+pip3 install redis onnx onnxruntime opencv-python rospkg 
 ```
 
 ## Cloning this repository ##
