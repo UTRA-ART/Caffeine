@@ -40,7 +40,7 @@ class ZedWrapperServer:
                         output[str((x, y))] = avg_depth_vals[i, j]
         
         rospack = rospkg.RosPack()
-        save_path = rospack.get_path('lane_detection') + '/config/depth_vals.json'
+        save_path = rospack.get_path('cv') + '/config/depth_vals.json'
         print("Depth values recorded. Saved to", save_path)
         json.dump(output, open(save_path, 'w'), indent=4)
 

@@ -10,10 +10,10 @@ from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
 
 
-class ZedServerWrapper:
+class ZedWrapperServer:
     def __init__(self):
         self.bridge = CvBridge()
-        self.redis = redis.Redis(host='127.0.0.1', port=6379)
+        self.redis = redis.Redis(host='127.0.0.1', port=6379, db=0)
 
     def run(self):
         rospy.init_node('zed_server_wrapper')
@@ -40,5 +40,5 @@ class ZedServerWrapper:
         return
 
 if __name__ == '__main__':
-    wrapper = ZedServerWrapper()
+    wrapper = ZedWrapperServer()
     wrapper.run()

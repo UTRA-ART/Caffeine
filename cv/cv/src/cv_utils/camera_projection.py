@@ -9,7 +9,7 @@ import rospkg
 class CameraProjection:
     def __init__(self):
         rospack = rospkg.RosPack()
-        save_path = rospack.get_path('lane_detection') + '/config/depth_vals.json'
+        save_path = rospack.get_path('cv') + '/config/depth_vals.json'
         if os.path.exists(save_path):
             print("Using depth map values from", save_path)
             self.depth_map = json.load(open(save_path, 'r'))

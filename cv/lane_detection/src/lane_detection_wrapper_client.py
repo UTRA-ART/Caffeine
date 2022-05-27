@@ -7,15 +7,15 @@ import numpy as np
 import redis
 import rospy
 
-from lane_detection.msg import FloatArray, FloatList
+from cv.msg import FloatArray, FloatList
 from geometry_msgs.msg import Point
-import camera_projection
+from cv_utils import camera_projection
 
 class CVWrapperClient:
     def __init__(self):
         self.redis = redis.Redis(host='127.0.0.1', port=6379, db=0)
         self.pub = rospy.Publisher('cv/lane_detections', FloatArray, queue_size=10)
-        rospy.init_node('cv_wrapper_client')
+        rospy.init_node('lane_detection_wrapper_client')
         self.r = rospy.Rate(10) # 10hz
 
         self.projection = camera_projection.CameraProjection()
@@ -24,7 +24,6 @@ class CVWrapperClient:
         while not rospy.is_shutdown():
             lanes = self._fromRedis('lane_detection')
 
-            # TODO: Publish lane data 
             lanes_msgs = []
             for lane in lanes:
                 project_points = self.projection(np.array(lane, dtype=np.int))
@@ -45,9 +44,6 @@ class CVWrapperClient:
             self.pub.publish(msg)
 
             self.r.sleep()
-
-    def forward_image(self):
-        lanes = self._fromRedis("lane_detection")
 
     def _fromRedis(self, name):
         """Retrieve Numpy array from Redis key 'n'"""
