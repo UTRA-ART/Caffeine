@@ -122,6 +122,12 @@ Also, make sure you have cuDNN installed. This can be installed using:
 sudo apt install libcudnn8-dev
 ```
 
+## Install geodesy ##
+Provides the [Geodesy] (http://wiki.ros.org/geodesy) package to transform between GPS Coordinates (lat/lon) and UTM Coordinates.
+```
+sudo apt-get install ros-melodic-geodesy
+```
+
 ## Cloning this repository ##
 Before cloning this repository, create a ROS workspace:
 ```
