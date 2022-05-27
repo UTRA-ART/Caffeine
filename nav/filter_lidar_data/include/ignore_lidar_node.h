@@ -16,13 +16,11 @@ class IgnoreLidarNode
         ros::Publisher ignore_lidar_pub_;
 
         struct GpsCoord {
-
             double latitude{};
             double longitude{};
         };
 
-        struct odomCoord {
-
+        struct OdomCoord {
             double x;
             double y;
         };
@@ -30,9 +28,9 @@ class IgnoreLidarNode
         GpsCoord second_waypoint_ = {43.6571667, -79.3903788}; //Temporarily set to in SIM Gps coordinates. CHANGE HERE LATER
         GpsCoord third_waypoint_ = {43.6571678, -79.3902588};
 
-        std::array<odomCoord, 2> bounds_;
+        std::array<OdomCoord, 2> bounds_;
 
-        odomCoord cur_odom_;
+        OdomCoord cur_odom_;
         bool is_odom_init = false;
 
         ros::Subscriber lidar_sub_;
