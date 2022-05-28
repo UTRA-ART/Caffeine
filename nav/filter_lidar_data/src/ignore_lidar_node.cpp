@@ -12,6 +12,14 @@ IgnoreLidarNode::IgnoreLidarNode(ros::NodeHandle nh)
 {
     ROS_INFO("Connected to Node");
 
+    // Obtain waypoint gps coordingates from launch file
+    nh_.getParam("second_waypoint_latitude", second_waypoint_.latitude);
+    nh_.getParam("second_waypoint_longitude", second_waypoint_.longitude);
+    ROS_INFO("Second Waypoint Coordinates: %f, %f", second_waypoint_.latitude, second_waypoint_.longitude);
+    nh_.getParam("third_waypoint_latitude", third_waypoint_.latitude);
+    nh_.getParam("third_waypoint_longitude", third_waypoint_.longitude);
+    ROS_INFO("Third Waypoint Coordinates: %f, %f", third_waypoint_.latitude, third_waypoint_.longitude);
+
     // Transform Gps waypoints into pose
     geometry_msgs::PoseStamped second_pose_stamped = getPoseFromGps(second_waypoint_.latitude, 
                                                             second_waypoint_.longitude, "/odom");
