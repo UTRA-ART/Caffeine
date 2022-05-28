@@ -15,6 +15,8 @@ class IgnoreLidarNode
         ros::NodeHandle nh_;
         ros::Publisher ignore_lidar_pub_;
 
+        bool debug = false;
+
         struct GpsCoord {
             double latitude{};
             double longitude{};

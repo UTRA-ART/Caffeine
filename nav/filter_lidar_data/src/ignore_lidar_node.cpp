@@ -56,8 +56,11 @@ void IgnoreLidarNode::lidarCallback(const sensor_msgs::LaserScanConstPtr& lidar_
         cur_odom_.x >= bounds_[1].x && 
         cur_odom_.y <= bounds_[0].y && 
         cur_odom_.y >= bounds_[1].y) {
-
-        ROS_INFO("At Second Waypoint");
+        
+        if (debug) {
+            ROS_INFO("At Second Waypoint. Currently at: x:%f, y:%f", cur_odom_.x, cur_odom_.y);
+        }
+        
         sensor_msgs::LaserScan output_msg = *lidar_msg; // Make a copy of lidar_msg
 
         // Set each element in ranges to inf (No obstacles present) to clear costmap
@@ -69,7 +72,11 @@ void IgnoreLidarNode::lidarCallback(const sensor_msgs::LaserScanConstPtr& lidar_
         ignore_lidar_pub_.publish(output_msg);
 
     } else {
-        ROS_INFO("NOT at Second Waypoint");
+        
+        if (debug) {
+            ROS_INFO("NOT at Second Waypoint. Currently at: x:%f, y:%f", cur_odom_.x, cur_odom_.y);
+        }
+        
         ignore_lidar_pub_.publish(lidar_msg); // Republish the same msg. No changes to data.
     }
 }

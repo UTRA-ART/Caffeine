@@ -19,17 +19,8 @@
         <param name="base_global_planner" value="navfn/NavfnROS"/>
     </node>
 
-    <!-- Alternative to launch
-    <node name="filter_lidar_data" pkg="filter_lidar_data" type="ignore_lidar_node" output="screen">
-        <param name="second_waypoint_latitude" value="43.6571667"/>
-        <param name="second_waypoint_longitude" value="-79.3903788"/>
-        <param name="third_waypoint_latitude" value="43.6571678"/>
-        <param name="third_waypoint_longitude" value="-79.3902588"/>
-    </node>
-    --> 
-
     <!-- Launch filtered lidar data topic used for costmap-->
-    <include file="$(find filter_lidar_data)/launch/filter_lidar_data.launch"> </include>
+    <include file="$(find filter_lidar_data)/launch/filter_lidar_data.launch"/>
 
     <!-- TODO: always have a manual override available when doing autonomous navigation -->
 
