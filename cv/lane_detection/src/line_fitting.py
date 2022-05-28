@@ -72,9 +72,11 @@ def lane_fitting(points):
 
 def fit_lanes(mask):
     out = []
-
-    rows = np.where(input_norm==1)[0].reshape(-1,1)
-    cols = np.where(input_norm==1)[1].reshape(-1,1)
+    
+    smoothed_pred = cv2.morphologyEx(pred, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_CROSS,(3,3)))
+    
+    rows = np.where(smoothed_pred==1)[0].reshape(-1,1)
+    cols = np.where(smoothed_pred==1)[1].reshape(-1,1)
     coords = np.concatenate((rows,cols),axis=1)     # (y,x) points
     
     if len(coords) > 0:
