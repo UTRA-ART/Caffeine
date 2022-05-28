@@ -15,20 +15,24 @@ VirtualLayer::VirtualLayer() {
 }
 
 void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
-  cv_points.clear();
-
+  int total_points = 0;
+  //cv_points.clear();
   for (int i=0; i < msg->lists.size(); i++) {
+    std::vector<geometry_msgs::Point> lane;
     for (int j=0; j< msg->lists[i].elements.size(); j++) {
       geometry_msgs::PoseStamped new_pose = geometry_msgs::PoseStamped();
-      new_pose.pose.position.x = msg->lists[i].elements[j].x;
-      new_pose.pose.position.y = msg->lists[i].elements[j].y;
-      listener.transformPose("/left_camera_link_optical", new_pose, new_pose);
+      new_pose.header.frame_id = "left_camera_link_optical";
+      new_pose.pose.position.x = msg->lists[i].elements[j].x; //i+(0.1*j);
+      new_pose.pose.position.y = msg->lists[i].elements[j].y; //i;
+      new_pose.pose.orientation.w = 1.0;
+      listener.transformPose("/odom", new_pose, new_pose);
 
       geometry_msgs::Point new_point = geometry_msgs::Point();
       new_point.x = new_pose.pose.position.x;
       new_point.y = new_pose.pose.position.y;
-      cv_points.push_back(new_point);
+      lane.push_back(new_point);
     }
+    cv_points.push_back(lane);
   }
 }//callback function
 
@@ -91,25 +95,31 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
   if (!enabled_)
     return;
 
-  std::vector<std::vector<double>> coord = pointsToLine(cv_points, 10);
-  
-  for (int i = 0; i < coord.size(); i++) {
-    double magnitude = sqrt(pow(coord[i][0],2) + pow(coord[i][1],2));
-    // To account for rotation (depends on what frame CV data is in)
-    // double mark_x = magnitude*cos(robot_yaw) + robot_x, 
-    // mark_y = magnitude*sin(robot_yaw) + robot_y;
-    double mark_x = coord[i][0] - robot_x;
-    double mark_y = coord[i][1] - robot_y;
-    unsigned int mx;
-    unsigned int my;
-    if(worldToMap(mark_x + COSTMAP_OFFSET_X, mark_y + COSTMAP_OFFSET_Y, mx, my)){
-      setCost(mx, my, LETHAL_OBSTACLE);
+  std::vector<std::vector<std::vector<double>>> lane_points;
+
+  for (int i = 0; i < cv_points.size(); i++) {
+    lane_points.push_back(pointsToLine(cv_points[i], 0.05));
+  }
+
+  for (int i = 0; i < lane_points.size(); i++) {
+    for (int j = 0; j < lane_points[i].size(); j++) {
+      double magnitude = sqrt(pow(lane_points[i][j][0],2) + pow(lane_points[i][j][1],2));
+      // To account for rotation (depends on what frame CV data is in)
+      // double mark_x = magnitude*cos(robot_yaw) + robot_x, 
+      // mark_y = magnitude*sin(robot_yaw) + robot_y;
+      double mark_x = lane_points[i][j][0] - robot_x;
+      double mark_y = lane_points[i][j][1] - robot_y;
+      unsigned int mx;
+      unsigned int my;
+      if(worldToMap(mark_x + COSTMAP_OFFSET_X, mark_y + COSTMAP_OFFSET_Y, mx, my)){
+        setCost(mx, my, LETHAL_OBSTACLE);
+      }
+      
+      *min_x = std::min(*min_x, mark_x);
+      *min_y = std::min(*min_y, mark_y);
+      *max_x = std::max(*max_x, mark_x);
+      *max_y = std::max(*max_y, mark_y);
     }
-    
-    *min_x = std::min(*min_x, mark_x);
-    *min_y = std::min(*min_y, mark_y);
-    *max_x = std::max(*max_x, mark_x);
-    *max_y = std::max(*max_y, mark_y);
   }
 }
 

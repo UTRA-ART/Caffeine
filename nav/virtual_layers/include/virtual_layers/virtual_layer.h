@@ -30,7 +30,7 @@ public:
   
   virtual void matchSize();
 
-  std::vector<geometry_msgs::Point> cv_points;
+  std::vector<std::vector<geometry_msgs::Point>> cv_points;
   void clbk(const cv::FloatArray::ConstPtr& msg);
   tf::TransformListener listener;
 
