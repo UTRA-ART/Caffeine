@@ -29,25 +29,20 @@ class CVModelInferencer:
 
     def run(self):
         raw = self._fromRedis("zed/preprocessed")
-        img = get_input(raw.copy())
+        if raw is not None:
+            img = get_input(raw.copy())
 
-        # Do model inference 
-        output = self.ort_session.run(None, {'Inputs': img.astype(np.float32)})[0][0][0]
-        mask = np.where(output > 0.5, 1., 0.)
+            # Do model inference 
+            output = self.ort_session.run(None, {'Inputs': img.astype(np.float32)})[0][0][0]
+            mask = np.where(output > 0.5, 1., 0.)
 
-        lanes = fit_lanes(mask)
-        if lanes is not None:
-            self._toRedis(lanes, "lane_detection")
+            lanes = fit_lanes(mask)
+            if lanes is not None:
+                self._toRedis(lanes, "lane_detection")
 
-<<<<<<< HEAD
-        toshow = np.concatenate([cv2.resize(raw, (330, 180)), np.tile(mask[...,np.newaxis]*255, (1, 1, 3))], axis=1).astype(np.uint8)
-        cv2.imshow("image", toshow)
-        cv2.waitKey(1)
-=======
-        # toshow = np.concatenate([cv2.resize(raw, (330, 180)), np.tile(mask[...,np.newaxis]*255, (1, 1, 3))], axis=1).astype(np.uint8)
-        # cv2.imshow("image", toshow)
-        # cv2.waitKey(1)
->>>>>>> f635010e4ff6d636b5b227b6d413a0e255cad00f
+            # toshow = np.concatenate([cv2.resize(raw, (330, 180)), np.tile(mask[...,np.newaxis]*255, (1, 1, 3))], axis=1).astype(np.uint8)
+            # cv2.imshow("image", toshow)
+            # cv2.waitKey(1)
 
     def _toRedis(self,lanes,name):
         """Store given Numpy array 'img' in Redis under key 'name'"""
@@ -59,9 +54,10 @@ class CVModelInferencer:
     def _fromRedis(self, name):
         """Retrieve Numpy array from Redis key 'n'"""
         encoded = self.redis.get(name)
-        h, w = struct.unpack('>II',encoded[:8])
-        a = cv2.imdecode(np.frombuffer(encoded, dtype=np.uint8, offset=8), 1).reshape(h,w,3)
-        return a
+        if encoded is not None:
+            h, w = struct.unpack('>II',encoded[:8])
+            a = cv2.imdecode(np.frombuffer(encoded, dtype=np.uint8, offset=8), 1).reshape(h,w,3)
+            return a
 
 
 def find_edge_channel(img):

@@ -6,8 +6,10 @@
 #include <costmap_2d/GenericPluginConfig.h>
 #include <dynamic_reconfigure/server.h>
 #include <vector>
-#include <cv_pkg/cv_msg.h>
 #include <geometry_msgs/Point.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <cv/FloatArray.h>
+#include <tf/transform_listener.h>
 
 namespace virtual_layers
 {
@@ -29,7 +31,8 @@ public:
   virtual void matchSize();
 
   std::vector<geometry_msgs::Point> cv_points;
-  void clbk(const cv_pkg::cv_msg::ConstPtr& msg);
+  void clbk(const cv::FloatArray::ConstPtr& msg);
+  tf::TransformListener listener;
 
 private:
   const double COSTMAP_OFFSET_X = 50.0; //0.5 * global map (length/width);

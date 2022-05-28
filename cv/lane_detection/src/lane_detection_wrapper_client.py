@@ -8,7 +8,7 @@ import redis
 import rospy
 
 from cv.msg import FloatArray, FloatList
-from geometry_msgs.msg import Point
+from geometry_msgs.msg import PoseArray, Point
 from cv_utils import camera_projection
 
 class CVWrapperClient:
@@ -54,6 +54,3 @@ class CVWrapperClient:
 if __name__ == '__main__':
     wrapper = CVWrapperClient()
     wrapper.run()
-
-
-    

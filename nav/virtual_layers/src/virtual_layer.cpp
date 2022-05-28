@@ -10,15 +10,25 @@ using costmap_2d::NO_INFORMATION;
 
 namespace virtual_layers
 {
-VirtualLayer::VirtualLayer() {}
+VirtualLayer::VirtualLayer() {
+  listener.waitForTransform("/odom", "/left_camera_link_optical", ros::Time(0), ros::Duration(60.0));
+}
 
-void VirtualLayer::clbk(const cv_pkg::cv_msg::ConstPtr& msg) {
-  for (int i = 0; i < msg->points.size(); i++) {
-    geometry_msgs::Point new_point = geometry_msgs::Point();
-    new_point.x = msg->points[i].x;
-    new_point.y = msg->points[i].y;
+void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
+  cv_points.clear();
 
-    cv_points.push_back(new_point);
+  for (int i=0; i < msg->lists.size(); i++) {
+    for (int j=0; j< msg->lists[i].elements.size(); j++) {
+      geometry_msgs::PoseStamped new_pose = geometry_msgs::PoseStamped();
+      new_pose.pose.position.x = msg->lists[i].elements[j].x;
+      new_pose.pose.position.y = msg->lists[i].elements[j].y;
+      listener.transformPose("/left_camera_link_optical", new_pose, new_pose);
+
+      geometry_msgs::Point new_point = geometry_msgs::Point();
+      new_point.x = new_pose.pose.position.x;
+      new_point.y = new_pose.pose.position.y;
+      cv_points.push_back(new_point);
+    }
   }
 }//callback function
 
@@ -30,7 +40,7 @@ void VirtualLayer::onInitialize()
   matchSize();
   
   //subscribe
-  cv_sub=nh.subscribe("/lanes", 10, &VirtualLayer::clbk, this);
+  cv_sub=nh.subscribe("/cv/lane_detections", 10, &VirtualLayer::clbk, this);
 
   dsrv_ = new dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>(nh);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>::CallbackType cb = boost::bind(
