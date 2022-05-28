@@ -5,8 +5,9 @@ from scipy import interpolate
 import matplotlib.pyplot as plt
 import time
 
-img_pth = '/Users/jasonyuan/Desktop/Test9.png'
+img_pth = # Path to test image
 SPLINE_DIM = 3
+EXTRAPOLATE_VALUE = 0.05
 
 def sort_by_cluster(labels,data):
     clusters = {}
@@ -28,13 +29,11 @@ def lane_fitting(points):
     x_width = abs(sorted_points_x[-1][1] - sorted_points_x[0][1])
     y_width = abs(sorted_points_y[-1][0] - sorted_points_y[0][0])
 
-    if (x_width < 15) or (y_width < 15):    # Hard-coded parameter, update maybe
+    if ((x_width > 0.95*y_width) and (x_width < 1.05*y_width) and (x_width < 20 or y_width < 20)) or len(points) < 200:    # Hard-coded parameter, update maybe
         return None
 
-    # print(sorted_points)
-    pts_added = 0
     total_pts = len(points)
-    num_windows = 20
+    num_windows = 30
 
     slice = int(total_pts//num_windows)
 
@@ -51,8 +50,6 @@ def lane_fitting(points):
         sigma_x = np.sqrt(np.sum(np.power(group[:,1]-x_avg,2))/group.shape[0])
         sigma_y = np.sqrt(np.sum(np.power(group[:,0]-y_avg,2))/group.shape[0])
 
-        # print(sigma_x, sigma_y)
-
         if (sigma_x < 5) and (sigma_y < 5):
             fit_points.append([y_avg,x_avg])
 
@@ -60,85 +57,59 @@ def lane_fitting(points):
         return None
 
     fit_points = np.array(fit_points)
-    # print(fit_points)
 
     x = fit_points[:,1]
     y = fit_points[:,0]
     tck,u = interpolate.splprep([x,y],k=SPLINE_DIM,s=32)
-    # print(tck)
-    out = interpolate.splev(u,tck)
+    u = np.linspace(u[0]-EXTRAPOLATE_VALUE,u[-1]+EXTRAPOLATE_VALUE,500)
+    out = interpolate.splev(u,tck)  # out is an array in the form of [[x_points], [y_points]]
 
     if type(out) == list:
         return [out[0].tolist(), out[1].tolist()]
     else:
-        return out.tolist()
+        return out.tolist() # We shouldn't be hitting this, right? 
 
 
 def fit_lanes(mask):
-    # fig = plt.figure()
-    # ax = fig.add_subplot(111)
+    out = []
 
-    rows = np.where(mask==1)[0].reshape(-1,1)
-    cols = np.where(mask==1)[1].reshape(-1,1)
+    rows = np.where(input_norm==1)[0].reshape(-1,1)
+    cols = np.where(input_norm==1)[1].reshape(-1,1)
     coords = np.concatenate((rows,cols),axis=1)     # (y,x) points
-
+    
     if len(coords) > 0:
-
-        clustering = DBSCAN(eps=15, min_samples=30).fit(coords)
+        clustering = DBSCAN(eps=9, min_samples=35).fit(coords)
         labels = clustering.labels_
 
-        for i,pt in enumerate(coords):
-            if labels[i] == 0:
-                color = 'g'
-            elif labels[i] == 1:
-                color = 'r'
-            elif labels[i] == 2:
-                color = 'y'
-            elif labels[i] == 3:
-                color = 'b'
-            elif labels[i] == 4:
-                color = 'm'
-            elif labels[i] == 5:
-                color = 'c'
-            elif labels[i] == -1:
-                color = 'k'
-
-            # ax.scatter(pt[1],pt[0],c=color)
-
         clusters = sort_by_cluster(labels,coords)
-        out = []
 
         for label,pts in clusters.items():
             if label == -1:
                 continue
             else:
-                # coefficients = lane_fitting(pts,15)
-                # poly = np.poly1d(coefficients)
-                # min_x = pts[0][1]
-                # max_x = pts[len(pts)-1][1]
-                #
-                # xrange = np.linspace(min_x,max_x,endpoint=True)
-                # plt.plot(xrange,poly(xrange),'-',c='k')
                 _out = lane_fitting(pts)
                 if _out is not None:
                     out += [_out]
-                # print(out[0])
-                # print(out[1])
-                # ax.plot(out[0],out[1],c='k')
+                 
+                _out = lane_fitting(pts)
+                if _out is not None:
+                    out += [_out]
+                    
+                # print(_out[0])
+                # print(_out[1])
+                # ax.plot(_out[0],_out[1],c='k')
                 # ax.gca().invert_yaxis()
-
-        # If we haven't already shown or saved the plot, then we need to
-        # draw the figure first...
-        # fig.canvas.draw()
-
+                
         # # Now we can save it to a numpy array.
         # data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)
         # data = data.reshape(fig.canvas.get_width_height()[::-1] + (3,))
 
+        # If we haven't already shown or saved the plot, then we need to
+        # draw the figure first...
+        # fig.canvas.draw()
+        
         return out
     return None
-    # end = time.perf_counter()
-    # print(end-start)
 
 if __name__ == "__main__":
     # start = time.perf_counter()
