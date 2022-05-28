@@ -32,8 +32,8 @@ class CVWrapperClient:
                 pts_msg = []
                 for pt in project_points:
                     pt_msg = Point()
-                    pt_msg.x = pt[0]
-                    pt_msg.y = pt[1]
+                    pt_msg.x = pt[0]*2
+                    pt_msg.y = pt[1]*2
                     pt_msg.z = pt[2]
                     pts_msg += [pt_msg]
                 lane_msg.elements = pts_msg

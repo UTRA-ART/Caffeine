@@ -42,7 +42,7 @@ class CameraProjection:
         '''
         points = []
         for i in range(len(x_array)):
-            vec = self.camera.projectPixelTo3dRay((x_array[i], y_array[i]))
+            vec = self.camera.projectPixelTo3dRay((x_array[i]+190, y_array[i]+80))
             z_val = self.depth_map[str((x_array[i], y_array[i]))]
             point3D = [vec[i] * z_val for i in range(3)]
             points += [point3D]
