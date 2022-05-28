@@ -1,0 +1,17 @@
+<launch>
+    <!-- Runs CV pipeline in python3 communicating with UDP pipeline -->
+    <node
+        name="lane_detection_model_inference"
+        pkg="lane_detection"
+        type="lane_detection_model_inference.py"
+        output="screen"
+    />
+
+    <!-- Runs UDP client as node to publish results back in Python2 -->
+    <node
+        name="lane_detection_wrapper_client"
+        pkg="lane_detection"
+        type="lane_detection_wrapper_client.py"
+        output="screen"
+    />
+</launch>

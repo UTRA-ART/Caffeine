@@ -1,0 +1,1 @@
+/usr/bin/cc   -rdynamic CMakeFiles/get_distance.dir/current/samples/get_distance.c.o  -o ../devel/lib/urg_c/get_distance -Wl,-rpath,/media/art-jetson/SSD/caffeine/sensor_tests/ros_nodes/src/devel/lib: ../devel/lib/libopen_urg_sensor.so ../devel/lib/libliburg_c.so -lrt -lm 

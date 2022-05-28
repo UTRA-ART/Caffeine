@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package>
+  <name>urg_c</name>
+  <version>1.0.405</version><!-- Format is urg three digit dot, followed by ROS two digit update.  Example 1.0.4 becomes 1.0.400 -->
+  <description>The urg_c package</description>
+
+  <maintainer email="chadrockey@gmail.com">Chad Rockey</maintainer>
+  <maintainer email="tony.baltovski@gmail.com">Tony Baltovski</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://sourceforge.net/projects/urgwidget/</url>
+  <url type="bugtracker">https://github.com/ros-drivers/urg_c/issues</url>
+  <url type="repository">https://github.com/ros-drivers/urg_c</url>
+
+  <author email="satofumi@users.sourceforge.net">Satofumi Kamimura</author>
+  <author>Katsumi Kimoto</author>
+  <author>Adrian Boeing</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+  </export>
+</package>

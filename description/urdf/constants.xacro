@@ -20,12 +20,12 @@
 
     <!-- Casters -->
     <xacro:property name="caster_link_mass" value="1.2"/>
-        
+
     <xacro:property name="casters_separation" value="1.12"/>
     <xacro:property name="caster_vertical_offset" value="-0.619167561"/>
-        
+
     <xacro:property name="caster_wheel_mass" value="0.7"/>
-        
+
     <xacro:property name="caster_link_to_wheel_dist_x" value="0.03621719"/>
     <xacro:property name="caster_link_to_wheel_dist_z" value="-0.04361749"/>
 
@@ -108,7 +108,7 @@
     <xacro:property name="ZED_camera_length" value="0.175"/>
     <xacro:property name="ZED_camera_width" value="0.03"/>
     <xacro:property name="ZED_camera_height" value="0.033"/>
-    <xacro:property name="ZED_camera_pitch" value="${15 * pi/180}"/>
+    <xacro:property name="ZED_camera_pitch" value="${15 * pi/180}"/> <!-- 19.66 degrees ensures the camera's field of view overlaps with the end of the lidar readings-->
     <!-- ZED image height/width corresponds to image size for 60Hz refresh-->
     <xacro:property name="ZED_image_refresh" value="60"/>
     <xacro:property name="ZED_image_width" value="3840"/>
