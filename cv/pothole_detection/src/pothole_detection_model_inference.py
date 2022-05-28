@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
-import struct
-import sys 
-import time
 import json
-import os
+import struct
+from tkinter import OUTSIDE
 
 import cv2
 import numpy as np
-import redis
 import onnx
-import onnxruntime as ort 
-
+import onnxruntime as ort
+import redis
 import rospkg
 
 
@@ -19,43 +16,31 @@ class CVModelInferencer:
         self.redis = redis.Redis(host='127.0.0.1', port=6379)
         
         rospack = rospkg.RosPack()
-        # TODO(sacharya, awu): Figure out the rospack.get_path()
-        # model_path = rospack.get_path('pothole_detection') + '/models/best.onnx'
-        model_path = "src/cv/pothole_detection/models/best.onnx"
-        print(f">>> {os.path.dirname(model_path)}, {os.listdir(os.path.dirname(model_path))}")
+        model_path = f"{rospack.get_path('pothole_detection')}/models/best.onnx"
         self.model = onnx.load(model_path)
         onnx.checker.check_model(self.model)
-
         self.ort_session = ort.InferenceSession(model_path, providers=['CUDAExecutionProvider'])
 
-    def run(self):
+    def run(self) -> None:
         raw = self._fromRedis("zed/preprocessed")
         if raw is not None:
-            img = get_input(raw.copy())
-            ## Preprcoess image
-            # run inference
-            print(f"{[(i.name, i.shape, i.type) for i in self.ort_session.get_inputs()]}")
-            print(f"{[(i.name, i.shape, i.type) for i in self.ort_session.get_outputs()]}")
-            print(f"{img.shape}")
+            # PREPROCESS IMAGE
+            img = get_copied_resized_input(raw)
+            # RUN ONNX SESSION
+            # Get inputs names with `[(i.name, i.shape, i.type) for i in self.ort_session.get_inputs()]`
+            # Get inputs names with `[(o.name, o.shape, o.type) for o in self.ort_session.get_outputs()]`
             output = self.ort_session.run(None, {'images': img.astype(np.float32)})[0][0]
+            if output is None:
+                return
+            # TODO(@Ammar-V) if you want to add non-potholes (e.g. ramps), do so here!
             # 0.5 is from CV-Pipeline's onnx/runonnx-numpy.py
-            predictions = [[x1, y1, x2, y2, confs, class_] for x1, y1, x2, y2, confs, class_ in output if confs > 0.5]
-            # self._toRedis(mask, "cv/model/output")
-            # get to json dumpable item
-            json_dumpable = {"mask": predictions}
-            print(f">>> (json) {json.dumps(json_dumpable)}")
+            potholes = [[x, y] for x, y, _, _, confs, class_ in output if confs > 0.5 and class_ == 0]
+            non_potholes = [[x, y] for x, y, _, _, confs, class_ in output if confs > 0.5 and class_ != 0]
+            json_dumpable = {"pothole": potholes, "non_potholes": non_potholes}
+            self._toRedis(json_dumpable, "pothole_detection")
 
-            # TODO(awu, sacharya): debug why this doesn't work
-            if output is not None:
-                self._toRedis(json_dumpable, "pothole_detection")
-
-            # toshow = np.concatenate([cv2.resize(raw, (330, 180)), np.tile(mask[...,np.newaxis]*255, (1, 1, 3))], axis=1).astype(np.uint8)
-            # cv2.imshow("image", toshow)
-            # cv2.waitKey(1)
-
-    def _toRedis(self,lanes,name):
+    def _toRedis(self, lanes, name):
         """Store given Numpy array 'img' in Redis under key 'name'"""
-
         encoded = json.dumps(lanes)
         # Store encoded data in Redis
         self.redis.set(name,encoded)
@@ -108,18 +93,11 @@ def find_edge_channel(img):
     return edges_mask, edges_mask_inv
 
 
-def get_input(frame: np.ndarray) -> np.ndarray:
-    # frame = cv2.resize(frame,(1280,720),interpolation=cv2.INTER_AREA)
+def get_copied_resized_input(frame: np.ndarray) -> np.ndarray:
     frame_copy = np.copy(frame)
-
-    # test_edges,test_edges_inv = find_edge_channel(frame_copy)
-    # frame_copy = np.append(frame_copy,test_edges.reshape(test_edges.shape[0],test_edges.shape[1],1),axis=2)
-    # frame_copy = np.append(frame_copy,test_edges_inv.reshape(test_edges_inv.shape[0],test_edges_inv.shape[1],1),axis=2)
     frame_copy = cv2.resize(frame_copy,(448,448))
-    print(frame_copy.shape)
-
-    input = (frame_copy/255.).transpose(2,0,1).reshape(1,3,448,448)
-    return input
+    frame_copy = (frame_copy / 255.).transpose(2,0,1).reshape(1,3,448,448)
+    return frame_copy
 
 
 if __name__ == '__main__':
