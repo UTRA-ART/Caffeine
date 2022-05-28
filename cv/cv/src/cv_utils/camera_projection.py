@@ -28,6 +28,12 @@ class CameraProjection:
 
         camera_info = rospy.wait_for_message('/zed/zed_node/rgb/camera_info', CameraInfo)
         self.camera = PinholeCameraModel()
+        
+        # Update camera intrinsics to account for the resized new images. I think it's 720x1280 -> 180x330
+        camera_info[0,0] = camera_info[0,0] * 180/720
+        camera_info[0,2] = camera_info[0,2] * 180/720
+        camera_info[1,1] = camera_info[1,1] * 330/1280
+        camera_info[1,2] = camera_info[1,2] * 330/1280
         self.camera.fromCameraInfo(camera_info)
 
 
