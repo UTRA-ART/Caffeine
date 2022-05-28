@@ -19,8 +19,9 @@ class CVModelInferencer:
         self.redis = redis.Redis(host='127.0.0.1', port=6379)
         
         rospack = rospkg.RosPack()
-        model_path = "/home/spencer/Documents/ART/caffeine-ws/src/cv/pothole_detection/models/best.onnx"
+        # TODO(sacharya, awu): Figure out the rospack.get_path()
         # model_path = rospack.get_path('pothole_detection') + '/models/best.onnx'
+        model_path = "src/cv/pothole_detection/models/best.onnx"
         print(f">>> {os.path.dirname(model_path)}, {os.listdir(os.path.dirname(model_path))}")
         self.model = onnx.load(model_path)
         onnx.checker.check_model(self.model)
@@ -34,16 +35,19 @@ class CVModelInferencer:
             ## Preprcoess image
             # run inference
             print(f"{[(i.name, i.shape, i.type) for i in self.ort_session.get_inputs()]}")
+            print(f"{[(i.name, i.shape, i.type) for i in self.ort_session.get_outputs()]}")
             print(f"{img.shape}")
-            output = self.ort_session.run(None, {'images': img.astype(np.float32)})[0][0][0]
-            mask: np.ndarray = np.where(output > 0.5, 1., 0.)
-            self._toRedis(mask, "cv/model/output")
+            output = self.ort_session.run(None, {'images': img.astype(np.float32)})[0][0]
+            # 0.5 is from CV-Pipeline's onnx/runonnx-numpy.py
+            predictions = [[x1, y1, x2, y2, confs, class_] for x1, y1, x2, y2, confs, class_ in output if confs > 0.5]
+            # self._toRedis(mask, "cv/model/output")
             # get to json dumpable item
-            json_dumpable = {"mask": mask.tolist()}
+            json_dumpable = {"mask": predictions}
             print(f">>> (json) {json.dumps(json_dumpable)}")
 
+            # TODO(awu, sacharya): debug why this doesn't work
             if output is not None:
-                self._toRedis(output, "pothole_detection")
+                self._toRedis(json_dumpable, "pothole_detection")
 
             # toshow = np.concatenate([cv2.resize(raw, (330, 180)), np.tile(mask[...,np.newaxis]*255, (1, 1, 3))], axis=1).astype(np.uint8)
             # cv2.imshow("image", toshow)
