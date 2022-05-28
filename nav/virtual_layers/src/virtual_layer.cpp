@@ -22,9 +22,9 @@ void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
     for (int j=0; j< msg->lists[i].elements.size(); j++) {
       geometry_msgs::PoseStamped new_pose = geometry_msgs::PoseStamped();
       new_pose.header.frame_id = "left_camera_link_optical";
-      new_pose.pose.position.x = msg->lists[i].elements[j].z; //i+(0.1*j);
-      new_pose.pose.position.y = msg->lists[i].elements[j].x; // NOT SURE IF NEG OR NOT
-      new_pose.pose.position.z = -msg->lists[i].elements[j].y;
+      new_pose.pose.position.x = msg->lists[i].elements[j].x;
+      new_pose.pose.position.y = msg->lists[i].elements[j].y;
+      new_pose.pose.position.z = msg->lists[i].elements[j].z;
       new_pose.pose.orientation.w = 1.0;
       listener.transformPose("/odom", new_pose, new_pose);
 
