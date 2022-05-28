@@ -17,7 +17,7 @@ from line_fitting import fit_lanes
 
 class CVModelInferencer:
     def __init__(self):
-        self.redis = redis.Redis(host='127.0.0.1', port=6379)
+        self.redis = redis.Redis(host='127.0.0.1', port=6379, db=3)
         
         rospack = rospkg.RosPack()
         model_path = rospack.get_path('lane_detection') + '/models/unet_with_sigmoid.onnx'
@@ -39,9 +39,15 @@ class CVModelInferencer:
         if lanes is not None:
             self._toRedis(lanes, "lane_detection")
 
+<<<<<<< HEAD
         toshow = np.concatenate([cv2.resize(raw, (330, 180)), np.tile(mask[...,np.newaxis]*255, (1, 1, 3))], axis=1).astype(np.uint8)
         cv2.imshow("image", toshow)
         cv2.waitKey(1)
+=======
+        # toshow = np.concatenate([cv2.resize(raw, (330, 180)), np.tile(mask[...,np.newaxis]*255, (1, 1, 3))], axis=1).astype(np.uint8)
+        # cv2.imshow("image", toshow)
+        # cv2.waitKey(1)
+>>>>>>> f635010e4ff6d636b5b227b6d413a0e255cad00f
 
     def _toRedis(self,lanes,name):
         """Store given Numpy array 'img' in Redis under key 'name'"""

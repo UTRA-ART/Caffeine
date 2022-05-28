@@ -19,6 +19,8 @@
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>rospy</build_export_depend>
   <build_export_depend>std_msgs</build_export_depend>
+  <build_depend>cv_pkg</build_depend>
+  <exec_depend>cv_pkg</exec_depend>
   <exec_depend>costmap_2d</exec_depend>
   <exec_depend>dynamic_reconfigure</exec_depend>
   <exec_depend>roscpp</exec_depend>
