@@ -112,7 +112,6 @@ def fit_lanes(mask):
     return None
 
 if __name__ == "__main__":
-    # start = time.perf_counter()
     input = cv2.imread(img_pth, cv2.IMREAD_GRAYSCALE)
     input_norm = input/255
 
