@@ -1,0 +1,9 @@
+<launch>
+    <!--  -->
+    <node
+        name="motor_odom_node"
+        pkg="odom_motor"
+        type="motor_odom_node.py"
+        output="screen"
+    />
+</launch>
