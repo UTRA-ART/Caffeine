@@ -1,7 +1,7 @@
 <launch>
 
   <!-- Ports -->
-  <arg name="motor_port" default="/dev/ttyACM0"/>
+  <arg name="motor_port" default="/dev/ttyACM2"/>
   <!-- 
   <arg name="encoder1_port" default="/dev/ttyACM1"/>
   <arg name="encoder2_port" default="/dev/ttyACM2"/>
@@ -9,11 +9,16 @@
   <!-- Enable cmd_vel (ROS) to motor (Arduino) communication -->
   <node name="cmd_vel_to_motor" pkg="motor_control" type="cmd_vel_to_motor"/>
   
-  <!-- Set up motor_node communication port -->
+  <!-- Set up motor_node  communication port -->
   <node name="motor_node" pkg="rosserial_python" type="serial_node.py" ns="motor_node">
     <param name="port" value="$(arg motor_port)"/>
-    <param name="baud" value="57600"/>
+    <param name="baud" value="115200"/>
   </node>
+
+  <!-- <node name="serial_node"        pkg="rosserial_python"      type="serial_node.py">
+    <param name="port"              type="string"               value="/dev/ttyACM0"/>
+    <param name="baud"              type="int"                  value="57600"/>
+  </node> -->
 
     
 </launch>

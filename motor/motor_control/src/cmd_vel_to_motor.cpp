@@ -5,7 +5,12 @@
 
 double vx = 0.0;
 double wz = 0.0;
-double wheelbase = 0.91; // meters
+double wheelbase = 0.89; // meters
+
+// For more info see https://www.ato.com/Content/doc/ATO-BLD750-BLDC-motor-controller-specs.pdf 
+double factor = 1 / .447 * 5280 * 12 / 10 / 3.1415 / 60 * 16; // m/s to rpm (before gearbox) 
+double b = -10.1124; // y-intecept of control profile 
+double m = 640.449; // slope of control profile 
 
 void targetcb(const geometry_msgs::Twist& msg)
 {
@@ -45,8 +50,8 @@ int main(int argc, char **argv)
         vr = vx + (wheelbase * wz) / 2.0;
         vl = vx - (wheelbase * wz) / 2.0;
 
-        rvelmsg.data = vr;
-        lvelmsg.data = vl;
+        rvelmsg.data = (vr * factor - b) / m;
+        lvelmsg.data = (vl * factor - b) / m;
 
         rvel_pub.publish(rvelmsg);
         lvel_pub.publish(lvelmsg);

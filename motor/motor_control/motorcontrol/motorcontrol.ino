@@ -1,6 +1,13 @@
 #include <ros.h>
 #include <std_msgs/Float64.h>
-// #include <std_msgs/Float64MultiArray.h>
+#include <std_msgs/Float64MultiArray.h>
+#include <std_msgs/Int16MultiArray.h>
+#include <std_msgs/Int16.h>
+#include <std_msgs/String.h>
+#include <tf/transform_broadcaster.h>
+#include <nav_msgs/Odometry.h>
+
+#include <ros/time.h>
 
 static unsigned long last_ros_count = 0;
 
@@ -10,7 +17,7 @@ const int RSPEED = A0;    // outputs rotating speed as pulse frequency
 const int RFR =  4;      // digital; motor direction control; F/R == COM == 0 => anticlockwise; clockwise defined as forwards
 const int RSV = 5;       // controls speed; 5V = max speed
 // left
-const int LSPEED = A1;    // outputs rotating speed as pulse frequency
+const int LSPEED = A5;    // outputs rotating speed as pulse frequency
 const int LFR = 7;       // digital; motor direction control; F/R == COM == 0 => anticlockwise; clockwise defined as forwards
 const int LSV = 6;       // controls speed; 5V = max speed
 // commands
@@ -29,16 +36,9 @@ int speed = 0;      // arbitrary placeholder
 int loops_until_cmd = 0;
 
 unsigned long current_ros = 0;
-
-
-//   TO DOOOOOOOOOOO
-//
-//
-////measure millis from the last ros command (see if functions are called) if bigger than 200 ms then shut the robot off
-//
-//
-
-// control motors using keyboard input
+  
+  
+  
 void keyboard_control(){
     if(Serial.available() > 0){  // if serial value available
         int val = Serial.read(); // read serial value
@@ -87,7 +87,7 @@ void keyboard_control(){
 
 // code for light (flashes when rover in autonomous mode, solid when manual)
 // light (code based on https://www.arduino.cc/en/Tutorial/BuiltInExamples/BlinkWithoutDelay)
-int mode = 1;     // 1 -> autonomous mode (light flashes), 0 -> manual mode (light solid)
+int mode = 0;     // 1 -> autonomous mode (light flashes), 0 -> manual mode (light solid)
             // digital; placeholder pin number
 int light_state = LOW;                // used to set light
 unsigned long previousMillis = 0;   // stores last time light was updated
@@ -97,6 +97,8 @@ const long interval = 1000;         // interval at which to blink (milliseconds)
 ros::NodeHandle nh;
 float right_speed = 0;
 float left_speed = 0;
+int Lspeedread;
+int Rspeedread;
 int right_dir = 0;
 int left_dir = 0;
 
@@ -106,10 +108,10 @@ void rmotorCb(const std_msgs::Float64& control_msg){
     current_ros = millis();    
     float right_input = control_msg.data;
     if(right_input >= 0){
-        right_speed = (80.5*right_input);
+        right_speed = right_input;
         right_dir = 0;
     }else{
-        right_speed = (-80.5*right_input);
+        right_speed = -right_input;
         right_dir = 1;
     }
 }
@@ -118,30 +120,46 @@ void rmotorCb(const std_msgs::Float64& control_msg){
 void lmotorCb(const std_msgs::Float64& control_msg){
     float left_input = control_msg.data;
     if(left_input < 0){
-        left_speed = (-80.5*left_input);
+        left_speed = -left_input;
         left_dir = 0;
     }else{
-        left_speed = (80.5*left_input);
+        left_speed = left_input;
         left_dir = 1;
     }
 }
 
+/*void setmode(const std_msgs::Float64& mode_msg){
+    mode = mode_msg.data; 
+}*/
+
+//ros subs
+ros::Subscriber<std_msgs::Float64> right_motor_vel_sub("/right_wheel/command", &rmotorCb );
+ros::Subscriber<std_msgs::Float64> left_motor_vel_sub("/left_wheel/command", &lmotorCb );
+//ros::Subscriber<std_msgs::Float64> mode_sub("/system/operating_mode", &setmode );
+
+std_msgs::Float64 str_msg;
 //std_msgs::Float64MultiArray speed_feedback;
+std_msgs::Int16MultiArray speed_feedback;
 
-ros::Subscriber<std_msgs::Float64> sub("/right_wheel/command", &rmotorCb );
-ros::Subscriber<std_msgs::Float64> sub2("/left_wheel/command", &lmotorCb );
-//ros::Publisher speed_pub("/arduino_speed_feedback", &speed_feedback);
+//ros pubs
+ros::Publisher chatter("chatter", &str_msg);
+ros::Publisher speed_pub("/arduino_speed_feedback", &speed_feedback);
 
 
+char hello[13] = "hello world!";
 
-void setup(){
-    Serial.begin(9600);     // Serial comm begin at 9600bps
+void setup() {
 
+    Serial.begin(115200);     // Serial comm begin at 9600bps
+    nh.getHardware()->setBaud(115200);
     nh.initNode();
-    nh.subscribe(sub);
-    nh.subscribe(sub2);
-//    nh.advertise(speed_pub);
-    
+    nh.subscribe(right_motor_vel_sub);
+    nh.subscribe(left_motor_vel_sub);
+    //nh.subscribe(mode_sub); 
+    nh.advertise(chatter);
+    nh.advertise(speed_pub);
+    //nh.negotiateTopics();
+
     pinMode(RFR, OUTPUT);
     pinMode(LFR, OUTPUT);
     pinMode(RSV, OUTPUT);
@@ -155,7 +173,13 @@ void setup(){
 void loop(){
     // control motors
     nh.spinOnce();
+
+    
     if(nh.connected()){
+      nh.spinOnce();
+      //str_msg.data = left_speed; 
+      //chatter.publish( &str_msg );
+      //nh.spinOnce();
       if (current_ros - last_ros_count >= interval){
         digitalWrite(RFR, 0);
         digitalWrite(LFR, 0);
@@ -167,17 +191,23 @@ void loop(){
         analogWrite(RSV, right_speed);
         analogWrite(LSV, left_speed);
       }
-  
+      nh.spinOnce();
+
       //reads motor speed feedback and publishes it to ros
-  //    float Lspeedread = analogRead(LSPEED);
-  //    float Rspeedread = analogRead(RSPEED);
-  //    speed_feedback.data_length = 2;
-  //    
-  //    speed_feedback.data[0] = Lspeedread;
-  //    speed_feedback.data[1] = Rspeedread;
-  
+      Lspeedread = analogRead(LSPEED);
+      Rspeedread = analogRead(RSPEED);
+      speed_feedback.data_length = 2;
+      nh.spinOnce();
+      
+      int speeds[] = { Lspeedread, Rspeedread };
+      
+      speed_feedback.data = speeds;
+      //speed_feedback.data[1] = Rspeedread;
+      speed_pub.publish(&speed_feedback); 
+      nh.spinOnce();
       
       // control light
+      nh.spinOnce();
       if(mode){
           unsigned long currentMillis = millis();
           if(currentMillis - previousMillis >= interval){
@@ -199,5 +229,5 @@ void loop(){
         analogWrite(RSV, 0);
         analogWrite(LSV, 0);
       }
-
+      nh.spinOnce();
 }
