@@ -5,7 +5,6 @@ from scipy import interpolate
 import matplotlib.pyplot as plt
 import time
 
-# img_pth = # Path to test image
 SPLINE_DIM = 3
 EXTRAPOLATE_VALUE = 0.05
 
@@ -61,6 +60,7 @@ def lane_fitting(points):
     x = fit_points[:,1]
     y = fit_points[:,0]
     tck,u = interpolate.splprep([x,y],k=SPLINE_DIM,s=32)
+
     # u = np.linspace(u[0]-EXTRAPOLATE_VALUE,u[-1]+EXTRAPOLATE_VALUE,500)
     out = interpolate.splev(u,tck)  # out is an array in the form of [[x_points], [y_points]]
 
@@ -93,30 +93,6 @@ def fit_lanes(mask):
                 _out = lane_fitting(pts)
                 if _out is not None:
                     out += [_out]
-                 
-                # _out = lane_fitting(pts)
-                # if _out is not None:
-                #     out += [_out]
-                    
-                # print(_out[0])
-                # print(_out[1])
-                # ax.plot(_out[0],_out[1],c='k')
-                # ax.gca().invert_yaxis()
-                
-        # # Now we can save it to a numpy array.
-        # data = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)
-        # data = data.reshape(fig.canvas.get_width_height()[::-1] + (3,))
 
-        # If we haven't already shown or saved the plot, then we need to
-        # draw the figure first...
-        # fig.canvas.draw()
-        
         return out
     return None
-
-# if __name__ == "__main__":
-#     input = cv2.imread(img_pth, cv2.IMREAD_GRAYSCALE)
-#     input_norm = input/255
-
-#     fit_lanes(input_norm)
-    

@@ -23,7 +23,6 @@ class CVWrapperClient:
         self.r = rospy.Rate(10) # 10hz
 
         self.bridge = CvBridge()
-
         self.projection = camera_projection.CameraProjection()
 
     def run(self):
