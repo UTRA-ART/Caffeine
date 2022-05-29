@@ -32,10 +32,10 @@ IgnoreLidarNode::IgnoreLidarNode(ros::NodeHandle nh)
     
     // Set rectangular bounds where lidar data needs to be adjusted. Based on the 2nd and 3rd waypoint
     // TODO: Tune padding  
-    bounds_[0].x = second_pose_stamped.pose.position.x + 1.5;
-    bounds_[0].y = second_pose_stamped.pose.position.y + 4.0;
-    bounds_[1].x = third_pose_stamped.pose.position.x - 1.0;
-    bounds_[1].y = third_pose_stamped.pose.position.y - 4.0;
+    bounds_[0].x = second_pose_stamped.pose.position.x + 3.0;
+    bounds_[0].y = second_pose_stamped.pose.position.y + 3.0;
+    bounds_[1].x = third_pose_stamped.pose.position.x - 3.0;
+    bounds_[1].y = third_pose_stamped.pose.position.y - 3.0;
 
     // Subscribe to recieve lidar data and current pose
     lidar_sub_ = nh_.subscribe("/scan", 10, &IgnoreLidarNode::lidarCallback, this);

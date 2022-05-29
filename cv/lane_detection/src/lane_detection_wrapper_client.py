@@ -76,6 +76,3 @@ class CVWrapperClient:
 if __name__ == '__main__':
     wrapper = CVWrapperClient()
     wrapper.run()
-
-
-    

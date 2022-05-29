@@ -1,6 +1,6 @@
 <launch>
     <!-- Launch zed camera -->
-    <include file="$(find zed_wrapper)/launch/zed.launch"/>
+    <!--<include file="$(find zed_wrapper)/launch/zed.launch"/>-->
 
     <!-- Launch server for ZED data. Uploads rectified image to UDP server -->
     <node
@@ -9,7 +9,7 @@
         type="zed_wrapper_server.py"
         output="screen"
     >
-        <remap from="image" to="/zed/zed_node/rgb/image_rect_color"/>
+        <remap from="image" to="/zed/zed_node/left/image_rect_color"/>
     </node>
 
     <!-- Launch lane detection pipeline -->
