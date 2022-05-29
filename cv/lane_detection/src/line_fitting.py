@@ -5,10 +5,6 @@ from scipy import interpolate
 import matplotlib.pyplot as plt
 import time
 
-<<<<<<< HEAD
-# img_pth = # Path to test image
-=======
->>>>>>> 275d177f3dfd5335470b934ecc990bd16647b2ab
 SPLINE_DIM = 3
 EXTRAPOLATE_VALUE = 0.05
 
@@ -36,13 +32,13 @@ def lane_fitting(points):
         return None
 
     total_pts = len(points)
-    num_windows = 30
+    NUM_WINDOWS = 30
 
-    slice = int(total_pts//num_windows)
+    slice = int(total_pts//NUM_WINDOWS)
 
     #TODO: Instead of just using arbitrary slices, use local cluster like centers
     # to choose the points to be included in the average
-    for n in range(num_windows):
+    for n in range(NUM_WINDOWS):
         start_idx = n*slice
         end_idx = min((n+1)*slice,total_pts)
 
@@ -64,21 +60,14 @@ def lane_fitting(points):
     x = fit_points[:,1]
     y = fit_points[:,0]
     tck,u = interpolate.splprep([x,y],k=SPLINE_DIM,s=32)
-<<<<<<< HEAD
-=======
 
->>>>>>> 275d177f3dfd5335470b934ecc990bd16647b2ab
     # u = np.linspace(u[0]-EXTRAPOLATE_VALUE,u[-1]+EXTRAPOLATE_VALUE,500)
     out = interpolate.splev(u,tck)  # out is an array in the form of [[x_points], [y_points]]
 
     if type(out) == list:
         return np.array(out).T.tolist()
     else:
-<<<<<<< HEAD
-=======
-        raise NotImplementedError()
->>>>>>> 275d177f3dfd5335470b934ecc990bd16647b2ab
-        return out.tolist() # We shouldn't be hitting this, right? 
+        return None
 
 
 def fit_lanes(mask):

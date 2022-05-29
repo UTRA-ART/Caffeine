@@ -19,6 +19,8 @@
         <param name="base_global_planner" value="navfn/NavfnROS"/>
     </node>
 
+    <!-- Launch filtered lidar data topic used for costmap-->
+    <include file="$(find filter_lidar_data)/launch/filter_lidar_data.launch"/>
 
     <!-- TODO: always have a manual override available when doing autonomous navigation -->
 
