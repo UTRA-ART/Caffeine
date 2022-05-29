@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(lane_detection)
+project(pothole_detection)
 
-# Find catkin macros and libraries
+# # Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS 
   rospy 
   std_msgs 
@@ -13,4 +13,4 @@ catkin_package(
   INCLUDE_DIRS
   CATKIN_DEPENDS
   )
- 
+  
