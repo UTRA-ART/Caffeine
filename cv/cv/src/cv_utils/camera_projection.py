@@ -42,7 +42,7 @@ class CameraProjection:
         P = list(camera_info.P)
         P[0] = P[0] * scale_x
         P[2] = P[2] * scale_x
-        P[3] = P[3] * scale_x        
+        P[3] = P[3] * scale_x
         P[5] = P[5] * scale_y
         P[6] = P[6] * scale_y
         camera_info.P = tuple(camera_info.P)
