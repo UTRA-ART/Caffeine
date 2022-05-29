@@ -36,7 +36,8 @@ class CVModelInferencer:
             potholes = [[[int(p[0] + ((p[2] - p[0]) / 2)), int(p[1] + ((p[3] - p[1]) / 2))] for p in potholes]]
             # json_dumpable = {"pothole": potholes}
 
-            # for circle in potholes:
+            # raw = cv2.resize(raw, (330, 180))
+            # for circle in potholes[0]:
             #     raw = cv2.circle(raw, circle, 5, (0, 0, 255), -1)
             # cv2.imshow("im", raw)
             # cv2.waitKey(1)
