@@ -108,7 +108,7 @@
     <xacro:property name="ZED_camera_length" value="0.175"/>
     <xacro:property name="ZED_camera_width" value="0.03"/>
     <xacro:property name="ZED_camera_height" value="0.033"/>
-    <xacro:property name="ZED_camera_pitch" value="${50 * pi/180}"/> <!-- 19.66 degrees ensures the camera's field of view overlaps with the end of the lidar readings-->
+    <xacro:property name="ZED_camera_pitch" value="${50 * pi/180}"/>
     <!-- ZED image height/width corresponds to image size for 60Hz refresh-->
     <xacro:property name="ZED_image_refresh" value="60"/>
     <xacro:property name="ZED_image_width" value="640"/>
@@ -142,7 +142,7 @@
     <xacro:property name="ref_lon" value="-79.3903"/>
     <xacro:property name="ref_alt" value="76.0000"/>
 
-    <xacro:property name="gps_drift" value="0 0 0"/>
+    <xacro:property name="gps_drift" value="1.5 1.5 1.5"/>
     <xacro:property name="gps_vel_drift" value="0.00 0.00 0.00"/>
 
     <!-- Phidget IMU -->

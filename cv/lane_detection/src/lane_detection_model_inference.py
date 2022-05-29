@@ -117,7 +117,6 @@ def find_edge_channel(img):
 
 
 def get_input(frame):
-    #print("HELLO")
     #frame = cv2.resize(frame,(1280,720),interpolation=cv2.INTER_AREA)
     frame_copy = np.copy(frame)
 

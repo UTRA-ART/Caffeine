@@ -11,7 +11,7 @@ from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
 
 from cv.msg import FloatArray, FloatList
-from geometry_msgs.msg import PoseArray, Point
+from geometry_msgs.msg import Point
 from cv_utils import camera_projection
 
 class CVWrapperClient:

@@ -9,7 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   tf
   geometry_msgs #for topic subscription
-  cv_pkg
+  cv
 )
 
 catkin_package()

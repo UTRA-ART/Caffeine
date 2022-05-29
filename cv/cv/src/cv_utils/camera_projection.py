@@ -26,7 +26,7 @@ class CameraProjection:
             self.depth_values += [self.depth_map[key]]
         self.depth_values = np.array(self.depth_values)
 
-        camera_info = rospy.wait_for_message('/zed/zed_node/left/camera_info', CameraInfo)
+        camera_info = rospy.wait_for_message('/zed/zed_node/rgb/camera_info', CameraInfo)
 
         # Update camera intrinsics to account for the resized new images
         scale_x = 330.0/camera_info.width
