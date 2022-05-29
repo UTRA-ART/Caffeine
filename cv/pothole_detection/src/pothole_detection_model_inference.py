@@ -1,80 +1,55 @@
 #!/usr/bin/env python3
-import struct
-import sys 
-import time
 import json
-import os
+import struct
 
 import cv2
 import numpy as np
-import redis
 import onnx
-import onnxruntime as ort 
-
+import onnxruntime as ort
+import redis
 import rospkg
 
-from line_fitting import fit_lanes
 
 class CVModelInferencer:
     def __init__(self):
-        self.redis = redis.Redis(host='127.0.0.1', port=6379, db=3)
+        self.redis = redis.Redis(host='127.0.0.1', port=6379)
         
         rospack = rospkg.RosPack()
-        model_path = rospack.get_path('lane_detection') + '/models/unet_with_sigmoid.onnx'
-
+        model_path = f"{rospack.get_path('pothole_detection')}/models/best.onnx"
         self.model = onnx.load(model_path)
         onnx.checker.check_model(self.model)
-
         self.ort_session = ort.InferenceSession(model_path, providers=['CUDAExecutionProvider'])
 
-    def run(self):
-        raw = self._fromRedisImg("zed/preprocessed")
+    def run(self) -> None:
+        raw = self._fromRedis("zed/preprocessed")
         if raw is not None:
-            img = get_input(raw.copy())
+            # PREPROCESS IMAGE
+            img = get_copied_resized_input(raw)
+            # RUN ONNX SESSION
+            # Get inputs names with `[(i.name, i.shape, i.type) for i in self.ort_session.get_inputs()]`
+            # Get inputs names with `[(o.name, o.shape, o.type) for o in self.ort_session.get_outputs()]`
+            output = self.ort_session.run(None, {'images': img.astype(np.float32)})[0][0]
+            if output is None:
+                return
+            # TODO(@Ammar-V) if you want to add non-potholes (e.g. ramps), do so here!
+            # 0.5 is from CV-Pipeline's onnx/runonnx-numpy.py
+            potholes = [[x, y] for x, y, _, _, confs, class_ in output if confs > 0.5 and class_ == 0]
+            non_potholes = [[x, y] for x, y, _, _, confs, class_ in output if confs > 0.5 and class_ != 0]
+            json_dumpable = {"pothole": potholes, "non_potholes": non_potholes}
+            self._toRedis(json_dumpable, "pothole_detection")
 
-            # Do model inference 
-            output = self.ort_session.run(None, {'Inputs': img.astype(np.float32)})[0][0][0]
-            mask = np.where(output > 0.5, 1., 0.)
-            self._toRedisImg(mask, "cv/model/output")
-
-            lanes = fit_lanes(mask)
-            if lanes is not None:
-                self._toRedisLanes(lanes, "lane_detection")
-
-            # toshow = np.concatenate([cv2.resize(raw, (330, 180)), np.tile(mask[...,np.newaxis]*255, (1, 1, 3))], axis=1).astype(np.uint8)
-            # cv2.imshow("image", toshow)
-            # cv2.waitKey(1)
-
-    def _toRedisLanes(self,lanes,name):
+    def _toRedis(self, lanes, name):
         """Store given Numpy array 'img' in Redis under key 'name'"""
-
         encoded = json.dumps(lanes)
         # Store encoded data in Redis
         self.redis.set(name,encoded)
 
-    def _fromRedisImg(self, name):
+    def _fromRedis(self, name):
         """Retrieve Numpy array from Redis key 'n'"""
         encoded = self.redis.get(name)
-        if encoded is None:
-            return None
         h, w = struct.unpack('>II',encoded[:8])
         a = cv2.imdecode(np.frombuffer(encoded, dtype=np.uint8, offset=8), 1).reshape(h,w,3)
         return a
-
-    def _toRedisImg(self,img,name):
-        """Store given Numpy array 'img' in Redis under key 'name'"""
-        h, w = img.shape[:2]
-        shape = struct.pack('>II',h,w)
-
-        retval, buffer = cv2.imencode('.png', img)
-        img_bytes = np.array(buffer).tostring()
-
-        encoded = shape + img_bytes
-
-        # Store encoded data in Redis
-        self.redis.set(name,encoded)
-
-        return
 
 
 def find_edge_channel(img):
@@ -117,18 +92,11 @@ def find_edge_channel(img):
     return edges_mask, edges_mask_inv
 
 
-def get_input(frame):
-    #print("HELLO")
-    #frame = cv2.resize(frame,(1280,720),interpolation=cv2.INTER_AREA)
+def get_copied_resized_input(frame: np.ndarray) -> np.ndarray:
     frame_copy = np.copy(frame)
-
-    test_edges,test_edges_inv = find_edge_channel(frame_copy)
-    frame_copy = np.append(frame_copy,test_edges.reshape(test_edges.shape[0],test_edges.shape[1],1),axis=2)
-    frame_copy = np.append(frame_copy,test_edges_inv.reshape(test_edges_inv.shape[0],test_edges_inv.shape[1],1),axis=2)
-    frame_copy = cv2.resize(frame_copy,(330,180))
-
-    input = (frame_copy/255.).transpose(2,0,1).reshape(1,5,180,330)
-    return input
+    frame_copy = cv2.resize(frame_copy,(448,448))
+    frame_copy = (frame_copy / 255.).transpose(2,0,1).reshape(1,3,448,448)
+    return frame_copy
 
 
 if __name__ == '__main__':

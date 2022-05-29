@@ -23,9 +23,9 @@ class ZedWrapperServer:
     def forward_image(self, data):
         if data != []:
             img = self.bridge.imgmsg_to_cv2(data, desired_encoding='passthrough')
-            self._toRedis(img, "zed/preprocessed")
+            self._toRedisImg(img, "zed/preprocessed")
 
-    def _toRedis(self,img,name):
+    def _toRedisImg(self,img,name):
         """Store given Numpy array 'img' in Redis under key 'name'"""
         h, w = img.shape[:2]
         shape = struct.pack('>II',h,w)

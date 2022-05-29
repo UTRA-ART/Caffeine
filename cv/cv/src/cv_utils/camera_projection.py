@@ -26,8 +26,34 @@ class CameraProjection:
             self.depth_values += [self.depth_map[key]]
         self.depth_values = np.array(self.depth_values)
 
-        camera_info = rospy.wait_for_message('/zed/zed_node/left/camera_info', CameraInfo)
+        camera_info = rospy.wait_for_message('/zed/zed_node/rgb/camera_info', CameraInfo)
+
+        # Update camera intrinsics to account for the resized new images
+        scale_x = 330/camera_info.width
+        scale_y = 180/camera_info.height
+
+        K = list(camera_info.K)
+        K[0] = K[0] * scale_x
+        K[2] = K[2] * scale_x
+        K[4] = K[4] * scale_y
+        K[5] = K[5] * scale_y
+        camera_info.K = tuple(K)
+
+        P = list(camera_info.P)
+        P[0] = P[0] * scale_x
+        P[2] = P[2] * scale_x
+        P[3] = P[3] * scale_x        
+        P[5] = P[5] * scale_y
+        P[6] = P[6] * scale_y
+        camera_info.P = tuple(camera_info.P)
+
+        camera_info.roi.x_offset = int(camera_info.roi.x_offset * scale_x)
+        camera_info.roi.y_offset = int(camera_info.roi.y_offset * scale_y)
+        camera_info.roi.width = int(camera_info.roi.width * scale_x)
+        camera_info.roi.height = int(camera_info.roi.height * scale_y)
+
         self.camera = PinholeCameraModel()
+
         self.camera.fromCameraInfo(camera_info)
 
 
@@ -42,7 +68,9 @@ class CameraProjection:
         '''
         points = []
         for i in range(len(x_array)):
-            vec = self.camera.projectPixelTo3dRay((x_array[i]+190, y_array[i]+80))
+            if x_array[i] < 0 or y_array[i] < 0:
+                continue
+            vec = self.camera.projectPixelTo3dRay((x_array[i], y_array[i]))
             z_val = self.depth_map[str((x_array[i], y_array[i]))]
             point3D = [vec[i] * z_val for i in range(3)]
             points += [point3D]

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>pothole_detection</name>
+  <version>0.0.0</version>
+  <description>The pothole_detection package</description>
+
+  <maintainer email="spencer@todo.todo">spencer</maintainer>
+  <maintainer email="kajanan@todo.todo">kajanan</maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>sensor_msgs</depend>
+  <depend>cv_bridge</depend>
+  <depend>image_transport</depend>
+</package>
