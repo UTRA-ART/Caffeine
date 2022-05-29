@@ -17,7 +17,7 @@ from line_fitting import fit_lanes
 
 class CVModelInferencer:
     def __init__(self):
-        self.redis = redis.Redis(host='127.0.0.1', port=6379)
+        self.redis = redis.Redis(host='127.0.0.1', port=6379, db=3)
         
         rospack = rospkg.RosPack()
         model_path = rospack.get_path('lane_detection') + '/models/unet_with_sigmoid.onnx'
@@ -28,35 +28,53 @@ class CVModelInferencer:
         self.ort_session = ort.InferenceSession(model_path, providers=['CUDAExecutionProvider'])
 
     def run(self):
-        raw = self._fromRedis("zed/preprocessed")
-        img = get_input(raw.copy())
+        raw = self._fromRedisImg("zed/preprocessed")
+        if raw is not None:
+            img = get_input(raw.copy())
 
-        # Do model inference 
-        output = self.ort_session.run(None, {'Inputs': img.astype(np.float32)})[0][0][0]
-        mask = np.where(output > 0.5, 1., 0.)
+            # Do model inference 
+            output = self.ort_session.run(None, {'Inputs': img.astype(np.float32)})[0][0][0]
+            mask = np.where(output > 0.5, 1., 0.)
+            self._toRedisImg(mask, "cv/model/output")
 
-        lanes = fit_lanes(mask)
-        if lanes is not None:
-            self._toRedis(lanes, "lane_detection")
+            lanes = fit_lanes(mask)
+            if lanes is not None:
+                self._toRedisLanes(lanes, "lane_detection")
 
-        toshow = np.concatenate([cv2.resize(raw, (330, 180)), np.tile(mask[...,np.newaxis]*255, (1, 1, 3))], axis=1).astype(np.uint8)
-        cv2.imshow("image", toshow)
-        cv2.waitKey(1)
+            # toshow = np.concatenate([cv2.resize(raw, (330, 180)), np.tile(mask[...,np.newaxis]*255, (1, 1, 3))], axis=1).astype(np.uint8)
+            # cv2.imshow("image", toshow)
+            # cv2.waitKey(1)
 
-    def _toRedis(self,lanes,name):
+    def _toRedisLanes(self,lanes,name):
         """Store given Numpy array 'img' in Redis under key 'name'"""
 
         encoded = json.dumps(lanes)
         # Store encoded data in Redis
         self.redis.set(name,encoded)
 
-    def _fromRedis(self, name):
+    def _fromRedisImg(self, name):
         """Retrieve Numpy array from Redis key 'n'"""
         encoded = self.redis.get(name)
+        if encoded is None:
+            return None
         h, w = struct.unpack('>II',encoded[:8])
         a = cv2.imdecode(np.frombuffer(encoded, dtype=np.uint8, offset=8), 1).reshape(h,w,3)
         return a
 
+    def _toRedisImg(self,img,name):
+        """Store given Numpy array 'img' in Redis under key 'name'"""
+        h, w = img.shape[:2]
+        shape = struct.pack('>II',h,w)
+
+        retval, buffer = cv2.imencode('.png', img)
+        img_bytes = np.array(buffer).tostring()
+
+        encoded = shape + img_bytes
+
+        # Store encoded data in Redis
+        self.redis.set(name,encoded)
+
+        return
 
 def find_edge_channel(img):
     edges_mask = np.zeros((img.shape[0],img.shape[1]),dtype=np.uint8)
