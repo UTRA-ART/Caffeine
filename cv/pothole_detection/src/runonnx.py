@@ -25,7 +25,7 @@ def non_max_suppression(prediction, conf_thres=0.4, iou_thres=0.6):
     candidates = prediction[..., 4] > conf_thres
 
     max_det = 300
-    time_limit = 5.0
+    time_limit = 0.05
 
     t = time.time()
     output = [np.zeros(6)] * prediction.shape[0]

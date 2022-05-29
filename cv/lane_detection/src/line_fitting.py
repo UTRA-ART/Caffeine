@@ -32,13 +32,13 @@ def lane_fitting(points):
         return None
 
     total_pts = len(points)
-    num_windows = 30
+    NUM_WINDOWS = 30
 
-    slice = int(total_pts//num_windows)
+    slice = int(total_pts//NUM_WINDOWS)
 
     #TODO: Instead of just using arbitrary slices, use local cluster like centers
     # to choose the points to be included in the average
-    for n in range(num_windows):
+    for n in range(NUM_WINDOWS):
         start_idx = n*slice
         end_idx = min((n+1)*slice,total_pts)
 
@@ -67,8 +67,7 @@ def lane_fitting(points):
     if type(out) == list:
         return np.array(out).T.tolist()
     else:
-        raise NotImplementedError()
-        return out.tolist() # We shouldn't be hitting this, right? 
+        return None
 
 
 def fit_lanes(mask):

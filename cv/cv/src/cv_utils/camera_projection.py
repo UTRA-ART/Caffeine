@@ -32,6 +32,9 @@ class CameraProjection:
         scale_x = 330.0/camera_info.width
         scale_y = 180.0/camera_info.height
 
+        camera_info.width = 330
+        camera_info.height = 180
+
         K = list(camera_info.K)
         K[0] = K[0] * scale_x
         K[2] = K[2] * scale_x
@@ -72,7 +75,7 @@ class CameraProjection:
         '''
         points = []
         for i in range(len(pts)):
-            if pts[i][0] < 0 or pts[i][1] < 0:# or pts[i][0] >  or pts[i][1] < 0:
+            if pts[i][0] < 0 or pts[i][1] < 0 or pts[i][0] >= 330 or pts[i][1] >= 180:
                 continue
             vec = self.camera.projectPixelTo3dRay((pts[i][0], pts[i][1]))
             z_val = self.depth_map[str((pts[i][0], pts[i][1]))]
