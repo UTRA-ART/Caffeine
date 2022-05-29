@@ -58,20 +58,23 @@ class CameraProjection:
 
 
     def __call__(self, pts):
-        return self.project_2D_to_3D_camera(pts[0], pts[1])
+        '''
+        [[x, y], [x, y]]
+        '''
+        return self.project_2D_to_3D_camera(pts)
 
 
-    def project_2D_to_3D_camera(self, x_array, y_array):
+    def project_2D_to_3D_camera(self, pts):
         ''' Given the pixel image coordinates and a constant mapping of depth to y-values,
             calculate the resulting projection of points in the camera coordinate frame.
             Requires the focal lengths in x and y and the optical centers
         '''
         points = []
-        for i in range(len(x_array)):
-            if x_array[i] < 0 or y_array[i] < 0:
+        for i in range(len(pts)):
+            if pts[i][0] < 0 or pts[i][1] < 0:# or pts[i][0] >  or pts[i][1] < 0:
                 continue
-            vec = self.camera.projectPixelTo3dRay((x_array[i], y_array[i]))
-            z_val = self.depth_map[str((x_array[i], y_array[i]))]
+            vec = self.camera.projectPixelTo3dRay((pts[i][0], pts[i][1]))
+            z_val = self.depth_map[str((pts[i][0], pts[i][1]))]
             point3D = [vec[i] * z_val for i in range(3)]
             points += [point3D]
 

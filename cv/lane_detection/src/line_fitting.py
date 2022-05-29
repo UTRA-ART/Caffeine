@@ -65,8 +65,9 @@ def lane_fitting(points):
     out = interpolate.splev(u,tck)  # out is an array in the form of [[x_points], [y_points]]
 
     if type(out) == list:
-        return [out[0].tolist(), out[1].tolist()]
+        return np.array(out).T.tolist()
     else:
+        raise NotImplementedError()
         return out.tolist() # We shouldn't be hitting this, right? 
 
 
