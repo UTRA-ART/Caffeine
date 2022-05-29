@@ -33,7 +33,6 @@ class CVWrapperClient:
             img = self.bridge.cv2_to_imgmsg(mask*255, encoding='passthrough')
             self.pub_raw.publish(img)
 
-
             if lanes is not None:
                 lanes_msgs = []
                 for lane in lanes:

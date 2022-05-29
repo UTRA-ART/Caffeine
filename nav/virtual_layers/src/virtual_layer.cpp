@@ -16,7 +16,7 @@ VirtualLayer::VirtualLayer() {
 
 void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
   int total_points = 0;
-  //cv_points.clear();
+  cv_points.clear();
   for (int i=0; i < msg->lists.size(); i++) {
     std::vector<geometry_msgs::Point> lane;
     for (int j=0; j< msg->lists[i].elements.size(); j++) {
