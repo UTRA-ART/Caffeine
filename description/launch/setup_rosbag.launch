@@ -1,0 +1,29 @@
+<launch>
+    <!-- Create node that records all topics in a bag file in description/caffeine_bag -->
+    <node pkg="rosbag" type="record" name="caffeine_bag"
+        args="record -o $(find description)/caffeine_bag/caffeine_bag 
+            /clock 
+            /cmd_vel 
+            /gps/filtered
+            /gps/fix 
+            /gps/fix/position/parameter_descriptions 
+            /gps/fix/position/parameter_updates
+            /gps/fix/status/parameter_descriptions 
+            /gps/fix/status/parameter_updates 
+            /gps/fix/velocity/parameter_descriptions
+            /gps/fix/velocity/parameter_updates 
+            /gps/fix_velocity
+            /imu/data 
+            /key_vel 
+            /man_vel 
+            /nav_vel
+            /odom
+            /odometry/global
+            /odometry/gps
+            /odometry/local
+            /pause_navigation
+            /scan
+            /scan_modified
+            /tf
+            /tf_static" />
+</launch>
