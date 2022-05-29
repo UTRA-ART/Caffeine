@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import json
 import struct
-from tkinter import OUTSIDE
 
 import cv2
 import numpy as np

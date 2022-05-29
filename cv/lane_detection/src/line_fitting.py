@@ -5,7 +5,7 @@ from scipy import interpolate
 import matplotlib.pyplot as plt
 import time
 
-img_pth = # Path to test image
+# img_pth = # Path to test image
 SPLINE_DIM = 3
 EXTRAPOLATE_VALUE = 0.05
 
@@ -61,7 +61,7 @@ def lane_fitting(points):
     x = fit_points[:,1]
     y = fit_points[:,0]
     tck,u = interpolate.splprep([x,y],k=SPLINE_DIM,s=32)
-    u = np.linspace(u[0]-EXTRAPOLATE_VALUE,u[-1]+EXTRAPOLATE_VALUE,500)
+    # u = np.linspace(u[0]-EXTRAPOLATE_VALUE,u[-1]+EXTRAPOLATE_VALUE,500)
     out = interpolate.splev(u,tck)  # out is an array in the form of [[x_points], [y_points]]
 
     if type(out) == list:
@@ -72,8 +72,8 @@ def lane_fitting(points):
 
 def fit_lanes(mask):
     out = []
-    
-    smoothed_pred = cv2.morphologyEx(pred, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_CROSS,(3,3)))
+
+    smoothed_pred = cv2.morphologyEx(mask, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_CROSS,(3,3)))
     
     rows = np.where(smoothed_pred==1)[0].reshape(-1,1)
     cols = np.where(smoothed_pred==1)[1].reshape(-1,1)
@@ -93,9 +93,9 @@ def fit_lanes(mask):
                 if _out is not None:
                     out += [_out]
                  
-                _out = lane_fitting(pts)
-                if _out is not None:
-                    out += [_out]
+                # _out = lane_fitting(pts)
+                # if _out is not None:
+                #     out += [_out]
                     
                 # print(_out[0])
                 # print(_out[1])
@@ -113,9 +113,9 @@ def fit_lanes(mask):
         return out
     return None
 
-if __name__ == "__main__":
-    input = cv2.imread(img_pth, cv2.IMREAD_GRAYSCALE)
-    input_norm = input/255
+# if __name__ == "__main__":
+#     input = cv2.imread(img_pth, cv2.IMREAD_GRAYSCALE)
+#     input_norm = input/255
 
-    fit_lanes(input_norm)
+#     fit_lanes(input_norm)
     
