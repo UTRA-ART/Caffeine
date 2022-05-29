@@ -13,10 +13,10 @@ from cv_utils import camera_projection
 
 class CVWrapperClient:
     def __init__(self):
-        self.redis = redis.Redis(host='127.0.0.1', port=6379, db=0)
+        self.redis = redis.Redis(host='127.0.0.1', port=6379, db=3)
         self.pub = rospy.Publisher('cv/pothole_detections', FloatArray, queue_size=10)
-        rospy.init_node('cv_wrapper_client')
-        self.r = rospy.Rate(10) # 10hz
+        rospy.init_node('pothole_detection_wrapper_client')
+        self.r = rospy.Rate(10) # 10hz  
 
         self.projection = camera_projection.CameraProjection()
 

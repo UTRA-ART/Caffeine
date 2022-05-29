@@ -29,8 +29,8 @@ class CameraProjection:
         camera_info = rospy.wait_for_message('/zed/zed_node/left/camera_info', CameraInfo)
 
         # Update camera intrinsics to account for the resized new images
-        scale_x = 330/camera_info.width
-        scale_y = 180/camera_info.height
+        scale_x = 330.0/camera_info.width
+        scale_y = 180.0/camera_info.height
 
         K = list(camera_info.K)
         K[0] = K[0] * scale_x
@@ -45,7 +45,8 @@ class CameraProjection:
         P[3] = P[3] * scale_x
         P[5] = P[5] * scale_y
         P[6] = P[6] * scale_y
-        camera_info.P = tuple(camera_info.P)
+        P[7] = P[7] * scale_y
+        camera_info.P = tuple(P)
 
         camera_info.roi.x_offset = int(camera_info.roi.x_offset * scale_x)
         camera_info.roi.y_offset = int(camera_info.roi.y_offset * scale_y)
@@ -58,21 +59,24 @@ class CameraProjection:
 
 
     def __call__(self, pts):
-        return self.project_2D_to_3D_camera(pts[0], pts[1])
+        '''
+        [[x, y], [x, y]]
+        '''
+        return self.project_2D_to_3D_camera(pts)
 
 
-    def project_2D_to_3D_camera(self, x_array, y_array):
+    def project_2D_to_3D_camera(self, pts):
         ''' Given the pixel image coordinates and a constant mapping of depth to y-values,
             calculate the resulting projection of points in the camera coordinate frame.
             Requires the focal lengths in x and y and the optical centers
         '''
         points = []
-        for i in range(len(x_array)):
-            if x_array[i] < 0 or y_array[i] < 0:
+        for i in range(len(pts)):
+            if pts[i][0] < 0 or pts[i][1] < 0:# or pts[i][0] >  or pts[i][1] < 0:
                 continue
-            vec = self.camera.projectPixelTo3dRay((x_array[i], y_array[i]))
-            z_val = self.depth_map[str((x_array[i], y_array[i]))]
-            point3D = [vec[i] * z_val for i in range(3)]
+            vec = self.camera.projectPixelTo3dRay((pts[i][0], pts[i][1]))
+            z_val = self.depth_map[str((pts[i][0], pts[i][1]))]
+            point3D = [vec[i] * z_val/vec[2] for i in range(3)]
             points += [point3D]
 
         return points

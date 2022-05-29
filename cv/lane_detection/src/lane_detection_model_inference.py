@@ -76,7 +76,6 @@ class CVModelInferencer:
 
         return
 
-
 def find_edge_channel(img):
     edges_mask = np.zeros((img.shape[0],img.shape[1]),dtype=np.uint8)
     width = img.shape[1]
