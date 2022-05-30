@@ -14,6 +14,7 @@ import utm
 from geometry_msgs.msg import PoseStamped
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from sensor_msgs.msg import NavSatFix
+from std_msgs.msg import UInt8
 from tf import TransformListener
 from tf.transformations import quaternion_from_euler
 
@@ -29,6 +30,9 @@ class NavigateWaypoints:
         self.curr_waypoint_idx = 0 
         self.tf = TransformListener()
 
+        self.pub = rospy.Publisher("/waypoint_target", UInt8, queue_size=10)
+        while self.pub.get_num_connections() < 1:
+            pass
 
     def populate_waypoint_dict(self):
         '''
@@ -113,6 +117,7 @@ class NavigateWaypoints:
         waypoint = self.waypoints[self.curr_waypoint_idx]
         print(self.curr_waypoint_idx)
         self.curr_waypoint_idx += 1
+        self.pub.publish(self.curr_waypoint_idx)
         return waypoint
     
     def get_pose_from_gps(self, longitude, latitude, frame, pose_test_var = None):
