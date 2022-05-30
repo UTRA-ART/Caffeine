@@ -1,0 +1,11 @@
+<library path="lib/libLaserProcNodelet">
+
+  <class name="laser_proc/LaserProcNodelet"
+	 type="laser_proc::LaserProcNodelet"
+	 base_class_type="nodelet::Nodelet">
+    <description>
+      Nodelet to convert sensor_msgs/MultiEchoLaserScans to sensor_msgs/LaserScans.
+    </description>
+  </class>
+
+</library>

@@ -1,0 +1,20 @@
+LIB_URG = liburg_c.a
+
+include ../build_rule.mk
+
+CFLAGS = -g -O2 $(INCLUDES) -I../include -fPIC
+
+all : $(LIB_URG)
+
+clean :
+	$(RM) *.o $(LIB_URG)
+
+$(LIB_URG) : \
+	$(LIB_URG)(urg_sensor.o) \
+	$(LIB_URG)(urg_utils.o) \
+	$(LIB_URG)(urg_debug.o) \
+	$(LIB_URG)(urg_connection.o) \
+	$(LIB_URG)(urg_ring_buffer.o) \
+	$(LIB_URG)(urg_serial.o) \
+	$(LIB_URG)(urg_serial_utils.o) \
+	$(LIB_URG)(urg_tcpclient.o) \
