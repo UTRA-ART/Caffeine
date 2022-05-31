@@ -5,7 +5,6 @@
 #include "ros/ros.h"
 #include "sensor_msgs/LaserScan.h"
 #include "nav_msgs/Odometry.h"
-#include "std_msgs/UInt8.h"
 
 class IgnoreLidarNode
 {
@@ -31,16 +30,15 @@ class IgnoreLidarNode
         GpsCoord second_waypoint_;
         GpsCoord third_waypoint_;
 
-        int waypoint_target_ = 1;
-
         std::array<OdomCoord, 2> bounds_;
 
         OdomCoord cur_odom_;
         bool is_odom_init = false;
 
         ros::Subscriber lidar_sub_;
-        ros::Subscriber waypoint_sub_;
+        ros::Subscriber odom_sub_;
 
         void lidarCallback(const sensor_msgs::LaserScanConstPtr &lidar_msg);
-        void waypointCallback(const std_msgs::UInt8ConstPtr &waypoint_msg);
+        void odomCallback(const nav_msgs::OdometryConstPtr &odom_msg);
+        geometry_msgs::PoseStamped getPoseFromGps(double latitude, double longitude, std::string target_frame);
 };

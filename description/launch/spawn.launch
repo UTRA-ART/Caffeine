@@ -48,6 +48,6 @@
 
     <!-- Record topics using Rosbag -->
     <include file="$(find description)/launch/setup_rosbag.launch"
-        if="true"/>
+        if="false"/>
     
 </launch>
