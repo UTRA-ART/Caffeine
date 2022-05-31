@@ -117,7 +117,10 @@ class NavigateWaypoints:
         waypoint = self.waypoints[self.curr_waypoint_idx]
         print(self.curr_waypoint_idx)
         self.curr_waypoint_idx += 1
-        self.pub.publish(self.curr_waypoint_idx)
+        rate = rospy.Rate(10)
+        for x in range(10):
+            self.pub.publish(self.curr_waypoint_idx)
+            rate.sleep()
         return waypoint
     
     def get_pose_from_gps(self, longitude, latitude, frame, pose_test_var = None):

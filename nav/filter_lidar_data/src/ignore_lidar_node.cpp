@@ -1,7 +1,3 @@
-#include <tf/transform_listener.h>
-#include <geometry_msgs/TransformStamped.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <geographic_msgs/GeoPoint.h>
 #include <geodesy/utm.h>
 #include <limits>
 
@@ -23,10 +19,6 @@ IgnoreLidarNode::IgnoreLidarNode(ros::NodeHandle nh)
 
 void IgnoreLidarNode::lidarCallback(const sensor_msgs::LaserScanConstPtr& lidar_msg)
 {
-    if (!is_odom_init) {
-        return; // Do not do calculations without a pose to work with
-    }
-
     if (waypoint_target_ == 3) {
         
         if (debug) {
