@@ -52,4 +52,5 @@ global_costmap:
 
   plugins:
     - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}
+    - {name: virtual_layer,       type: "virtual_layers::VirtualLayer"}
     - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}

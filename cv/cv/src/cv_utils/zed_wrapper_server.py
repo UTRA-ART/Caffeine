@@ -13,7 +13,7 @@ from sensor_msgs.msg import Image
 class ZedWrapperServer:
     def __init__(self):
         self.bridge = CvBridge()
-        self.redis = redis.Redis(host='127.0.0.1', port=6379, db=0)
+        self.redis = redis.Redis(host='127.0.0.1', port=6379, db=3)
 
     def run(self):
         rospy.init_node('zed_server_wrapper')
@@ -21,10 +21,11 @@ class ZedWrapperServer:
         rospy.spin()
 
     def forward_image(self, data):
-        img = self.bridge.imgmsg_to_cv2(data, desired_encoding='passthrough')
-        self._toRedis(img, "zed/preprocessed")
+        if data != []:
+            img = self.bridge.imgmsg_to_cv2(data, desired_encoding='passthrough')
+            self._toRedisImg(img, "zed/preprocessed")
 
-    def _toRedis(self,img,name):
+    def _toRedisImg(self,img,name):
         """Store given Numpy array 'img' in Redis under key 'name'"""
         h, w = img.shape[:2]
         shape = struct.pack('>II',h,w)

@@ -3,8 +3,11 @@ import os
 
 import cv2
 import numpy as np
+import rospy
+from image_geometry import PinholeCameraModel
 import rospkg
 
+from sensor_msgs.msg import CameraInfo
 
 class CameraProjection:
     def __init__(self):
@@ -23,51 +26,63 @@ class CameraProjection:
             self.depth_values += [self.depth_map[key]]
         self.depth_values = np.array(self.depth_values)
 
+        camera_info = rospy.wait_for_message('/zed/zed_node/rgb/camera_info', CameraInfo)
 
-        '''
-        Raw parameters (found in /usr/local/zed/settings)
-        fx = 1400.13
-        fy = 1400.13
-        cx = 1188.06
-        cy = 645.894
+        # Update camera intrinsics to account for the resized new images
+        scale_x = 330.0/camera_info.width
+        scale_y = 180.0/camera_info.height
 
-        image size: 360, 640, 3
+        camera_info.width = 330
+        camera_info.height = 180
 
-        detination image size: 180, 330
-        ratio: 0.5, 0.515625
+        K = list(camera_info.K)
+        K[0] = K[0] * scale_x
+        K[2] = K[2] * scale_x
+        K[4] = K[4] * scale_y
+        K[5] = K[5] * scale_y
+        camera_info.K = tuple(K)
 
-        TODO: Remove estimates 
-        '''
+        P = list(camera_info.P)
+        P[0] = P[0] * scale_x
+        P[2] = P[2] * scale_x
+        P[3] = P[3] * scale_x        
+        P[5] = P[5] * scale_y
+        P[6] = P[6] * scale_y
+        P[7] = P[7] * scale_y
+        camera_info.P = tuple(P)
 
-        self.fx = (360 + 640) / 2
-        self.fy = (360 + 640) / 2
-        self.ox = 640 / 2
-        self.oy = 360 / 2
+        camera_info.roi.x_offset = int(camera_info.roi.x_offset * scale_x)
+        camera_info.roi.y_offset = int(camera_info.roi.y_offset * scale_y)
+        camera_info.roi.width = int(camera_info.roi.width * scale_x)
+        camera_info.roi.height = int(camera_info.roi.height * scale_y)
+
+        self.camera = PinholeCameraModel()
+
+        self.camera.fromCameraInfo(camera_info)
 
 
     def __call__(self, pts):
-        return self.project_2D_to_3D_camera(pts[0], pts[1])
+        '''
+        [[x, y], [x, y]]
+        '''
+        return self.project_2D_to_3D_camera(pts)
 
 
-    def project_2D_to_3D_camera(self, x_array, y_array):
+    def project_2D_to_3D_camera(self, pts):
         ''' Given the pixel image coordinates and a constant mapping of depth to y-values,
             calculate the resulting projection of points in the camera coordinate frame.
             Requires the focal lengths in x and y and the optical centers
         '''
-        x_cam_coords = []
-        y_cam_coords = []
-        z_cam_coords = []
+        points = []
+        for i in range(len(pts)):
+            if pts[i][0] < 0 or pts[i][1] < 0 or pts[i][0] >= 330 or pts[i][1] >= 180:
+                continue
+            vec = self.camera.projectPixelTo3dRay((pts[i][0], pts[i][1]))
+            z_val = self.depth_map[str((pts[i][0], pts[i][1]))]
+            point3D = [vec[i] * z_val/vec[2] for i in range(3)]
+            points += [point3D]
 
-        z_map_indeces = []
-        for i in range(len(x_array)):
-            z_map_indeces += [self.keys[str((x_array[i], y_array[i]))]]
-        z_map_indeces = np.array(z_map_indeces)
-
-        x_cam_coords = (x_array - self.ox) / self.fx * self.depth_values[z_map_indeces]
-        y_cam_coords = (y_array - self.oy) / self.fy * self.depth_values[z_map_indeces]
-        z_cam_coords = self.depth_values[z_map_indeces]
-
-        return x_cam_coords, y_cam_coords, z_cam_coords
+        return points
 
 
     def gen_depth_to_y_map(self, min_z, max_z):

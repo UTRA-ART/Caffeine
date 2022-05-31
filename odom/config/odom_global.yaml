@@ -1,7 +1,7 @@
 frequency: 50
 
 # Specify planar environment
-two_d_mode: false
+two_d_mode: true
 
 map_frame: map
 odom_frame: odom
