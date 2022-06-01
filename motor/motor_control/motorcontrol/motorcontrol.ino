@@ -1,3 +1,8 @@
+
+#include <ros.h>
+#include <ArduinoHardware.h>
+
+
 #include <ros.h>
 #include <std_msgs/Float64.h>
 #include <std_msgs/Float64MultiArray.h>
@@ -108,10 +113,10 @@ void rmotorCb(const std_msgs::Float64& control_msg){
     current_ros = millis();    
     float right_input = control_msg.data;
     if(right_input >= 0){
-        right_speed = right_input;
+        right_speed = 51*right_input;
         right_dir = 0;
     }else{
-        right_speed = -right_input;
+        right_speed = -51*right_input;
         right_dir = 1;
     }
 }
@@ -120,10 +125,10 @@ void rmotorCb(const std_msgs::Float64& control_msg){
 void lmotorCb(const std_msgs::Float64& control_msg){
     float left_input = control_msg.data;
     if(left_input < 0){
-        left_speed = -left_input;
+        left_speed = -51*left_input;
         left_dir = 0;
     }else{
-        left_speed = left_input;
+        left_speed = 51*left_input;
         left_dir = 1;
     }
 }
@@ -150,8 +155,8 @@ char hello[13] = "hello world!";
 
 void setup() {
 
-    Serial.begin(115200);     // Serial comm begin at 9600bps
-    nh.getHardware()->setBaud(115200);
+    Serial.begin(9600);     // Serial comm begin at 9600bps
+    nh.getHardware()->setBaud(57600);
     nh.initNode();
     nh.subscribe(right_motor_vel_sub);
     nh.subscribe(left_motor_vel_sub);
@@ -177,9 +182,9 @@ void loop(){
     
     if(nh.connected()){
       nh.spinOnce();
-      //str_msg.data = left_speed; 
-      //chatter.publish( &str_msg );
-      //nh.spinOnce();
+      str_msg.data = left_speed; 
+      chatter.publish( &str_msg );
+      nh.spinOnce();
       if (current_ros - last_ros_count >= interval){
         digitalWrite(RFR, 0);
         digitalWrite(LFR, 0);
