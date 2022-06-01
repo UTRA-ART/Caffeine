@@ -8,10 +8,10 @@ import matplotlib.pyplot as plt
 HEIGHT: int = 180
 WIDTH: int = 330
 RAW_DEPTH_VALS_PATH: str = (
-    f"{os.path.dirname(os.path.abspath(__file__))}/data/raw_depth_vals.json"
+    f"{os.path.dirname(os.path.abspath(__file__))}/../../config/depth_vals.json"
 )
 PROCESSED_DEPTH_VALS_PATH: str = (
-    f"{os.path.dirname(os.path.abspath(__file__))}/data/processed_depth_vals.json"
+    f"{os.path.dirname(os.path.abspath(__file__))}/../../config/processed_depth_vals.json"
 )
 
 
