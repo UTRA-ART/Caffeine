@@ -1,0 +1,32 @@
+<launch>
+    <!-- Parse URDF with xacro -->
+    <param name="robot_description" command="xacro '$(find description)/urdf/caffeine.urdf.xacro'"/>
+    
+    <!-- Set up TF Tree -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <param name="rate" value="50"/>
+    </node>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+    <!-- Launch of sensor suite -->
+    <include file="$(find sensors)/launch/sensors.launch"/>
+
+    <!-- Twist Multiplexer -->
+    <include file="$(find twist_mux)/launch/twist_mux.launch">
+        <arg name="cmd_vel_out" value="cmd_vel"/>
+    </include>
+    <!-- Motor controller + feedback -->
+    <include file="$(find motor_control)/launch/motor_control.launch"/>
+    <include file="$(find teleop_twist_keyboard)/launch/keyboard_teleop.launch"/>
+
+    <!-- Compute Odometry from Sensor Fusion -->
+    <include file="$(find odom)/launch/odom.launch"/>
+
+    <!-- CV stack -->
+    <include file="$(find cv)/launch/pipeline.launch"/>
+
+    <!-- Virtual layer -->
+
+    <!-- Navigation stack -->
+    <include file="$(find nav_stack)/launch/move_base.launch"/>
+</launch>
