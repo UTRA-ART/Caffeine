@@ -48,7 +48,7 @@ if __name__=="__main__":
     rospy.init_node("serial_node")
     rospy.loginfo("ROS Serial Python Node")
 
-    port_name = rospy.get_param('~port','/dev/ttyACM0')
+    port_name = rospy.get_param('~port','/dev/ttyUSB0')
     baud = int(rospy.get_param('~baud','57600'))
 
     # for systems where pyserial yields errors in the fcntl.ioctl(self.fd, TIOCMBIS, \
@@ -93,6 +93,11 @@ if __name__=="__main__":
                 sleep(1.0)
                 continue
             except OSError:
+                sleep(1.0)
+                continue
+            except:
+                rospy.logwarn("Unexpected Error.%s", sys.exc_info()[0])
+                client.port.close()
                 sleep(1.0)
                 continue
 

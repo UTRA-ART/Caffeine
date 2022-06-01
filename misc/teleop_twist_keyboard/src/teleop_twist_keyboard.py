@@ -8,6 +8,7 @@ import roslib; roslib.load_manifest('teleop_twist_keyboard')
 import rospy
 
 from geometry_msgs.msg import Twist
+from std_msgs.msg import Bool
 
 import sys, select, termios, tty
 
@@ -41,7 +42,7 @@ moveBindings = {
         'i':(1,0,0,1),
     }
 
-delta = 0.2
+delta = 0.1
 speedBindings={
         'w':(delta,0),
         's':(-delta,0),
@@ -150,18 +151,27 @@ if __name__=="__main__":
 
     speed = rospy.get_param("~speed", 0.0)
     turn = rospy.get_param("~turn", 0.0)
-    repeat = rospy.get_param("~repeat_rate", 0.0)
+    repeat = rospy.get_param("~repeat_rate", 0.001)
     key_timeout = rospy.get_param("~key_timeout", 0.0)
     if key_timeout == 0.0:
         key_timeout = None
 
     pub_thread = PublishThread(repeat)
+    autonomous_mode = False
+    mode_pub = rospy.Publisher('/pause_navigation', Bool, queue_size = 1)
 
     x = 1
     y = 0
     z = 0
     th = 1
     status = 0
+    top_vel = 2.2352 # m/s
+    factor = 1 /.447 * 5280 * 12 / 10 / 3.1415 / 60 * 16
+    b = -10.1124
+    m = 640.449
+
+    min_turn = -2*top_vel/0.445
+    max_turn = 2*top_vel/0.445
 
     try:
         pub_thread.wait_for_subscribers()
@@ -171,50 +181,15 @@ if __name__=="__main__":
         print(vels(speed,turn))
         while(1):
             key = getKey(key_timeout)
-            # if key in moveBindings.keys():
-            #     x = moveBindings[key][0]
-            #     y = moveBindings[key][1]
-            #     z = moveBindings[key][2]
-            #     th = moveBindings[key][3]
-            if key in speedBindings.keys():
-                '''
-                v = (L + R) / 2
-                w = (R - L) / l
-                
-                wl + L = R
+            if key != 'p' and key != '':
+                autonomous_mode = False
+            elif key == 'p':
+                autonomous_mode = True
+            mode_pub.publish(not autonomous_mode)
 
-                v = (2L + wl) / 2
-                (2v - wl) / 2 = L 
-
-                wl + (2v - wl)/2 = R
-                wl / 2 + v = R
-
-                -2.2352 < wl/2 + v < 2.2352
-                -2.2352 - wl/2 < v < 2.2352 - wl/2
-
-
-
-                -2.2352 < (2v - wl) / 2 < 2.2352
-                -2.2352 + wl/2 < v < 2.2352 + wl/2
-
-
-                tan = r * w
-                -top_vel < r * w < top_vel 
-
-
-                '''
-
-                top_vel = 2.2352
-
-                factor = 1 /.447 * 5280 * 12 / 10 / 3.1415 / 60 * 16
-                b = -10.1124
-                m = 640.449
-
-                min_turn = -2*top_vel/0.445
-                max_turn = 2*top_vel/0.445
-
+            if key in speedBindings.keys(): 
                 if speedBindings[key][1] != 0: # case: changing angular vel
-                    turn = turn + speedBindings[key][1]
+                    turn = turn + speedBindings[key][1] # TODO: Write angular limits
                 else: # case: changing linear vel 
                     if turn < 0:
                         speed = min(max(speed + speedBindings[key][0], (-2*top_vel - turn*0.89)/2), (2*top_vel + turn*0.89)/2) # mph 
@@ -242,12 +217,15 @@ if __name__=="__main__":
             else:
                 # Skip updating cmd_vel if key timeout and robot already
                 # stopped.
-                if key == '' and x == 0 and y == 0 and z == 0 and th == 0:
+                if key == '' and autonomous_mode:
                     continue
-                x = 0
-                y = 0
-                z = 0
-                th = 0
+                elif key != '':
+                    x = 1
+                    y = 0
+                    z = 0
+                    th = 1
+                    speed = 0
+                    turn = 0
                 if (key == '\x03'):
                     break
  
