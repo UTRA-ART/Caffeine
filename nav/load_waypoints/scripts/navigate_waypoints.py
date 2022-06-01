@@ -117,7 +117,7 @@ class NavigateWaypoints:
         waypoint = self.waypoints[self.curr_waypoint_idx]
         print(self.curr_waypoint_idx)
         self.curr_waypoint_idx += 1
-        rate = rospy.Rate(10)
+        rate = rospy.Rate(15)
         for x in range(10):
             self.pub.publish(self.curr_waypoint_idx)
             rate.sleep()
