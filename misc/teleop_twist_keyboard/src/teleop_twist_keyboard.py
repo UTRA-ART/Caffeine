@@ -16,24 +16,13 @@ msg = """
 Reading from the keyboard  and Publishing to Twist!
 ---------------------------
 Moving around:
-   u    i    o
-   j    k    l
-   m    ,    .
+w : increase forward speed by 0.1
+a : increase leftward turn by 0.1rad/s 
+s : increase backward speed by 0.1
+d : increase rightward turn by 0.1rad/s 
+p : give motor control to nav_stack (set to autonomous mode)
 
-For Holonomic mode (strafing), hold down the shift key:
----------------------------
-   U    I    O
-   J    K    L
-   M    <    >
-
-t : up (+z)
-b : down (-z)
-
-anything else : stop
-
-q/z : increase/decrease max speeds by 10%
-w/x : increase/decrease only linear speed by 10%
-e/c : increase/decrease only angular speed by 10%
+anything else : take control from nav_stack, stops rover 
 
 CTRL-C to quit
 """
@@ -195,20 +184,6 @@ if __name__=="__main__":
                         speed = min(max(speed + speedBindings[key][0], (-2*top_vel - turn*0.89)/2), (2*top_vel + turn*0.89)/2) # mph 
                     else:
                         speed = min(max(speed + speedBindings[key][0], (-2*top_vel + turn*0.89)/2), (2*top_vel - turn*0.89)/2) # mph 
-
-
-                
-                # print(speed, 'af')
-
-                vr = speed + (0.89 * turn) / 2.0
-                vl = speed - (0.89 * turn) / 2.0
-
-                print(vl, vr)
-
-                rvelmsg = (vr * factor - b) / m
-                lvelmsg = (vl * factor - b) / m
-
-                print(lvelmsg, rvelmsg)
 
                 print(vels(speed,turn))
                 if (status == 14):

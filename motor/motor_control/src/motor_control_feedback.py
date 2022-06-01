@@ -34,8 +34,8 @@ from std_msgs.msg import Float64
 from math import exp
 
 # Pin Definitons:
-pin_5v_left = 16
-pin_5v_right = 12  # NOTE: overlaps with audio GPIO
+LEFT_FEEDBACK_PIN = 16
+RIGHT_FEEDBACK_PIN = 12  # NOTE: overlaps with audio GPIO
 
 LOGIC_WINDOW_SIZE = 90
 TIME_WINDOW_SIZE = 30
@@ -45,8 +45,8 @@ ZERO_DELAY = 0.1
 class MotorSpeedFeedbackNode:
     def __init__(self):
         GPIO.setmode(GPIO.BOARD)  # BOARD pin-numbering scheme
-        GPIO.setup(pin_5v_left, GPIO.IN)
-        GPIO.setup(pin_5v_right, GPIO.IN)
+        GPIO.setup(LEFT_FEEDBACK_PIN, GPIO.IN)
+        GPIO.setup(RIGHT_FEEDBACK_PIN, GPIO.IN)
 
         self.tic_left = time.time()
         self.tic_right = time.time()
@@ -102,7 +102,7 @@ class MotorSpeedFeedbackNode:
     def run(self):
         # Estimated time per loop: 0.0001426s / reading 
         # Read and publish left motor feedback 
-        reading_left = GPIO.input(pin_5v_left)
+        reading_left = GPIO.input(LEFT_FEEDBACK_PIN)
         self.logic_window_left[self.logic_index_left % self.logic_end_left] = reading_left 
         self.logic_index_left += 1
 
@@ -120,7 +120,7 @@ class MotorSpeedFeedbackNode:
             self.tic_left = time.time()
 
         # Read and publish right motor feedback 
-        reading_right = GPIO.input(pin_5v_right)
+        reading_right = GPIO.input(RIGHT_FEEDBACK_PIN)
         self.logic_window_right[self.logic_index_right % self.logic_end_right] = reading_right 
         self.logic_index_right += 1
 
