@@ -17,8 +17,7 @@
     </include>
     <!-- Motor controller + feedback -->
     <include file="$(find motor_control)/launch/motor_control.launch"/>
-    <include file="$(find teleop_twist_keyboard)/launch/keyboard_teleop.launch"/>
-
+    
     <!-- Compute Odometry from Sensor Fusion -->
     <include file="$(find odom)/launch/odom.launch"/>
 

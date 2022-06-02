@@ -11,7 +11,7 @@ import redis
 import onnx
 import onnxruntime as ort 
 
-import rospkg
+# import rospkg
 
 from line_fitting import fit_lanes
 
@@ -19,8 +19,9 @@ class CVModelInferencer:
     def __init__(self):
         self.redis = redis.Redis(host='127.0.0.1', port=6379, db=3)
         
-        rospack = rospkg.RosPack()
-        model_path = rospack.get_path('lane_detection') + '/models/unet_with_sigmoid.onnx'
+        # rospack = rospkg.RosPack()
+        # model_path = rospack.get_path('lane_detection') + '/models/unet_with_sigmoid.onnx'
+        model_path = "/home/art-jetson/Desktop/caffeine_ws/cv_models/lanes.onnx"
 
         self.model = onnx.load(model_path)
         onnx.checker.check_model(self.model)
