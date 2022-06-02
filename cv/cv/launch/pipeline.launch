@@ -16,6 +16,6 @@
     <include file="$(find lane_detection)/launch/lane_detection_server.launch"/>
 
     <!-- Launch pothole detection pipeline -->
-    <include file="$(find pothole_detection)/launch/pothole_detection_server.launch"/>
+    <!-- <include file="$(find pothole_detection)/launch/pothole_detection_server.launch"/> -->
 
 </launch>

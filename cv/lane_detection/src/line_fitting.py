@@ -4,6 +4,7 @@ from sklearn.cluster import DBSCAN
 from scipy import interpolate
 import matplotlib.pyplot as plt
 import time
+import pandas as pd
 
 SPLINE_DIM = 3
 EXTRAPOLATE_VALUE = 0.05
@@ -72,7 +73,6 @@ def lane_fitting(points):
 
 def fit_lanes(mask):
     out = []
-
     smoothed_pred = cv2.morphologyEx(mask, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_CROSS,(3,3)))
     
     rows = np.where(smoothed_pred==1)[0].reshape(-1,1)
