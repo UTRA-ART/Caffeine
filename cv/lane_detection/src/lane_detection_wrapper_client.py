@@ -30,7 +30,7 @@ class CVWrapperClient:
             lanes = self._fromRedisLanes("lane_detection")
             mask = self._fromRedisImg("cv/model/output")
 
-            if img is not None:
+            if mask is not None:
                 img = self.bridge.cv2_to_imgmsg(mask * 255, encoding="passthrough")
                 self.pub_raw.publish(img)
 

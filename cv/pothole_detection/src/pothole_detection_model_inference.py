@@ -12,6 +12,9 @@ import rospkg
 from runonnx import run_inference
 
 
+DEBUG_MODE: bool = True
+
+
 class CVModelInferencer:
     def __init__(self):
         self.redis = redis.Redis(host="127.0.0.1", port=6379, db=3)
@@ -41,13 +44,13 @@ class CVModelInferencer:
                     for p in potholes
                 ]
             ]
-            # json_dumpable = {"pothole": potholes}
 
-            # raw = cv2.resize(raw, (330, 180))
-            # for circle in potholes[0]:
-            #     raw = cv2.circle(raw, circle, 5, (0, 0, 255), -1)
-            # cv2.imshow("im", raw)
-            # cv2.waitKey(1)
+            if DEBUG_MODE:
+                raw = cv2.resize(raw, (330, 180))
+                for circle in potholes[0]:
+                    raw = cv2.circle(raw, circle, 5, (0, 0, 255), -1)
+                cv2.imshow("im", raw)
+                cv2.waitKey(1)
 
             self._toRedis(potholes, "pothole_detection")
 
@@ -76,9 +79,12 @@ def get_copied_resized_input(frame: np.ndarray) -> np.ndarray:
 
 if __name__ == "__main__":
     wrapper = CVModelInferencer()
-
-    while True:
-        try:
+    if DEBUG_MODE:
+        while True:
             wrapper.run()
-        except:  # Top-level loop must not fail
-            pass
+    else:
+        while True:
+            try:
+                wrapper.run()
+            except:
+                pass

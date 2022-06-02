@@ -14,6 +14,7 @@ from line_fitting import fit_lanes
 
 WIDTH: int = 330
 HEIGHT: int = 180
+DEBUG_MODE: bool = True
 
 
 class CVModelInferencer:
@@ -46,6 +47,11 @@ class CVModelInferencer:
         lanes = fit_lanes(mask)
         if lanes is not None:
             self._toRedisLanes(lanes, "lane_detection")
+
+        if DEBUG_MODE:
+            toshow = np.concatenate([cv2.resize(raw, (330, 180)), np.tile(mask[...,np.newaxis]*255, (1, 1, 3))], axis=1).astype(np.uint8)
+            cv2.imshow("image", toshow)
+            cv2.waitKey(1)
 
     def _toRedisLanes(self, lanes, name):
         """Store given Numpy array 'img' in Redis under key 'name'"""
@@ -82,7 +88,7 @@ class CVModelInferencer:
 
 
 def find_edge_channel(img):
-    edges_mask = np.zeros_like(img, dtype=np.uint8)
+    edges_mask = np.zeros(img.shape[0:2], dtype=np.uint8)
     width = img.shape[1]
     height = img.shape[0]
 
@@ -128,22 +134,24 @@ def get_input(frame: np.ndarray) -> np.ndarray:
     test_edges, test_edges_inv = find_edge_channel(frame_copy)
     frame_copy = np.block(
         [
-            frame_copy,  # shape: (330, 180, 3)
-            test_edges.reshape(WIDTH, HEIGHT, 1),  # shape: (330, 180, 1)
-            test_edges_inv.reshape(WIDTH, HEIGHT, 1),  # shape: (330, 180, 1)
+            frame_copy,  # shape: (180, 330, 3)
+            test_edges.reshape(*test_edges.shape, 1),  # shape: (180, 330, 1)
+            test_edges_inv.reshape(*test_edges_inv.shape, 1),  # shape: (180, 330, 1)
         ]
     )  # (330, 180, 5)
 
-    # Is this the correct permutation? Maybe try it out
-    # Shapes go: (330, 180, 5) ----> (5, 330, 180) --ERROR??--> (1, 5, 180, 330)
-    input = (frame_copy / 255.0).transpose(2, 0, 1).reshape(1, 5, HEIGHT, WIDTH)
+    input = (frame_copy / 255.0).transpose(2, 0, 1).reshape(1, 5, *test_edges.shape)
     return input
 
 
 if __name__ == "__main__":
     wrapper = CVModelInferencer()
-    while True:
-        try:
+    if DEBUG_MODE:
+        while True:
             wrapper.run()
-        except:  # Top-level loop must not fail
-            pass
+    else:
+        while True:
+            try:
+                wrapper.run()
+            except:
+                pass
