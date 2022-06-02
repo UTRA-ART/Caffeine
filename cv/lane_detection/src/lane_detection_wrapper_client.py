@@ -1,6 +1,5 @@
 #!/usr/bin/env python2
 import struct
-import sys
 import json
 
 import numpy as np
@@ -14,24 +13,25 @@ from cv.msg import FloatArray, FloatList
 from geometry_msgs.msg import Point
 from cv_utils import camera_projection
 
+
 class CVWrapperClient:
     def __init__(self):
-        self.redis = redis.Redis(host='127.0.0.1', port=6379, db=3)
-        self.pub = rospy.Publisher('cv/lane_detections', FloatArray, queue_size=10)
-        self.pub_raw = rospy.Publisher('cv/model_output', Image, queue_size=10)
-        rospy.init_node('lane_detection_wrapper_client')
-        self.r = rospy.Rate(10) # 10hz
+        self.redis = redis.Redis(host="127.0.0.1", port=6379, db=3)
+        self.pub = rospy.Publisher("cv/lane_detections", FloatArray, queue_size=10)
+        self.pub_raw = rospy.Publisher("cv/model_output", Image, queue_size=10)
+        rospy.init_node("lane_detection_wrapper_client")
+        self.r = rospy.Rate(10)  # 10hz
 
         self.bridge = CvBridge()
         self.projection = camera_projection.CameraProjection()
 
     def run(self):
         while not rospy.is_shutdown():
-            lanes = self._fromRedisLanes('lane_detection')
-            mask = self._fromRedisImg('cv/model/output')
+            lanes = self._fromRedisLanes("lane_detection")
+            mask = self._fromRedisImg("cv/model/output")
 
             if img is not None:
-                img = self.bridge.cv2_to_imgmsg(mask*255, encoding='passthrough')
+                img = self.bridge.cv2_to_imgmsg(mask * 255, encoding="passthrough")
                 self.pub_raw.publish(img)
 
             if lanes is not None:
@@ -69,13 +69,13 @@ class CVWrapperClient:
         encoded = self.redis.get(name)
         if encoded is None:
             return None
-        h, w = struct.unpack('>II',encoded[:8])
-        a = cv2.imdecode(np.frombuffer(encoded, dtype=np.uint8, offset=8), 1).reshape(h,w,3)
+        h, w = struct.unpack(">II", encoded[:8])
+        a = cv2.imdecode(np.frombuffer(encoded, dtype=np.uint8, offset=8), 1).reshape(
+            h, w, 3
+        )
         return a
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     wrapper = CVWrapperClient()
     wrapper.run()
-
-
-    
