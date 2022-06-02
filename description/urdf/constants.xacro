@@ -157,7 +157,7 @@
 
     <xacro:property name="imu_x_dist" value="0.28"/>
     <xacro:property name="imu_y_dist" value="0.295"/>
-    <xacro:property name="imu_z_dist" value="0.34"/>
+    <xacro:property name="imu_z_dist" value="0.195"/>
 
 
 </robot>
