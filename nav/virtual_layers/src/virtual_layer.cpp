@@ -14,27 +14,34 @@ VirtualLayer::VirtualLayer() {
   listener.waitForTransform("/odom", "/left_camera_link_optical", ros::Time(0), ros::Duration(60.0));
 }
 
+geometry_msgs::Point VirtualLayer::transform_from_camera_to_odom(double x, double y, double z) {
+  geometry_msgs::PoseStamped new_pose = geometry_msgs::PoseStamped();
+  new_pose.header.frame_id = "left_camera_link_optical";
+  new_pose.pose.position.x = msg->lists[i].elements[j].x;
+  new_pose.pose.position.y = msg->lists[i].elements[j].y;
+  new_pose.pose.position.z = msg->lists[i].elements[j].z;
+  new_pose.pose.orientation.w = 1.0;
+  listener.transformPose("/odom", new_pose, new_pose);
+
+  geometry_msgs::Point new_point = geometry_msgs::Point();
+  new_point.x = new_pose.pose.position.x;
+  new_point.y = new_pose.pose.position.y;
+  return new_point
+}
+
 void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
   cv_points.clear();
   for (int i=0; i < msg->lists.size(); i++) {
     std::vector<geometry_msgs::Point> lane;
     for (int j=0; j< msg->lists[i].elements.size(); j++) {
-      geometry_msgs::PoseStamped new_pose = geometry_msgs::PoseStamped();
-      new_pose.header.frame_id = "left_camera_link_optical";
-      new_pose.pose.position.x = msg->lists[i].elements[j].x;
-      new_pose.pose.position.y = msg->lists[i].elements[j].y;
-      new_pose.pose.position.z = msg->lists[i].elements[j].z;
-      new_pose.pose.orientation.w = 1.0;
-      listener.transformPose("/odom", new_pose, new_pose);
-
-      geometry_msgs::Point new_point = geometry_msgs::Point();
-      new_point.x = new_pose.pose.position.x;
-      new_point.y = new_pose.pose.position.y;
-      //std::cout << new_point.x << " " << new_point.y << std::endl;
-      lane.push_back(new_point);
+      double x = msg->lists[i].elements[j].x;
+      double y = msg->lists[i].elements[j].y;
+      double z = msg->lists[i].elements[j].z;
+      lane.push_back(transform_from_camera_to_odom(x, y, z));
     }
     cv_points.push_back(lane);
   }
+  geometry_msgs::Point min_pose = transform_from_camera_to_odom()
 }//callback function
 
 void VirtualLayer::onInitialize()
@@ -113,9 +120,25 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
       unsigned int mx;
       unsigned int my;
       if(worldToMap(mark_x + COSTMAP_OFFSET_X, mark_y + COSTMAP_OFFSET_Y, mx, my)){
-        setCost(mx, my, LETHAL_OBSTACLE);
+        if (detected){
+          map[mx][my] = map[mx][my] + ((1-map[mx][my])*0.5);
+        } else {
+          map[mx][my] = map[mx][my]/2;
+        }
       }
-      
+    }
+  }
+
+  // 1. 
+
+  for (unsigned int i=0; i < 500; i++) {
+    for (unsigned int j=0; j < 500; j++) {
+      if (map[i][j] > threshold) {
+        setCost(i, j, LETHAL_OBSTACLE);
+      }
+      double mark_x;
+      double mark_y;
+      mapToWorld(mark_x + COSTMAP_OFFSET_X, mark_y + COSTMAP_OFFSET_Y, i, j)
       *min_x = std::min(*min_x, mark_x);
       *min_y = std::min(*min_y, mark_y);
       *max_x = std::max(*max_x, mark_x);
