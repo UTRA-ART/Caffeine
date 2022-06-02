@@ -12,6 +12,10 @@ import rospkg
 from line_fitting import fit_lanes
 
 
+WIDTH: int = 330
+HEIGHT: int = 180
+
+
 class CVModelInferencer:
     def __init__(self):
         self.redis = redis.Redis(host="127.0.0.1", port=6379, db=3)
@@ -78,7 +82,7 @@ class CVModelInferencer:
 
 
 def find_edge_channel(img):
-    edges_mask = np.zeros((img.shape[0], img.shape[1]), dtype=np.uint8)
+    edges_mask = np.zeros_like(img, dtype=np.uint8)
     width = img.shape[1]
     height = img.shape[0]
 
@@ -118,19 +122,21 @@ def find_edge_channel(img):
 
 
 def get_input(frame: np.ndarray) -> np.ndarray:
-    frame = cv2.resize(frame, (330, 180), interpolation=cv2.INTER_AREA)
     frame_copy = np.copy(frame)
+    frame_copy = cv2.resize(frame_copy, (WIDTH, HEIGHT), interpolation=cv2.INTER_AREA)
 
     test_edges, test_edges_inv = find_edge_channel(frame_copy)
     frame_copy = np.block(
         [
-            frame_copy,
-            test_edges.reshape(test_edges.shape[0], test_edges.shape[1], 1),
-            test_edges_inv.reshape(test_edges_inv.shape[0], test_edges_inv.shape[1], 1),
+            frame_copy,  # shape: (330, 180, 3)
+            test_edges.reshape(WIDTH, HEIGHT, 1),  # shape: (330, 180, 1)
+            test_edges_inv.reshape(WIDTH, HEIGHT, 1),  # shape: (330, 180, 1)
         ]
-    )
+    )  # (330, 180, 5)
 
-    input = (frame_copy / 255.0).transpose(2, 0, 1).reshape(1, 5, 180, 330)
+    # Is this the correct permutation? Maybe try it out
+    # Shapes go: (330, 180, 5) ----> (5, 330, 180) --ERROR??--> (1, 5, 180, 330)
+    input = (frame_copy / 255.0).transpose(2, 0, 1).reshape(1, 5, HEIGHT, WIDTH)
     return input
 
 
