@@ -19,7 +19,7 @@
 
 
     <!-- Front caster definition -->
-    <!-- <link name="front_caster_link">
+    <link name="front_caster_link">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -52,10 +52,10 @@
         <mu2 value="0.3"/>
         <kp value="10000000.0" />
         <kd value="1.0" />
-    </gazebo> -->
+    </gazebo>
 
     <!-- Front caster wheel definition -->
-    <!-- <link name="front_caster_wheel">
+    <link name="front_caster_wheel">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -89,10 +89,10 @@
         <mu2 value="0.1"/>
         <kp value="10000000.0" />
         <kd value="1.0" />
-    </gazebo> -->
+    </gazebo>
 
     <!-- Back caster definition -->
-    <link name="back_caster_link">
+    <!-- <link name="back_caster_link">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -125,10 +125,10 @@
         <mu2 value="0.3"/>
         <kp value="10000000.0" />
         <kd value="1.0" />
-    </gazebo>
+    </gazebo> -->
 
     <!-- Back caster wheel definition -->
-    <link name="back_caster_wheel">
+    <!-- <link name="back_caster_wheel">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
@@ -161,6 +161,6 @@
         <mu2 value="0.1"/>
         <kp value="10000000.0" />
         <kd value="1.0" />
-    </gazebo>
+    </gazebo> -->
 
 </robot>

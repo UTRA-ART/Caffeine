@@ -15,9 +15,9 @@ topics:
   name    : manual
   topic   : man_vel
   timeout : 0.5
-  priority: 100
+  priority: 110
 -
   name    : keyboard
   topic   : key_vel
   timeout : 0.5
-  priority: 90
+  priority: 100

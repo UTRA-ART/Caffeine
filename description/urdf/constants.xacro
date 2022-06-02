@@ -14,8 +14,8 @@
 
     <!-- Stand -->
     <xacro:property name="stand_length" value="0.412"/>
-    <xacro:property name="stand_width" value="0.254"/>
-    <xacro:property name="stand_height" value="1.324"/>
+    <xacro:property name="stand_width" value="0.33"/>
+    <xacro:property name="stand_height" value="1.335"/>
     <xacro:property name="stand_mass" value="1.0"/>
 
     <!-- Casters -->
@@ -107,7 +107,7 @@
     <xacro:property name="ZED_camera_mass" value="0.1587573"/>
     <xacro:property name="ZED_camera_length" value="0.175"/>
     <xacro:property name="ZED_camera_width" value="0.03"/>
-    <xacro:property name="ZED_camera_height" value="0.033"/>
+    <xacro:property name="ZED_camera_height" value="0.06"/>
     <xacro:property name="ZED_camera_pitch" value="${50 * pi/180}"/>
     <!-- ZED image height/width corresponds to image size for 60Hz refresh-->
     <xacro:property name="ZED_image_refresh" value="60"/>
@@ -154,5 +154,10 @@
     <xacro:property name="imu_frame" value="imu_link"/>
     <xacro:property name="imu_topic" value="imu/data"/>
     <xacro:property name="imu_update_rate" value="128.0"/>
+
+    <xacro:property name="imu_x_dist" value="0.28"/>
+    <xacro:property name="imu_y_dist" value="0.295"/>
+    <xacro:property name="imu_z_dist" value="0.195"/>
+
 
 </robot>

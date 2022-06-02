@@ -39,7 +39,7 @@
     <joint name="gps_joint" type="fixed">
         <parent link="stand_link"/>
         <child link="gps_link"/>
-        <origin xyz="0 0 ${(gps_length + phidget_height) / 2.0}" rpy="0 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
     </joint>
 
     <!-- IMU -->
@@ -65,11 +65,12 @@
     </link>
     
     <joint name="base_link_to_imu_link" type="fixed">
-        <parent link="stand_link"/>
+        <parent link="base_link"/>
         <child link="imu_link"/>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="${imu_x_dist} ${imu_y_dist} ${imu_z_dist}" rpy="0 0 0"/>
     </joint>
 
+    <!-- </robot> -->
     <!-- ZED Camera -->
     <!-- NOTE: this frame is for convenience, multicamera will use the subsequent left camera frames -->
     <link name="zed_camera_link">
@@ -96,7 +97,7 @@
     <joint name="zed_camera_joint" type="fixed">
         <parent link="stand_link"/>
         <child link="zed_camera_link"/>
-        <origin xyz="${stand_length / 2.0 - ZED_camera_width} 0 ${ZED_camera_height / 2.0}" rpy="0 ${ZED_camera_pitch} 0"/>
+        <origin xyz="${0.05 + (stand_width / 2.0) - ZED_camera_width} 0 ${ZED_camera_height / 2.0}" rpy="0 ${ZED_camera_pitch} 0"/>
     </joint>
 
     <!-- Generate Left Camera frame -->
@@ -119,4 +120,4 @@
         <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
     </joint>
 
-</robot>
+</robot> 
