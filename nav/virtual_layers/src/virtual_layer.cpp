@@ -12,8 +12,8 @@ namespace virtual_layers
 {
 VirtualLayer::VirtualLayer() {
   listener.waitForTransform("/base_link", "/left_camera_link_optical", ros::Time(0), ros::Duration(60.0));
-  listener_map.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(60.0));
-  listener_baselink.waitForTransform("/base_link", "/map", ros::Time(0), ros::Duration(60.0));
+  listener_map.waitForTransform("/odom", "/base_link", ros::Time(0), ros::Duration(60.0));
+  listener_baselink.waitForTransform("/base_link", "/odom", ros::Time(0), ros::Duration(60.0));
 }
 
 geometry_msgs::Point VirtualLayer::transform_from_camera_to_baselink(double x, double y, double z) {
@@ -38,7 +38,7 @@ geometry_msgs::Point VirtualLayer::transform_from_baselink_to_map(double x, doub
   new_pose.pose.position.y = y;
   new_pose.pose.position.z = z;
   new_pose.pose.orientation.w = 1.0;
-  listener_map.transformPose("/map", new_pose, new_pose);
+  listener_map.transformPose("/odom", new_pose, new_pose);
 
 
   geometry_msgs::Point new_point = geometry_msgs::Point();
@@ -49,11 +49,11 @@ geometry_msgs::Point VirtualLayer::transform_from_baselink_to_map(double x, doub
 
 geometry_msgs::Point VirtualLayer::transform_from_map_to_baselink(double x, double y, double z) {
   geometry_msgs::PoseStamped new_pose = geometry_msgs::PoseStamped();
-  new_pose.header.frame_id = "map";
+  new_pose.header.frame_id = "odom";
   new_pose.pose.position.x = x;
   new_pose.pose.position.y = y;
   new_pose.pose.position.z = z;
-  new_pose.pose.orientation.w = 1.0;
+  new_pose.pose.orientation.w = -1.0;
   listener_baselink.transformPose("/base_link", new_pose, new_pose);
 
   geometry_msgs::Point new_point = geometry_msgs::Point();
@@ -170,8 +170,8 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
       // To account for rotation (depends on what frame CV data is in)
       //double mark_x = magnitude*cos(robot_yaw);// + robot_x; 
       //double mark_y = magnitude*sin(robot_yaw);// + robot_y;
-      double mark_x = lane_points[i][j][0] - robot_x;
-      double mark_y = lane_points[i][j][1] - robot_y;
+      double mark_x = lane_points[i][j][0];
+      double mark_y = lane_points[i][j][1];
       geometry_msgs::Point map_point = transform_from_baselink_to_map(mark_x, mark_y); // map frame xy meters
       //std::cout << robot_x << " " << robot_y << " " << robot_yaw << std::endl;
        // map frame xy grid
@@ -188,21 +188,21 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
   }
 
   for (std::map<std::tuple<unsigned int,unsigned int>, std::tuple<double,double>>::iterator it = xy_dict_in_map_frame.begin(); it != xy_dict_in_map_frame.end(); it++) {
-    unsigned int max_grid_x = std::get<0>(it->first);
-    unsigned int max_grid_y = std::get<1>(it->first);
+    unsigned int map_grid_x = std::get<0>(it->first);
+    unsigned int map_grid_y = std::get<1>(it->first);
     double map_world_x = std::get<0>(it->second);
     double map_world_y = std::get<1>(it->second);
-    geometry_msgs::Point odom_point = transform_from_map_to_baselink(map_world_x, map_world_y);
-    unsigned int odom_grid_x = static_cast<int>(10*(odom_point.x) + 500);
-    unsigned int odom_grid_y = static_cast<int>(10*(odom_point.y) + 500);
+    geometry_msgs::Point baselink_point = transform_from_map_to_baselink(map_world_x, map_world_y);
+    unsigned int baselink_grid_x = static_cast<int>(10*(baselink_point.x) + 500);
+    unsigned int baselink_grid_y = static_cast<int>(10*(baselink_point.y) + 500);
     //std::cout << "HI: " << odom_point.x << " " << odom_point.y << " " << odom_grid_x << " " << odom_grid_y << " " << map[max_grid_x][max_grid_y] << " " << max_grid_x << " " << max_grid_y << std::endl;
-    if (map[max_grid_x][max_grid_y] > threshold) {
-      setCost(odom_grid_x, odom_grid_y, LETHAL_OBSTACLE);
+    if (map[map_grid_x][map_grid_y] > threshold) {
+      setCost(map_grid_x, map_grid_y, LETHAL_OBSTACLE);
     }
-    *min_x = std::min(*min_x, odom_point.x);
-    *min_y = std::min(*min_y, odom_point.y);
-    *max_x = std::max(*max_x, odom_point.x);
-    *max_y = std::max(*max_y, odom_point.y);
+    *min_x = std::min(*min_x, baselink_point.x);
+    *min_y = std::min(*min_y, baselink_point.y);
+    *max_x = std::max(*max_x, baselink_point.x);
+    *max_y = std::max(*max_y, baselink_point.y);
   }
 }
 
