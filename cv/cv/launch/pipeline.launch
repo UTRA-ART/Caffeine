@@ -12,6 +12,16 @@
         <remap from="image" to="/zed_node/rgb/image_rect_color"/>
     </node>
 
+
+    <!-- <node
+        name="zed_output_data"
+        pkg="cv"
+        type="zed_output_data.py"
+        output="screen"
+    >
+        <remap from="image" to="/zed_node/rgb/image_rect_color"/>
+    </node> -->
+
     <!-- Launch lane detection pipeline -->
     <include file="$(find lane_detection)/launch/lane_detection_server.launch"/>
 

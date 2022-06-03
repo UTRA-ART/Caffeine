@@ -169,7 +169,8 @@ class NavigateWaypoints:
 
 if __name__ == "__main__":
     # CHANGE THIS TO GET MAP SPECIFIC GPS WAYPOINTS
-    static_waypoint_file = 'static_waypoints_pavement.json'
+    static_waypoint_file = 'IGVC_practice.json'
+    # static_waypoint_file = 'static_waypoints_pavement.json'
     # static_waypoint_file = 'static_waypoints_grass.json'
 
     rospy.init_node('navigate_waypoints')

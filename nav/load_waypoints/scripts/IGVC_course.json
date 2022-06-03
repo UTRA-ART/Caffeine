@@ -1,0 +1,116 @@
+{
+    "waypoints" : [
+        {
+            "id" : 0,
+            "longitude" : -83.130645144,
+            "latitude" : 42.400556255,
+            "description"  : "First corner",
+            "frame_id" : "odom"
+        },
+        {
+            "id" : 1,
+            "longitude" : -83.130640432,
+            "latitude" : 42.400510946,
+            "description"  : "Second corner",
+            "frame_id" : "odom"
+        },
+        {
+            "id" : 2,
+            "longitude" : -83.130635756,
+            "latitude" : 42.400465621,
+            "description"  : "Start of no mans",
+            "frame_id" : "odom"
+        },
+        {
+            "id" : 3,
+            "longitude" : -83.130645144,
+            "latitude" : 42.400556255,
+            "description"  : "Ramp entrance",
+            "frame_id" : "odom"
+        },
+        {
+            "id" : 4,
+            "longitude" : -83.130640432,
+            "latitude" : 42.400510946,
+            "description"  : "Ramp exit",
+            "frame_id" : "odom"
+        },
+        {
+            "id" : 5,
+            "longitude" : -83.130635756,
+            "latitude" : 42.400465621,
+            "description"  : "End of no mans",
+            "frame_id" : "odom"
+        },
+        {
+            "id" : 6,
+            "longitude" : -83.130645144,
+            "latitude" : 42.400556255,
+            "description"  : "Third corner",
+            "frame_id" : "odom"
+        },
+        {
+            "id" : 7,
+            "longitude" : -83.130640432,
+            "latitude" : 42.400510946,
+            "description"  : "Forth corner",
+            "frame_id" : "odom"
+        },
+        {
+            "id" : 8,
+            "longitude" : -83.130645144,
+            "latitude" : 42.400556255,
+            "description"  : "First corner",
+            "frame_id" : "odom"
+        },
+        {
+            "id" : 9,
+            "longitude" : -83.130640432,
+            "latitude" : 42.400510946,
+            "description"  : "Second corner",
+            "frame_id" : "odom"
+        },
+        {
+            "id" : 10,
+            "longitude" : -83.130635756,
+            "latitude" : 42.400465621,
+            "description"  : "Start of no mans",
+            "frame_id" : "odom"
+        },
+        {
+            "id" : 11,
+            "longitude" : -83.130645144,
+            "latitude" : 42.400556255,
+            "description"  : "Ramp entrance",
+            "frame_id" : "odom"
+        },
+        {
+            "id" : 12,
+            "longitude" : -83.130640432,
+            "latitude" : 42.400510946,
+            "description"  : "Ramp exit",
+            "frame_id" : "odom"
+        },
+        {
+            "id" : 13,
+            "longitude" : -83.130635756,
+            "latitude" : 42.400465621,
+            "description"  : "End of no mans",
+            "frame_id" : "odom"
+        },
+        {
+            "id" : 14,
+            "longitude" : -83.130645144,
+            "latitude" : 42.400556255,
+            "description"  : "Third corner",
+            "frame_id" : "odom"
+        },
+        {
+            "id" : 15,
+            "longitude" : -83.130640432,
+            "latitude" : 42.400510946,
+            "description"  : "Forth corner",
+            "frame_id" : "odom"
+        }
+    ]
+}
