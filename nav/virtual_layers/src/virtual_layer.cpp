@@ -17,16 +17,16 @@ VirtualLayer::VirtualLayer() {
 geometry_msgs::Point VirtualLayer::transform_from_camera_to_odom(double x, double y, double z) {
   geometry_msgs::PoseStamped new_pose = geometry_msgs::PoseStamped();
   new_pose.header.frame_id = "left_camera_link_optical";
-  new_pose.pose.position.x = msg->lists[i].elements[j].x;
-  new_pose.pose.position.y = msg->lists[i].elements[j].y;
-  new_pose.pose.position.z = msg->lists[i].elements[j].z;
+  new_pose.pose.position.x = x;
+  new_pose.pose.position.y = y;
+  new_pose.pose.position.z = z;
   new_pose.pose.orientation.w = 1.0;
   listener.transformPose("/odom", new_pose, new_pose);
 
   geometry_msgs::Point new_point = geometry_msgs::Point();
   new_point.x = new_pose.pose.position.x;
   new_point.y = new_pose.pose.position.y;
-  return new_point
+  return new_point;
 }
 
 void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
@@ -41,7 +41,16 @@ void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
     }
     cv_points.push_back(lane);
   }
-  geometry_msgs::Point min_pose = transform_from_camera_to_odom()
+  geometry_msgs::Point min_pose = transform_from_camera_to_odom(-0.37, -0.657, 3.0420);
+  geometry_msgs::Point max_pose = transform_from_camera_to_odom(0.366, 0.655, 1.3089);
+  unsigned int min_x, min_y, max_x, max_y;
+  worldToMap(min_pose.x + COSTMAP_OFFSET_X, min_pose.y + COSTMAP_OFFSET_Y, min_x, min_y);
+  worldToMap(max_pose.x + COSTMAP_OFFSET_X, max_pose.y + COSTMAP_OFFSET_Y, max_x, max_y);
+  last_min_x = std::min(min_x, max_x);
+  last_min_y = std::min(min_y, max_y);
+  last_max_x = std::max(min_x, max_x);
+  last_max_y = std::max(min_y, max_y);
+  //std::cout << last_min_x << " " << last_max_x << " " << last_min_y << " " << last_max_y << std::endl;
 }//callback function
 
 void VirtualLayer::onInitialize()
@@ -87,12 +96,14 @@ std::vector<std::vector<double>> pointsToLine(std::vector<geometry_msgs::Point> 
     double y2 = points[j+1].y;
     double dis = sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
     double alpha = t / dis;
+    std::cout << x1 << " " << x2 << " " << y1 << " " << y2 << " " << alpha << " " << dis << std::endl;
     for (double k = alpha; k <= 1; k += alpha){
       double x_point = x1 + k * (x2 - x1);
       double y_point = y1 + k * (y2 - y1);
       coord.push_back({x_point, y_point});
+      std::cout << "INSERT" << std::endl;
     }
-  } 
+  }
   
   return coord;
 }
@@ -106,7 +117,13 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
   std::vector<std::vector<std::vector<double>>> lane_points;
 
   for (int i = 0; i < cv_points.size(); i++) {
-    lane_points.push_back(pointsToLine(cv_points[i], 0.05));
+    lane_points.push_back(pointsToLine(cv_points[i], 0.1));
+  }
+
+  for (unsigned int i=last_min_x; i<last_max_x; i++) {
+    for (unsigned int j=last_min_y; j<last_min_y; j++) {
+      map[i][j] = map[i][j]/2.0;
+    }
   }
 
   for (int i = 0; i < lane_points.size(); i++) {
@@ -120,30 +137,30 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
       unsigned int mx;
       unsigned int my;
       if(worldToMap(mark_x + COSTMAP_OFFSET_X, mark_y + COSTMAP_OFFSET_Y, mx, my)){
-        if (detected){
-          map[mx][my] = map[mx][my] + ((1-map[mx][my])*0.5);
-        } else {
-          map[mx][my] = map[mx][my]/2;
+        map[mx][my] = map[mx][my] + ((1-map[mx][my])*0.5);
+        map[mx][my] = map[mx][my] + ((1-map[mx][my])*0.5);
+        if (xy_set.find({mx, my}) == xy_set.end()) {
+          xy_set.insert({mx, my});
         }
       }
+      std::cout << "INSERT " <<  mx << " " << my << " " << mark_x << " " << mark_y << std::endl;
     }
   }
 
-  // 1. 
-
-  for (unsigned int i=0; i < 500; i++) {
-    for (unsigned int j=0; j < 500; j++) {
-      if (map[i][j] > threshold) {
-        setCost(i, j, LETHAL_OBSTACLE);
-      }
-      double mark_x;
-      double mark_y;
-      mapToWorld(mark_x + COSTMAP_OFFSET_X, mark_y + COSTMAP_OFFSET_Y, i, j)
-      *min_x = std::min(*min_x, mark_x);
-      *min_y = std::min(*min_y, mark_y);
-      *max_x = std::max(*max_x, mark_x);
-      *max_y = std::max(*max_y, mark_y);
+  for (std::set<std::tuple<int,int>>::iterator it = xy_set.begin(); it != xy_set.end(); it++) {
+    int x = std::get<0>(*it);
+    int y = std::get<1>(*it);
+    std::cout << "HI " << x << " " << y << std::endl;
+    if (map[x][y] > threshold) {
+      setCost(x, y, LETHAL_OBSTACLE);
     }
+    double mark_x;
+    double mark_y;
+    mapToWorld(x, y, mark_x, mark_y);
+    *min_x = std::min(*min_x, mark_x);
+    *min_y = std::min(*min_y, mark_y);
+    *max_x = std::max(*max_x, mark_x);
+    *max_y = std::max(*max_y, mark_y);
   }
 }
 
