@@ -10,6 +10,16 @@
         output="screen"
     >
         <remap from="image" to="/zed_node/rgb/image_rect_color"/>
+        <param name="general/grab_frame_rate"           value="10"/> 
+
+        <param name="depth/quality"                     value="1"/> 
+
+        <param name="pos_tracking/pos_tracking_enabled" value="false"/> 
+        <param name="pos_tracking/are_memory"           value="false"/> 
+        <param name="pos_tracking/path_pub_rate"        value="0.1"/> 
+
+        <param name="mapping/mapping_enabled"           value="false"/> 
+        <param name="depth/quality"                     value="1"/>
     </node>
 
 
@@ -26,6 +36,6 @@
     <include file="$(find lane_detection)/launch/lane_detection_server.launch"/>
 
     <!-- Launch pothole detection pipeline -->
-    <include file="$(find pothole_detection)/launch/pothole_detection_server.launch"/>
+    <!-- <include file="$(find pothole_detection)/launch/pothole_detection_server.launch"/> -->
 
 </launch>

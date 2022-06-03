@@ -156,6 +156,7 @@ class NavigateWaypoints:
             action_client.cancel_goal()  
             rospy.loginfo("Timed out achieving goal")  
         else:  
+            print(finished_within_time)
             rospy.loginfo("Reached nav goal")
 
     def navigate_waypoints(self):

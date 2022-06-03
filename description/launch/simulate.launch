@@ -32,11 +32,11 @@
     <!-- MISCALLANEOUS -->
 
     <!-- rqt robot steering GUI -->
-    <group if="$(arg rqt_steer)">
+    <!-- <group if="$(arg rqt_steer)">
         <node pkg="rqt_robot_steering" type="rqt_robot_steering" name="rqt_robot_steering">
             <param name="default_topic" value="/man_vel"/>
         </node>
-    </group>
+    </group> -->
 
     <!-- RViz -->
     <group if="$(arg rviz)">

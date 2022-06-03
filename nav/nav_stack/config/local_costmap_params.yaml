@@ -1,8 +1,8 @@
 local_costmap:
   global_frame: odom
   robot_base_frame: base_link
-  update_frequency: 10.0 # 50
-  publish_frequency: 10.0 # 20
+  update_frequency: 50.0 # 50
+  publish_frequency: 20.0 # 20
   static_map: false
   rolling_window: true
   always_send_full_costmap: false
@@ -21,7 +21,7 @@ local_costmap:
       max_obstacle_height: 10.0,  # we still add lidar scans to costmap
       sensor_frame: base_laser,
       data_type: LaserScan,
-      topic: scan_modified,
+      topic: scan,
       marking: true,
       clearing: true, # true
       obstacle_range: 3.7,   # Decide how far we should see obstacles, should be less than raytrace range

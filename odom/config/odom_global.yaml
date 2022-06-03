@@ -17,15 +17,15 @@ transform_time_offset: 0.05
 print_diagnostics: true
 
 ## Odometry Sensor(s) ##
-odom0: odometry/gps
-odom0_config: [true , true , false,
-               false, false, false,
-               true , true , false,
-               false, false, false,
-               false, false, false]
-odom0_queue_size: 10
-odom0_differential: false 
-odom0_relative: false
+# odom0: odometry/gps
+# odom0_config: [true , true , false,
+#                false, false, false,
+#                true , true , false,
+#                false, false, false,
+#                false, false, false]
+# odom0_queue_size: 10
+# odom0_differential: false 
+# odom0_relative: false
 
 odom1: odometry/local
 odom1_config: [true , true , true ,

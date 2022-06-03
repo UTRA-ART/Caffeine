@@ -36,11 +36,11 @@ class MotorOdom:
         self.R = data.data
 
     def update_speed(self, msg):
-        g_vx = msg.linear.x
-        g_wz = msg.angular.z
+        v = msg.linear.x
+        w = msg.angular.z
 
-        self.R = g_vx + (self.WHEELBASE * g_wz) / 2.0
-        self.L = g_vx - (self.WHEELBASE * g_wz) / 2.0
+        self.R = v + ((self.WHEELBASE * w) / 2.0)
+        self.L = v - ((self.WHEELBASE * w) / 2.0)
 
     def run(self):
         while not rospy.is_shutdown():
