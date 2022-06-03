@@ -40,7 +40,7 @@ private:
   const double COSTMAP_OFFSET_Y = 50.0; //0.5 * global map (length/width)
   double map[1000][1000] = {0}; // Depends on global costmap resolution and size
   std::set<std::tuple<int,int>> xy_set;
-  double threshold = 0.7; // threshold to declare lethal obstacle in costmap
+  double threshold = 0.97; // threshold to declare lethal obstacle in costmap
 
   void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv_;
