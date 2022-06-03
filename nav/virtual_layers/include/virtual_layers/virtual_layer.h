@@ -40,7 +40,7 @@ public:
 private:
   const double COSTMAP_OFFSET_X = 50.0; //0.5 * global map (length/width)
   const double COSTMAP_OFFSET_Y = 50.0; //0.5 * global map (length/width)
-  std::map<std::tuple<double,double>, double> xy_dict;
+  std::map<std::tuple<float,float>, double> xy_dict;
   double threshold = 0.4; // threshold to declare lethal obstacle in costmap
 
   void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);

@@ -35,7 +35,7 @@ geometry_msgs::Point VirtualLayer::transform_from_odom_to_map(double x, double y
   new_pose.header.frame_id = "odom";
   new_pose.pose.position.x = x;
   new_pose.pose.position.y = y;
-  new_pose.pose.position.z = z;
+  new_pose.pose.position.z = 0;
   new_pose.pose.orientation.w = 1.0;
   listener_map.transformPose("/map", new_pose, new_pose);
 
@@ -137,52 +137,53 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
   for (int i = 0; i < cv_points.size(); i++) {
     lane_points.push_back(pointsToLine(cv_points[i], 0.1));
   }
-  
+  /*
   for (unsigned int i=last_min_x; i<last_max_x; i++) {
     for (unsigned int j=last_min_y; j<last_min_y; j++) {
       map[i][j] = map[i][j]/2.0;
     }
   }
-
+  */
   for (int i = 0; i < lane_points.size(); i++) {
     for (int j = 0; j < lane_points[i].size(); j++) {
       double magnitude = sqrt(pow(lane_points[i][j][0],2) + pow(lane_points[i][j][1],2));
       // To account for rotation (depends on what frame CV data is in)
       // double mark_x = magnitude*cos(robot_yaw) + robot_x, 
       // mark_y = magnitude*sin(robot_yaw) + robot_y;
-      double mark_x = lane_points[i][j][0];// - robot_x;
-      double mark_y = lane_points[i][j][1];// - robot_y;
+      double mark_x = lane_points[i][j][0] - robot_x;
+      double mark_y = lane_points[i][j][1] - robot_y;
       geometry_msgs::Point map_xy_point = transform_from_odom_to_map(mark_x, mark_y);
       //std::cout << robot_x << " " << robot_y << " " << mark_x << " " << mark_y << std::endl;
       unsigned int mx;
       unsigned int my;
-      if(worldToMap(map_xy_point.x + COSTMAP_OFFSET_X, map_xy_point.y + COSTMAP_OFFSET_Y, mx, my)){
+      if(worldToMap(-(map_xy_point.x) + COSTMAP_OFFSET_X, -(map_xy_point.y) + COSTMAP_OFFSET_Y, mx, my)){
       //if(worldToMap(mark_x, mark_y, mx, my)){
-        if (xy_dict.find({map_xy_point.x, map_xy_point.y}) == xy_dict.end() ) {
-          xy_dict.insert({{map_xy_point.x, map_xy_point.y}, 0.5})
+        float x_round = static_cast<float>(static_cast<int>(map_xy_point.x * 10.)) / 10.;
+        float y_round = static_cast<float>(static_cast<int>(map_xy_point.y * 10.)) / 10.;
+        if (xy_dict.find({x_round, y_round}) == xy_dict.end() ) {
+          xy_dict.insert({{x_round, y_round}, 0.5});
         } else {
-          xy_dict[{map_xy_point.x, map_xy_point.y}] = xy_dict[{map_xy_point.x, map_xy_point.y}] + ((1-xy_dict[{map_xy_point.x, map_xy_point.y}])*0.5);
+          xy_dict[{x_round, y_round}] = xy_dict[{x_round, y_round}] + ((1-xy_dict[{x_round, y_round}])*0.5);
         }
       }
       //std::cout << "INSERT " <<  mx << " " << my << " " << mark_x << " " << mark_y << std::endl;
     }
   }
 
-  for (std::map<std::tuple<double,double>, double>::iterator it = xy_dict.begin(); it != xy_dict.end(); it++) {
-    double x = std::get<0>(it->first);
-    double y = std::get<1>(it->first);
-
-    if (map[x][y] > threshold) {
+  for (std::map<std::tuple<float,float>, double>::iterator it = xy_dict.begin(); it != xy_dict.end(); it++) {
+    double x = static_cast<double>(std::get<0>(it->first));
+    double y = static_cast<double>(std::get<1>(it->first));
+    unsigned int mx;
+    unsigned int my;
+    worldToMap(x + COSTMAP_OFFSET_X, y + COSTMAP_OFFSET_Y, mx, my);
+    if (it->second > threshold) {
       //std::cout << x << " " << y << std::endl;
-      setCost(x, y, LETHAL_OBSTACLE);
+      setCost(mx, my, LETHAL_OBSTACLE);
     }
-    double mark_x;
-    double mark_y;
-    mapToWorld(x, y, mark_x, mark_y);
-    *min_x = std::min(*min_x, mark_x);
-    *min_y = std::min(*min_y, mark_y);
-    *max_x = std::max(*max_x, mark_x);
-    *max_y = std::max(*max_y, mark_y);
+    *min_x = std::min(*min_x, x);
+    *min_y = std::min(*min_y, y);
+    *max_x = std::max(*max_x, x);
+    *max_y = std::max(*max_y, y);
   }
 }
 
