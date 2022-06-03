@@ -32,13 +32,13 @@ public:
 
   std::vector<std::vector<geometry_msgs::Point>> cv_points;
   void clbk(const cv::FloatArray::ConstPtr& msg);
-  geometry_msgs::Point transform_from_camera_to_odom(double x, double y, double z);
-  geometry_msgs::Point transform_from_odom_to_map(double x, double y, double z=0);
-  geometry_msgs::Point transform_from_map_to_odom(double x, double y, double z=0);
+  geometry_msgs::Point transform_from_camera_to_baselink(double x, double y, double z);
+  geometry_msgs::Point transform_from_baselink_to_map(double x, double y, double z=0);
+  geometry_msgs::Point transform_from_map_to_baselink(double x, double y, double z=0);
   geometry_msgs::Point get_grid_offset();
   tf::TransformListener listener;
   tf::TransformListener listener_map;
-  tf::TransformListener listener_odom;
+  tf::TransformListener listener_baselink;
 
 private:
   const double COSTMAP_OFFSET_X = 50.0; //0.5 * global map (length/width)
