@@ -96,12 +96,12 @@ std::vector<std::vector<double>> pointsToLine(std::vector<geometry_msgs::Point> 
     double y2 = points[j+1].y;
     double dis = sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
     double alpha = t / dis;
-    std::cout << x1 << " " << x2 << " " << y1 << " " << y2 << " " << alpha << " " << dis << std::endl;
+    //std::cout << x1 << " " << x2 << " " << y1 << " " << y2 << " " << alpha << " " << dis << std::endl;
     for (double k = alpha; k <= 1; k += alpha){
       double x_point = x1 + k * (x2 - x1);
       double y_point = y1 + k * (y2 - y1);
       coord.push_back({x_point, y_point});
-      std::cout << "INSERT" << std::endl;
+      //std::cout << "INSERT" << std::endl;
     }
   }
   
@@ -143,14 +143,14 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
           xy_set.insert({mx, my});
         }
       }
-      std::cout << "INSERT " <<  mx << " " << my << " " << mark_x << " " << mark_y << std::endl;
+      //std::cout << "INSERT " <<  mx << " " << my << " " << mark_x << " " << mark_y << std::endl;
     }
   }
 
   for (std::set<std::tuple<int,int>>::iterator it = xy_set.begin(); it != xy_set.end(); it++) {
     int x = std::get<0>(*it);
     int y = std::get<1>(*it);
-    std::cout << "HI " << x << " " << y << std::endl;
+    //std::cout << "HI " << x << " " << y << std::endl;
     if (map[x][y] > threshold) {
       setCost(x, y, LETHAL_OBSTACLE);
     }

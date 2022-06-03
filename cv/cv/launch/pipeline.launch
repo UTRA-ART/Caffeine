@@ -3,14 +3,14 @@
     <!--<include file="$(find zed_wrapper)/launch/zed.launch"/>-->
 
     <!-- Launch server for ZED data. Uploads rectified image to UDP server -->
-    <!-- <node
+    <node
         name="zed_wrapper_server"
         pkg="cv"
         type="zed_wrapper_server.py"
         output="screen"
     >
         <remap from="image" to="/zed/zed_node/left/image_rect_color"/>
-    </node> -->
+    </node>
 
     <!-- Launch lane detection pipeline -->
     <include file="$(find lane_detection)/launch/lane_detection_server.launch"/>
