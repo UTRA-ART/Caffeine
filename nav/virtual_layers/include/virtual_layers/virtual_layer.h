@@ -33,15 +33,19 @@ public:
   std::vector<std::vector<geometry_msgs::Point>> cv_points;
   void clbk(const cv::FloatArray::ConstPtr& msg);
   geometry_msgs::Point transform_from_camera_to_odom(double x, double y, double z);
-  geometry_msgs::Point transform_from_odom_to_map(double x, double y);
+  geometry_msgs::Point transform_from_odom_to_map(double x, double y, double z=0);
+  geometry_msgs::Point transform_from_map_to_odom(double x, double y, double z=0);
+  geometry_msgs::Point get_grid_offset();
   tf::TransformListener listener;
   tf::TransformListener listener_map;
+  tf::TransformListener listener_odom;
 
 private:
   const double COSTMAP_OFFSET_X = 50.0; //0.5 * global map (length/width)
   const double COSTMAP_OFFSET_Y = 50.0; //0.5 * global map (length/width)
-  std::map<std::tuple<float,float>, double> xy_dict;
-  double threshold = 0.4; // threshold to declare lethal obstacle in costmap
+  std::map<std::tuple<unsigned int,unsigned int>, std::tuple<double, double>> xy_dict_in_map_frame;
+  double map[1000][1000] = {0};
+  double threshold = 0.97; // threshold to declare lethal obstacle in costmap
 
   void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv_;
