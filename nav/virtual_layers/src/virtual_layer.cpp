@@ -46,6 +46,8 @@ void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
   unsigned int min_x, min_y, max_x, max_y;
   worldToMap(min_pose.x + COSTMAP_OFFSET_X, min_pose.y + COSTMAP_OFFSET_Y, min_x, min_y);
   worldToMap(max_pose.x + COSTMAP_OFFSET_X, max_pose.y + COSTMAP_OFFSET_Y, max_x, max_y);
+  //worldToMap(min_pose.x, min_pose.y, min_x, min_y);
+  //worldToMap(max_pose.x, max_pose.y, max_x, max_y);
   last_min_x = std::min(min_x, max_x);
   last_min_y = std::min(min_y, max_y);
   last_max_x = std::max(min_x, max_x);
@@ -119,12 +121,12 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
   for (int i = 0; i < cv_points.size(); i++) {
     lane_points.push_back(pointsToLine(cv_points[i], 0.1));
   }
-
+  /*
   for (unsigned int i=last_min_x; i<last_max_x; i++) {
     for (unsigned int j=last_min_y; j<last_min_y; j++) {
       map[i][j] = map[i][j]/2.0;
     }
-  }
+  }*/
 
   for (int i = 0; i < lane_points.size(); i++) {
     for (int j = 0; j < lane_points[i].size(); j++) {
@@ -137,6 +139,7 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
       unsigned int mx;
       unsigned int my;
       if(worldToMap(mark_x + COSTMAP_OFFSET_X, mark_y + COSTMAP_OFFSET_Y, mx, my)){
+      //if(worldToMap(mark_x, mark_y, mx, my)){
         map[mx][my] = map[mx][my] + ((1-map[mx][my])*0.5);
         map[mx][my] = map[mx][my] + ((1-map[mx][my])*0.5);
         if (xy_set.find({mx, my}) == xy_set.end()) {
@@ -152,6 +155,7 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
     int y = std::get<1>(*it);
     //std::cout << "HI " << x << " " << y << std::endl;
     if (map[x][y] > threshold) {
+      //std::cout << x << " " << y << std::endl;
       setCost(x, y, LETHAL_OBSTACLE);
     }
     double mark_x;
