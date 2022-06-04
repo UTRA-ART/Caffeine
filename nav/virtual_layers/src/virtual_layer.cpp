@@ -2,7 +2,6 @@
 #include <pluginlib/class_list_macros.h>
 #include <random>
 #include <iostream>
-#include <math.h>       /* atan */
 
 PLUGINLIB_EXPORT_CLASS(virtual_layers::VirtualLayer, costmap_2d::Layer)
 

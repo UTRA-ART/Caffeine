@@ -45,14 +45,6 @@ private:
 
   void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv_;
-  unsigned int last_min_x;
-  unsigned int last_max_x;
-  unsigned int last_min_y;
-  unsigned int last_max_y;
-  double robot_last_x;
-  double robot_last_y;
-  bool got_msg = true;
-
 
   ros::NodeHandle nh;
   ros::Subscriber cv_sub;
