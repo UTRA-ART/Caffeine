@@ -57,4 +57,10 @@
     <!-- Compute Odometry from Sensor Fusion -->
     <include file="$(find odom)/launch/odom.launch"/>
 
+    <!-- Record topics using Rosbag -->
+   <include file="$(find description)/launch/setup_rosbag.launch"
+       if="true" >
+       <arg name="output_folder" default="$(find description)/caffeine_bag/caffeine_bag" />
+   </include>
+
 </launch>
