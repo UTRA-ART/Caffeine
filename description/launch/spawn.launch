@@ -59,6 +59,8 @@
 
     <!-- Record topics using Rosbag -->
     <include file="$(find description)/launch/setup_rosbag.launch"
-        if="false"/>
+        if="false" >
+        <arg name="output_folder" default="$(find description)/caffeine_bag/caffeine_bag" />
+    </include>
     
 </launch>
