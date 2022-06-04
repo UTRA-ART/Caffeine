@@ -13,7 +13,7 @@ namespace virtual_layers
 {
 VirtualLayer::VirtualLayer() {
   listener_map.waitForTransform("/map", "/left_camera_link_optical", ros::Time(0), ros::Duration(60.0));
-  listener_baselink.waitForTransform("/map", "/base_link", ros::Time(0), ros::Duration(60.0));
+  listener_baselink.waitForTransform("/base_link", "/map", ros::Time(0), ros::Duration(60.0));
 }
 
 geometry_msgs::Point VirtualLayer::transform_from_camera_to_map(double x, double y, double z) {
@@ -33,12 +33,12 @@ geometry_msgs::Point VirtualLayer::transform_from_camera_to_map(double x, double
 
 geometry_msgs::Point VirtualLayer::transform_from_map_to_baselink(double x, double y, double z) {
   geometry_msgs::PoseStamped new_pose = geometry_msgs::PoseStamped();
-  new_pose.header.frame_id = "base_link";
+  new_pose.header.frame_id = "map";
   new_pose.pose.position.x = x;
   new_pose.pose.position.y = y;
   new_pose.pose.position.z = z;
   new_pose.pose.orientation.w = 1.0;
-  listener_map.transformPose("/map", new_pose, new_pose);
+  listener_baselink.transformPose("/base_link", new_pose, new_pose);
 
   geometry_msgs::Point new_point = geometry_msgs::Point();
   new_point.x = new_pose.pose.position.x;
@@ -177,7 +177,7 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
       //std::cout << "INSERT " <<  mx << " " << my << " " << mark_x << " " << mark_y << std::endl;
     }
   }
-  setCost(500, 500, LETHAL_OBSTACLE);
+  
   for (std::map<std::tuple<unsigned int,unsigned int>, std::tuple<double,double>>::iterator it = xy_dict_in_map_frame.begin(); it != xy_dict_in_map_frame.end(); it++) {
     
     unsigned int map_grid_x = std::get<0>(it->first);
@@ -194,7 +194,7 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
     worldToMap(baselink_pose.x + COSTMAP_OFFSET_X, baselink_pose.y + COSTMAP_OFFSET_Y, baselink_grid_x, baselink_grid_y);
     //std::cout << "HI: " << odom_point.x << " " << odom_point.y << " " << odom_grid_x << " " << odom_grid_y << " " << map[max_grid_x][max_grid_y] << " " << max_grid_x << " " << max_grid_y << std::endl;
     if (map[map_grid_x][map_grid_y] > threshold) {
-      //setCost(baselink_grid_x, baselink_grid_y, LETHAL_OBSTACLE);
+      setCost(baselink_grid_x, baselink_grid_y, LETHAL_OBSTACLE);
       //continue;
     }
     
