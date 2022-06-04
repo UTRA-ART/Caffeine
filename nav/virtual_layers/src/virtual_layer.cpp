@@ -12,33 +12,17 @@ using costmap_2d::NO_INFORMATION;
 namespace virtual_layers
 {
 VirtualLayer::VirtualLayer() {
-  listener_map.waitForTransform("/map", "/left_camera_link_optical", ros::Time(0), ros::Duration(60.0));
-  listener_baselink.waitForTransform("/odom", "/map", ros::Time(0), ros::Duration(60.0));
+  listener.waitForTransform("/odom", "/left_camera_link_optical", ros::Time(0), ros::Duration(60.0));
 }
 
-geometry_msgs::Point VirtualLayer::transform_from_camera_to_map(double x, double y, double z) {
+geometry_msgs::Point VirtualLayer::transform_from_camera_to_odom(double x, double y, double z) {
   geometry_msgs::PoseStamped new_pose = geometry_msgs::PoseStamped();
   new_pose.header.frame_id = "left_camera_link_optical";
   new_pose.pose.position.x = x;
   new_pose.pose.position.y = y;
   new_pose.pose.position.z = z;
   new_pose.pose.orientation.w = 1.0;
-  listener_map.transformPose("/map", new_pose, new_pose);
-
-  geometry_msgs::Point new_point = geometry_msgs::Point();
-  new_point.x = new_pose.pose.position.x;
-  new_point.y = new_pose.pose.position.y;
-  return new_point;
-}
-
-geometry_msgs::Point VirtualLayer::transform_from_map_to_baselink(double x, double y, double z) {
-  geometry_msgs::PoseStamped new_pose = geometry_msgs::PoseStamped();
-  new_pose.header.frame_id = "map";
-  new_pose.pose.position.x = x;
-  new_pose.pose.position.y = y;
-  new_pose.pose.position.z = z;
-  new_pose.pose.orientation.w = 1.0;
-  listener_baselink.transformPose("/odom", new_pose, new_pose);
+  listener.transformPose("/odom", new_pose, new_pose);
 
   geometry_msgs::Point new_point = geometry_msgs::Point();
   new_point.x = new_pose.pose.position.x;
@@ -57,13 +41,14 @@ void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
       //unsigned mx, my;
       //worldToMap(x+COSTMAP_OFFSET_X, y+COSTMAP_OFFSET_Y, mx, my);
       //setCost(mx, my, LETHAL_OBSTACLE);
-      lane.push_back(transform_from_camera_to_map(x, y, z));
+      lane.push_back(transform_from_camera_to_odom(x, y, z));
     }
     cv_points.push_back(lane);
   }
+  /*
   // TODO: Min/Max xy bounds broken prob
-  geometry_msgs::Point min_point = transform_from_camera_to_map(-0.37, -0.657, 3.0420);
-  geometry_msgs::Point max_point = transform_from_camera_to_map(0.366, 0.655, 1.3089);
+  geometry_msgs::Point min_point = transform_from_camera_to_odom(-3.0, -5.0, 3.0420);
+  geometry_msgs::Point max_point = transform_from_camera_to_odom(3.0, 5.0, 1.3089);
 
   //TODO: min max bounds we dont think work
   unsigned int min_x = static_cast<unsigned int>(10*(min_point.x + COSTMAP_OFFSET_X));
@@ -76,6 +61,7 @@ void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
   last_min_y = std::min(min_y, max_y);
   last_max_x = std::max(min_x, max_x);
   last_max_y = std::max(min_y, max_y);
+  */
   //std::cout << last_min_x << " " << last_max_x << " " << last_min_y << " " << last_max_y << std::endl;
   
 }//callback function
@@ -123,12 +109,10 @@ std::vector<std::vector<double>> pointsToLine(std::vector<geometry_msgs::Point> 
     double y2 = points[j+1].y;
     double dis = sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
     double alpha = t / dis;
-    //std::cout << x1 << " " << x2 << " " << y1 << " " << y2 << " " << alpha << " " << dis << std::endl;
     for (double k = alpha; k <= 1; k += alpha){
       double x_point = x1 + k * (x2 - x1);
       double y_point = y1 + k * (y2 - y1);
       coord.push_back({x_point, y_point});
-      //std::cout << "INSERT" << std::endl;
     }
   }
   
@@ -140,75 +124,72 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
 {
   if (!enabled_)
     return;
-
   std::vector<std::vector<std::vector<double>>> lane_points;
 
   for (int i = 0; i < cv_points.size(); i++) {
     lane_points.push_back(pointsToLine(cv_points[i], 0.1));
   }
-  
-  for (unsigned int i=last_min_x; i<last_max_x; i++) {
-    for (unsigned int j=last_min_y; j<last_min_y; j++) {
+  // Get trapezoid (camera's field of view in odom frame) to decay;
+  double min_x_meters = 1;
+  double max_x_meters = 3.35 + min_x_meters;
+  double min_y_meters = -2.375;
+  double max_y_meters = 2.375;
+
+  double odom_min_x = robot_x + (cos(robot_yaw)*min_x_meters);
+  double odom_max_x = robot_x + (cos(robot_yaw)*max_x_meters);
+  double odom_min_y = robot_y + (sin(robot_yaw)*min_y_meters);
+  double odom_max_y = robot_y + (sin(robot_yaw)*max_y_meters);
+
+  unsigned int decay_bound_x_min, decay_bound_y_min;
+  unsigned int decay_bound_x_max, decay_bound_y_max;
+
+  worldToMap(odom_min_x+COSTMAP_OFFSET_X, odom_min_y+COSTMAP_OFFSET_Y, decay_bound_x_min, decay_bound_y_min);
+  worldToMap(odom_max_x+COSTMAP_OFFSET_X, odom_max_y+COSTMAP_OFFSET_Y, decay_bound_x_max, decay_bound_y_max);
+
+  for (unsigned int i=decay_bound_x_min; i<decay_bound_x_max; i++) {
+    for (unsigned int j=decay_bound_y_min; j<decay_bound_y_max; j++) {
+      
       map[i][j] = map[i][j]/2.0;
     }
   }
 
   for (int i = 0; i < lane_points.size(); i++) {
     for (int j = 0; j < lane_points[i].size(); j++) {
-      //double magnitude = sqrt(pow(lane_points[i][j][0],2) + pow(lane_points[i][j][1],2));
-      // To account for rotation (depends on what frame CV data is in)
-      //double mark_x = magnitude*cos(robot_yaw);// + robot_x; 
-      //double mark_y = magnitude*sin(robot_yaw);// + robot_y;
-      double mark_x = lane_points[i][j][0];
-      double mark_y = lane_points[i][j][1];
-      unsigned mx, my;
-      //worldToMap(mark_x+COSTMAP_OFFSET_X, mark_y+COSTMAP_OFFSET_Y, mx, my);
-      //setCost(mx, my, LETHAL_OBSTACLE);
-      //std::cout << "baselink: " << mark_x << " " << mark_y <<  " " << atan(mark_y/mark_x) * 180 / 3.14159265 << std::endl;
-      //geometry_msgs::PoseStamped map_pose = transform_from_baselink_to_map(mark_x, mark_y, 0, robot_yaw); // map frame xy meters
-      //std::cout << "map: " << map_point.x << " " << map_point.y <<  " " << atan(map_point.y/map_point.x) * 180 / 3.14159265 << std::endl;
-      //std::cout << "baselink-map: " << (atan(mark_y/mark_x) * 180 / 3.14159265) - (atan(map_point.y/map_point.x) * 180 / 3.14159265) << " | robot: " << robot_yaw  << std::endl;
-      //std::cout << robot_x << " " << robot_y << " " << robot_yaw << std::endl;
-      // map frame xy grid
-      //unsigned int mx, my;
-      //worldToMap(map_pose.pose.position.x + COSTMAP_OFFSET_X, map_pose.pose.position.y + COSTMAP_OFFSET_Y, mx, my); 
-      mx = static_cast<unsigned int>(10*(mark_x + COSTMAP_OFFSET_X));
-      my = static_cast<unsigned int>(10*(mark_y + COSTMAP_OFFSET_Y));
-      map[mx][my] = map[mx][my] + ((1-map[mx][my])*0.5);
-      map[mx][my] = map[mx][my] + ((1-map[mx][my])*0.5);
-      //std::cout << mx << " " << my << " " << map_point.x << " " << map_point.y << std::endl;
-      if (xy_dict_in_map_frame.find({mx, my}) == xy_dict_in_map_frame.end()) {
-        xy_dict_in_map_frame.insert({{mx, my}, {mark_x, mark_y}});
+      double map_world_x = lane_points[i][j][0];
+      double map_world_y = lane_points[i][j][1];
+      //unsigned int map_grid_x = static_cast<unsigned int>(10*(map_world_x + COSTMAP_OFFSET_X));
+      //unsigned int map_grid_y = static_cast<unsigned int>(10*(map_world_y + COSTMAP_OFFSET_Y));
+      unsigned int map_grid_x, map_grid_y;
+      worldToMap(map_world_x+COSTMAP_OFFSET_X, map_world_y+COSTMAP_OFFSET_Y, map_grid_x, map_grid_y);
+      map[map_grid_x][map_grid_y] = map[map_grid_x][map_grid_y] + ((1-map[map_grid_x][map_grid_y])*0.5);
+      map[map_grid_x][map_grid_y] = map[map_grid_x][map_grid_y] + ((1-map[map_grid_x][map_grid_y])*0.5);
+      if (xy_dict_in_map_frame.find({map_grid_x, map_grid_y}) == xy_dict_in_map_frame.end()) {
+        xy_dict_in_map_frame.insert({{map_grid_x, map_grid_y}, {map_world_x, map_world_y}});
       }
-      //std::cout << "INSERT " <<  mx << " " << my << " " << mark_x << " " << mark_y << std::endl;
     }
   }
 
-  setCost(500, 500, LETHAL_OBSTACLE);
-  setCost(500, 510, LETHAL_OBSTACLE);
   for (std::map<std::tuple<unsigned int,unsigned int>, std::tuple<double,double>>::iterator it = xy_dict_in_map_frame.begin(); it != xy_dict_in_map_frame.end(); it++) {
-    
     unsigned int map_grid_x = std::get<0>(it->first);
     unsigned int map_grid_y = std::get<1>(it->first);
-    double map_world_x = std::get<0>(it->second) - robot_x;
-    double map_world_y = std::get<1>(it->second) - robot_y;
-    //geometry_msgs::Point baselink_point = transform_from_map_to_baselink(map_world_x, map_world_y, 0);
-    //double magnitude = sqrt(pow(baselink_point.x,2) + pow(baselink_point.y,2));
-    //double theta = atan(baselink_point.y / baselink_point.x);
-    //baselink_point.x = magnitude*cos(-robot_yaw) + robot_x;
-    //baselink_point.y = magnitude*sin(-robot_yaw) + robot_y;
-    //std::cout << "HI: " << odom_point.x << " " << odom_point.y << " " << odom_grid_x << " " << odom_grid_y << " " << map[max_grid_x][max_grid_y] << " " << max_grid_x << " " << max_grid_y << std::endl;
+
+    double costmap_world_x = std::get<0>(it->second) - robot_x;
+    double costmap_world_y = std::get<1>(it->second) - robot_y;
+    unsigned int grid_x = static_cast<unsigned int>(10*(costmap_world_x + COSTMAP_OFFSET_X));
+    unsigned int grid_y = static_cast<unsigned int>(10*(costmap_world_y + COSTMAP_OFFSET_Y));
+    //std::cout << robot_x << " " << robot_y << " " << robot_yaw * 180.0 / 3.14159 << std::endl;
     if (map[map_grid_x][map_grid_y] > threshold) {
-      unsigned int grid_x = static_cast<unsigned int>(10*(map_world_x + COSTMAP_OFFSET_X));
-      unsigned int grid_y = static_cast<unsigned int>(10*(map_world_y + COSTMAP_OFFSET_Y));
+      //unsigned int costmap_grid_x = static_cast<unsigned int>(10*(costmap_world_x + COSTMAP_OFFSET_X));
+      //unsigned int costmap_grid_y = static_cast<unsigned int>(10*(costmap_world_y+ COSTMAP_OFFSET_Y));
       setCost(grid_x, grid_y, LETHAL_OBSTACLE);
       //continue;
+      //int index = getIndex(map_grid_x, map_grid_y);
+      //costmap_[index] = LETHAL_OBSTACLE;
     }
-    
-    *min_x = std::min(*min_x, map_world_x);
-    *min_y = std::min(*min_y, map_world_y);
-    *max_x = std::max(*max_x, map_world_x);
-    *max_y = std::max(*max_y, map_world_y);
+    *min_x = std::min(*min_x, costmap_world_x);
+    *min_y = std::min(*min_y, costmap_world_y);
+    *max_x = std::max(*max_x, costmap_world_x);
+    *max_y = std::max(*max_y, costmap_world_y);
   }
 }
 
@@ -227,31 +208,8 @@ void VirtualLayer::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, in
       master_grid.setCost(i, j, costmap_[index]); 
     }
   }
-  /*
 
-  for (std::map<std::tuple<unsigned int,unsigned int>, std::tuple<double,double>>::iterator it = xy_dict_in_map_frame.begin(); it != xy_dict_in_map_frame.end(); it++) {
-    
-    unsigned int map_grid_x = std::get<0>(it->first);
-    unsigned int map_grid_y = std::get<1>(it->first);
-    double map_world_x = std::get<0>(it->second);
-    double map_world_y = std::get<1>(it->second);
-    geometry_msgs::Point baselink_pose = transform_from_map_to_baselink(map_world_x, map_world_y, 0);
-    //double magnitude = sqrt(pow(baselink_pose.pose.position.x,2) + pow(baselink_pose.pose.position.y,2));
-    //double theta = atan(baselink_point.y / baselink_point.x);
-    //baselink_point.x = magnitude*cos(map_world_yaw);
-    //baselink_point.y = magnitude*sin(map_world_yaw);
-    unsigned int baselink_grid_x, baselink_grid_y;
-    
-    worldToMap(baselink_pose.x + COSTMAP_OFFSET_X, baselink_pose.y + COSTMAP_OFFSET_Y, baselink_grid_x, baselink_grid_y);
-    //std::cout << "HI: " << odom_point.x << " " << odom_point.y << " " << odom_grid_x << " " << odom_grid_y << " " << map[max_grid_x][max_grid_y] << " " << max_grid_x << " " << max_grid_y << std::endl;
-    if (map_grid_x < max_i && map_grid_x >= min_i && map_grid_y < max_j && map_grid_y >= min_j) {
-      if (map[map_grid_x][map_grid_y] > threshold) {
-        master_grid.setCost(baselink_grid_x, baselink_grid_y, LETHAL_OBSTACLE);
-        continue;
-      }
-    }
-  }
-  //master_grid.setCost(500,530,LETHAL_OBSTACLE);
-  */
+  resetMap(min_i, min_j, max_i, max_j);
+  //xy_dict_in_map_frame.clear();
 }
 }  // namespace virtual_layers
