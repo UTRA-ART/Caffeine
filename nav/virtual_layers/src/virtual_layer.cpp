@@ -12,7 +12,7 @@ using costmap_2d::NO_INFORMATION;
 namespace virtual_layers
 {
 VirtualLayer::VirtualLayer() {
-  listener.waitForTransform("/odom", "/left_camera_link_optical", ros::Time(0), ros::Duration(60.0));
+  listener.waitForTransform("/odom", "/zed_left_camera_optical_frame", ros::Time(0), ros::Duration(60.0));
 }
 
 geometry_msgs::Point VirtualLayer::transform_from_camera_to_odom(double x, double y, double z) {
@@ -38,31 +38,10 @@ void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
       double x = msg->lists[i].elements[j].x;
       double y = msg->lists[i].elements[j].y;
       double z = msg->lists[i].elements[j].z;
-      //unsigned mx, my;
-      //worldToMap(x+COSTMAP_OFFSET_X, y+COSTMAP_OFFSET_Y, mx, my);
-      //setCost(mx, my, LETHAL_OBSTACLE);
       lane.push_back(transform_from_camera_to_odom(x, y, z));
     }
     cv_points.push_back(lane);
   }
-  /*
-  // TODO: Min/Max xy bounds broken prob
-  geometry_msgs::Point min_point = transform_from_camera_to_odom(-3.0, -5.0, 3.0420);
-  geometry_msgs::Point max_point = transform_from_camera_to_odom(3.0, 5.0, 1.3089);
-
-  //TODO: min max bounds we dont think work
-  unsigned int min_x = static_cast<unsigned int>(10*(min_point.x + COSTMAP_OFFSET_X));
-  unsigned int min_y = static_cast<unsigned int>(10*(min_point.y + COSTMAP_OFFSET_Y));
-  unsigned int max_x = static_cast<unsigned int>(10*(max_point.x + COSTMAP_OFFSET_X));
-  unsigned int max_y = static_cast<unsigned int>(10*(max_point.y + COSTMAP_OFFSET_Y));
-  //worldToMap(min_pose.x, min_pose.y, min_x, min_y);
-  //worldToMap(max_pose.x, max_pose.y, max_x, max_y);
-  last_min_x = std::min(min_x, max_x);
-  last_min_y = std::min(min_y, max_y);
-  last_max_x = std::max(min_x, max_x);
-  last_max_y = std::max(min_y, max_y);
-  */
-  //std::cout << last_min_x << " " << last_max_x << " " << last_min_y << " " << last_max_y << std::endl;
   
 }//callback function
 
@@ -157,12 +136,12 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
     for (int j = 0; j < lane_points[i].size(); j++) {
       double map_world_x = lane_points[i][j][0];
       double map_world_y = lane_points[i][j][1];
-      //unsigned int map_grid_x = static_cast<unsigned int>(10*(map_world_x + COSTMAP_OFFSET_X));
-      //unsigned int map_grid_y = static_cast<unsigned int>(10*(map_world_y + COSTMAP_OFFSET_Y));
+
       unsigned int map_grid_x, map_grid_y;
       worldToMap(map_world_x+COSTMAP_OFFSET_X, map_world_y+COSTMAP_OFFSET_Y, map_grid_x, map_grid_y);
       map[map_grid_x][map_grid_y] = map[map_grid_x][map_grid_y] + ((1-map[map_grid_x][map_grid_y])*0.5);
       map[map_grid_x][map_grid_y] = map[map_grid_x][map_grid_y] + ((1-map[map_grid_x][map_grid_y])*0.5);
+
       if (xy_dict_in_map_frame.find({map_grid_x, map_grid_y}) == xy_dict_in_map_frame.end()) {
         xy_dict_in_map_frame.insert({{map_grid_x, map_grid_y}, {map_world_x, map_world_y}});
       }
@@ -177,14 +156,9 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
     double costmap_world_y = std::get<1>(it->second) - robot_y;
     unsigned int grid_x = static_cast<unsigned int>(10*(costmap_world_x + COSTMAP_OFFSET_X));
     unsigned int grid_y = static_cast<unsigned int>(10*(costmap_world_y + COSTMAP_OFFSET_Y));
-    //std::cout << robot_x << " " << robot_y << " " << robot_yaw * 180.0 / 3.14159 << std::endl;
+    
     if (map[map_grid_x][map_grid_y] > threshold) {
-      //unsigned int costmap_grid_x = static_cast<unsigned int>(10*(costmap_world_x + COSTMAP_OFFSET_X));
-      //unsigned int costmap_grid_y = static_cast<unsigned int>(10*(costmap_world_y+ COSTMAP_OFFSET_Y));
       setCost(grid_x, grid_y, LETHAL_OBSTACLE);
-      //continue;
-      //int index = getIndex(map_grid_x, map_grid_y);
-      //costmap_[index] = LETHAL_OBSTACLE;
     }
     *min_x = std::min(*min_x, costmap_world_x);
     *min_y = std::min(*min_y, costmap_world_y);
@@ -210,6 +184,5 @@ void VirtualLayer::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, in
   }
 
   resetMap(min_i, min_j, max_i, max_j);
-  //xy_dict_in_map_frame.clear();
 }
 }  // namespace virtual_layers
