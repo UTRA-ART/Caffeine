@@ -51,6 +51,7 @@ private:
   unsigned int last_max_x;
   unsigned int last_min_y;
   unsigned int last_max_y;
+  bool got_msg = true;
 
 
   ros::NodeHandle nh;

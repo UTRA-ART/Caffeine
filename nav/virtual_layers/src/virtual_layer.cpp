@@ -13,7 +13,7 @@ namespace virtual_layers
 {
 VirtualLayer::VirtualLayer() {
   listener_map.waitForTransform("/map", "/left_camera_link_optical", ros::Time(0), ros::Duration(60.0));
-  listener_baselink.waitForTransform("/base_link", "/map", ros::Time(0), ros::Duration(60.0));
+  listener_baselink.waitForTransform("/odom", "/map", ros::Time(0), ros::Duration(60.0));
 }
 
 geometry_msgs::Point VirtualLayer::transform_from_camera_to_map(double x, double y, double z) {
@@ -38,7 +38,7 @@ geometry_msgs::Point VirtualLayer::transform_from_map_to_baselink(double x, doub
   new_pose.pose.position.y = y;
   new_pose.pose.position.z = z;
   new_pose.pose.orientation.w = 1.0;
-  listener_baselink.transformPose("/base_link", new_pose, new_pose);
+  listener_baselink.transformPose("/odom", new_pose, new_pose);
 
   geometry_msgs::Point new_point = geometry_msgs::Point();
   new_point.x = new_pose.pose.position.x;
@@ -61,11 +61,15 @@ void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
     }
     cv_points.push_back(lane);
   }
+  // TODO: Min/Max xy bounds broken prob
   geometry_msgs::Point min_point = transform_from_camera_to_map(-0.37, -0.657, 3.0420);
   geometry_msgs::Point max_point = transform_from_camera_to_map(0.366, 0.655, 1.3089);
-  unsigned int min_x, min_y, max_x, max_y;
-  worldToMap(min_point.x + COSTMAP_OFFSET_X, min_point.y + COSTMAP_OFFSET_Y, min_x, min_y);
-  worldToMap(max_point.x + COSTMAP_OFFSET_X, max_point.y + COSTMAP_OFFSET_Y, max_x, max_y);
+
+  //TODO: min max bounds we dont think work
+  unsigned int min_x = static_cast<unsigned int>(10*(min_point.x + COSTMAP_OFFSET_X));
+  unsigned int min_y = static_cast<unsigned int>(10*(min_point.y + COSTMAP_OFFSET_Y));
+  unsigned int max_x = static_cast<unsigned int>(10*(max_point.x + COSTMAP_OFFSET_X));
+  unsigned int max_y = static_cast<unsigned int>(10*(max_point.y + COSTMAP_OFFSET_Y));
   //worldToMap(min_pose.x, min_pose.y, min_x, min_y);
   //worldToMap(max_pose.x, max_pose.y, max_x, max_y);
   last_min_x = std::min(min_x, max_x);
@@ -73,6 +77,7 @@ void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
   last_max_x = std::max(min_x, max_x);
   last_max_y = std::max(min_y, max_y);
   //std::cout << last_min_x << " " << last_max_x << " " << last_min_y << " " << last_max_y << std::endl;
+  
 }//callback function
 
 void VirtualLayer::onInitialize()
@@ -142,11 +147,11 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
     lane_points.push_back(pointsToLine(cv_points[i], 0.1));
   }
   
-  /*for (unsigned int i=last_min_x; i<last_max_x; i++) {
+  for (unsigned int i=last_min_x; i<last_max_x; i++) {
     for (unsigned int j=last_min_y; j<last_min_y; j++) {
       map[i][j] = map[i][j]/2.0;
     }
-  }*/
+  }
 
   for (int i = 0; i < lane_points.size(); i++) {
     for (int j = 0; j < lane_points[i].size(); j++) {
@@ -167,7 +172,8 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
       // map frame xy grid
       //unsigned int mx, my;
       //worldToMap(map_pose.pose.position.x + COSTMAP_OFFSET_X, map_pose.pose.position.y + COSTMAP_OFFSET_Y, mx, my); 
-      worldToMap(mark_x + COSTMAP_OFFSET_X, mark_y + COSTMAP_OFFSET_Y, mx, my);
+      mx = static_cast<unsigned int>(10*(mark_x + COSTMAP_OFFSET_X));
+      my = static_cast<unsigned int>(10*(mark_y + COSTMAP_OFFSET_Y));
       map[mx][my] = map[mx][my] + ((1-map[mx][my])*0.5);
       map[mx][my] = map[mx][my] + ((1-map[mx][my])*0.5);
       //std::cout << mx << " " << my << " " << map_point.x << " " << map_point.y << std::endl;
@@ -177,7 +183,52 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
       //std::cout << "INSERT " <<  mx << " " << my << " " << mark_x << " " << mark_y << std::endl;
     }
   }
-  
+
+  setCost(500, 500, LETHAL_OBSTACLE);
+  setCost(500, 510, LETHAL_OBSTACLE);
+  for (std::map<std::tuple<unsigned int,unsigned int>, std::tuple<double,double>>::iterator it = xy_dict_in_map_frame.begin(); it != xy_dict_in_map_frame.end(); it++) {
+    
+    unsigned int map_grid_x = std::get<0>(it->first);
+    unsigned int map_grid_y = std::get<1>(it->first);
+    double map_world_x = std::get<0>(it->second) - robot_x;
+    double map_world_y = std::get<1>(it->second) - robot_y;
+    //geometry_msgs::Point baselink_point = transform_from_map_to_baselink(map_world_x, map_world_y, 0);
+    //double magnitude = sqrt(pow(baselink_point.x,2) + pow(baselink_point.y,2));
+    //double theta = atan(baselink_point.y / baselink_point.x);
+    //baselink_point.x = magnitude*cos(-robot_yaw) + robot_x;
+    //baselink_point.y = magnitude*sin(-robot_yaw) + robot_y;
+    //std::cout << "HI: " << odom_point.x << " " << odom_point.y << " " << odom_grid_x << " " << odom_grid_y << " " << map[max_grid_x][max_grid_y] << " " << max_grid_x << " " << max_grid_y << std::endl;
+    if (map[map_grid_x][map_grid_y] > threshold) {
+      unsigned int grid_x = static_cast<unsigned int>(10*(map_world_x + COSTMAP_OFFSET_X));
+      unsigned int grid_y = static_cast<unsigned int>(10*(map_world_y + COSTMAP_OFFSET_Y));
+      setCost(grid_x, grid_y, LETHAL_OBSTACLE);
+      //continue;
+    }
+    
+    *min_x = std::min(*min_x, map_world_x);
+    *min_y = std::min(*min_y, map_world_y);
+    *max_x = std::max(*max_x, map_world_x);
+    *max_y = std::max(*max_y, map_world_y);
+  }
+}
+
+void VirtualLayer::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, int min_j, int max_i,
+                                          int max_j)
+{
+  if (!enabled_)
+    return;
+  for (int j = min_j; j < max_j; j++)
+  {
+    for (int i = min_i; i < max_i; i++)
+    {
+      int index = getIndex(i, j);
+      if (costmap_[index] == NO_INFORMATION)
+        continue;
+      master_grid.setCost(i, j, costmap_[index]); 
+    }
+  }
+  /*
+
   for (std::map<std::tuple<unsigned int,unsigned int>, std::tuple<double,double>>::iterator it = xy_dict_in_map_frame.begin(); it != xy_dict_in_map_frame.end(); it++) {
     
     unsigned int map_grid_x = std::get<0>(it->first);
@@ -193,33 +244,14 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
     
     worldToMap(baselink_pose.x + COSTMAP_OFFSET_X, baselink_pose.y + COSTMAP_OFFSET_Y, baselink_grid_x, baselink_grid_y);
     //std::cout << "HI: " << odom_point.x << " " << odom_point.y << " " << odom_grid_x << " " << odom_grid_y << " " << map[max_grid_x][max_grid_y] << " " << max_grid_x << " " << max_grid_y << std::endl;
-    if (map[map_grid_x][map_grid_y] > threshold) {
-      setCost(baselink_grid_x, baselink_grid_y, LETHAL_OBSTACLE);
-      //continue;
-    }
-    
-    *min_x = std::min(*min_x, baselink_pose.x);
-    *min_y = std::min(*min_y, baselink_pose.y);
-    *max_x = std::max(*max_x, baselink_pose.x);
-    *max_y = std::max(*max_y, baselink_pose.y);
-  }
-}
-
-void VirtualLayer::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, int min_j, int max_i,
-                                          int max_j)
-{
-  if (!enabled_)
-    return;
-
-  for (int j = min_j; j < max_j; j++)
-  {
-    for (int i = min_i; i < max_i; i++)
-    {
-      int index = getIndex(i, j);
-      if (costmap_[index] == NO_INFORMATION)
+    if (map_grid_x < max_i && map_grid_x >= min_i && map_grid_y < max_j && map_grid_y >= min_j) {
+      if (map[map_grid_x][map_grid_y] > threshold) {
+        master_grid.setCost(baselink_grid_x, baselink_grid_y, LETHAL_OBSTACLE);
         continue;
-      master_grid.setCost(i, j, costmap_[index]); 
+      }
     }
   }
+  //master_grid.setCost(500,530,LETHAL_OBSTACLE);
+  */
 }
 }  // namespace virtual_layers
