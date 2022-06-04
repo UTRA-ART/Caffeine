@@ -1,0 +1,5 @@
+<launch>
+    <!-- Load our custom RViz configuration -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find description)/rviz/igvc.rviz"/>
+</launch>
+

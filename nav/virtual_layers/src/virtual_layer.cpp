@@ -11,7 +11,7 @@ using costmap_2d::NO_INFORMATION;
 namespace virtual_layers
 {
 VirtualLayer::VirtualLayer() {
-  listener.waitForTransform("/odom", "/left_camera_link_optical", ros::Time(0), ros::Duration(60.0));
+  listener.waitForTransform("/odom", "/zed_left_camera_optical_frame", ros::Time(0), ros::Duration(60.0));
 }
 
 void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
@@ -22,7 +22,7 @@ void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
     std::vector<geometry_msgs::Point> lane;
     for (int j=0; j< msg->lists[i].elements.size(); j++) {
       geometry_msgs::PoseStamped new_pose = geometry_msgs::PoseStamped();
-      new_pose.header.frame_id = "left_camera_link_optical";
+      new_pose.header.frame_id = "zed_left_camera_optical_frame";
       new_pose.pose.position.x = msg->lists[i].elements[j].x;
       new_pose.pose.position.y = msg->lists[i].elements[j].y;
       new_pose.pose.position.z = msg->lists[i].elements[j].z;

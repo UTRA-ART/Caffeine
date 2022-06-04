@@ -9,6 +9,7 @@ import rospy
 
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Bool
+from std_srvs.srv import Empty
 
 import sys, select, termios, tty
 
@@ -155,12 +156,6 @@ if __name__=="__main__":
     th = 1
     status = 0
     top_vel = 2.2352 # m/s
-    factor = 1 /.447 * 5280 * 12 / 10 / 3.1415 / 60 * 16
-    b = -10.1124
-    m = 640.449
-
-    min_turn = -2*top_vel/0.445
-    max_turn = 2*top_vel/0.445
 
     try:
         pub_thread.wait_for_subscribers()
@@ -170,20 +165,33 @@ if __name__=="__main__":
         print(vels(speed,turn))
         while(1):
             key = getKey(key_timeout)
-            if key != 'p' and key != '':
+            if key != 'p' and key != '' and autonomous_mode:
+                rospy.loginfo("Autonomous mode set to false. Teleop control is active.")
                 autonomous_mode = False
             elif key == 'p':
                 autonomous_mode = True
+                rospy.wait_for_service('/move_base/clear_costmaps')
+                clear_costmaps = rospy.ServiceProxy('/move_base/clear_costmaps', Empty)
+                clear_costmaps()
+
+                rospy.wait_for_service('/move_base/clear_unknown_space')
+                clear_unknown_space = rospy.ServiceProxy('/move_base/clear_unknown_space', Empty)
+                clear_unknown_space()
+
+                rospy.loginfo("Autonomous mode set to true.")
+                rospy.loginfo("Costmap cleared.")
+                
             mode_pub.publish(not autonomous_mode)
 
             if key in speedBindings.keys(): 
                 if speedBindings[key][1] != 0: # case: changing angular vel
                     turn = turn + speedBindings[key][1] # TODO: Write angular limits
                 else: # case: changing linear vel 
-                    if turn < 0:
-                        speed = min(max(speed + speedBindings[key][0], (-2*top_vel - turn*0.89)/2), (2*top_vel + turn*0.89)/2) # mph 
-                    else:
-                        speed = min(max(speed + speedBindings[key][0], (-2*top_vel + turn*0.89)/2), (2*top_vel - turn*0.89)/2) # mph 
+                    speed = speed + speedBindings[key][0]
+                    # if turn < 0:
+                    #     speed = min(max(speed + speedBindings[key][0], (-2*top_vel - turn*0.89)/2), (2*top_vel + turn*0.89)/2) # mph 
+                    # else:
+                    #     speed = min(max(speed + speedBindings[key][0], (-2*top_vel + turn*0.89)/2), (2*top_vel - turn*0.89)/2) # mph 
 
                 print(vels(speed,turn))
                 if (status == 14):

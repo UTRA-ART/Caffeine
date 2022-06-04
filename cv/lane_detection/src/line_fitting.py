@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 from sklearn.cluster import DBSCAN
 from scipy import interpolate
-import matplotlib.pyplot as plt
 import time
 import pandas as pd
 
