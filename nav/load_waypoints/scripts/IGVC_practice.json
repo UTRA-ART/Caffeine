@@ -1,4 +1,6 @@
 {
+    "start_direction": "north",
+    "laps": 2,
     "waypoints" : [
         {
             "id" : 0,
