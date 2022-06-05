@@ -168,30 +168,39 @@ if __name__=="__main__":
             if key != 'p' and key != '' and autonomous_mode:
                 rospy.loginfo("Autonomous mode set to false. Teleop control is active.")
                 autonomous_mode = False
+                mode_pub.publish(not autonomous_mode)
             elif key == 'p':
                 autonomous_mode = True
-                rospy.wait_for_service('/move_base/clear_costmaps')
-                clear_costmaps = rospy.ServiceProxy('/move_base/clear_costmaps', Empty)
-                clear_costmaps()
-
-                rospy.wait_for_service('/move_base/clear_unknown_space')
-                clear_unknown_space = rospy.ServiceProxy('/move_base/clear_unknown_space', Empty)
-                clear_unknown_space()
+                mode_pub.publish(not autonomous_mode)
 
                 rospy.loginfo("Autonomous mode set to true.")
-                rospy.loginfo("Costmap cleared.")
-                
-            mode_pub.publish(not autonomous_mode)
+                try:
+                    rospy.wait_for_service('/move_base/clear_costmaps', 2)
+                    clear_costmaps = rospy.ServiceProxy('/move_base/clear_costmaps', Empty)
+                    clear_costmaps()
+                    rospy.loginfo("Cost map cleared.")
+                except:
+                    rospy.loginfo("Unable to clear cost map.")
+                try:
+                    rospy.wait_for_service('/move_base/clear_unknown_space', 2)
+                    clear_unknown_space = rospy.ServiceProxy('/move_base/clear_unknown_space', Empty)
+                    clear_unknown_space()
+                    rospy.loginfo("Unknown space cleared.")
+                except:
+                    rospy.loginfo("Unable to clear unknown space.")
+                rospy.loginfo("Autonomous mode set to true.")
+            else:
+                mode_pub.publish(not autonomous_mode)
 
             if key in speedBindings.keys(): 
                 if speedBindings[key][1] != 0: # case: changing angular vel
                     turn = turn + speedBindings[key][1] # TODO: Write angular limits
                 else: # case: changing linear vel 
-                    speed = speed + speedBindings[key][0]
-                    # if turn < 0:
-                    #     speed = min(max(speed + speedBindings[key][0], (-2*top_vel - turn*0.89)/2), (2*top_vel + turn*0.89)/2) # mph 
-                    # else:
-                    #     speed = min(max(speed + speedBindings[key][0], (-2*top_vel + turn*0.89)/2), (2*top_vel - turn*0.89)/2) # mph 
+                    # speed = speed + speedBindings[key][0]
+                    if turn < 0:
+                        speed = min(max(speed + speedBindings[key][0], (-2*top_vel - turn*0.89)/2), (2*top_vel + turn*0.89)/2) # mph 
+                    else:
+                        speed = min(max(speed + speedBindings[key][0], (-2*top_vel + turn*0.89)/2), (2*top_vel - turn*0.89)/2) # mph 
 
                 print(vels(speed,turn))
                 if (status == 14):

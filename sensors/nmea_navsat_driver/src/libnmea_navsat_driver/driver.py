@@ -107,7 +107,7 @@ class RosNMEADriver(object):
             current_time = rospy.get_rostime()
         current_fix = NavSatFix()
         current_fix.header.stamp = current_time
-        current_fix.header.frame_id = frame_id
+        current_fix.header.frame_id = "gps_link" #frame_id
         if not self.use_GNSS_time:
             current_time_ref = TimeReference()
             current_time_ref.header.stamp = current_time

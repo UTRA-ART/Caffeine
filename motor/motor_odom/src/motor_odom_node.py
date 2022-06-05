@@ -13,6 +13,8 @@ class MotorOdom:
         self.y = 0.0
         self.th = 0.0
 
+        self.WHEELBASE = 0.89
+
         rospy.init_node('odometry_publisher')
         
         self.last_time = rospy.Time.now()
@@ -21,8 +23,9 @@ class MotorOdom:
         
         self.odom_pub = rospy.Publisher("odom", Odometry, queue_size=1)
         self.odom_broadcaster = tf.TransformBroadcaster()
-        rospy.Subscriber("/right_wheel/feedback", Float64, self.update_right_speed, queue_size=1)
-        rospy.Subscriber("/left_wheel/feedback", Float64, self.update_left_speed, queue_size=1)
+        # rospy.Subscriber("/right_wheel/command", Float64, self.update_right_speed, queue_size=1)
+        # rospy.Subscriber("/left_wheel/command", Float64, self.update_left_speed, queue_size=1)
+        rospy.Subscriber("/cmd_vel", Twist, self.update_speed, queue_size=1)
 
         self.R = 0
         self.L = 0
@@ -31,6 +34,13 @@ class MotorOdom:
         self.L = data.data
     def update_right_speed(self, data):
         self.R = data.data
+
+    def update_speed(self, msg):
+        v = msg.linear.x
+        w = msg.angular.z
+
+        self.R = v + ((self.WHEELBASE * w) / 2.0)
+        self.L = v - ((self.WHEELBASE * w) / 2.0)
 
     def run(self):
         while not rospy.is_shutdown():
@@ -52,13 +62,13 @@ class MotorOdom:
 
         odom_quat = tf.transformations.quaternion_from_euler(0, 0, self.th)
 
-        self.odom_broadcaster.sendTransform(
-            (self.x, self.y, 0.),
-            odom_quat,
-            self.current_time,
-            "base_link",
-            "odom"
-        )
+        # self.odom_broadcaster.sendTransform(
+        #     (self.x, self.y, 0.),
+        #     odom_quat,
+        #     self.current_time,
+        #     "base_link",
+        #     "odom"
+        # )
 
         odom = Odometry()
         odom.header.stamp = self.current_time

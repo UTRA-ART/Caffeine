@@ -24,8 +24,6 @@
     <!-- CV stack -->
     <include file="$(find cv)/launch/pipeline.launch"/>
 
-    <!-- Virtual layer -->
-
     <!-- Navigation stack -->
     <include file="$(find nav_stack)/launch/move_base.launch"/>
 </launch>

@@ -250,17 +250,22 @@ bool URGCWrapper::grabScan(const sensor_msgs::LaserScanPtr& msg)
 
   for (int i = 0; i < num_beams; i++)
   {
-    if (data_[(i) + 0] != 0)
-    {
-      msg->ranges[i] = static_cast<float>(data_[i]) / 1000.0;
+    if (data_[(i) + 0] != 0){ // TODO: Fix this mess of logic
+      if (data_[(i) + 0] != std::numeric_limits<float>::quiet_NaN())
+      {msg->ranges[i] = static_cast<float>(data_[i]) / 1000.0;
       if (use_intensity_)
       {
         msg->intensities[i] = intensity_[i];
-      }
+      }}
+      else
+    {
+      msg->ranges[i] = 3.9f;
+      continue;
+    }
     }
     else
     {
-      msg->ranges[i] = std::numeric_limits<float>::quiet_NaN();
+      msg->ranges[i] = 3.9f;
       continue;
     }
   }

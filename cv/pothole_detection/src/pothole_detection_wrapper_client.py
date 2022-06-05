@@ -17,15 +17,13 @@ class CVWrapperClient:
         self.pub = rospy.Publisher('cv/pothole_detections', FloatArray, queue_size=10)
         rospy.init_node('pothole_detection_wrapper_client')
         self.r = rospy.Rate(10) # 10hz  
-
         self.projection = camera_projection.CameraProjection()
 
     def run(self):
         while not rospy.is_shutdown():
-            lanes = self._fromRedis('pothole_detection')
-
-            lanes_msgs = []
-            for lane in lanes:
+            potholes = self._fromRedis('pothole_detection')
+            potholes_msgs = []
+            for lane in potholes:
                 project_points = self.projection(np.array(lane, dtype=np.int))
 
                 lane_msg = FloatList()
@@ -37,10 +35,10 @@ class CVWrapperClient:
                     pt_msg.z = pt[2]
                     pts_msg += [pt_msg]
                 lane_msg.elements = pts_msg
-                lanes_msgs += [lane_msg]
+                potholes_msgs += [lane_msg]
 
             msg = FloatArray()
-            msg.lists = lanes_msgs
+            msg.lists = potholes_msgs
             self.pub.publish(msg)
 
             self.r.sleep()
@@ -48,8 +46,8 @@ class CVWrapperClient:
     def _fromRedis(self, name):
         """Retrieve Numpy array from Redis key 'n'"""
         encoded = self.redis.get(name)
-        lanes = json.loads(encoded)
-        return lanes
+        potholes = json.loads(encoded)
+        return potholes
 
 if __name__ == '__main__':
     wrapper = CVWrapperClient()

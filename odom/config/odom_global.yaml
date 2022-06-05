@@ -39,12 +39,12 @@ odom1_relative: false
 
 ## IMU Sensor(s) ## 
 
-imu0: imu/data 
-imu0_config: [false, false, false, 
-              false, true , true ,
-              false, false, false,
-              false, true , true ,
-              true , true , false] # Acceleration can be on/off
+# imu0: imu/data 
+# imu0_config: [false, false, false, 
+#               false, true , true ,
+#               false, false, false,
+#               false, true , true ,
+#               true , true , false] # Acceleration can be on/off
               
 imu0_queue_size: 10
 imu0_differential: false

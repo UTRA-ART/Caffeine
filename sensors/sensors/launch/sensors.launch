@@ -1,5 +1,5 @@
 <launch>
+    <include file="$(find nmea_navsat_driver)/launch/nmea_serial_driver.launch"/>
     <include file="$(find urg_node)/launch/urg_lidar.launch"/>
     <include file="$(find phidgets_imu)/launch/imu.launch"/>
-    <include file="$(find nmea_navsat_driver)/launch/nmea_serial_driver.launch"/>
 </launch>

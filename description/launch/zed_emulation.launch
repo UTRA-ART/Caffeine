@@ -35,7 +35,7 @@
             <param name="frame_id"              type="string" value="base_link"/>
             <param name="odom_frame_id"         value="odom"/>
             <param name="approx_sync"           value="false"/>
-            <param name="queue_size"            value="5"/>
+            <param name="queue_size"            value="2"/>
             <param name="publish_tf"            value="false"/>
         </node>
 

@@ -28,7 +28,7 @@ class ZedWrapperServer:
         img = self.bridge.imgmsg_to_cv2(data, desired_encoding='passthrough')  
 
         if self.delay == 0: 
-            cv2.imwrite('/home/spencer/Documents/ART/zed_images/4/' + str(self.counter) + '.png', img)
+            cv2.imwrite('/media/art-jetson/SSD/caffeine/comp__data/' + str(self.counter) + '.png', img)
             self.delay = 5
             self.counter += 1
         else:

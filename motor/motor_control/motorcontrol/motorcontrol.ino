@@ -1,12 +1,8 @@
 #include <ros.h>
 #include <ArduinoHardware.h>
 
-
-#include <ros.h>
 #include <std_msgs/Float64.h>
 #include <std_msgs/Bool.h>
-#include <tf/transform_broadcaster.h>
-#include <nav_msgs/Odometry.h>
 
 #include <ros/time.h>
 
@@ -131,7 +127,6 @@ void loop(){
                 // Manual control (solid light) 
                 g_light_state = HIGH;
             }
-
         
             digitalWrite(LIGHT_PIN, g_light_state);
         } else {

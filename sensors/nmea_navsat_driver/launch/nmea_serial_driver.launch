@@ -4,7 +4,7 @@
 
   <arg name="port" default="/dev/ttyUSB0" />
   <arg name="baud" default="4800" />
-  <arg name="frame_id" default="gps" />
+  <arg name="frame_id" default="gps_link" />
   <arg name="use_GNSS_time" default="False" />
   <arg name="time_ref_source" default="gps" />
   <arg name="useRMC" default="False" />
@@ -16,6 +16,10 @@
     <param name="use_GNSS_time" value="$(arg use_GNSS_time)" />
     <param name="time_ref_source" value="$(arg time_ref_source)" />
     <param name="useRMC" value="$(arg useRMC)" />
+
+    <remap from="/fix" to="/gps/fix"/>
+    <remap from="/vel" to="/gps/fix_velocity"/>
+
   </node>
 
 </launch>
