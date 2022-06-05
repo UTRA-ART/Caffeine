@@ -1,5 +1,5 @@
-#ifndef VIRTUAL_LAYER_H_
-#define VIRTUAL_LAYER_H_
+#ifndef VIRTUAL_LAYER_LOCAL_H_
+#define VIRTUAL_LAYER_LOCAL_H_
 #include <ros/ros.h>
 #include <costmap_2d/layer.h>
 #include <costmap_2d/layered_costmap.h>
@@ -11,13 +11,13 @@
 #include <cv/FloatArray.h>
 #include <tf/transform_listener.h>
 
-namespace virtual_layers
+namespace virtual_layers_local
 {
 
-class VirtualLayer : public costmap_2d::Layer, public costmap_2d::Costmap2D
+class VirtualLayer_Local : public costmap_2d::Layer, public costmap_2d::Costmap2D
 {
 public:
-  VirtualLayer();
+  VirtualLayer_Local();
 
   virtual void onInitialize();
   virtual void updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x, double* min_y, double* max_x,
@@ -37,25 +37,24 @@ public:
   tf::TransformListener listener;
 
 private:
-  const double COSTMAP_OFFSET_X = 50.0; //0.5 * global map (length/width)
-  const double COSTMAP_OFFSET_Y = 50.0; //0.5 * global map (length/width)
-  std::map<std::tuple<unsigned int,unsigned int>, std::tuple<double, double>> xy_dict_in_map_frame;
-  double map[1000][1000] = {0};
-  double threshold = 0.4; // threshold to declare lethal obstacle in costmap
 
+  std::map<std::tuple<unsigned int,unsigned int>, std::tuple<double, double>> xy_dict_in_map_frame;
   void reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig> *dsrv_;
-  unsigned int last_min_x;
-  unsigned int last_max_x;
-  unsigned int last_min_y;
-  unsigned int last_max_y;
-  double robot_last_x;
-  double robot_last_y;
-  bool got_msg = true;
-
 
   ros::NodeHandle nh;
   ros::Subscriber cv_sub;
+
+  // Specific Parameters
+  const double COSTMAP_OFFSET_X = 8.0; //0.5 * global map (length/width)
+  const double COSTMAP_OFFSET_Y = 8.0; //0.5 * global map (length/width)
+  const double COSTMAP_OFFSET_X_FOR_MAP = 50.0; //0.5 * global map (length/width)
+  const double COSTMAP_OFFSET_Y_FOR_MAP = 50.0; //0.5 * global map (length/width)
+  double map[1000][1000] = {0};
+  double threshold = 0.4; // threshold to declare lethal obstacle in costmap
+  std::string target_frame = "/odom";
 };
+
+
 }
-#endif //  VIRTUAL_LAYER_H_
+#endif //  VIRTUAL_LAYER_LOCAL_H_

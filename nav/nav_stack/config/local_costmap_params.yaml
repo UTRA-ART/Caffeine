@@ -7,8 +7,8 @@ local_costmap:
   rolling_window: true
   always_send_full_costmap: false
   # TODO: Update size if needed
-  width: 8 # cost map size needs to be large enough to encompass the point cloud range
-  height: 8 # This size is arbitary for now so it may need to be adjusted
+  width: 16 # cost map size needs to be large enough to encompass the point cloud range
+  height: 16 # This size is arbitary for now so it may need to be adjusted
   resolution: 0.1
 
   obstacle_layer:
@@ -21,7 +21,7 @@ local_costmap:
       max_obstacle_height: 10.0,  # we still add lidar scans to costmap
       sensor_frame: base_laser,
       data_type: LaserScan,
-      topic: scan_modified,
+      topic: scan,
       marking: true,
       clearing: true, # true
       obstacle_range: 3.7,   # Decide how far we should see obstacles, should be less than raytrace range
@@ -47,5 +47,5 @@ local_costmap:
 
   plugins:
     - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}
-    #- {name: virtual_layer,       type: "virtual_layers::VirtualLayer"}
+    - {name: virtual_layer_local,       type: "virtual_layers_local::VirtualLayer_Local"}
     - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}

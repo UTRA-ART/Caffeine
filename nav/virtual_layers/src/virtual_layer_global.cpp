@@ -1,28 +1,28 @@
-#include <virtual_layers/virtual_layer.h>
+#include <virtual_layers/virtual_layer_global.h>
 #include <pluginlib/class_list_macros.h>
 #include <random>
 #include <iostream>
 #include <math.h>       /* atan */
 
-PLUGINLIB_EXPORT_CLASS(virtual_layers::VirtualLayer, costmap_2d::Layer)
+PLUGINLIB_EXPORT_CLASS(virtual_layers_global::VirtualLayer_Global, costmap_2d::Layer)
 
 using costmap_2d::LETHAL_OBSTACLE;
 using costmap_2d::NO_INFORMATION;
 
-namespace virtual_layers
+namespace virtual_layers_global
 {
-VirtualLayer::VirtualLayer() {
-  listener.waitForTransform("/odom", "/left_camera_link_optical", ros::Time(0), ros::Duration(60.0));
+VirtualLayer_Global::VirtualLayer_Global() {
+  listener.waitForTransform(target_frame, "/left_camera_link_optical", ros::Time(0), ros::Duration(60.0));
 }
 
-geometry_msgs::Point VirtualLayer::transform_from_camera_to_odom(double x, double y, double z) {
+geometry_msgs::Point VirtualLayer_Global::transform_from_camera_to_odom(double x, double y, double z) {
   geometry_msgs::PoseStamped new_pose = geometry_msgs::PoseStamped();
   new_pose.header.frame_id = "left_camera_link_optical";
   new_pose.pose.position.x = x;
   new_pose.pose.position.y = y;
   new_pose.pose.position.z = z;
   new_pose.pose.orientation.w = 1.0;
-  listener.transformPose("/odom", new_pose, new_pose);
+  listener.transformPose(target_frame, new_pose, new_pose);
 
   geometry_msgs::Point new_point = geometry_msgs::Point();
   new_point.x = new_pose.pose.position.x;
@@ -30,7 +30,7 @@ geometry_msgs::Point VirtualLayer::transform_from_camera_to_odom(double x, doubl
   return new_point;
 }
 
-void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
+void VirtualLayer_Global::clbk(const cv::FloatArray::ConstPtr& msg) {
   cv_points.clear();
   for (int i=0; i < msg->lists.size(); i++) {
     std::vector<geometry_msgs::Point> lane;
@@ -38,35 +38,14 @@ void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
       double x = msg->lists[i].elements[j].x;
       double y = msg->lists[i].elements[j].y;
       double z = msg->lists[i].elements[j].z;
-      //unsigned mx, my;
-      //worldToMap(x+COSTMAP_OFFSET_X, y+COSTMAP_OFFSET_Y, mx, my);
-      //setCost(mx, my, LETHAL_OBSTACLE);
       lane.push_back(transform_from_camera_to_odom(x, y, z));
     }
     cv_points.push_back(lane);
   }
-  /*
-  // TODO: Min/Max xy bounds broken prob
-  geometry_msgs::Point min_point = transform_from_camera_to_odom(-3.0, -5.0, 3.0420);
-  geometry_msgs::Point max_point = transform_from_camera_to_odom(3.0, 5.0, 1.3089);
-
-  //TODO: min max bounds we dont think work
-  unsigned int min_x = static_cast<unsigned int>(10*(min_point.x + COSTMAP_OFFSET_X));
-  unsigned int min_y = static_cast<unsigned int>(10*(min_point.y + COSTMAP_OFFSET_Y));
-  unsigned int max_x = static_cast<unsigned int>(10*(max_point.x + COSTMAP_OFFSET_X));
-  unsigned int max_y = static_cast<unsigned int>(10*(max_point.y + COSTMAP_OFFSET_Y));
-  //worldToMap(min_pose.x, min_pose.y, min_x, min_y);
-  //worldToMap(max_pose.x, max_pose.y, max_x, max_y);
-  last_min_x = std::min(min_x, max_x);
-  last_min_y = std::min(min_y, max_y);
-  last_max_x = std::max(min_x, max_x);
-  last_max_y = std::max(min_y, max_y);
-  */
-  //std::cout << last_min_x << " " << last_max_x << " " << last_min_y << " " << last_max_y << std::endl;
   
 }//callback function
 
-void VirtualLayer::onInitialize()
+void VirtualLayer_Global::onInitialize()
 {
   nh = ros::NodeHandle("~/" + name_);
   current_ = true;
@@ -74,22 +53,22 @@ void VirtualLayer::onInitialize()
   matchSize();
   
   //subscribe
-  cv_sub=nh.subscribe("/cv/lane_detections", 10, &VirtualLayer::clbk, this);
+  cv_sub=nh.subscribe("/cv/lane_detections", 10, &VirtualLayer_Global::clbk, this);
 
   dsrv_ = new dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>(nh);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>::CallbackType cb = boost::bind(
-      &VirtualLayer::reconfigureCB, this, _1, _2);
+      &VirtualLayer_Global::reconfigureCB, this, _1, _2);
   dsrv_->setCallback(cb);
 }
 
-void VirtualLayer::matchSize()
+void VirtualLayer_Global::matchSize()
 {
   Costmap2D* master = layered_costmap_->getCostmap();
   resizeMap(master->getSizeInCellsX(), master->getSizeInCellsY(), master->getResolution(),
             master->getOriginX(), master->getOriginY());
 }
 
-void VirtualLayer::reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level)
+void VirtualLayer_Global::reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level)
 {
   enabled_ = config.enabled;
 }
@@ -119,7 +98,7 @@ std::vector<std::vector<double>> pointsToLine(std::vector<geometry_msgs::Point> 
   return coord;
 }
 
-void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x,
+void VirtualLayer_Global::updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x,
                                            double* min_y, double* max_x, double* max_y)
 {
   if (!enabled_)
@@ -193,7 +172,7 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
   }
 }
 
-void VirtualLayer::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, int min_j, int max_i,
+void VirtualLayer_Global::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, int min_j, int max_i,
                                           int max_j)
 {
   if (!enabled_)
@@ -210,6 +189,5 @@ void VirtualLayer::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, in
   }
 
   resetMap(min_i, min_j, max_i, max_j);
-  //xy_dict_in_map_frame.clear();
 }
-}  // namespace virtual_layers
+}  // namespace virtual_layers_global
