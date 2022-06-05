@@ -8,7 +8,7 @@ NavfnROS:
 
 # Plans robot movement
 TrajectoryPlannerROS:
-  max_vel_x: 2.0
+  max_vel_x: 1.0
   min_vel_x: 0.2
   max_vel_theta: 0.8
   min_vel_theta: -0.8

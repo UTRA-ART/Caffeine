@@ -84,7 +84,9 @@
             <referenceAltitude>${ref_alt}</referenceAltitude>
 
             <drift>${gps_drift}</drift> <!-- m -->
+            <gaussianNoise>0.1 0.1 0.1</gaussianNoise>
             <velocityDrift>${gps_vel_drift}</velocityDrift> <!-- m/s-->
+            <velocityGaussianNoise>0.1 0.1 0.1</velocityGaussianNoise>
             <!-- TODO: add Gaussian noise based off Garmin GPS -->
         </plugin>
     </gazebo>
@@ -155,11 +157,53 @@
                 <bodyName>${imu_frame}</bodyName>
                 <frameName>${imu_frame}</frameName>
                 <updateRateHZ>${imu_update_rate}</updateRateHZ>
-                <gaussianNoise>0.0</gaussianNoise>  <!-- TODO: set Gaussian noise based on Phidget IMU -->
+                <gaussianNoise>0.1</gaussianNoise>  <!-- TODO: set Gaussian noise based on Phidget IMU -->
                 <xyzOffset>0 0 0</xyzOffset>
                 <rpyOffset>0 0 0</rpyOffset>
                 <initialOrientationAsReference>false</initialOrientationAsReference>
             </plugin>
+            <imu>
+                <angular_velocity>
+                    <x>
+                        <noise type="gaussian">
+                            <mean>0.0</mean>
+                            <stddev>2e-4</stddev>
+                        </noise>
+                    </x>
+                    <y>
+                        <noise type="gaussian">
+                            <mean>0.0</mean>
+                            <stddev>2e-4</stddev>
+                        </noise>
+                    </y>
+                    <z>
+                        <noise type="gaussian">
+                            <mean>0.0</mean>
+                            <stddev>2e-4</stddev>
+                        </noise>
+                    </z>
+                </angular_velocity>
+                <linear_acceleration>
+                    <x>
+                        <noise type="gaussian">
+                            <mean>0.0</mean>
+                            <stddev>1.7e-2</stddev>
+                        </noise>
+                    </x>   
+                    <y>
+                        <noise type="gaussian">
+                            <mean>0.0</mean>
+                            <stddev>1.7e-2</stddev>
+                        </noise>
+                    </y>  
+                    <y>
+                        <noise type="gaussian">
+                            <mean>0.0</mean>
+                            <stddev>1.7e-2</stddev>
+                        </noise>
+                    </y>       
+                </linear_acceleration>
+            </imu>
             
             <pose>0 0 0 0 0 0</pose>
         </sensor>

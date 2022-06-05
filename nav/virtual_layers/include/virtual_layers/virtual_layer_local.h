@@ -51,7 +51,7 @@ private:
   const double COSTMAP_OFFSET_X_FOR_MAP = 50.0; //0.5 * global map (length/width)
   const double COSTMAP_OFFSET_Y_FOR_MAP = 50.0; //0.5 * global map (length/width)
   double map[1000][1000] = {0};
-  double threshold = 0.4; // threshold to declare lethal obstacle in costmap
+  double threshold = 0.0; // threshold to declare lethal obstacle in costmap
   std::string target_frame = "/odom";
 };
 
