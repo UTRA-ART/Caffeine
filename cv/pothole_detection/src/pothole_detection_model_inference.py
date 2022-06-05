@@ -16,8 +16,10 @@ class CVModelInferencer:
     def __init__(self):
         self.redis = redis.Redis(host='127.0.0.1', port=6379, db=3)
         
-        rospack = rospkg.RosPack()
-        model_path = f"{rospack.get_path('pothole_detection')}/models/best.onnx"
+        # rospack = rospkg.RosPack()
+        # model_path = f"{rospack.get_path('pothole_detection')}/models/best.onnx"
+        model_path = "/home/art-jetson/Desktop/caffeine_ws/cv_models/potholes.onnx"
+
         self.model = onnx.load(model_path)
         onnx.checker.check_model(self.model)
         self.ort_session = ort.InferenceSession(model_path, providers=['CUDAExecutionProvider'])

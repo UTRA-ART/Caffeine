@@ -2,7 +2,6 @@
 #include <pluginlib/class_list_macros.h>
 #include <random>
 #include <iostream>
-#include <math.h>       /* atan */
 
 PLUGINLIB_EXPORT_CLASS(virtual_layers_global::VirtualLayer_Global, costmap_2d::Layer)
 
@@ -136,12 +135,12 @@ void VirtualLayer_Global::updateBounds(double robot_x, double robot_y, double ro
     for (int j = 0; j < lane_points[i].size(); j++) {
       double map_world_x = lane_points[i][j][0];
       double map_world_y = lane_points[i][j][1];
-      //unsigned int map_grid_x = static_cast<unsigned int>(10*(map_world_x + COSTMAP_OFFSET_X));
-      //unsigned int map_grid_y = static_cast<unsigned int>(10*(map_world_y + COSTMAP_OFFSET_Y));
+
       unsigned int map_grid_x, map_grid_y;
       worldToMap(map_world_x+COSTMAP_OFFSET_X, map_world_y+COSTMAP_OFFSET_Y, map_grid_x, map_grid_y);
       map[map_grid_x][map_grid_y] = map[map_grid_x][map_grid_y] + ((1-map[map_grid_x][map_grid_y])*0.5);
       map[map_grid_x][map_grid_y] = map[map_grid_x][map_grid_y] + ((1-map[map_grid_x][map_grid_y])*0.5);
+
       if (xy_dict_in_map_frame.find({map_grid_x, map_grid_y}) == xy_dict_in_map_frame.end()) {
         xy_dict_in_map_frame.insert({{map_grid_x, map_grid_y}, {map_world_x, map_world_y}});
       }
@@ -156,14 +155,9 @@ void VirtualLayer_Global::updateBounds(double robot_x, double robot_y, double ro
     double costmap_world_y = std::get<1>(it->second) - robot_y;
     unsigned int grid_x = static_cast<unsigned int>(10*(costmap_world_x + COSTMAP_OFFSET_X));
     unsigned int grid_y = static_cast<unsigned int>(10*(costmap_world_y + COSTMAP_OFFSET_Y));
-    //std::cout << robot_x << " " << robot_y << " " << robot_yaw * 180.0 / 3.14159 << std::endl;
+    
     if (map[map_grid_x][map_grid_y] > threshold) {
-      //unsigned int costmap_grid_x = static_cast<unsigned int>(10*(costmap_world_x + COSTMAP_OFFSET_X));
-      //unsigned int costmap_grid_y = static_cast<unsigned int>(10*(costmap_world_y+ COSTMAP_OFFSET_Y));
       setCost(grid_x, grid_y, LETHAL_OBSTACLE);
-      //continue;
-      //int index = getIndex(map_grid_x, map_grid_y);
-      //costmap_[index] = LETHAL_OBSTACLE;
     }
     *min_x = std::min(*min_x, costmap_world_x);
     *min_y = std::min(*min_y, costmap_world_y);
