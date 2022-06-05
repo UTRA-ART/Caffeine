@@ -9,6 +9,8 @@ import rospy
 from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
 
+from datetime import datetime
+
 
 class ZedWrapperServer:
     def __init__(self):
@@ -22,13 +24,14 @@ class ZedWrapperServer:
 
     def forward_image(self, data):
         if data != []:
-            img = self.bridge.imgmsg_to_cv2(data, desired_encoding='passthrough')
+            img = self.bridge.imgmsg_to_cv2(
+                data, desired_encoding='passthrough')
             self._toRedisImg(img, "zed/preprocessed")
 
-    def _toRedisImg(self,img,name):
+    def _toRedisImg(self, img, name):
         """Store given Numpy array 'img' in Redis under key 'name'"""
         h, w = img.shape[:2]
-        shape = struct.pack('>II',h,w)
+        shape = struct.pack('>II', h, w)
 
         retval, buffer = cv2.imencode('.png', img)
         img_bytes = np.array(buffer).tostring()
@@ -36,9 +39,12 @@ class ZedWrapperServer:
         encoded = shape + img_bytes
 
         # Store encoded data in Redis
-        self.redis.set(name,encoded)
+        self.redis.set(name, encoded)
+        # set new timestamp in redis dict
+        self.redis.set("zed/preprocessed_timestamp", str(datetime.utcnow()))
 
         return
+
 
 if __name__ == '__main__':
     wrapper = ZedWrapperServer()
