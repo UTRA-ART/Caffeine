@@ -7,8 +7,8 @@ local_costmap:
   rolling_window: true
   always_send_full_costmap: false
   # TODO: Update size if needed
-  width: 8 # cost map size needs to be large enough to encompass the point cloud range
-  height: 8 # This size is arbitary for now so it may need to be adjusted
+  width: 16 # cost map size needs to be large enough to encompass the point cloud range
+  height: 16 # This size is arbitary for now so it may need to be adjusted
   resolution: 0.1
 
   obstacle_layer:
