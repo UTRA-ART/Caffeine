@@ -1,4 +1,8 @@
 <launch>
+    <!-- Defaults mode to manual control -->
+    <node pkg="rostopic" type="rostopic" name="rostopic_manual_default" args="pub /pause_navigation std_msgs/Bool true"/>
+    
+    <include file="$(find description)/launch/setup_rosbag.launch"/>
     <!-- Parse URDF with xacro -->
     <param name="robot_description" command="xacro '$(find description)/urdf/caffeine.urdf.xacro'"/>
     

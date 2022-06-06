@@ -9,6 +9,9 @@ import rospy
 from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
 
+from datetime import datetime
+
+
 
 class ZedWrapperServer:
     def __init__(self):
@@ -37,6 +40,7 @@ class ZedWrapperServer:
 
         # Store encoded data in Redis
         self.redis.set(name,encoded)
+        self.redis.set('zed/preprocessed_timestamp', str(datetime.utcnow()))
 
         return
 

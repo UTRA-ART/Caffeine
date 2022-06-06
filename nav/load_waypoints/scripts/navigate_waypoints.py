@@ -52,8 +52,8 @@ class NavigateWaypoints:
         # Parse through json data and create list of lists holding all waypoints
         for waypoint in waypoint_data["waypoints"]:
             self.waypoints[waypoint['id']] = waypoint
-        self.start_direction = 1 if self.waypoint_data["start_direction"] == "north" else -1
-        self.laps = self.waypoint_data["laps"]
+        self.start_direction = 1 if waypoint_data["start_direction"] == "north" else -1
+        self.laps = waypoint_data["laps"]
 
         # Call method to wait for transform 
         self.waited_for_transform = self.wait_for_utm_transform()

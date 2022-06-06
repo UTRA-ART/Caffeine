@@ -13,6 +13,7 @@ from sensor_msgs.msg import Image
 from cv.msg import FloatArray, FloatList
 from geometry_msgs.msg import Point
 from cv_utils import camera_projection
+from datetime import datetime
 
 class CVWrapperClient:
     def __init__(self):
@@ -20,13 +21,22 @@ class CVWrapperClient:
         self.pub = rospy.Publisher('cv/lane_detections', FloatArray, queue_size=10)
         self.pub_raw = rospy.Publisher('cv/model_output', Image, queue_size=10)
         rospy.init_node('lane_detection_wrapper_client')
-        self.r = rospy.Rate(10) # 10hz
+        self.r = rospy.Rate(30) # 30hz
 
         self.bridge = CvBridge()
         self.projection = camera_projection.CameraProjection()
+        self.last_timestamp = str(datetime.utcnow())
+
 
     def run(self):
         while not rospy.is_shutdown():
+            ts = self._fromRedisImgTimeStamp('lane_detection_timestamp')
+            if self.last_timestamp == ts:
+                continue
+            else:
+                self.last_timestamp = ts
+
+
             lanes = self._fromRedisLanes('lane_detection')
             mask = self._fromRedisImg('cv/model/output')
       
@@ -72,6 +82,13 @@ class CVWrapperClient:
         h, w = struct.unpack('>II',encoded[:8])
         a = cv2.imdecode(np.frombuffer(encoded, dtype=np.uint8, offset=8), 1).reshape(h,w,3)
         return a
+
+    def _fromRedisImgTimeStamp(self, name):
+        time = self.redis.get(name)
+        
+        if time is None:
+            return None
+        return time
 
 if __name__ == '__main__':
     wrapper = CVWrapperClient()

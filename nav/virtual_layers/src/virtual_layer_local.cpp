@@ -1,27 +1,28 @@
-#include <virtual_layers/virtual_layer.h>
+#include <virtual_layers/virtual_layer_local.h>
 #include <pluginlib/class_list_macros.h>
 #include <random>
 #include <iostream>
+#include <math.h>       /* atan */
 
-PLUGINLIB_EXPORT_CLASS(virtual_layers::VirtualLayer, costmap_2d::Layer)
+PLUGINLIB_EXPORT_CLASS(virtual_layers_local::VirtualLayer_Local, costmap_2d::Layer)
 
 using costmap_2d::LETHAL_OBSTACLE;
 using costmap_2d::NO_INFORMATION;
 
-namespace virtual_layers
+namespace virtual_layers_local
 {
-VirtualLayer::VirtualLayer() {
-  listener.waitForTransform("/odom", "/zed_left_camera_optical_frame", ros::Time(0), ros::Duration(60.0));
+VirtualLayer_Local::VirtualLayer_Local() {
+  listener.waitForTransform(target_frame, camera_frame, ros::Time(0), ros::Duration(60.0));
 }
 
-geometry_msgs::Point VirtualLayer::transform_from_camera_to_odom(double x, double y, double z) {
+geometry_msgs::Point VirtualLayer_Local::transform_from_camera_to_odom(double x, double y, double z) {
   geometry_msgs::PoseStamped new_pose = geometry_msgs::PoseStamped();
-  new_pose.header.frame_id = "left_camera_link_optical";
+  new_pose.header.frame_id = camera_frame;
   new_pose.pose.position.x = x;
   new_pose.pose.position.y = y;
   new_pose.pose.position.z = z;
   new_pose.pose.orientation.w = 1.0;
-  listener.transformPose("/odom", new_pose, new_pose);
+  listener.transformPose(target_frame, new_pose, new_pose);
 
   geometry_msgs::Point new_point = geometry_msgs::Point();
   new_point.x = new_pose.pose.position.x;
@@ -29,7 +30,7 @@ geometry_msgs::Point VirtualLayer::transform_from_camera_to_odom(double x, doubl
   return new_point;
 }
 
-void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
+void VirtualLayer_Local::clbk(const cv::FloatArray::ConstPtr& msg) {
   cv_points.clear();
   for (int i=0; i < msg->lists.size(); i++) {
     std::vector<geometry_msgs::Point> lane;
@@ -44,7 +45,7 @@ void VirtualLayer::clbk(const cv::FloatArray::ConstPtr& msg) {
   
 }//callback function
 
-void VirtualLayer::onInitialize()
+void VirtualLayer_Local::onInitialize()
 {
   nh = ros::NodeHandle("~/" + name_);
   current_ = true;
@@ -52,22 +53,22 @@ void VirtualLayer::onInitialize()
   matchSize();
   
   //subscribe
-  cv_sub=nh.subscribe("/cv/lane_detections", 10, &VirtualLayer::clbk, this);
+  cv_sub=nh.subscribe("/cv/lane_detections", 10, &VirtualLayer_Local::clbk, this);
 
   dsrv_ = new dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>(nh);
   dynamic_reconfigure::Server<costmap_2d::GenericPluginConfig>::CallbackType cb = boost::bind(
-      &VirtualLayer::reconfigureCB, this, _1, _2);
+      &VirtualLayer_Local::reconfigureCB, this, _1, _2);
   dsrv_->setCallback(cb);
 }
 
-void VirtualLayer::matchSize()
+void VirtualLayer_Local::matchSize()
 {
   Costmap2D* master = layered_costmap_->getCostmap();
   resizeMap(master->getSizeInCellsX(), master->getSizeInCellsY(), master->getResolution(),
             master->getOriginX(), master->getOriginY());
 }
 
-void VirtualLayer::reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level)
+void VirtualLayer_Local::reconfigureCB(costmap_2d::GenericPluginConfig &config, uint32_t level)
 {
   enabled_ = config.enabled;
 }
@@ -97,7 +98,7 @@ std::vector<std::vector<double>> pointsToLine(std::vector<geometry_msgs::Point> 
   return coord;
 }
 
-void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x,
+void VirtualLayer_Local::updateBounds(double robot_x, double robot_y, double robot_yaw, double* min_x,
                                            double* min_y, double* max_x, double* max_y)
 {
   if (!enabled_)
@@ -121,8 +122,8 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
   unsigned int decay_bound_x_min, decay_bound_y_min;
   unsigned int decay_bound_x_max, decay_bound_y_max;
 
-  worldToMap(odom_min_x+COSTMAP_OFFSET_X, odom_min_y+COSTMAP_OFFSET_Y, decay_bound_x_min, decay_bound_y_min);
-  worldToMap(odom_max_x+COSTMAP_OFFSET_X, odom_max_y+COSTMAP_OFFSET_Y, decay_bound_x_max, decay_bound_y_max);
+  worldToMap(odom_min_x+COSTMAP_OFFSET_X_FOR_MAP, odom_min_y+COSTMAP_OFFSET_Y_FOR_MAP, decay_bound_x_min, decay_bound_y_min);
+  worldToMap(odom_max_x+COSTMAP_OFFSET_X_FOR_MAP, odom_max_y+COSTMAP_OFFSET_Y_FOR_MAP, decay_bound_x_max, decay_bound_y_max);
 
   for (unsigned int i=decay_bound_x_min; i<decay_bound_x_max; i++) {
     for (unsigned int j=decay_bound_y_min; j<decay_bound_y_max; j++) {
@@ -135,12 +136,12 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
     for (int j = 0; j < lane_points[i].size(); j++) {
       double map_world_x = lane_points[i][j][0];
       double map_world_y = lane_points[i][j][1];
-
+      //unsigned int map_grid_x = static_cast<unsigned int>(10*(map_world_x + COSTMAP_OFFSET_X));
+      //unsigned int map_grid_y = static_cast<unsigned int>(10*(map_world_y + COSTMAP_OFFSET_Y));
       unsigned int map_grid_x, map_grid_y;
-      worldToMap(map_world_x+COSTMAP_OFFSET_X, map_world_y+COSTMAP_OFFSET_Y, map_grid_x, map_grid_y);
+      worldToMap(map_world_x+COSTMAP_OFFSET_X_FOR_MAP, map_world_y+COSTMAP_OFFSET_Y_FOR_MAP, map_grid_x, map_grid_y);
       map[map_grid_x][map_grid_y] = map[map_grid_x][map_grid_y] + ((1-map[map_grid_x][map_grid_y])*0.5);
       map[map_grid_x][map_grid_y] = map[map_grid_x][map_grid_y] + ((1-map[map_grid_x][map_grid_y])*0.5);
-
       if (xy_dict_in_map_frame.find({map_grid_x, map_grid_y}) == xy_dict_in_map_frame.end()) {
         xy_dict_in_map_frame.insert({{map_grid_x, map_grid_y}, {map_world_x, map_world_y}});
       }
@@ -155,9 +156,14 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
     double costmap_world_y = std::get<1>(it->second) - robot_y;
     unsigned int grid_x = static_cast<unsigned int>(10*(costmap_world_x + COSTMAP_OFFSET_X));
     unsigned int grid_y = static_cast<unsigned int>(10*(costmap_world_y + COSTMAP_OFFSET_Y));
-    
+    //std::cout << robot_x << " " << robot_y << " " << robot_yaw * 180.0 / 3.14159 << std::endl;
     if (map[map_grid_x][map_grid_y] > threshold) {
+      //unsigned int costmap_grid_x = static_cast<unsigned int>(10*(costmap_world_x + COSTMAP_OFFSET_X));
+      //unsigned int costmap_grid_y = static_cast<unsigned int>(10*(costmap_world_y+ COSTMAP_OFFSET_Y));
       setCost(grid_x, grid_y, LETHAL_OBSTACLE);
+      //continue;
+      //int index = getIndex(map_grid_x, map_grid_y);
+      //costmap_[index] = LETHAL_OBSTACLE;
     }
     *min_x = std::min(*min_x, costmap_world_x);
     *min_y = std::min(*min_y, costmap_world_y);
@@ -166,7 +172,7 @@ void VirtualLayer::updateBounds(double robot_x, double robot_y, double robot_yaw
   }
 }
 
-void VirtualLayer::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, int min_j, int max_i,
+void VirtualLayer_Local::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, int min_j, int max_i,
                                           int max_j)
 {
   if (!enabled_)
@@ -184,4 +190,4 @@ void VirtualLayer::updateCosts(costmap_2d::Costmap2D& master_grid, int min_i, in
 
   resetMap(min_i, min_j, max_i, max_j);
 }
-}  // namespace virtual_layers
+}  // namespace virtual_layers_local
