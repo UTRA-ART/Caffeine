@@ -8,6 +8,7 @@ import actionlib
 import rospkg
 import rospy
 import std_msgs.msg
+from std_msgs.msg import Bool
 import tf
 import tf2_ros
 import utm
@@ -31,6 +32,7 @@ class NavigateWaypoints:
         self.current_lap = 0
         self.curr_waypoint_idx = 0 if self.start_direction else len(self.waypoints) - 1
         self.tf = TransformListener()
+        self.publisher = rospy.Publisher('/waypoint_int', Bool, queue_size=10)
 
 
     def populate_waypoint_dict(self):
@@ -104,7 +106,7 @@ class NavigateWaypoints:
                     now = rospy.Time.now()
 
                     # Wait for transform from /map to /utm
-                    listener.waitForTransform("map", "/utm", now, rospy.Duration(5.0))
+                    listener.waitForTransform("/map", "/utm", now, rospy.Duration(5.0))
                     rospy.loginfo("Transform found. Time waited for transform: %s s"%(rospy.get_time() - start_time))
                     waited_for_transform = True
                     break
@@ -116,7 +118,12 @@ class NavigateWaypoints:
     
     def get_next_waypoint(self):
         waypoint = self.waypoints[self.curr_waypoint_idx]
-        print(self.curr_waypoint_idx)
+        if self.curr_waypoint_idx == 1000:
+            for i in range(10):
+                self.publisher.publish(False)
+        else:
+            for i in range(10):
+                self.publisher.publish(True)
         self.curr_waypoint_idx += self.start_direction
         if self.curr_waypoint_idx < 0 and self.current_lap < self.laps:
             self.current_lap += 1
@@ -186,6 +193,7 @@ if __name__ == "__main__":
     # static_waypoint_file = 'static_waypoints_pavement.json'
     # static_waypoint_file = 'static_waypoints_grass.json'
 
-    rospy.init_node('navigate_waypoints')
+    rospy.init_node('load_waypoints_server')
     waypoints = NavigateWaypoints(static_waypoint_file, max_time_for_transform=60.0)
     waypoints.navigate_waypoints()
+    print("HELLLLLLOOOOOOOO")

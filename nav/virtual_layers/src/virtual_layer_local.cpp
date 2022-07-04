@@ -30,6 +30,21 @@ geometry_msgs::Point VirtualLayer_Local::transform_from_camera_to_odom(double x,
   return new_point;
 }
 
+geometry_msgs::Point VirtualLayer_Local::transform_from_baselink_to_odom(double x, double y, double z) {
+  geometry_msgs::PoseStamped new_pose = geometry_msgs::PoseStamped();
+  new_pose.header.frame_id = "/base_link";
+  new_pose.pose.position.x = x;
+  new_pose.pose.position.y = y;
+  new_pose.pose.position.z = z;
+  new_pose.pose.orientation.w = 1.0;
+  listener.transformPose(target_frame, new_pose, new_pose);
+
+  geometry_msgs::Point new_point = geometry_msgs::Point();
+  new_point.x = new_pose.pose.position.x;
+  new_point.y = new_pose.pose.position.y;
+  return new_point;
+}
+
 void VirtualLayer_Local::clbk(const cv::FloatArray::ConstPtr& msg) {
   cv_points.clear();
   for (int i=0; i < msg->lists.size(); i++) {
@@ -109,26 +124,22 @@ void VirtualLayer_Local::updateBounds(double robot_x, double robot_y, double rob
     lane_points.push_back(pointsToLine(cv_points[i], 0.1));
   }
   // Get trapezoid (camera's field of view in odom frame) to decay;
-  double min_x_meters = 1;
-  double max_x_meters = 3.35 + min_x_meters;
-  double min_y_meters = -2.375;
-  double max_y_meters = 2.375;
+  double min_x_in_baselink = 1;
+  double max_x_in_baselink = 3.35 + min_x_in_baselink;
+  double min_y_in_baselink = -2.375;
+  double max_y_in_baselink = 2.375;
 
-  double odom_min_x = robot_x + (cos(robot_yaw)*min_x_meters);
-  double odom_max_x = robot_x + (cos(robot_yaw)*max_x_meters);
-  double odom_min_y = robot_y + (sin(robot_yaw)*min_y_meters);
-  double odom_max_y = robot_y + (sin(robot_yaw)*max_y_meters);
-
-  unsigned int decay_bound_x_min, decay_bound_y_min;
-  unsigned int decay_bound_x_max, decay_bound_y_max;
-
-  worldToMap(odom_min_x+COSTMAP_OFFSET_X_FOR_MAP, odom_min_y+COSTMAP_OFFSET_Y_FOR_MAP, decay_bound_x_min, decay_bound_y_min);
-  worldToMap(odom_max_x+COSTMAP_OFFSET_X_FOR_MAP, odom_max_y+COSTMAP_OFFSET_Y_FOR_MAP, decay_bound_x_max, decay_bound_y_max);
-
-  for (unsigned int i=decay_bound_x_min; i<decay_bound_x_max; i++) {
-    for (unsigned int j=decay_bound_y_min; j<decay_bound_y_max; j++) {
-      
-      map[i][j] = map[i][j]/2.0;
+  for (double i=min_x_in_baselink; i<max_x_in_baselink; i += 0.1) {
+    for (double j=min_y_in_baselink; j<max_y_in_baselink; j += 0.1) {
+      geometry_msgs::Point odom_point = transform_from_baselink_to_odom(i, j, 0);
+      unsigned int odom_grid_x, odom_grid_y;
+      worldToMap(odom_point.x + COSTMAP_OFFSET_X, odom_point.y + COSTMAP_OFFSET_Y, odom_grid_x, odom_grid_y);
+      map[odom_grid_x][odom_grid_y] = map[odom_grid_x][odom_grid_y]/2.0;
+    
+      *min_x = std::min(*min_x, odom_point.x);
+      *min_y = std::min(*min_y, odom_point.y);
+      *max_x = std::max(*max_x, odom_point.x);
+      *max_y = std::max(*max_y, odom_point.y);
     }
   }
 
@@ -161,10 +172,8 @@ void VirtualLayer_Local::updateBounds(double robot_x, double robot_y, double rob
       //unsigned int costmap_grid_x = static_cast<unsigned int>(10*(costmap_world_x + COSTMAP_OFFSET_X));
       //unsigned int costmap_grid_y = static_cast<unsigned int>(10*(costmap_world_y+ COSTMAP_OFFSET_Y));
       setCost(grid_x, grid_y, LETHAL_OBSTACLE);
-      //continue;
-      //int index = getIndex(map_grid_x, map_grid_y);
-      //costmap_[index] = LETHAL_OBSTACLE;
     }
+    
     *min_x = std::min(*min_x, costmap_world_x);
     *min_y = std::min(*min_y, costmap_world_y);
     *max_x = std::max(*max_x, costmap_world_x);

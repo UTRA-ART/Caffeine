@@ -1,5 +1,5 @@
 {
-    "start_direction": "north",
+    "start_direction": "south",
     "laps": 2,
     "waypoints" : [
         {
@@ -7,21 +7,21 @@
             "longitude" : -83.130645144,
             "latitude" : 42.400556255,
             "description"  : "North waypoint",
-            "frame_id" : "odom"
+            "frame_id" : "map"
         },
         {
             "id" : 1,
             "longitude" : -83.130640432,
             "latitude" : 42.400510946,
             "description"  : "Mid",
-            "frame_id" : "odom"
+            "frame_id" : "map"
         },
         {
             "id" : 2,
             "longitude" : -83.130635756,
             "latitude" : 42.400465621,
             "description"  : "South",
-            "frame_id" : "odom"
+            "frame_id" : "map"
         }
     ]
 }

@@ -33,6 +33,7 @@ public:
   std::vector<std::vector<geometry_msgs::Point>> cv_points;
   void clbk(const cv::FloatArray::ConstPtr& msg);
   geometry_msgs::Point transform_from_camera_to_odom(double x, double y, double z);
+  geometry_msgs::Point transform_from_baselink_to_odom(double x, double y, double z);
   
   tf::TransformListener listener;
 
@@ -49,7 +50,7 @@ private:
   const double COSTMAP_OFFSET_X = 50.0; //0.5 * global map (length/width)
   const double COSTMAP_OFFSET_Y = 50.0; //0.5 * global map (length/width)
   double map[1000][1000] = {0};
-  double threshold = 0.4; // threshold to declare lethal obstacle in costmap
+  double threshold = 0.7; // threshold to declare lethal obstacle in costmap
   std::string target_frame = "/odom";
   std::string camera_frame = "/zed_left_camera_optical_frame";
 };

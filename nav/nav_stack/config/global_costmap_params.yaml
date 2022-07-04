@@ -1,5 +1,5 @@
 global_costmap:
-  global_frame: odom   # Because we don't have a map to load in, we use the odom frame as our global frame (rather than /map)
+  global_frame: map   # Because we don't have a map to load in, we use the odom frame as our global frame (rather than /map)
   robot_base_frame: base_link
   update_frequency: 5.0 # Set update rate lower for large maps; 20
   publish_frequency: 2.0
@@ -25,7 +25,7 @@ global_costmap:
       max_obstacle_height: 10.0,  # we still add lidar scans to costmap
       sensor_frame: base_laser,
       data_type: LaserScan,
-      topic: scan,
+      topic: scan_modified,
       marking: true,
       clearing: true,
       obstacle_range: 3.7,   # Decide how far we should see obstacles, should be less than raytrace range
@@ -51,5 +51,5 @@ global_costmap:
 
   plugins:
     - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}
-    - {name: virtual_layer_global,       type: "virtual_layers_global::VirtualLayer_Global"}
+    #- {name: virtual_layer_global,       type: "virtual_layers_global::VirtualLayer_Global"}
     - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}

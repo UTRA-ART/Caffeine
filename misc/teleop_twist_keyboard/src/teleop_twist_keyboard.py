@@ -3,6 +3,7 @@
 from __future__ import print_function
 
 import threading
+import time
 
 import roslib; roslib.load_manifest('teleop_twist_keyboard')
 import rospy
@@ -149,6 +150,10 @@ if __name__=="__main__":
     pub_thread = PublishThread(repeat)
     autonomous_mode = False
     mode_pub = rospy.Publisher('/pause_navigation', Bool, queue_size = 1)
+
+    mode_pub.publish(False)
+    time.sleep(1)
+    mode_pub.publish(True)
 
     x = 1
     y = 0

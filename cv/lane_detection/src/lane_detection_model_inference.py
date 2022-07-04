@@ -524,12 +524,8 @@ def get_input(frame):
 
 def main():
     wrapper = CVModelInferencer()
-    start_time = time.time()
-
     while True:
         wrapper.run()
-        if time.time() - start_time > 30:
-            break
 
 if __name__ == '__main__':
     main()

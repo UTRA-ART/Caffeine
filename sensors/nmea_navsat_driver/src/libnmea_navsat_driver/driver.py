@@ -162,9 +162,9 @@ class RosNMEADriver(object):
             current_fix.longitude = longitude
 
             hdop = data['hdop']
-            current_fix.position_covariance[0] = hdop ** 2
-            current_fix.position_covariance[4] = hdop ** 2
-            current_fix.position_covariance[8] = (2 * hdop) ** 2  # FIXME
+            current_fix.position_covariance[0] = hdop ** 2 * 6
+            current_fix.position_covariance[4] = hdop ** 2 * 6
+            current_fix.position_covariance[8] = (2 * hdop) ** 2 * 6  # FIXME
             current_fix.position_covariance_type = \
                 NavSatFix.COVARIANCE_TYPE_APPROXIMATED
 

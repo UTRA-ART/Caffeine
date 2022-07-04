@@ -1,0 +1,8 @@
+<launch>
+<!-- Twist Multiplexer -->
+    <include file="$(find twist_mux)/launch/twist_mux.launch">
+        <arg name="cmd_vel_out" value="cmd_vel"/>
+    </include>
+    <!-- Motor controller + feedback -->
+    <include file="$(find motor_control)/launch/motor_control.launch"/>
+</launch>

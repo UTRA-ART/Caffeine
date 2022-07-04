@@ -1,16 +1,12 @@
 <launch>
    <!-- Create node that records all topics in a bag file -->
-   <arg name="output_folder" value="/media/art-jetson/SD_card/rosbags"/>
+   <arg name="output_folder" value="/media/art-jetson/SD_card2/rosbags/"/>
   
    <node pkg="rosbag" type="record" name="caffeine_bag"
        args="record -o $(arg output_folder)
            /ImuFilterNodelet/parameter_descriptions
            /ImuFilterNodelet/parameter_updates
-           /clicked_point
            /cmd_vel
-           /cv/lane_detections
-           /cv/model_output
-           /cv/pothole_detections
            /diagnostics
            /fix
            /gps/filtered
@@ -24,51 +20,11 @@
            /key_vel
            /laser_status
            /left_wheel/command
-           /left_wheel/feedback
            /man_vel
-           /move_base/NavfnROS/plan
-           /move_base/TrajectoryPlannerROS/cost_cloud
-           /move_base/TrajectoryPlannerROS/global_plan
-           /move_base/TrajectoryPlannerROS/local_plan
-           /move_base/TrajectoryPlannerROS/parameter_descriptions
-           /move_base/TrajectoryPlannerROS/parameter_updates
-           /move_base/cancel
-           /move_base/current_goal
-           /move_base/feedback
-           /move_base/global_costmap/costmap
-           /move_base/global_costmap/costmap_updates
-           /move_base/global_costmap/footprint
-           /move_base/global_costmap/inflation_layer/parameter_descriptions
-           /move_base/global_costmap/inflation_layer/parameter_updates
-           /move_base/global_costmap/obstacle_layer/parameter_descriptions
-           /move_base/global_costmap/obstacle_layer/parameter_updates
-           /move_base/global_costmap/parameter_descriptions
-           /move_base/global_costmap/parameter_updates
-           /move_base/global_costmap/virtual_layer/parameter_descriptions
-           /move_base/global_costmap/virtual_layer/parameter_updates
-           /move_base/goal
-           /move_base/local_costmap/costmap
-           /move_base/local_costmap/costmap_updates
-           /move_base/local_costmap/footprint
-           /move_base/local_costmap/inflation_layer/parameter_descriptions
-           /move_base/local_costmap/inflation_layer/parameter_updates
-           /move_base/local_costmap/obstacle_layer/parameter_descriptions
-           /move_base/local_costmap/obstacle_layer/parameter_updates
-           /move_base/local_costmap/parameter_descriptions
-           /move_base/local_costmap/parameter_updates
-           /move_base/parameter_descriptions
-           /move_base/parameter_updates
-           /move_base/result
-           /move_base/status
-           /move_base_simple/goal
            /nav_vel
            /odom
-           /odometry/global
-           /odometry/gps
-           /odometry/local
            /pause_navigation
            /right_wheel/command
-           /right_wheel/feedback
            /rosout
            /rosout_agg
            /scan
@@ -87,14 +43,9 @@
            /zed_node/depth/camera_info
            /zed_node/depth/depth_registered
            /zed_node/disparity/disparity_image
-           /zed_node/left_raw/camera_info
-           /zed_node/left_raw/image_raw_color
-           /zed_node/odom
            /zed_node/point_cloud/cloud_registered
            /zed_node/pose
            /zed_node/pose_with_covariance
-           /zed_node/rgb/camera_info
-           /zed_node/rgb/image_rect_color
            /zed_node/rgb_raw/camera_info
            /zed_node/rgb_raw/image_raw_color
            /zed_node/stereo/image_rect_color

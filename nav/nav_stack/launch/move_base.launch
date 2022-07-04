@@ -23,6 +23,6 @@
     <!-- <include file="$(find filter_lidar_data)/launch/filter_lidar_data.launch"/> -->
 
     <!-- TODO: always have a manual override available when doing autonomous navigation -->
-    <include file="$(find load_waypoints)/launch/load_waypoints.launch"/>
+    <!-- <include file="$(find load_waypoints)/launch/load_waypoints.launch"/> -->
 
 </launch>
