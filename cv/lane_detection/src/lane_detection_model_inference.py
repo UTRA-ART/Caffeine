@@ -7,17 +7,32 @@ import os
 
 import cv2
 import numpy as np
-import redis
 import onnx
 import onnxruntime as ort 
 
+from cv_bridge import CvBridge
+from sensor_msgs.msg import Image
+
 import rospkg
+import rospy
+
+from cv.msg import FloatArray, FloatList
+from geometry_msgs.msg import Point
+from cv_utils import camera_projection
 
 from line_fitting import fit_lanes
 
 class CVModelInferencer:
     def __init__(self):
-        self.redis = redis.Redis(host='127.0.0.1', port=6379, db=3)
+        rospy.init_node('lane_detection_model_inference')
+        
+        self.pub = rospy.Publisher('cv/lane_detections', FloatArray, queue_size=10)
+        self.pub_raw = rospy.Publisher('cv/model_output', Image, queue_size=10)
+
+        rospy.loginfo("Node initialized")
+
+        self.bridge = CvBridge()
+        self.projection = camera_projection.CameraProjection()
         
         rospack = rospkg.RosPack()
         model_path = rospack.get_path('lane_detection') + '/models/unet_with_sigmoid.onnx'
@@ -28,53 +43,54 @@ class CVModelInferencer:
         self.ort_session = ort.InferenceSession(model_path, providers=['CUDAExecutionProvider'])
 
     def run(self):
-        raw = self._fromRedisImg("zed/preprocessed")
+        rospy.Subscriber("image", Image, self.process_image)
+        rospy.spin()
+
+    def process_image(self, data):
+        rospy.loginfo("Triggered one image topic callback")
+        if data == []:
+            return
+            
+        raw = self.bridge.imgmsg_to_cv2(data, desired_encoding='passthrough')
+        
         if raw is not None:
             img = get_input(raw.copy())
 
             # Do model inference 
             output = self.ort_session.run(None, {'Inputs': img.astype(np.float32)})[0][0][0]
             mask = np.where(output > 0.5, 1., 0.)
-            self._toRedisImg(mask, "cv/model/output")
+            self._toRedisImg(mask, "cv/model_output")
 
+            # Publish to /cv/model_output
+            img_msg = self.bridge.cv2_to_imgmsg(mask*255, encoding='passthrough')
+            if img_msg is not None:
+                self.pub_raw.publish(img_msg)
+            
+            # Publish to /cv/lane_detection
             lanes = fit_lanes(mask)
             if lanes is not None:
-                self._toRedisLanes(lanes, "lane_detection")
+                lanes_msgs = []
+                for lane in lanes:
+                    project_points = self.projection(np.array(lane, dtype=np.int))
+
+                    lane_msg = FloatList()
+                    pts_msg = []
+                    for pt in project_points:
+                        pt_msg = Point()
+                        pt_msg.x = pt[0]
+                        pt_msg.y = pt[1]
+                        pt_msg.z = pt[2]
+                        pts_msg += [pt_msg]
+                    lane_msg.elements = pts_msg
+                    lanes_msgs += [lane_msg]
+
+                msg = FloatArray()
+                msg.lists = lanes_msgs
+                self.pub.publish(msg)
 
             # toshow = np.concatenate([cv2.resize(raw, (330, 180)), np.tile(mask[...,np.newaxis]*255, (1, 1, 3))], axis=1).astype(np.uint8)
             # cv2.imshow("image", toshow)
             # cv2.waitKey(1)
-
-    def _toRedisLanes(self,lanes,name):
-        """Store given Numpy array 'img' in Redis under key 'name'"""
-
-        encoded = json.dumps(lanes)
-        # Store encoded data in Redis
-        self.redis.set(name,encoded)
-
-    def _fromRedisImg(self, name):
-        """Retrieve Numpy array from Redis key 'n'"""
-        encoded = self.redis.get(name)
-        if encoded is None:
-            return None
-        h, w = struct.unpack('>II',encoded[:8])
-        a = cv2.imdecode(np.frombuffer(encoded, dtype=np.uint8, offset=8), 1).reshape(h,w,3)
-        return a
-
-    def _toRedisImg(self,img,name):
-        """Store given Numpy array 'img' in Redis under key 'name'"""
-        h, w = img.shape[:2]
-        shape = struct.pack('>II',h,w)
-
-        retval, buffer = cv2.imencode('.png', img)
-        img_bytes = np.array(buffer).tostring()
-
-        encoded = shape + img_bytes
-
-        # Store encoded data in Redis
-        self.redis.set(name,encoded)
-
-        return
 
 def find_edge_channel(img):
     edges_mask = np.zeros((img.shape[0],img.shape[1]),dtype=np.uint8)
@@ -131,6 +147,4 @@ def get_input(frame):
 
 if __name__ == '__main__':
     wrapper = CVModelInferencer()
-
-    while True:
-        wrapper.run()
+    wrapper.run()

@@ -5,13 +5,15 @@
         pkg="lane_detection"
         type="lane_detection_model_inference.py"
         output="screen"
-    />
+    >
+        <remap from="image" to="/zed/zed_node/left/image_rect_color"/>
+    </node>
 
     <!-- Runs UDP client as node to publish results back in Python2 -->
-    <node
+    <!-- <node
         name="lane_detection_wrapper_client"
         pkg="lane_detection"
         type="lane_detection_wrapper_client.py"
         output="screen"
-    />
+    /> -->
 </launch>
