@@ -103,21 +103,21 @@
     <!-- Generate Left Camera frame -->
     <!-- NOTE: specify frame of left camera (lens) because right one is specified relative to it by the multicamera plugin -->
     <!-- NOTE: we are assuming the lens are located at the edges of the camera (hence the use of 'camera_length' and not a 'stereo_offset') -->
-    <!-- <link name="left_camera_link"/> -->
+    <link name="left_camera_link"/>
 
-    <!-- <joint name="left_camera_link_joint" type="fixed">
+    <joint name="left_camera_link_joint" type="fixed">
         <parent link="zed_base_link"/>
         <child link="left_camera_link"/>
         <origin xyz="0 ${ZED_camera_length / 2.0} 0" rpy="0 0 0"/>
-    </joint> -->
+    </joint>
 
     <!-- Generate an optical frame http://www.ros.org/reps/rep-0103.html#suffix-frames so that ros and opencv can operate on the camera frame correctly -->
-    <!-- <link name="left_camera_link_optical"/> -->
+    <link name="left_camera_link_optical"/>
 
-    <!-- <joint name="left_camera_link_optical_joint" type="fixed">
+    <joint name="left_camera_link_optical_joint" type="fixed">
         <parent link="left_camera_link"/>
         <child link="left_camera_link_optical"/>
         <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
-    </joint> -->
+    </joint>
 
 </robot> 

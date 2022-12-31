@@ -35,7 +35,7 @@ class CVModelInferencer:
         self.projection = camera_projection.CameraProjection()
         
         rospack = rospkg.RosPack()
-        model_path = rospack.get_path('lane_detection') + '/models/unet_with_sigmoid.onnx'
+        model_path = rospack.get_path('lane_detection') + '/models/unet_v1.onnx'
 
         self.model = onnx.load(model_path)
         onnx.checker.check_model(self.model)
@@ -59,7 +59,7 @@ class CVModelInferencer:
             # Do model inference 
             output = self.ort_session.run(None, {'Inputs': img.astype(np.float32)})[0][0][0]
             mask = np.where(output > 0.5, 1., 0.)
-            self._toRedisImg(mask, "cv/model_output")
+            mask = mask.astype(np.uint8)
 
             # Publish to /cv/model_output
             img_msg = self.bridge.cv2_to_imgmsg(mask*255, encoding='passthrough')
@@ -71,7 +71,7 @@ class CVModelInferencer:
             if lanes is not None:
                 lanes_msgs = []
                 for lane in lanes:
-                    project_points = self.projection(np.array(lane, dtype=np.int))
+                    project_points = self.projection(np.array(lane, dtype=np.uint8))
 
                     lane_msg = FloatList()
                     pts_msg = []
@@ -136,12 +136,25 @@ def get_input(frame):
     #frame = cv2.resize(frame,(1280,720),interpolation=cv2.INTER_AREA)
     frame_copy = np.copy(frame)
 
-    test_edges,test_edges_inv = find_edge_channel(frame_copy)
-    frame_copy = np.append(frame_copy,test_edges.reshape(test_edges.shape[0],test_edges.shape[1],1),axis=2)
-    frame_copy = np.append(frame_copy,test_edges_inv.reshape(test_edges_inv.shape[0],test_edges_inv.shape[1],1),axis=2)
-    frame_copy = cv2.resize(frame_copy,(330,180))
+    gray = cv2.cvtColor(frame_copy, cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(gray, (9, 9), 0)
+    gradient_map = cv2.Sobel(blur, cv2.CV_64F, 1, 0, ksize=-1) # Gradient map along x
+    #         gradient_map = cv2.Laplacian(gray, cv2.CV_64F)
+    gradient_map = np.uint8(np.absolute(gradient_map))
+    test_edges, test_edges_inv = find_edge_channel(frame_copy)
 
-    input = (frame_copy/255.).transpose(2,0,1).reshape(1,5,180,330)
+
+    frame_copy = np.zeros((gray.shape[0],gray.shape[1],4),dtype=np.uint8)   
+    frame_copy[:,:,0] = gray
+    frame_copy[:,:,1] = test_edges
+    frame_copy[:,:,2] = test_edges_inv
+    frame_copy[:,:,3] = gradient_map
+
+    frame_copy = cv2.resize(frame_copy, (256, 160))
+
+
+
+    input = (frame_copy/255.).transpose(2,0,1).reshape(1,4,160,256)
     return input
 
 
