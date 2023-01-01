@@ -11,6 +11,9 @@ import rospkg
 from runonnx import run_inference
 import rospy
 
+from cv_bridge import CvBridge
+from sensor_msgs.msg import Image
+
 from cv.msg import FloatArray, FloatList
 from geometry_msgs.msg import Point
 from cv_utils import camera_projection
@@ -20,6 +23,7 @@ class CVModelInferencer:
         rospy.init_node('pothole_detection_model_inference')
         self.pub = rospy.Publisher('cv/pothole_detections', FloatArray, queue_size=10)
 
+        self.bridge = CvBridge()
         self.projection = camera_projection.CameraProjection()
         
         rospack = rospkg.RosPack()
@@ -28,7 +32,7 @@ class CVModelInferencer:
         self.model = onnx.load(model_path)
         onnx.checker.check_model(self.model)
 
-        self.ort_session = ort.InferenceSession(model_path, providers=['CUDAExecutionProvider'])
+        self.ort_session = ort.InferenceSession(model_path, providers=['CPUExecutionProvider'])
 
     def run(self):
         rospy.Subscriber("image", Image, self.process_image)
@@ -42,6 +46,7 @@ class CVModelInferencer:
 
         if raw is not None:
             potholes = run_inference(raw, self.ort_session)
+            # rospy.loginfo("potholes: %s", potholes)
             if potholes is None:
                 return
 
@@ -72,7 +77,7 @@ class CVModelInferencer:
                     pts_msg += [pt_msg]
                 lane_msg.elements = pts_msg
                 lanes_msgs += [lane_msg]
-
+            rospy.loginfo("Publishes Something!")
             msg = FloatArray()
             msg.lists = lanes_msgs
             self.pub.publish(msg)

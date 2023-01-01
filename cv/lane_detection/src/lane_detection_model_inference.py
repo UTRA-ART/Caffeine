@@ -29,8 +29,6 @@ class CVModelInferencer:
         self.pub = rospy.Publisher('cv/lane_detections', FloatArray, queue_size=10)
         self.pub_raw = rospy.Publisher('cv/model_output', Image, queue_size=10)
 
-        rospy.loginfo("Node initialized")
-
         self.bridge = CvBridge()
         self.projection = camera_projection.CameraProjection()
         
@@ -40,14 +38,13 @@ class CVModelInferencer:
         self.model = onnx.load(model_path)
         onnx.checker.check_model(self.model)
 
-        self.ort_session = ort.InferenceSession(model_path, providers=['CUDAExecutionProvider'])
+        self.ort_session = ort.InferenceSession(model_path, providers=['CPUExecutionProvider'])
 
     def run(self):
         rospy.Subscriber("image", Image, self.process_image)
         rospy.spin()
 
     def process_image(self, data):
-        rospy.loginfo("Triggered one image topic callback")
         if data == []:
             return
             
@@ -69,6 +66,7 @@ class CVModelInferencer:
             # Publish to /cv/lane_detection
             lanes = fit_lanes(mask)
             if lanes is not None:
+                # rospy.loginfo("lanes: %s", lanes)
                 lanes_msgs = []
                 for lane in lanes:
                     project_points = self.projection(np.array(lane, dtype=np.uint8))
