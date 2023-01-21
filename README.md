@@ -120,6 +120,18 @@ roslaunch nav_stack move_base.launch
 ```
 After running all 3 commands, set a 2d Nav Goal in RVIZ, and if your robot moves in both Gazebo and RVIZ, you are good
 
+## Other Launch Files
+```
+# To launch the CV Pipeline
+roslaunch cv pipeline.launch
+
+# To activate auto-navigation 
+roslaunch load_waypoints load_waypoints.launch 
+
+# To use teleop to manually control caffeine's movement
+roslaunch teleop_twist_keyboard keyboard_teleop.launch
+```
+
 ## Notes ##
 
 When running `simulate.launch`, an error saying that the `spawn_model` node failed will appear. This occurs because both the gazebo world and the urdf are loaded in the same `roslaunch` file (IGVC takes too long to load before model is spawned). The spawner will automatically retry and spawn Caffeine properly, so this error can be safely ignored.
