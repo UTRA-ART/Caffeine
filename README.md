@@ -79,7 +79,7 @@ Custom built world(s) representing the IGVC competition can be found in the [`/w
 ### Installing CV dependencies ###
 The cv pipeline has several pip dependencies that need to be installed for both python 2 and  python 3. Run the following commands. 
 ```
-pip3 install redis onnx onnxruntime opencv-python rospkg rospy scikit-learn scipy
+pip3 install onnx onnxruntime opencv-python rospkg scikit-learn scipy
 ```
 
 ## Cloning this repository ##
