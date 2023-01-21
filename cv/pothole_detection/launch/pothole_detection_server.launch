@@ -8,12 +8,4 @@
     >
         <remap from="image" to="/zed/zed_node/left/image_rect_color"/>
     </node>
-
-    <!-- Runs CV pipeline in python3 communicating with UDP pipeline -->
-    <!-- <node
-        name="pothole_detection_wrapper_client"
-        pkg="pothole_detection"
-        type="pothole_detection_wrapper_client.py"
-        output="screen"
-    /> -->
 </launch>
