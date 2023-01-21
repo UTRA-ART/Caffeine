@@ -1,14 +1,14 @@
 # Caffeine on ROS #
 
-This project runs on ROS melodic for Ubuntu 18.04 LTS. Caffeine is a robot being built to compete in IGVC.
+This project runs on ROS noetic for Ubuntu 20.04 LTS. Caffeine is a robot being built to compete in IGVC.
 
 ## Setting up the ROS Environment ##
 
-### Install Ubuntu 18.04 LTS ###
+### Install Ubuntu 20.04 LTS ###
 This is dependent on what OS and computer is currently used. The [wiki](https://github.com/UTRA-ART/Caffeine/wiki) has a section on how to dual boot.
 
-### Install ROS Melodic ###
-The following instructions are taken from the ROS wiki [install melodic](http://wiki.ros.org/melodic/Installation/Ubuntu) page:
+### Install ROS Noetic ###
+The following instructions are taken from the ROS wiki [install noetic](http://wiki.ros.org/noetic/Installation/Ubuntu) page:
 ```
 # Configure Ubuntu repositories
 sudo add-apt-repository universe
@@ -22,11 +22,11 @@ sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main
 sudo apt install curl
 curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
 
-# Melodic Desktop-Full Install
-sudo apt install ros-melodic-desktop-full
+# Noetic Desktop-Full Install
+sudo apt install ros-noetic-desktop-full
 
 # Environment setup
-echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
+echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 
 # Dependencies for buiding packages
@@ -38,38 +38,38 @@ rosdep update
 ### Install the Navigation Package ###
 Provides the [Navigation Stack](http://wiki.ros.org/navigation) package which is used for autonomous navigation.
 ```
-sudo apt-get install ros-melodic-navigation
+sudo apt-get install ros-noetic-navigation
 ```
 
 ### Install RVIZ Plugins ###
 Provides the [RVIZ Sensor Plugins](http://wiki.ros.org/rviz_imu_plugin) package which is used for RVIZ data visualization
 ```
-sudo apt-get install ros-melodic-rviz-imu-plugin
+sudo apt-get install ros-noetic-rviz-imu-plugin
 ```
 
 ### Install Robot Localization ###
-Provides the [Robot Localization](http://docs.ros.org/en/melodic/api/robot_localization/html/index.html) package which is used for localizing the robot.
+Provides the [Robot Localization](http://docs.ros.org/en/noetic/api/robot_localization/html/index.html) package which is used for localizing the robot.
 ```
-sudo apt-get install ros-melodic-robot-localization
+sudo apt-get install ros-noetic-robot-localization
 ```
 
 ### Install RTAB Map ###
 Provides the [rtabmap_ros](http://wiki.ros.org/rtabmap_ros) package which is used for performing RGB-D SLAM.
 ```
-sudo apt-get install ros-melodic-rtabmap-ros
+sudo apt-get install ros-noetic-rtabmap-ros
 ```
 
 ### Install IMU dependencies ###
 Provides the [phidgets_imu](http://wiki.ros.org/phidgets_imu) package dependencies which is used for publishing data from a phidget IMU.
 ```
-sudo apt-get install ros-melodic-imu-transformer
-sudo apt-get install ros-melodic-imu-filter-madgwick
+sudo apt-get install ros-noetic-imu-transformer
+sudo apt-get install ros-noetic-imu-filter-madgwick
 ```
 
 ### Install Hector Gazebo Plugins ###
 Provides the [Hector Gazebo Plugins](http://wiki.ros.org/hector_gazebo_plugins) package for our GPS
 ```
-sudo apt-get install ros-melodic-hector-gazebo-plugins
+sudo apt-get install ros-noetic-hector-gazebo-plugins
 ```
 
 ### Install IGVC World ###
@@ -79,8 +79,7 @@ Custom built world(s) representing the IGVC competition can be found in the [`/w
 ### Installing CV dependencies ###
 The cv pipeline has several pip dependencies that need to be installed for both python 2 and  python 3. Run the following commands. 
 ```
-pip2 install opencv-python rospkg redis rospy scikit-learn scipy 
-pip3 install redis onnx onnxruntime opencv-python rospkg 
+pip3 install redis onnx onnxruntime opencv-python rospkg rospy scikit-learn scipy
 ```
 
 ## Cloning this repository ##
@@ -120,6 +119,18 @@ roslaunch description view.launch
 roslaunch nav_stack move_base.launch
 ```
 After running all 3 commands, set a 2d Nav Goal in RVIZ, and if your robot moves in both Gazebo and RVIZ, you are good
+
+## Other Launch Files
+```
+# To launch the CV Pipeline
+roslaunch cv pipeline.launch
+
+# To activate auto-navigation 
+roslaunch load_waypoints load_waypoints.launch 
+
+# To use teleop to manually control caffeine's movement
+roslaunch teleop_twist_keyboard keyboard_teleop.launch
+```
 
 ## Notes ##
 
