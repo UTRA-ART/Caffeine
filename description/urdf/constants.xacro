@@ -94,6 +94,9 @@
     <xacro:property name="laser_topicName" value="scan"/>
     <xacro:property name="laser_frameName" value="base_laser"/>
 
+    <xacro:property name="another_laser_topicName" value="scan_upper"/>
+    <xacro:property name="another_laser_frameName" value="another_laser"/>
+
     <xacro:property name="laser_length" value="0.05"/>
     <xacro:property name="laser_width" value="0.05"/>
     <xacro:property name="laser_height" value="0.07"/>
@@ -101,6 +104,7 @@
 
     <xacro:property name="laser_x_dist" value="${base_length/2 - 2*laser_length}"/>
     <xacro:property name="laser_z_dist" value="${laser_height/2}"/>
+    <xacro:property name="distance_to_second_lidar" value="0.2"/>
 
     <!-- ZED camera -->
     <!-- NOTE: approx as a rectangular prism -->
