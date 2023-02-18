@@ -83,6 +83,7 @@ class CVModelInferencer:
                     lanes_msgs += [lane_msg]
 
                 msg = FloatArray()
+                msg.header.frame_id = 'left_camera_link_optical'
                 msg.lists = lanes_msgs
                 self.pub.publish(msg)
 
