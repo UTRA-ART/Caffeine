@@ -43,9 +43,9 @@
     </link>
 
     <joint name="base_laser_joint" type="fixed">
-        <parent link="chassis_link"/>
+        <parent link="base_link"/>
         <child link="base_laser"/>
-        <origin xyz="${laser_x_dist} 0 ${wheel_diameter - (2.75 * laser_height / 3)  - stand_height / 2}" rpy="0 0 0"/>
+        <origin xyz="${laser_x_dist} 0 ${laser_z_dist}" rpy="0 0 0"/>
     </joint>
 
     <!--another lidar for testing-->

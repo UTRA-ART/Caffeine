@@ -14,8 +14,8 @@
 
     <!-- Stand -->
     <xacro:property name="stand_length" value="0.412"/>
-    <xacro:property name="stand_width" value="0.254"/>
-    <xacro:property name="stand_height" value="1.324"/>
+    <xacro:property name="stand_width" value="0.33"/>
+    <xacro:property name="stand_height" value="1.335"/>
     <xacro:property name="stand_mass" value="1.0"/>
 
     <!-- Casters -->
