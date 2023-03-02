@@ -94,6 +94,9 @@
     <xacro:property name="laser_topicName" value="scan"/>
     <xacro:property name="laser_frameName" value="base_laser"/>
 
+    <xacro:property name="upper_laser_topicName" value="scan_upper"/>
+    <xacro:property name="upper_laser_frameName" value="upper_laser"/>
+
     <xacro:property name="laser_length" value="0.05"/>
     <xacro:property name="laser_width" value="0.05"/>
     <xacro:property name="laser_height" value="0.07"/>
@@ -154,5 +157,11 @@
     <xacro:property name="imu_frame" value="imu_link"/>
     <xacro:property name="imu_topic" value="imu/data"/>
     <xacro:property name="imu_update_rate" value="128.0"/>
+
+    <xacro:property name="imu_x_dist" value="0.28"/>
+    <xacro:property name="imu_y_dist" value="0.295"/>
+    <xacro:property name="imu_z_dist" value="0.0"/>
+    <!--<xacro:property name="imu_z_dist" value="0.195"/>-->
+
 
 </robot>
