@@ -6,11 +6,11 @@
     <xacro:property name="base_width" value="0.764"/>
     <xacro:property name="base_height" value="0.01"/>
 
-    <!-- Chassis -->
-    <xacro:property name="chassis_to_base_link_dist" value="0.74424"/>
-    <xacro:property name="chassis_to_stand_link_dist" value="1.0357"/>
+    <!-- Chassis --> 
+    <xacro:property name="chassis_to_base_link_dist" value="0.501747"/>
+    <xacro:property name="chassis_to_stand_link_dist" value="0.428526"/>
 
-    <xacro:property name="chassis_link_mass" value="32.46"/>
+    <xacro:property name="chassis_link_mass" value="36.95"/>
 
     <!-- Stand -->
     <xacro:property name="stand_length" value="0.412"/>

@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <robot name="caffeine_inertias" xmlns:xacro="http://ros.org/wiki/xacro">
-    <!-- Chassis -->
+    <!-- Chassis --> 
     <xacro:macro name="chassis_link_inertia">
         <inertia
-            ixx="21.200" ixy="0.000" ixz="0.0000"
-            iyx="0.0000" iyy="21.230" iyz="0.0000"
-            izx="0.0000" izy="0.0000" izz="2.2600"
+            ixx="13.1600" ixy="0.0000" ixz="0.0000"
+            iyx="0.0000" iyy="11.7000" iyz="0.0000"
+            izx="0.0000" izy="0.0000" izz="2.6800"
         />
     </xacro:macro>
 
@@ -21,16 +21,16 @@
     <!-- Box Inertia -->
     <xacro:macro name="box_inertia" params="mass length width height">
         <inertia
-            ixx="${mass * (height*height + length*length)/12.0}" ixy="0.0" ixz="0.0"
-            iyx="0.0" iyy="${mass * (width*width + length*length)/12.0}" iyz="0.0"
+            ixx="${mass * (height*height + length*length)/12.0}" ixy="0.0" ixz="0.0" 
+            iyx="0.0" iyy="${mass * (width*width + length*length)/12.0}" iyz="0.0" 
             izx="0.0" izy="0.0" izz="${mass * (width*width + height*height)/12.0}"
-        />
+        /> 
     </xacro:macro>
-
-    <!-- Cynlinder Inertia -->
+    
+    <!-- Cylinder Inertia -->
     <xacro:macro name="cylinder_inertia" params="mass length radius">
         <inertia
-            ixx="${mass * (3*radius*radius + length*length)/12.0}" ixy="0.0" ixz="0.0"
+            ixx="${mass * (3*radius*radius + length*length)/12.0}" ixy="0.0" ixz="0.0" 
             iyx="0.0" iyy="${mass * (3*radius*radius + length*length)/12.0}" iyz="0.0"
             izx="0.0" izy="0.0" izz="${0.5*mass*radius*radius}"
         />
@@ -39,9 +39,9 @@
      <!-- Sphere Inertia -->
      <xacro:macro name="sphere_inertia" params="mass radius">
          <inertia
-             ixx="${(2.0 * mass * radius * radius) / 5.0}" ixy="0.0" ixz="0.0"
-             iyx="0.0" iyy="${(2.0 * mass * radius * radius) / 5.0}" iyz="0.0"
-             izx="0.0" izy="0.0" izz="${(2.0 * mass * radius * radius) / 5.0}"
+             ixx="${(2.0 * mass * radius * radius) / 5.0}" ixy="0.0" ixz="0.0" 
+             iyx="0.0" iyy="${(2.0 * mass * radius * radius) / 5.0}" iyz="0.0" 
+             izx="0.0" izy="0.0" izz="${(2.0 * mass * radius * radius) / 5.0}" 
          />
      </xacro:macro>
 
@@ -63,3 +63,4 @@
     </xacro:macro>
 
  </robot>
+
