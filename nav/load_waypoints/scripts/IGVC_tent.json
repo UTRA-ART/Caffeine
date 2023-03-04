@@ -1,0 +1,27 @@
+{
+    "start_direction": "north",
+    "laps": 2,
+    "waypoints" : [
+        {
+            "id" : 0,
+            "longitude" : -83.217924,
+            "latitude" : 42.668261,
+            "description"  : "North waypoint",
+            "frame_id" : "odom"
+        },
+        {
+            "id" : 1,
+            "longitude" : -83.218045,
+            "latitude" : 42.668210,
+            "description"  : "Mid",
+            "frame_id" : "odom"
+        },
+        {
+            "id" : 2,
+            "longitude" : -83.217930,
+            "latitude" : 42.668115,
+            "description"  : "South",
+            "frame_id" : "odom"
+        }
+    ]
+}
