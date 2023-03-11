@@ -70,7 +70,7 @@
     </gazebo>
 
     <!-- Another LIDAR for testing-->
-    <gazebo reference="another_laser">
+    <gazebo reference="upper_laser">
         <sensor type="ray" name="gpu_hokuyo_sensor">
             <pose>0 0 0 0 0 0</pose>
             <visualize>${laser_visualize}</visualize>
@@ -99,8 +99,8 @@
                 </noise>
             </ray>
             <plugin name="gazebo_ros_hokuyo_controller" filename="libgazebo_ros_laser.so">
-                <topicName>${another_laser_topicName}</topicName>
-                <frameName>${another_laser_frameName}</frameName>
+                <topicName>${upper_laser_topicName}</topicName>
+                <frameName>${upper_laser_frameName}</frameName>
             </plugin>
         </sensor>
     </gazebo>

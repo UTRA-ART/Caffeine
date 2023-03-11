@@ -94,8 +94,8 @@
     <xacro:property name="laser_topicName" value="scan"/>
     <xacro:property name="laser_frameName" value="base_laser"/>
 
-    <xacro:property name="another_laser_topicName" value="scan_upper"/>
-    <xacro:property name="another_laser_frameName" value="another_laser"/>
+    <xacro:property name="upper_laser_topicName" value="scan_upper"/>
+    <xacro:property name="upper_laser_frameName" value="upper_laser"/>
 
     <xacro:property name="laser_length" value="0.05"/>
     <xacro:property name="laser_width" value="0.05"/>

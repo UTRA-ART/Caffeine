@@ -50,7 +50,7 @@
 
     <!--another lidar for testing-->
 
-    <link name="another_laser">
+    <link name="upper_laser">
         <inertial>
             <mass value="${laser_mass}"/>
             <xacro:box_inertia mass="${laser_mass}" length="${laser_length}" width="${laser_width}" height="${laser_height}"/>
@@ -71,9 +71,9 @@
         </collision>
     </link>
 
-    <joint name="another_laser_joint" type="fixed">
+    <joint name="upper_laser_joint" type="fixed">
         <parent link="base_link"/>
-        <child link="another_laser"/>
+        <child link="upper_laser"/>
         <origin xyz="${laser_x_dist} 0 ${laser_z_dist+distance_to_second_lidar}" rpy="0 0 0"/>
     </joint>
 
