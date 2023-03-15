@@ -19,7 +19,7 @@
  */
 
 
-#include <ros/rs.h>
+#include <ros/ros.h>
 #include <std_msgs/Int16.h>
 #include <std_msgs/Float64.h>
 #include <nav_msgs/Odometry.h>
@@ -29,6 +29,8 @@
 #include <tf2_ros/transform_broadcaster.h>
 #include <cmath>
 #include <time.h>
+
+#include <std_msgs/String.h>
 
 // publish to
 ros::Publisher odom_data_pub;
@@ -204,13 +206,13 @@ void update_odom(){
     distance_left = l_direction * vel_left * duration;
     distance_right = r_direction * vel_right * duration;
 
-    std_msgs::String msg;
-    std::stringstream ss;
+    // std_msgs::String msg;
+    // std::stringstream ss;
 
-    ss << "distance_left: " << distance_left;
-    msg.data = ss.str();
+    // ss << "distance_left: " << distance_left;
+    // msg.data = ss.str();
 
-    debug_pub.publish(msg)
+    // debug_pub.publish(msg)
 
     // average distance since last cycle
     double cycle_distance = (distance_right + distance_left) / 2;
@@ -302,7 +304,7 @@ int main(int argc, char **argv){
     odom_data_pub = nh.advertise<nav_msgs::Odometry>("odom_wheel_encoder_euler", 100);   // simple odom message, orientation.z is an euler angle
     odom_data_pub_quat = nh.advertise<nav_msgs::Odometry>("odom_wheel_encoder_quat", 100);   // full odom message, orientation.z is quaternion
 
-    debug_pub = nh.advertise<std_msgs::String>("debug", 100);
+    // debug_pub = nh.advertise<std_msgs::String>("debug", 100);
 
     ros::Rate loop_rate(30);
 
