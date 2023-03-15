@@ -1,5 +1,5 @@
 <launch>
-    <arg name='baud_rate' default='9600'/>
+    <arg name='baud_rate' default='115200'/>
     <arg name='ros_rate' default='30'/>
     <arg name='odom_arduino_port' default='/dev/ttyACM0'/>
 

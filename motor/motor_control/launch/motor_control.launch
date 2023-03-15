@@ -7,7 +7,7 @@
   <arg name="encoder2_port" default="/dev/ttyACM2"/>
   -->
   <!-- Enable cmd_vel (ROS) to motor (Raspberry Pi) communication -->
-  <node name="cmd_vel_to_motor" pkg="motor_control" type="cmd_vel_to_motor"/>
+  <!-- <node name="cmd_vel_to_motor" pkg="motor_control" type="cmd_vel_to_motor"/> -->
   
   <!-- Output cmd_vel to Raspberry Pi GPIO pins -->
   <node name="motor_control_node" pkg="motor_control" type="motor_control.py"/>

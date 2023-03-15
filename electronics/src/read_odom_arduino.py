@@ -6,11 +6,11 @@
 read from arduino
 
 subscribes to:
-- left_wheel/command
+- left_wheel/command    (Float64)
 - right_wheel/command
 
 publishes to:
-- left_wheel/ticks
+- left_wheel/ticks      (Int32)
 - right_wheel/ticks
 
 params
@@ -22,12 +22,12 @@ params
 import serial
 
 import rospy
-from std_msgs.msg import Float64
+from std_msgs.msg import Int32
 
 odom_arduino_port = rospy.get_param('/ticks_publisher/odom_arduino_port')
 
 BAUD_RATE = rospy.get_param('/ticks_publisher/baud_rate')
-ROS_RATE = rospy.get_param('/ticks_publisher/ros_rate', 30)
+ROS_RATE = rospy.get_param('/ticks_publisher/ros_rate', 31)
 
 direction_r = 1 
 direction_l = 1 
@@ -54,8 +54,8 @@ if __name__ == '__main__':
     # ros setup
     rospy.init_node("ticks_publisher", anonymous=True)
 
-    ticks_pub_r = rospy.Publisher("right_wheel/ticks_ps", Float64, queue_size=10)
-    ticks_pub_l = rospy.Publisher("left_wheel/ticks_ps", Float64, queue_size=10)
+    ticks_pub_r = rospy.Publisher("/right_wheel/ticks", Int32, queue_size=10)
+    ticks_pub_l = rospy.Publisher("/left_wheel/ticks", Int32, queue_size=10)
 
     # rospy.Subscriber("right_wheel/command", Float64, r_command_cb)
     # rospy.Subscriber("left_wheel/command", Float64, l_command_cb)
@@ -67,13 +67,12 @@ if __name__ == '__main__':
 
     # run
     while not rospy.is_shutdown():
-        if conn.in_waiting > 0:
-            line = conn.readline().decode('utf-8').rstrip()
+        if conn.in_waiting > 0:          
+            try:
+                line = conn.readline().decode('utf-8').rstrip()
+                l_val, r_val = line[1:-1].split(',')    # data in format <{left_count},{right_count}>
 
-        try:
-            l_val, r_val = line[1:-1].split(',')    # data in format <{left_count},{right_count}>
-
-            ticks_pub_l.publish(direction_l * int(l_val))
-            ticks_pub_r.publish(direction_r * int(r_val))
-        except:
-            pass
+                ticks_pub_l.publish(direction_l * int(l_val))
+                ticks_pub_r.publish(direction_r * int(r_val))
+            except:
+                pass
