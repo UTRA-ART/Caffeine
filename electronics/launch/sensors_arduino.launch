@@ -1,0 +1,11 @@
+<launch>
+
+    <arg name='baud_rate' default='115200'/>
+    <arg name='fault_arduino_port' default='/dev/ttyACM0'/>
+    
+    <!-- launch fault_monitor -->
+    <node name='fault_monitor' pkg='electronics' type='sensors_arduino.py' output='screen'>
+        <param name='baud_rate' value='$(arg baud_rate)'/>
+        <param name='arduino_port' value='$(arg fault_arduino_port)'/>
+    </node>
+</launch>
