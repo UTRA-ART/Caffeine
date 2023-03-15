@@ -31,6 +31,7 @@
 #include <time.h>
 
 #include <std_msgs/String.h>
+#include <ros/console.h>
 
 // publish to
 ros::Publisher odom_data_pub;
@@ -92,6 +93,8 @@ void right_encoder_cb(const std_msgs::Float64& right_ticks){
     ticks_ps_right = right_ticks.data;
     // velocity = ticks per second / ticks per metre = metres per second
     vel_right = ticks_ps_right / TICKS_PER_METRE;
+
+    ROS_DEBUG("vel_right: %f", vel_right);
 }
 
 void left_encoder_cb(const std_msgs::Float64& left_ticks){
@@ -289,8 +292,10 @@ int main(int argc, char **argv){
 
     // subscribers
     // ticks per second from both wheels
-    ros::Subscriber right_vel_sub = nh.subscribe("right_wheel/ticks_ps", 100, right_encoder_cb, ros::TransportHints().tcpNoDelay());    // reduce latency for large messages
-    ros::Subscriber left_vel_sub = nh.subscribe("left_wheel/ticks_ps", 100, left_encoder_cb, ros::TransportHints().tcpNoDelay());       // 100 is queue size
+    // ros::Subscriber right_vel_sub = nh.subscribe("/right_wheel/ticks_ps", 100, right_encoder_cb, ros::TransportHints().tcpNoDelay());    // reduce latency for large messages
+    // ros::Subscriber left_vel_sub = nh.subscribe("/left_wheel/ticks_ps", 100, left_encoder_cb, ros::TransportHints().tcpNoDelay());       // 100 is queue size
+    ros::Subscriber right_vel_sub = nh.subscribe("/right_wheel/ticks_ps", 100, right_encoder_cb);
+    ros::Subscriber left_vel_sub = nh.subscribe("/left_wheel/ticks_ps", 100, left_encoder_cb);
     // wheel commands to get direction for both wheels
     ros::Subscriber r_vel = nh.subscribe("/right_wheel/command", 100, right_direction_cb, ros::TransportHints().tcpNoDelay());
     ros::Subscriber l_vel = nh.subscribe("/left_wheel/command", 100, left_direction_cb, ros::TransportHints().tcpNoDelay());
@@ -306,7 +311,7 @@ int main(int argc, char **argv){
 
     // debug_pub = nh.advertise<std_msgs::String>("debug", 100);
 
-    ros::Rate loop_rate(30);
+    ros::Rate loop_rate(60);
 
     while(ros::ok()){
         // distance is updated in update_odom

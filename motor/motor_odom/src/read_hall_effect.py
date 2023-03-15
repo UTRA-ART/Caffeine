@@ -19,7 +19,7 @@ import sys
 import rospy 
 from std_msgs.msg import Float64 
 
-PRINT_RATE = 0.5
+PRINT_RATE = 1
 ROS_RATE = 60       # ros node cycles at 60 Hz
 
 encoder_r = 22     # (15)
@@ -72,7 +72,7 @@ if __name__ == '__main__':
         current_time = time.time()
         time_diff = time.time() - last_time 
         if current_time - last_time > PRINT_RATE:
-            print(f"ticks since last count: {pulse_count_r}")
+            print(f"ticks since last count: {pulse_count_r} ")
 
             l_ticks_ps = pulse_count_l / (time.time() - last_time)
             r_ticks_ps = pulse_count_r / (time.time() - last_time)
