@@ -5,26 +5,33 @@
  * note: tutorial is in Melodic
  * 
  * subscribed to:
- *   right_wheel/ticks_ps  (ticks per second, Float64)
- *   left_wheel/ticks_ps
- *   right_wheel/command
- *   left_wheel/command
+ *   right_wheel/ticks  (ticks since last, Float64)
+ *   left_wheel/ticks
+ *   right_wheel/direction (bool)
+ *   left_wheel/direction
+ *   rover_pose/set        (geometry_msgs/PoseStamped)
+ *   rover_pose/reset      (bool)
  * 
  * publishes to:
- *   odom_wheel_encoder_euler
- *   odom_wheel_encoder_quat
+ *   wheel_odom/euler
+ *   wheel_odom/quat
  * 
  * resources
  *   tcp_nodelay: https://answers.ros.org/question/360038/what-are-the-differences-between-the-different-transporthints/
  *   covariance matrix: https://answers.ros.org/question/64759/covariance-matrix-for-vo-and-odom/
  *   motion model: https://www.roboticsbook.org/S52_diffdrive_actions.html
- * 
+ *   publish geometry_msgs/PoseStamped message: https://answers.ros.org/question/47973/publishing-to-move_base_simplegoal/
+ *      
+ *  
  * 2024-04-10
  * fix direction issue - direction retrieved from command messages and
  * and combined with directionless ticks/s from hall effect sensors
  * 
  * 2024-05-20
  * subscribe to wheel/ticks instead, not necessarily ticks_ps
+ * 
+ * 2024-06-01
+ * subscribe to rover_pose to reset position without relaunching
  */
 
 
@@ -34,7 +41,6 @@
 #include <std_msgs/Float64.h>
 #include <std_msgs/Bool.h>
 #include <nav_msgs/Odometry.h>
-#include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2_ros/transform_broadcaster.h>
@@ -129,6 +135,20 @@ void right_direction_cb(const std_msgs::Bool& right_dir_msg){
         r_direction = 1;
     }else{
         r_direction = -1;
+    }
+}
+
+void set_pose_cb(const geometry_msgs::PoseStamped& pose_msg){
+    odom_old.pose.pose.position.x = pose_msg.pose.position.x;
+    odom_old.pose.pose.position.y = pose_msg.pose.position.y;
+    odom_old.pose.pose.orientation.z = pose_msg.pose.orientation.z;
+}
+
+void reset_pose_cb(const std_msgs::Bool& reset_msg){
+    if(reset_msg.data){
+        odom_old.pose.pose.position.x = 0;
+        odom_old.pose.pose.position.y = 0;
+        odom_old.pose.pose.orientation.z = 0;
     }
 }
 
@@ -250,7 +270,10 @@ int main(int argc, char **argv){
     // wheel commands to get direction for both wheels
     ros::Subscriber r_vel = nh.subscribe("/right_wheel/direction", 100, right_direction_cb, ros::TransportHints().tcpNoDelay());
     ros::Subscriber l_vel = nh.subscribe("/left_wheel/direction", 100, left_direction_cb, ros::TransportHints().tcpNoDelay());
-    
+    // force set rover position
+    ros::Subscriber pose_sub = nh.subscribe("rover_pose/set", 1, set_pose_cb, ros::TransportHints().tcpNoDelay()); 
+    ros::Subscriber reset_sub = nh.subscribe("rover_pose/reset", 1, reset_pose_cb, ros::TransportHints().tcpNoDelay());
+
     // initial timestamp? not sure how to initialize the time, time taken mostly in loop?
     last = time(NULL);
     current = last;

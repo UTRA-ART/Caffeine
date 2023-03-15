@@ -196,14 +196,14 @@ void senseAlarm(){
 void senseVolt(){
   int voltage = analogRead(volt_sensor);
   //Serial.println(voltage);
-  if (voltage < 50){
+  if (voltage < 50){  // no voltage = rover off
     voltage_error=1;
   }
-  else if (voltage < 800){
+  else if (voltage < 800){  // undervoltage = battery dying
     Serial.println("UVolt");
     voltage_error=1;
   }
-  else {
+  else {  // ok
     voltage_error=0;
   }
 
