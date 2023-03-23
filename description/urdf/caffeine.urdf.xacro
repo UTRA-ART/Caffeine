@@ -47,35 +47,4 @@
         <child link="base_laser"/>
         <origin xyz="${laser_x_dist} 0 ${laser_z_dist}" rpy="0 0 0"/>
     </joint>
-
-    <!--another lidar for testing-->
-
-    <link name="upper_laser">
-        <inertial>
-            <mass value="${laser_mass}"/>
-            <xacro:box_inertia mass="${laser_mass}" length="${laser_length}" width="${laser_width}" height="${laser_height}"/>
-        </inertial>
-
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-            <mesh filename="package://description/urdf/meshes/hokuyo.dae"/>
-            </geometry>
-        </visual>
-
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-            <mesh filename="package://description//urdf/meshes/hokuyo.dae"/>
-            </geometry>
-        </collision>
-    </link>
-
-    <joint name="upper_laser_joint" type="fixed">
-        <parent link="base_link"/>
-        <child link="upper_laser"/>
-        <origin xyz="${laser_x_dist} 0 ${laser_z_dist+distance_to_second_lidar}" rpy="0 0 0"/>
-    </joint>
-
-
 </robot>

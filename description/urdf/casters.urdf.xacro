@@ -59,14 +59,16 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://description/urdf/meshes/front_caster_wheel.dae"/>
+                <mesh filename="package://description/urdf/meshes/front_caster_wheel_new.dae"/>
+                <!--<mesh filename="package://description/urdf/meshes/front_caster_wheel.dae"/>-->
             </geometry>
         </visual>
 
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://description/urdf/meshes/front_caster_wheel.dae"/>
+                <mesh filename="package://description/urdf/meshes/front_caster_wheel_new.dae"/>
+                <!--<mesh filename="package://description/urdf/meshes/front_caster_wheel.dae"/>-->
             </geometry>
         </collision>
 
