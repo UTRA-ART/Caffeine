@@ -90,33 +90,4 @@
         <child link="left_camera_link_optical"/>
         <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
     </joint>
-
-    <!-- IMU (IS CONNECTED TO BASE LINK) -->
-    <link name="imu_link">
-        <inertial>
-            <mass value="${phidget_mass}"/>
-            <xacro:box_inertia mass="${phidget_mass}" length="${phidget_length}" width="${phidget_width}" height="${phidget_height}"/>
-        </inertial>
-
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-            <box size="${phidget_length} ${phidget_width} ${phidget_height}"/>
-            </geometry>
-        </visual>
-
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-            <box size="${phidget_length} ${phidget_width} ${phidget_height}"/>
-            </geometry>
-        </collision>
-    </link>
-    
-    <joint name="base_link_to_imu_link" type="fixed">
-        <parent link="base_link"/>
-        <child link="imu_link"/>
-        <origin xyz="${imu_x_dist} ${imu_y_dist} ${imu_z_dist}" rpy="0 0 0"/>
-    </joint>
-
 </robot>
