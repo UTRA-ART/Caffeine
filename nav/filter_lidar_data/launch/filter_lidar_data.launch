@@ -1,6 +1,6 @@
 <launch>
     <!-- old method of filtering lidar -->
-    <!-- <node 
+    <node 
         name="ignore_lidar" 
         pkg="filter_lidar_data" 
         type="ignore_lidar_node" 
@@ -10,14 +10,19 @@
         <param name="second_waypoint_longitude" value="-79.3903788"/>
         <param name="third_waypoint_latitude" value="43.6571678"/>
         <param name="third_waypoint_longitude" value="-79.3902588"/>
-    </node> -->
-    <node
+    </node>
+    <!-- <node
         name="dual_lidar_filter" 
         pkg="filter_lidar_data" 
         type="dual_lidar_filter_node" 
         output="screen"
     >
-        <!-- unless this can track a constant defined in constants.xacro, make sure this is updated to be actual distance b/w lidars -->
-        <param name="distance_to_second_lidar" value="0.2"/>
-    </node>
+         unless this can track a constant defined in constants.xacro, make sure this is updated to be actual distance b/w lidars
+        <param name="distance_to_second_lidar" value="0.6"/>
+        <param name="max_theta_degrees" value="5" />
+        <param name="main_topic" value="/scan" />
+        <param name="upper_topic" value="/scan_upper" />
+        <param name="out_topic" value="/scan_modified" />
+        <param name="compare_lidar_time_tolerance_seconds" value="10" />
+    </node> -->
 </launch>
