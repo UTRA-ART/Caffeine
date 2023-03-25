@@ -69,7 +69,7 @@
     <joint name="zed_camera_joint" type="fixed">
         <parent link="stand_link"/>
         <child link="zed_base_link"/>
-        <origin xyz="${0.05 + (stand_width / 2.0) - ZED_camera_width} 0 ${ZED_camera_height / 2.0}" rpy="0 ${ZED_camera_pitch} 0"/>
+        <origin xyz="${ZED_camera_to_top_plate_x} 0 ${ZED_camera_to_top_plate_z}" rpy="0 ${ZED_camera_pitch} 0"/>
     </joint>
 
     <!-- Generate Left Camera frame -->

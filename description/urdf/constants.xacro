@@ -14,7 +14,7 @@
 
     <!-- Stand -->
     <xacro:property name="stand_length" value="0.412"/>
-    <xacro:property name="stand_width" value="0.33"/>
+    <xacro:property name="stand_width" value="0.255"/>
     <xacro:property name="stand_height" value="1.335"/>
     <xacro:property name="stand_mass" value="1.0"/>
 
@@ -126,6 +126,11 @@
     <xacro:property name="ZED_depth_info_topicName" value="depth/camera_info"/>
     <xacro:property name="ZED_depth_points_topicName" value="depth/points"/>
     <xacro:property name="ZED_frameName" value="left_camera_link_optical"/>
+
+    <!--ZED CAMERA JOINT PARAMETERS-->
+
+    <xacro:property name="ZED_camera_to_top_plate_x" value="${(stand_width / 2.0)-0.01}"/>
+    <xacro:property name="ZED_camera_to_top_plate_z" value="0.065"/>
 
     <!-- Garmin GPS -->
     <!-- NOTE: approx. as a cylinder, Garmin itself is similar to a hockey puck -->
