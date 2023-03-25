@@ -35,7 +35,8 @@
 
     <!-- LIDAR -->
     <gazebo reference="base_laser">
-        <sensor type="ray" name="gpu_hokuyo_sensor">
+        <!-- make sure your sensor NAMES are unique :'( -->
+        <sensor type="ray" name="hokuyo_sensor_1">
             <pose>0 0 0 0 0 0</pose>
             <visualize>${laser_visualize}</visualize>
             <update_rate>${laser_update_rate}</update_rate>
@@ -71,7 +72,8 @@
 
     <!-- Another LIDAR for testing-->
     <gazebo reference="upper_laser">
-        <sensor type="ray" name="gpu_hokuyo_sensor">
+        <!-- make sure your sensor NAMES are unique :'( -->
+        <sensor type="ray" name="hokuyo_sensor_2">
             <pose>0 0 0 0 0 0</pose>
             <visualize>${laser_visualize}</visualize>
             <update_rate>${laser_update_rate}</update_rate>

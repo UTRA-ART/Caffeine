@@ -104,7 +104,7 @@
 
     <xacro:property name="laser_x_dist" value="${base_length/2 - 2*laser_length}"/>
     <xacro:property name="laser_z_dist" value="${laser_height/2}"/>
-    <xacro:property name="distance_to_second_lidar" value="0.6"/>
+    <xacro:property name="distance_to_second_lidar" value="0.2"/>
 
     <!-- ZED camera -->
     <!-- NOTE: approx as a rectangulSar prism -->
