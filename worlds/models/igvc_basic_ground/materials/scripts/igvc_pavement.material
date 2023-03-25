@@ -11,7 +11,7 @@ material igvc_pavement/Image
             texture_unit
             {
                 texture IGVC_pavement.png
-                filtering anisotropic
+                filtering trilinear
             }
         }
     }
