@@ -12,7 +12,7 @@
     
     <arg name="x" value="-19.5" if="$(eval arg('world_type') =='pavement')" />
     <arg name="y" value="0" if="$(eval arg('world_type') =='pavement')" />
-    <arg name="z" value="0.25" if="$(eval arg('world_type') =='pavement')" />
+    <arg name="z" value="0.241" if="$(eval arg('world_type') =='pavement')" />
     <arg name="roll" value="0" if="$(eval arg('world_type') =='pavement')" />
     <arg name="pitch" value="0" if="$(eval arg('world_type') =='pavement')" />
     <arg name="yaw" value="1.57" if="$(eval arg('world_type') =='pavement')" /> 

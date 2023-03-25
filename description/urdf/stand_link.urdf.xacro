@@ -42,9 +42,10 @@
         <origin xyz="0 0 ${(gps_length + phidget_height) / 2.0}" rpy="0 0 0"/>
     </joint>
 
+    <!-- </robot> -->
     <!-- ZED Camera -->
     <!-- NOTE: this frame is for convenience, multicamera will use the subsequent left camera frames -->
-    <link name="zed_camera_link">
+    <link name="zed_base_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
             <geometry>
@@ -67,8 +68,8 @@
 
     <joint name="zed_camera_joint" type="fixed">
         <parent link="stand_link"/>
-        <child link="zed_camera_link"/>
-        <origin xyz="${stand_length / 2.0 - ZED_camera_width} 0 ${ZED_camera_height / 2.0}" rpy="0 ${ZED_camera_pitch} 0"/>
+        <child link="zed_base_link"/>
+        <origin xyz="${0.05 + (stand_width / 2.0) - ZED_camera_width} 0 ${ZED_camera_height / 2.0}" rpy="0 ${ZED_camera_pitch} 0"/>
     </joint>
 
     <!-- Generate Left Camera frame -->
@@ -77,7 +78,7 @@
     <link name="left_camera_link"/>
 
     <joint name="left_camera_link_joint" type="fixed">
-        <parent link="zed_camera_link"/>
+        <parent link="zed_base_link"/>
         <child link="left_camera_link"/>
         <origin xyz="0 ${ZED_camera_length / 2.0} 0" rpy="0 0 0"/>
     </joint>
@@ -90,4 +91,5 @@
         <child link="left_camera_link_optical"/>
         <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
     </joint>
-</robot>
+
+</robot> 

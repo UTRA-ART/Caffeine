@@ -18,7 +18,7 @@
     -->
 
 
-       <!-- Front caster definition -->
+    <!-- Front caster definition -->
     <link name="front_caster_link">
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>

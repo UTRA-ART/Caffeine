@@ -21,6 +21,7 @@ include_directories(
 
 
 add_library(virtual_layers src/virtual_layer.cpp)
+add_dependencies(virtual_layers ${catkin_EXPORTED_TARGETS})
 
 ## Mark cpp header files for installation
 

@@ -1,12 +1,12 @@
 <launch>
 
-    <arg name="use_gui" default="false"/>
+    <arg name="use_gui" default="true"/>
     <arg name="rqt_steer" default="false"/>
     <arg name="rviz" default="true"/>
 
     <!-- IGVC worlds: full, walls, ramp, plain -->
     <!-- IGVC world types: pavement (2022 IGVC), grass (<2021 IGVC)-->
-    <arg name="world" default="full"/>
+    <arg name="world" default="plain"/>
     <arg name="world_type" default="pavement"/>
 
     <!-- Simulate 'world' in Gazebo -->
