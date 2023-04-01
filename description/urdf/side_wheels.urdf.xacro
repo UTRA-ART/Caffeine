@@ -20,14 +20,16 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://description/urdf/meshes/left_wheel.dae"/>
+                <mesh filename="package://description/urdf/meshes/left_wheel_new.dae"/>
+                <!--<mesh filename="package://description/urdf/meshes/left_wheel.dae"/>-->
             </geometry>
         </visual>
 
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://description/urdf/meshes/left_wheel.dae"/>
+                <mesh filename="package://description/urdf/meshes/left_wheel_new.dae"/>
+                <!--<mesh filename="package://description/urdf/meshes/left_wheel.dae"/>-->
             </geometry>
         </collision>
 
@@ -59,14 +61,16 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://description/urdf/meshes/right_wheel.dae"/>
+                <mesh filename="package://description/urdf/meshes/right_wheel_new.dae"/>
+                <!--mesh filename="package://description/urdf/meshes/right_wheel.dae"/>-->
             </geometry>
         </visual>
 
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://description/urdf/meshes/right_wheel.dae"/>
+                <mesh filename="package://description/urdf/meshes/right_wheel_new.dae"/>
+                <!--<mesh filename="package://description/urdf/meshes/right_wheel.dae"/>-->
             </geometry>
         </collision>
 
