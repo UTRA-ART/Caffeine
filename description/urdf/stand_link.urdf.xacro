@@ -3,10 +3,10 @@
     <!-- Includes -->
     <xacro:include filename="$(find description)/urdf/constants.xacro"/>
     <xacro:include filename="$(find description)/urdf/inertias.xacro"/>
-    
+
     <!-- Stand link; this is a dummy link that is used to make camera placement and other sensors on the stand more convenient -->
     <!-- Stand link definition. Note: purposely left blank -->
-    <link name="stand_link"/> 
+    <link name="stand_link"/>
 
     <joint name="stand_link_joint" type="fixed">
         <parent link="chassis_link"/>
@@ -39,35 +39,7 @@
     <joint name="gps_joint" type="fixed">
         <parent link="stand_link"/>
         <child link="gps_link"/>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-    </joint>
-
-    <!-- IMU -->
-    <link name="imu_link">
-        <inertial>
-            <mass value="${phidget_mass}"/>
-            <xacro:box_inertia mass="${phidget_mass}" length="${phidget_length}" width="${phidget_width}" height="${phidget_height}"/>
-        </inertial>
-
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-            <box size="${phidget_length} ${phidget_width} ${phidget_height}"/>
-            </geometry>
-        </visual>
-
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-            <box size="${phidget_length} ${phidget_width} ${phidget_height}"/>
-            </geometry>
-        </collision>
-    </link>
-    
-    <joint name="base_link_to_imu_link" type="fixed">
-        <parent link="base_link"/>
-        <child link="imu_link"/>
-        <origin xyz="${imu_x_dist} ${imu_y_dist} ${imu_z_dist}" rpy="0 0 0"/>
+        <origin xyz="0 0 ${(gps_length + phidget_height) / 2.0}" rpy="0 0 0"/>
     </joint>
 
     <!-- </robot> -->
@@ -97,7 +69,7 @@
     <joint name="zed_camera_joint" type="fixed">
         <parent link="stand_link"/>
         <child link="zed_base_link"/>
-        <origin xyz="${0.05 + (stand_width / 2.0) - ZED_camera_width} 0 ${ZED_camera_height / 2.0}" rpy="0 ${ZED_camera_pitch} 0"/>
+        <origin xyz="${ZED_camera_to_top_plate_x} 0 ${ZED_camera_to_top_plate_z}" rpy="0 ${ZED_camera_pitch} 0"/>
     </joint>
 
     <!-- Generate Left Camera frame -->

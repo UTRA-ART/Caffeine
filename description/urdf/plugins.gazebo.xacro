@@ -68,7 +68,7 @@
             </plugin>
         </sensor>
     </gazebo>
-
+    
     <!-- GPS -->
     <gazebo>
         <plugin name="gps_controller" filename="libhector_gazebo_ros_gps.so">
