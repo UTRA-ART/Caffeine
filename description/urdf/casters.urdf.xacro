@@ -14,7 +14,7 @@
         counterweight at the back, representative of a battery, for 
         example.
 
-        *Leave Front Caster+Wheel Definitions Commented Out*
+        *Leave BACK Caster+Wheel Definitions Commented Out*
     -->
 
 
@@ -59,14 +59,16 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://description/urdf/meshes/front_caster_wheel.dae"/>
+                <mesh filename="package://description/urdf/meshes/front_caster_wheel_new.dae"/>
+                <!--<mesh filename="package://description/urdf/meshes/front_caster_wheel.dae"/>-->
             </geometry>
         </visual>
 
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="package://description/urdf/meshes/front_caster_wheel.dae"/>
+                <mesh filename="package://description/urdf/meshes/front_caster_wheel_new.dae"/>
+                <!--<mesh filename="package://description/urdf/meshes/front_caster_wheel.dae"/>-->
             </geometry>
         </collision>
 
@@ -99,27 +101,23 @@
                 <mesh filename="package://description/urdf/meshes/back_caster.dae"/>
             </geometry>
         </visual>
-
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
                 <mesh filename="package://description/urdf/meshes/back_caster.dae"/>
             </geometry>
         </collision>
-
         <inertial>
             <mass value="${caster_link_mass}"/>
             <xacro:caster_link_inertia/>
         </inertial>
     </link>
-
     <joint name="back_caster_link_joint" type="continuous">
         <axis xyz="0 0 1"/>
         <parent link="chassis_link"/>
         <child link="back_caster_link"/>
         <origin rpy="0 0 0" xyz="-${casters_separation / 2.0} 0 ${caster_vertical_offset}"/>
     </joint>
-
     <gazebo reference="back_caster_link">
         <mu1 value="0.3"/>
         <mu2 value="0.3"/>
@@ -135,14 +133,12 @@
                 <mesh filename="package://description/urdf/meshes/back_caster_wheel.dae"/>
             </geometry>
         </visual>
-
         <collision>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
                 <mesh filename="package://description/urdf/meshes/back_caster_wheel.dae"/>
             </geometry>
         </collision>
-
         <inertial>
             <mass value="${caster_wheel_mass}"/>
             <xacro:caster_wheel_inertia/>
@@ -155,7 +151,6 @@
         <origin rpy="0 0 0" xyz="-${caster_link_to_wheel_dist_x} 0 ${caster_link_to_wheel_dist_z}"/>
         <axis xyz="0 1 0"/>
     </joint>
-
     <gazebo reference="back_caster_wheel">
         <mu1 value="0.1"/>
         <mu2 value="0.1"/>

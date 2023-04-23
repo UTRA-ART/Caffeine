@@ -8,13 +8,13 @@
 
     <!-- Chassis --> 
     <xacro:property name="chassis_to_base_link_dist" value="0.501747"/>
-    <xacro:property name="chassis_to_stand_link_dist" value="0.698253"/>
+    <xacro:property name="chassis_to_stand_link_dist" value="0.428526"/>
 
-    <xacro:property name="chassis_link_mass" value="33.9"/>
+    <xacro:property name="chassis_link_mass" value="36.95"/>
 
     <!-- Stand -->
     <xacro:property name="stand_length" value="0.412"/>
-    <xacro:property name="stand_width" value="0.33"/>
+    <xacro:property name="stand_width" value="0.255"/>
     <xacro:property name="stand_height" value="1.335"/>
     <xacro:property name="stand_mass" value="1.0"/>
 
@@ -45,7 +45,8 @@
     <xacro:property name="wheel_left_joint" value="left_wheel_joint"/>
     <xacro:property name="wheel_right_joint" value="right_wheel_joint"/>
 
-    <xacro:property name="wheels_separation" value="0.875"/>
+    <!--<xacro:property name="wheels_separation" value="0.875"/>-->
+    <xacro:property name="wheels_separation" value="1.0"/>
     <xacro:property name="wheel_diameter" value="0.25"/>
 
     <xacro:property name="wheel_acceleration" value="1.0"/>
@@ -84,7 +85,7 @@
 
     <xacro:property name="laser_range_min" value="0.06"/>
     <xacro:property name="laser_range_max" value="4.095"/>
-    <xacro:property name="laser_resolution_angle" value="0.36"/> 
+    <xacro:property name="laser_resolution_angle" value="0.36"/>
     <xacro:property name="laser_range_resolution" value="${laser_resolution_angle*pi/180}"/>
 
     <xacro:property name="laser_noise_type" value="gaussian"/>
@@ -126,6 +127,11 @@
     <xacro:property name="ZED_depth_points_topicName" value="depth/points"/>
     <xacro:property name="ZED_frameName" value="left_camera_link_optical"/>
 
+    <!--ZED CAMERA JOINT PARAMETERS-->
+
+    <xacro:property name="ZED_camera_to_top_plate_x" value="${(stand_width / 2.0)-0.01}"/>
+    <xacro:property name="ZED_camera_to_top_plate_z" value="0.065"/>
+
     <!-- Garmin GPS -->
     <!-- NOTE: approx. as a cylinder, Garmin itself is similar to a hockey puck -->
     <xacro:property name="gps_diam" value="0.061"/>
@@ -157,7 +163,8 @@
 
     <xacro:property name="imu_x_dist" value="0.28"/>
     <xacro:property name="imu_y_dist" value="0.295"/>
-    <xacro:property name="imu_z_dist" value="0.195"/>
+    <xacro:property name="imu_z_dist" value="0.0"/>
+    <!--<xacro:property name="imu_z_dist" value="0.195"/>-->
 
 
 </robot>
