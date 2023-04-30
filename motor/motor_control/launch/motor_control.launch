@@ -1,7 +1,10 @@
 <launch>
+  
+  <arg name="launch_state" default="sim">
 
   <!-- Ports -->
-  <arg name="motor_port" default="/dev/ttyACM0"/>
+  <arg name="motor_port" default="/dev/ttyACM0"/> 
+  
   <!-- 
   <arg name="encoder1_port" default="/dev/ttyACM1"/>
   <arg name="encoder2_port" default="/dev/ttyACM2"/>
@@ -17,6 +20,7 @@
 
   <node name="motor_feedback_node" pkg="motor_control" type="motor_control_feedback.py" output="screen"/>
 
-  <include file="$(find motor_odom)/launch/motor_odom.launch"/>
+  <include file="$(find motor_odom)/launch/motor_odom.launch">
+    <arg name="launch_state" value="$(arg launch_state)"
     
 </launch>

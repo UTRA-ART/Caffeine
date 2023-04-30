@@ -1,11 +1,40 @@
 <launch>
+
+    <arg name="launch_state" default="sim"/>
     <!-- Launch zed camera -->
     <!--<include file="$(find zed_wrapper)/launch/zed.launch"/>-->
 
-    <!-- Launch lane detection pipeline -->
-    <include file="$(find lane_detection)/launch/lane_detection_server.launch"/>
+    <group unless="$(eval launch_state == 'sim')">
+        <!-- Launch zed camera -->
+        <include file="$(find zed_wrapper)/launch/zed_no_tf.launch"/>
+
+        <!-- Launch server for ZED data. Uploads rectified image to UDP server -->
+        <node
+            name="zed_wrapper_server"
+            pkg="cv"
+            type="zed_wrapper_server.py"
+            output="screen"
+        >
+            <remap from="image" to="/zed_node/rgb/image_rect_color"/>
+            <param name="general/grab_frame_rate"           value="10"/> 
+
+            <param name="depth/quality"                     value="1"/> 
+
+            <param name="pos_tracking/pos_tracking_enabled" value="false"/> 
+            <param name="pos_tracking/are_memory"           value="false"/> 
+            <param name="pos_tracking/path_pub_rate"        value="0.1"/> 
+
+            <param name="mapping/mapping_enabled"           value="false"/> 
+            <param name="depth/quality"                     value="1"/>
+        </node>
+    </group>
 
     <!-- Launch pothole detection pipeline -->
-    <include file="$(find pothole_detection)/launch/pothole_detection_server.launch"/>
+    <group if="$(eval launch_state == 'sim')">
+        <include file="$(find pothole_detection)/launch/pothole_detection_server.launch"/>
+    </group>
+
+    <!-- Launch lane detection pipeline -->
+    <include file="$(find lane_detection)/launch/lane_detection_server.launch"/>
 
 </launch>

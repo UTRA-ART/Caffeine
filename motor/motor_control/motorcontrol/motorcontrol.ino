@@ -1,5 +1,9 @@
 #include <ros.h>
 #include <ArduinoHardware.h>
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 #include <std_msgs/Float64.h>
 #include <std_msgs/Bool.h>
 #include <tf/transform_broadcaster.h>

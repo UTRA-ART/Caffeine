@@ -170,11 +170,32 @@ if __name__=="__main__":
         print(vels(speed,turn))
         while(1):
             key = getKey(key_timeout)
-            if key != 'p' and key != '':
+            if key != 'p' and key != '': # and autonomous_mode:
+                #rospy.loginfo("Autonomous mode set to false, Teleop control is active.")
                 autonomous_mode = False
+                #mode_pub.publish(not autonomous_mode)
             elif key == 'p':
                 autonomous_mode = True
-            mode_pub.publish(not autonomous_mode)
+                mode_pub.publish(not autonomous_mode)
+
+            #     rospy.loginfo("Autonomous mode set to true.")
+            #     try:
+            #         rospy.wait_for_service('/move_base/clear_costmaps', 2)
+            #         clear_costmaps = rospy.ServiceProxy('/move_base/clear_costmaps', Empty)
+            #         clear_costmaps()
+            #         rospy.loginfo("Cost map cleared.")
+            #     except:
+            #         rospy.loginfo("Unable to clear cost map.")
+            #     try:
+            #         rospy.wait_for_service('/move_base/clear_unknown_space', 2)
+            #         clear_unknown_space = rospy.ServiceProxy('/move_base/clear_unknown_space', Empty)
+            #         clear_unknown_space()
+            #         rospy.loginfo("Unknown space cleared.")
+            #     except:
+            #         rospy.loginfo("Unable to clear unknown space.")
+            #     rospy.loginfo("Autonomous mode set to true.")
+            # else:
+            #     mode_pub.publish(not autonomous_mode)
 
             if key in speedBindings.keys(): 
                 if speedBindings[key][1] != 0: # case: changing angular vel

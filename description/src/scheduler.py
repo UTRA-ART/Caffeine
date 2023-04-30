@@ -112,7 +112,7 @@ class Scheduler:
 
         # Launch sensors, wait for success
         rospy.loginfo('Starting up sensors...')
-        os.system('roslaunch sensors sensors.launch &> /dev/null &')
+        os.system('roslaunch sensors sensors.launch launch_state:=IGVC frame_id:=gps_link &> /dev/null &')
         self.wait_for_condition('imu_started', 35)
         self.wait_for_condition('lidar_started', 35)
         self.wait_for_condition('gps_started', 90)
@@ -120,20 +120,20 @@ class Scheduler:
 
         # Run cv pipeline, wait for zed 
         rospy.loginfo('Starting CV pipeline...')
-        os.system('roslaunch cv pipeline.launch &> /dev/null &')
+        os.system('roslaunch cv pipeline.launch lauch_state:=IGVC &> /dev/null &')
         self.wait_for_condition('zed_started', 35)
         rospy.loginfo('CV pipeline launched.')
 
         # Run motor control and feedback, wait for /odom 
         rospy.loginfo('Starting motor controls...')
-        os.system('roslaunch description motor_control_pipeline.launch &> /dev/null &')
+        os.system('roslaunch description motor_control_pipeline.launch launch_state:=IGVC &> /dev/null &')
         # self.wait_for_transform(listener, 'base_link', 'odom')
         # self.wait_for_condition('odom_motor_published', 30)
         rospy.loginfo('Motor controls started.')
 
         # Run odom, wait for odom local, global, and /utm
         rospy.loginfo('Initializing odometry...')
-        os.system('roslaunch odom odom.launch &> /dev/null &')
+        os.system('roslaunch odom odom.launch launch_state:=IGVC &> /dev/null &')
         self.wait_for_condition('odom_global_published', 35)
         self.wait_for_condition('odom_local_published', 35)
         # self.wait_for_condition('odom_gps_published', 25)
@@ -160,7 +160,7 @@ class Scheduler:
         
         # load waypoints 
         rospy.loginfo('Loading waypoints...')
-        os.system('roslaunch load_waypoints load_waypoints.launch &> /dev/null &')
+        os.system('roslaunch load_waypoints load_waypoints.launch launch_state:=IGVC &> /dev/null &')
         rospy.loginfo('Waypoints loaded.') 
 
         # teleop 

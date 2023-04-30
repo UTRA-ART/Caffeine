@@ -8,6 +8,7 @@ import actionlib
 import rospkg
 import rospy
 import std_msgs.msg
+from std_msgs.msg import Bool
 import tf
 import tf2_ros
 import utm
@@ -29,6 +30,14 @@ class NavigateWaypoints:
         self.curr_waypoint_idx = 0 
         self.tf = TransformListener()
 
+        self.launch_state = rospy.get_param('/navigate_waypoints/launch_state')
+        if self.launch_state != "sim":
+            self.laps = 0
+            self.start_direction = 1 # North: 1, South = -1
+            self.current_lap = 0
+            self.publisher = rospy.Publisher('/waypoint_int', Bool, queue_size=10)
+
+
 
     def populate_waypoint_dict(self):
         '''
@@ -49,6 +58,10 @@ class NavigateWaypoints:
         # Parse through json data and create list of lists holding all waypoints
         for waypoint in waypoint_data["waypoints"]:
             self.waypoints[waypoint['id']] = waypoint
+
+        if self.launch_state != "sim":
+            self.start_direction = 1 if waypoint_data["start_direction"] == "north" else -1
+            self.laps = waypoint_data["laps"]
     
         # Call method to wait for transform 
         self.waited_for_transform = self.wait_for_utm_transform()
@@ -111,8 +124,24 @@ class NavigateWaypoints:
     
     def get_next_waypoint(self):
         waypoint = self.waypoints[self.curr_waypoint_idx]
-        print(self.curr_waypoint_idx)
-        self.curr_waypoint_idx += 1
+        if self.launch_state == "sim":
+            print(self.curr_waypoint_idx)
+            self.curr_waypoint_idx += 1
+        else:
+            if self.curr_waypoint_idx == 1000:
+                for i in range(10):
+                    self.publisher.publish(False)
+            else:
+                for i in range(10):
+                    self.publisher.publish(True)
+            self.curr_waypoint_idx += self.start_direction
+            if self.curr_waypoint_idx < 0 and self.current_lap < self.laps:
+                self.current_lap += 1
+                self.curr_waypoint_idx = len(self.waypoints) - 1
+            elif self.curr_waypoint_idx >= len(self.waypoints) and self.current_lap < self.laps:
+                self.current_lap += 1
+                self.curr_waypoint_idx = 0
+
         return waypoint
     
     def get_pose_from_gps(self, longitude, latitude, frame, pose_test_var = None):
@@ -169,8 +198,12 @@ class NavigateWaypoints:
 
 if __name__ == "__main__":
     # CHANGE THIS TO GET MAP SPECIFIC GPS WAYPOINTS
-    static_waypoint_file = 'static_waypoints_pavement.json'
-    # static_waypoint_file = 'static_waypoints_grass.json'
+    launch_state = rospy.get_param('/navigate_waypoints/launch_state')
+    if launch_state == "sim":
+        static_waypoint_file = 'static_waypoints_pavement.json'
+        # static_waypoint_file = 'static_waypoints_grass.json'
+    else:
+        static_waypoint_file = 'IGVC_practice.json'
 
     rospy.init_node('navigate_waypoints')
     waypoints = NavigateWaypoints(static_waypoint_file, max_time_for_transform=60.0)
