@@ -26,21 +26,11 @@ class IgnoreLidarNode
             double x;
             double y;
         };
-        
-        // GpsCoord second_waypoint_;
-        // GpsCoord third_waypoint_;
-
-        // std::array<OdomCoord, 2> bounds_;
-
-        // OdomCoord cur_odom_;
-        // bool is_odom_init = false;
 
         ros::Subscriber lidar_sub_;
         ros::Subscriber odom_sub_;
-        bool passthrough = true;
+        bool ignore_lidar_ = true;
 
         void lidarCallback(const sensor_msgs::LaserScanConstPtr &lidar_msg);
         void WaypointCallback(const std_msgs::Bool& msg);
-        // void odomCallback(const nav_msgs::OdometryConstPtr &odom_msg);
-        // geometry_msgs::PoseStamped getPoseFromGps(double latitude, double longitude, std::string target_frame);
 };
