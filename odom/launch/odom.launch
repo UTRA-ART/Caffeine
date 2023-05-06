@@ -20,4 +20,7 @@
         <rosparam command="load" file="$(find odom)/config/navsat.yaml"/>
     </node>
 
+    <!-- Publish base_link twist portion of odom message based on wheel encoders -->
+    <node name="wheel_odom_pub" pkg="odom" type="odom_pubv2" output="screen"/>   
+
 </launch>
