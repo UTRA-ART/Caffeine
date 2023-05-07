@@ -1,5 +1,5 @@
 <launch>
-    <!-- Runs CV pipeline in python3 communicating with UDP pipeline -->
+    <!-- Runs the pothole detection server -->
     
     <arg name="launch_state" default="sim"/>
 

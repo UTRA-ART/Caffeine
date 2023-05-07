@@ -10,7 +10,7 @@
 IgnoreLidarNode::IgnoreLidarNode(ros::NodeHandle nh)
     : nh_{nh}
 {
-    ROS_INFO("Connected to Node");
+    ROS_INFO("Connected to Ignore Lidar Node");
 
     // Subscribe to recieve lidar data and current pose
     lidar_sub_ = nh_.subscribe("/scan", 10, &IgnoreLidarNode::lidarCallback, this);

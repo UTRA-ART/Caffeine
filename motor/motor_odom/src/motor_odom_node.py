@@ -28,6 +28,8 @@ class MotorOdom:
         if self.launch_state == "sim":
             rospy.Subscriber("/right_wheel/feedback", Float64, self.update_right_speed, queue_size=1)
             rospy.Subscriber("/left_wheel/feedback", Float64, self.update_left_speed, queue_size=1)
+        else:
+            rospy.Subscriber("/cmd_vel", Twist, self.update_speed, queue_size=1)
 
         self.R = 0
         self.L = 0
@@ -38,12 +40,11 @@ class MotorOdom:
         self.R = data.data
 
     def update_speed(self, msg):
-        if self.launch_state != "sim":
-            v = msg.linear.x
-            w = msg.angular.z
+        v = msg.linear.x
+        w = msg.angular.z
 
-            self.R = v + ((self.WHEELBASE * w) / 2.0)
-            self.L = v - ((self.WHEELBASE * w) / 2.0)
+        self.R = v + ((self.WHEELBASE * w) / 2.0)
+        self.L = v - ((self.WHEELBASE * w) / 2.0)
 
     def run(self):
         while not rospy.is_shutdown():

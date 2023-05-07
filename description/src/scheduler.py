@@ -120,7 +120,7 @@ class Scheduler:
 
         # Run cv pipeline, wait for zed 
         rospy.loginfo('Starting CV pipeline...')
-        os.system('roslaunch cv pipeline.launch lauch_state:=IGVC &> /dev/null &')
+        os.system('roslaunch cv pipeline.launch launch_state:=IGVC &> /dev/null &')
         self.wait_for_condition('zed_started', 35)
         rospy.loginfo('CV pipeline launched.')
 
