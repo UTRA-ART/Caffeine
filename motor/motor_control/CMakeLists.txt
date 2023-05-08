@@ -8,21 +8,19 @@ project(motor_control)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  roscpp 
+  rospy 
   geometry_msgs
   nav_msgs
-  roscpp
-  rospy
-  rosserial_python
   std_msgs
 )
 
 catkin_package(
   CATKIN_DEPENDS
-    geometry_msgs
-    nav_msgs
     roscpp
     rospy
-    rosserial_python
+    geometry_msgs
+    nav_msgs
     std_msgs
 )
 
@@ -40,3 +38,6 @@ include_directories(
 # Create exectuable
 add_executable(cmd_vel_to_motor src/cmd_vel_to_motor.cpp)
 target_link_libraries(cmd_vel_to_motor ${catkin_LIBRARIES})
+
+# add_executable(motor_control_node src/motor_control.py)
+# target_link_libraries(motor_control_node ${catkin_LIBRARIES})
