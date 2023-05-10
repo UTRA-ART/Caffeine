@@ -37,15 +37,15 @@ odom1_queue_size: 10
 odom1_differential: true
 odom1_relative: false
 
-# odom2: zed/zed_node/odom
-# odom2_config: [true, true , false,
-#                false, false, false,
-#                false , false, false,
-#                false, false, false,
-#                false, false, false]
-# odom2_queue_size: 10
-# odom2_differential: false
-# odom2_relative: false
+odom2: zed/zed_node/odom
+odom2_config: [true, true, false,
+               false, false, true,
+               false, false, false,
+               false, false, false,
+               false, false, false]
+odom2_queue_size: 10
+odom2_differential: true
+odom2_relative: false
 
 ## IMU Sensor(s) ## 
 
