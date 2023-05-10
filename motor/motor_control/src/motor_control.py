@@ -4,7 +4,6 @@ Subscribes to velocity command topics for each wheel and converts to appropriate
 2023-05-07
 
 To do:
-* choose GPIO pins
 * adjust RATE
 * adjust TIMEOUT
 
@@ -29,11 +28,11 @@ RATE = 1          # rospy.Rate
 PWM_FREQ = 512
 
 # pins
-R_DIR_PIN = 0
-R_SPEED_PIN = 0
-L_DIR_PIN = 0
-L_SPEED_PIN = 0
-LIGHT_PIN = 0
+R_DIR_PIN = 5       # (29)
+R_SPEED_PIN = 12    # (32)
+L_DIR_PIN = 6       # (31)
+L_SPEED_PIN = 13    # (33)
+LIGHT_PIN = 16      # (36)
 
 # program control
 TIMEOUT = 100    # stop motors if TIMEOUT s have passed
