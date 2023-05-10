@@ -10,10 +10,10 @@
   <node name="cmd_vel_to_motor" pkg="motor_control" type="cmd_vel_to_motor"/>
   
   <!-- Output cmd_vel to Raspberry Pi GPIO pins -->
-  <node name="motor_control_node" pkg="motor_control" type="motro_control_node"/>
+  <node name="motor_control_node" pkg="motor_control" type="motor_control.py"/>
 
-  <node name="motor_feedback_node" pkg="motor_control" type="motor_control_feedback.py" output="screen"/>
+  <!-- <node name="motor_feedback_node" pkg="motor_control" type="motor_control_feedback.py" output="screen"/> -->
 
-  <include file="$(find motor_odom)/launch/motor_odom.launch"/>
+  <!-- <include file="$(find motor_odom)/launch/motor_odom.launch"/> -->
     
 </launch>

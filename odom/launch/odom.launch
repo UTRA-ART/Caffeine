@@ -21,6 +21,6 @@
     </node>
 
     <!-- Publish base_link twist portion of odom message based on wheel encoders -->
-    <node name="wheel_odom_pub" pkg="odom" type="odom_pubv2" output="screen"/>   
+    <node name="wheel_odom_pub" pkg="odom" type="odom_pub" output="screen"/>   
 
 </launch>
