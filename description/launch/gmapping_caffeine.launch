@@ -72,6 +72,9 @@
             <param name="subscribe_scan" type="bool" value="true"/>
             <param name="subscribe_odom" type="bool" value="true"/>
             <param name="frame_id" type="string" value="base_link"/>
+
+            <remap from="scan" to="/scan"/>
+            <remap from="odom" to="/odom"/>
         </node>
     </group>
 
