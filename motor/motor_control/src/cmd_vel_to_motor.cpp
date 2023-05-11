@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     current_time = ros::Time::now();
 
     // Subscribe to cmd_vel topics
-    ros::Subscriber cmd_vel_sub = n.subscribe("cmd_vel", 1, targetcb);
+    ros::Subscriber cmd_vel_sub = n.subscribe("twist_mux/cmd_vel", 1, targetcb);
 
     // Publish to right and left wheels
     ros::Publisher rvel_pub = n.advertise<std_msgs::Float64>("/right_wheel/command", 1);
