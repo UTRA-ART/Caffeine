@@ -11,7 +11,7 @@
 
     <!-- IGVC worlds: full, walls, ramp, plain -->
     <!-- IGVC world types: pavement (2022 IGVC), grass (<2021 IGVC)-->
-    <arg name="world" default="full"/> 
+    <arg name="world" default="full"/>
     <!-- plain is the one without barriers  -->
     <arg name="world_type" default="pavement"/>
 
@@ -49,71 +49,27 @@
         <include file="$(find description)/launch/view.launch"/>
     </group>
 
+    <group ns="rtabmap">
+        <node pkg="rtabmap_slam" type="rtabmap" name="rtabmap" output="screen" args="-d">
+            <param name="subscribe_scan" value="true"/>
+            <param name="subscribe_rgb"    value="false"/>
+            <param name="subscribe_depth"  value="false"/>
+            <param name="frame_id"         value="base_link"/>
+            <param name="odom_frame_id"    value="odom"/>
+            <param name="wait_for_transform_duration"  value="1"/>
+            <param name="odom_tf_linear_variance"  value="0.01"/>
+            <param name="odom_tf_angular_variance" value="0.05"/>
 
-<!-- below are the launch files for launching Gmapping  -->
+            <!-- RTAB-Map parameters -->
+            <param name="Reg/Strategy"              value="1"/>    <!-- 1 for lidar -->
+            <param name="Reg/Force3DoF"             value="true"/> <!-- 2d slam -->
+            <param name="RGBD/NeighborLinkRefining" value="true"/> <!-- odometry correction with scans -->
 
-  <!-- <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"></node> -->
+            <remap from="scan"    to="/scan"/>
+        </node>
 
-  <!-- <node pkg="rviz" type="rviz" name="rviz"></node> -->
-
-  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
-    <rosparam command="load" file="$(find description)/config/gmapping_params.yaml" />
-    <param name="base_frame" value="$(arg base_frame)"/>
-    <param name="odom_frame" value="$(arg odom_frame)"/>
-    <!-- <param name="map_frame" value="$(arg map_frame)"/> -->
-
-    <remap from="scan" to="$(arg scan_topic)"/>
-    <!-- <param name="base_frame" value="$(arg base_frame)"/>
-    <param name="odom_frame" value="$(arg odom_frame)"/>
-    <param name="map_update_interval" value="1.0"/>
-    <param name="maxUrange" value="7.0"/>
-    <param name="maxRange" value="10.0"/>
-    <param name="sigma" value="0.1"/>
-    <param name="kernelSize" value="1"/>
-    <param name="lstep" value="0.05"/>
-    <param name="astep" value="0.05"/>
-    <param name="iterations" value="5"/>
-    <param name="lsigma" value="0.075"/>
-    <param name="ogain" value="3.0"/>
-    <param name="lskip" value="0"/>
-    <param name="minimumScore" value="200"/>
-    <param name="srr" value="0.01"/>
-    <param name="srt" value="0.02"/>
-    <param name="str" value="0.01"/>
-    <param name="stt" value="0.02"/>
-    <param name="linearUpdate" value="0.5"/>
-    <param name="angularUpdate" value="0.2"/>
-    <param name="temporalUpdate" value="1.0"/>
-    <param name="resampleThreshold" value="0.5"/>
-    <param name="particles" value="50"/> -->
-    <!-- modified and added params below:  -->
-    <!-- <param name="throttle_scans" value="2"/> -->
-  <!--
-    <param name="xmin" value="-50.0"/>
-    <param name="ymin" value="-50.0"/>
-    <param name="xmax" value="50.0"/>
-    <param name="ymax" value="50.0"/>
-  make the starting size small for the benefit of the Android client's memory...
-  -->
-    <!-- <param name="xmin" value="-1.0"/>
-    <param name="ymin" value="-1.0"/>
-    <param name="xmax" value="1.0"/>
-    <param name="ymax" value="1.0"/>
-
-    <param name="delta" value="0.05"/>
-    <param name="llsamplerange" value="0.01"/>
-    <param name="llsamplestep" value="0.01"/>
-    <param name="lasamplerange" value="0.005"/>
-    <param name="lasamplestep" value="0.005"/>
-    <remap from="scan" to="$(arg scan_topic)"/> -->
-  </node> 
-
-<!-- below is the navigation stack:  -->
-
-
-
-
-
+        <node pkg="rtabmap_viz" type="rtabmap_viz" name="rtabmapviz" output="screen"/>
+    </group>
 
 
 </launch>
