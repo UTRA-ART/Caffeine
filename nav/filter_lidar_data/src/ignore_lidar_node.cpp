@@ -4,6 +4,7 @@
 #include <geographic_msgs/GeoPoint.h>
 #include <geodesy/utm.h>
 #include <limits>
+#include <std_msgs/Bool.h>
 
 #include "../include/ignore_lidar_node.h"
 
