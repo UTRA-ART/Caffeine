@@ -68,7 +68,11 @@
             <remap from="scan"    to="/scan"/>
         </node>
 
-        <node pkg="rtabmap_viz" type="rtabmap_viz" name="rtabmapviz" output="screen"/>
+        <node pkg="rtabmap_viz" type="rtabmap_viz" name="rtabmapviz" output="screen">
+            <param name="subscribe_scan" type="bool" value="true"/>
+            <param name="subscribe_odom" type="bool" value="true"/>
+            <param name="frame_id" type="string" value="base_link"/>
+        </node>
     </group>
 
 
