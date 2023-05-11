@@ -59,6 +59,7 @@
             <param name="wait_for_transform_duration"  value="1"/>
             <param name="odom_tf_linear_variance"  value="0.01"/>
             <param name="odom_tf_angular_variance" value="0.05"/>
+            <param name="approx_sync"         type="bool"   value="true"/>
 
             <!-- RTAB-Map parameters -->
             <param name="Reg/Strategy"              value="1"/>    <!-- 1 for lidar -->
@@ -72,6 +73,7 @@
             <param name="subscribe_scan" type="bool" value="true"/>
             <param name="subscribe_odom" type="bool" value="true"/>
             <param name="frame_id" type="string" value="base_link"/>
+            <param name="approx_sync"         type="bool"   value="true"/>
 
             <remap from="scan" to="/scan"/>
             <remap from="odom" to="/odom"/>
