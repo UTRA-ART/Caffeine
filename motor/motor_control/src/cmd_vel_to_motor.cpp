@@ -33,11 +33,14 @@ int main(int argc, char **argv)
     // Publish to right and left wheels
     ros::Publisher rvel_pub = n.advertise<std_msgs::Float64>("/right_wheel/command", 1);
     ros::Publisher lvel_pub = n.advertise<std_msgs::Float64>("/left_wheel/command", 1);
+    // Publisher for debugging
+    ros::Publisher debug_pub = n.advertise<std_msgs::Float64>("/debug_cmd_vel_to_motor", 1);
 
     ros::Rate loop_rate(100);
 
     std_msgs::Float64 rvelmsg;
     std_msgs::Float64 lvelmsg;
+    std_msgs::Float64 debugmsg;
 
     double v, vl, vr, rcommand, lcommand;
 
@@ -52,6 +55,12 @@ int main(int argc, char **argv)
 
         rvelmsg.data = (vr * FACTOR - B) / M;
         lvelmsg.data = (vl * FACTOR - B) / M;
+
+        // if input velocity is zero, ignore offset and set output to zero
+        if((g_vx == 0.0) && (g_wz == 0.0)){
+            rvelmsg.data = 0.0;
+            lvelmsg.data = 0.0;
+        }
 
         rvel_pub.publish(rvelmsg);
         lvel_pub.publish(lvelmsg);

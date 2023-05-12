@@ -16,6 +16,7 @@ Subscribes to:
 import rospy 
 from std_msgs.msg import Float64
 from std_msgs.msg import Bool 
+from std_msgs.msg import String 
 
 import RPi.GPIO as gpio
 import time 
@@ -59,11 +60,11 @@ def rmotor_cb(control_msg):
 
     input = control_msg.data 
     if input >= 0:
-        right_speed = max(VEL_CONVERT * input, VEL_MAX)     # clip speed at maximum duty cycle
-        right_dir = True
+        right_speed = min(VEL_CONVERT * input, VEL_MAX)     # clip speed at maximum duty cycle
+        right_dir = False 
     else:
-        right_speed = max(-VEL_CONVERT * input, VEL_MAX)
-        right_dir = False
+        right_speed = min(-VEL_CONVERT * input, VEL_MAX)
+        right_dir = True 
 
 def lmotor_cb(control_msg):
     global rostime_last, left_speed, left_dir
@@ -72,10 +73,10 @@ def lmotor_cb(control_msg):
 
     input = control_msg.data 
     if input >= 0:
-        left_speed = max(VEL_CONVERT * input, VEL_MAX)
+        left_speed = min(VEL_CONVERT * input, VEL_MAX)
         left_dir = True
     else:
-        left_speed = max(-VEL_CONVERT * input, VEL_MAX)
+        left_speed = min(-VEL_CONVERT * input, VEL_MAX)
         left_dir = False
 
 def mode_cb(mode_msg):
@@ -116,6 +117,8 @@ if __name__ == '__main__':
     rospy.Subscriber("right_wheel/command", Float64, rmotor_cb)
     rospy.Subscriber("left_wheel/command", Float64, lmotor_cb)
     rospy.Subscriber("pause_navigation", Bool, mode_cb)
+
+    debug_pub = rospy.Publisher("debug_motor_control", String)
     
 
     rate = rospy.Rate(RATE)
@@ -141,6 +144,9 @@ if __name__ == '__main__':
             r_speed_pin.ChangeDutyCycle(right_speed)
             l_speed_pin.ChangeDutyCycle(left_speed)
 
+            test_msg = f"Right duty cycle: {right_speed}, Left duty cycle: {left_speed}"
+            debug_pub.publish(test_msg)
+
         # control light
         if light_mode:  
             # autonomous mode; flashing
@@ -152,7 +158,7 @@ if __name__ == '__main__':
                 
         else:
             # manual mode; solid
-            gpio.ouput(LIGHT_PIN, True)
+            gpio.output(LIGHT_PIN, True)
 
         rate.sleep()
     
