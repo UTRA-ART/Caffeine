@@ -9,7 +9,7 @@
  *   modify covariance matrix as necessary
  * 
  * subscribed to:
- *   right_wheel/ticks_ps  (ticks per second, Float32)
+ *   right_wheel/ticks_ps  (ticks per second, Float64)
  *   left_wheel/ticks_ps
  * 
  * publishes to:
@@ -25,7 +25,7 @@
 
 #include <ros/ros.h>
 #include <std_msgs/Int16.h>
-#include <std_msgs/Float32.h>
+#include <std_msgs/Float64.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -112,12 +112,12 @@ using namespace std;
 // }
 
 // get current ticks/second from each wheel
-void right_encoder_cb(const std_msgs::Float32& right_ticks){
+void right_encoder_cb(const std_msgs::Float64& right_ticks){
     ticks_ps_right = right_ticks.data;
     vel_right = ticks_ps_right / TICKS_PER_METRE;
 }
 
-void left_encoder_cb(const std_msgs::Float32& left_ticks){
+void left_encoder_cb(const std_msgs::Float64& left_ticks){
     ticks_ps_left = left_ticks.data;
     vel_left = ticks_ps_left / TICKS_PER_METRE;
 }

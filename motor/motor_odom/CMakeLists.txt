@@ -4,8 +4,8 @@ project(motor_odom)
 find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
-  geometry_msgs
-  nav_msgs
+  # geometry_msgs
+  # nav_msgs
 )
 
 catkin_package()

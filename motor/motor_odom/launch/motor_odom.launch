@@ -1,9 +1,16 @@
 <launch>
     <!--  -->
-    <node
+    <!-- <node
         name="motor_odom_node"
         pkg="motor_odom"
         type="motor_odom_node.py"
         output="screen"
+    /> -->
+
+    <node 
+        name="wheel_encoder_reader" 
+        pkg="motor_odom" 
+        type="read_wheel_encoders.py"
+        ouput="screen"
     />
 </launch>
