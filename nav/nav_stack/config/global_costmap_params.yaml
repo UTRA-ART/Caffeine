@@ -1,5 +1,5 @@
 global_costmap:
-  global_frame: map
+  global_frame: odom
   robot_base_frame: base_link
   update_frequency: 5.0 # Set update rate lower for large maps; 20
   publish_frequency: 2.0

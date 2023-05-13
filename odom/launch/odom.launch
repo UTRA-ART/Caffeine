@@ -16,7 +16,7 @@
         <rosparam command="load" file="$(find odom)/config/odom_global.yaml"/>
     </node>
 
-    <node pkg="odom" type="zero_odom.py" name="zero_odom_node" output="screen"/>
+    <!-- <node pkg="odom" type="zero_odom.py" name="zero_odom_node" output="screen"/> -->
 
     <!-- Establish transform b/w Earth reference and Robot reference -->
     <!-- In scheduler, utm.launch is used. So this is only launched for sim -->

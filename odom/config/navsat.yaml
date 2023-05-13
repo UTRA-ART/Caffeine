@@ -3,7 +3,7 @@ delay: 0.0  # Simulated GPS needs no start-up time
 # delay: 90.0 # Real GPS start-up time
 
 # Initial configuration
-magnetic_declination_radians: 0.0
+magnetic_declination_radians: -0.1306
 yaw_offset: 1.5707963 # pi/2 rad since 0 yaw == North
 zero_altitude: true
 
