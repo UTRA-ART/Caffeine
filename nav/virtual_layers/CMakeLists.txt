@@ -19,6 +19,11 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+# In case we want to use virtual_layers_local/global
+# add_library(virtual_layers_local src/virtual_layer_local.cpp)
+# add_library(virtual_layers_global src/virtual_layer_global.cpp)
+# add_dependencies(virtual_layers_local ${catkin_EXPORTED_TARGETS})
+# add_dependencies(virtual_layers_global ${catkin_EXPORTED_TARGETS})
 
 add_library(virtual_layers src/virtual_layer.cpp)
 add_dependencies(virtual_layers ${catkin_EXPORTED_TARGETS})
