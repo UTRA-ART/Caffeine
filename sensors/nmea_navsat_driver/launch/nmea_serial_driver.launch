@@ -2,6 +2,8 @@
 
   <!-- A simple launch file for the nmea_serial_driver node. -->
 
+  <arg name="launch_state" default="sim"/>
+
   <arg name="port" default="/dev/ttyUSB0" />
   <arg name="baud" default="4800" />
   <arg name="frame_id" default="gps" />
@@ -16,6 +18,9 @@
     <param name="use_GNSS_time" value="$(arg use_GNSS_time)" />
     <param name="time_ref_source" value="$(arg time_ref_source)" />
     <param name="useRMC" value="$(arg useRMC)" />
+
+    <remap from="/fix" to="/gps/fix" if="$(eval launch_state == 'IGVC')"/>
+    <remap from="/vel" to="/gps/fix_velocity" if="$(eval launch_state == 'IGVC')"/>
   </node>
 
 </launch>

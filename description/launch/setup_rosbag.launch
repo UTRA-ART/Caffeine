@@ -1,0 +1,53 @@
+<launch>
+   <!-- Create node that records all topics in a bag file -->
+   <arg name="output_folder" value="/media/art-jetson/SD_card2/rosbags/"/>
+  
+   <node pkg="rosbag" type="record" name="caffeine_bag"
+       args="record -o $(arg output_folder)
+           /ImuFilterNodelet/parameter_descriptions
+           /ImuFilterNodelet/parameter_updates
+           /cmd_vel
+           /diagnostics
+           /fix
+           /gps/filtered
+           /gps/fix
+           /imu/data
+           /imu/data_raw
+           /imu/is_calibrated
+           /imu/mag
+           /imu_manager/bond
+           /joint_states
+           /key_vel
+           /laser_status
+           /left_wheel/command
+           /man_vel
+           /nav_vel
+           /odom
+           /pause_navigation
+           /right_wheel/command
+           /rosout
+           /rosout_agg
+           /scan
+           /scan_modified
+           /set_pose
+           /stop_closing_loop
+           /tf
+           /tf_static
+           /time_reference
+           /twist_marker
+           /urg_node/parameter_descriptions
+           /urg_node/parameter_updates
+           /vel
+           /zed/joint_states
+           /zed_node/confidence/confidence_map
+           /zed_node/depth/camera_info
+           /zed_node/depth/depth_registered
+           /zed_node/disparity/disparity_image
+           /zed_node/point_cloud/cloud_registered
+           /zed_node/pose
+           /zed_node/pose_with_covariance
+           /zed_node/rgb_raw/camera_info
+           /zed_node/rgb_raw/image_raw_color
+           /zed_node/stereo/image_rect_color
+           /zed_node/stereo_raw/image_raw_color" />
+</launch>

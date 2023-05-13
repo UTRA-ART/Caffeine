@@ -1,11 +1,15 @@
 <launch>
-    <!-- Runs CV pipeline in python3 communicating with UDP pipeline -->
+    <!-- Runs the pothole detection server -->
+    
+    <arg name="launch_state" default="sim"/>
+
     <node
         name="pothole_detection_model_inference"
         pkg="pothole_detection"
         type="pothole_detection_model_inference.py"
         output="screen"
     >
-        <remap from="image" to="/zed/zed_node/left/image_rect_color"/>
+        <remap from="image" to="/zed/zed_node/rgb/image_rect_color" unless="$(eval launch_state == 'sim')"/>
+        <remap from="image" to="/zed/zed_node/left/image_rect_color" if="$(eval launch_state == 'sim')"/>
     </node>
 </launch>
