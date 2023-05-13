@@ -2,4 +2,5 @@ max_obstacle_height: 3.3 # Can be a large number, currently matched to the obsta
 footprint: [[-0.630, -0.488], [-0.630, 0.488], [0.630, 0.488], [0.630, -0.488]]
 
 # NOTE: Caffeine is generally parallel to the ground with 3-wheel drive + battery HACK
+map_type: costmap
 observation_sources: laser_scan_sensor

@@ -1,0 +1,90 @@
+<launch>
+  <arg name="scan_topic"  default="/scan" />
+  <arg name="base_frame"  default="base_link"/>
+  <arg name="odom_frame"  default="odom"/>
+
+
+<!-- below are the launch files from description that launches the simulation environment:  -->
+    <arg name="use_gui" default="true"/>
+    <arg name="rqt_steer" default="false"/>
+    <arg name="rviz" default="true"/>
+
+    <!-- IGVC worlds: full, walls, ramp, plain -->
+    <!-- IGVC world types: pavement (2022 IGVC), grass (<2021 IGVC)-->
+    <arg name="world" default="full"/>
+    <!-- plain is the one without barriers  -->
+    <arg name="world_type" default="pavement"/>
+
+    <!-- Simulate 'world' in Gazebo -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find worlds)/gazebo_worlds/$(arg world_type)/igvc_$(arg world).world"/>
+
+        <arg name="paused" value="false"/>
+        <arg name="verbose" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+
+        <arg name="gui" value="$(arg use_gui)"/>
+        <arg name="gui_required" value="$(arg use_gui)"/>
+
+        <arg name="debug" value="false"/>
+        <arg name="server_required" value="false"/>
+    </include>
+
+    <!-- Spawn the robot -->
+    <include file="$(find description)/launch/spawn.launch">
+        <arg name="world_type" value="$(arg world_type)"/>
+    </include>
+
+    <!-- MISCALLANEOUS -->
+
+    <!-- rqt robot steering GUI -->
+    <group if="$(arg rqt_steer)">
+        <node pkg="rqt_robot_steering" type="rqt_robot_steering" name="rqt_robot_steering">
+            <param name="default_topic" value="/man_vel"/>
+        </node>
+    </group>
+
+    <!-- RViz -->
+    <group if="$(arg rviz)">
+        <include file="$(find description)/launch/view.launch"/>
+    </group>
+
+    <group ns="rtabmap">
+        <node pkg="rtabmap_slam" type="rtabmap" name="rtabmap" output="screen" args="-d">
+            <param name="subscribe_scan" value="true"/>
+            <param name="subscribe_rgb"    value="false"/>
+            <param name="subscribe_depth"  value="false"/>
+            <param name="frame_id"         value="base_link"/>
+            <param name="odom_frame_id"    value="odom"/>
+            <param name="wait_for_transform_duration"  value="1"/>
+            <param name="odom_tf_linear_variance"  value="0.01"/>
+            <param name="odom_tf_angular_variance" value="0.05"/>
+            <param name="approx_sync"         type="bool"   value="true"/>
+
+            <param name="use_action_for_goal" type="bool" value="true"/>
+            <remap from="move_base"            to="/move_base"/>
+
+            <remap from="grid_map" to="/map"/>
+
+            <!-- RTAB-Map parameters -->
+            <param name="Reg/Strategy"              value="1"/>    <!-- 1 for lidar -->
+            <param name="Reg/Force3DoF"             value="true"/> <!-- 2d slam -->
+            <param name="RGBD/NeighborLinkRefining" value="true"/> <!-- odometry correction with scans -->
+            
+            <remap from="scan"    to="/scan"/>
+            <remap from="odom"            to="/odom"/>
+        </node>
+
+        <node pkg="rtabmap_viz" type="rtabmap_viz" name="rtabmapviz" output="screen">
+            <param name="subscribe_scan" type="bool" value="true"/>
+            <param name="subscribe_odom" type="bool" value="true"/>
+            <param name="frame_id" type="string" value="base_link"/>
+            <param name="approx_sync"         type="bool"   value="true"/>
+
+            <remap from="scan" to="/scan"/>
+            <remap from="odom" to="/odom"/>
+        </node>
+    </group>
+
+
+</launch>

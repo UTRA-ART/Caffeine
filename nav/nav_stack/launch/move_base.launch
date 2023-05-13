@@ -1,7 +1,5 @@
 <launch>
 
-    <remap from="map" to="/rtabmap/proj_map"/>
-
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
         <remap from="cmd_vel" to="nav_vel"/>
 

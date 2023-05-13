@@ -55,6 +55,5 @@
     </include>
 
     <!-- Compute Odometry from Sensor Fusion -->
-    <include file="$(find odom)/launch/odom.launch"/>
 
 </launch>
