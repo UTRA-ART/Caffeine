@@ -26,7 +26,7 @@ class NavigateWaypoints:
         self.max_time_for_transform = max_time_for_transform # Maximum time to wait for the transform. Node shuts down if time limit hit
         self.waited_for_transform = False # Initialize the boolean for whether or waiting has timed out 
 
-        self.launch_state = rospy.get_param('/navigate_waypoints/launch_state')
+        self.launch_state = rospy.get_param('/load_waypoints_server/launch_state')
         self.ignore_lidar = False
         self.start_direction = 1 # North: 1, South = -1
         self.laps = 0
@@ -196,7 +196,7 @@ class NavigateWaypoints:
 
 if __name__ == "__main__":
     # CHANGE THIS TO GET MAP SPECIFIC GPS WAYPOINTS
-    launch_state = rospy.get_param('/navigate_waypoints/launch_state')
+    launch_state = rospy.get_param('/load_waypoints_server/launch_state')
     if launch_state == "sim":
         static_waypoint_file = 'static_waypoints_pavement.json'
         # static_waypoint_file = 'static_waypoints_grass.json'
