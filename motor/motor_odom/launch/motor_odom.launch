@@ -11,6 +11,6 @@
         name="wheel_encoder_reader" 
         pkg="motor_odom" 
         type="read_wheel_encoders.py"
-        ouput="screen"
+        output="screen"
     />
 </launch>
