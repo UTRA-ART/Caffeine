@@ -3,7 +3,8 @@ global_costmap:
   robot_base_frame: base_link
   update_frequency: 5.0 # Set update rate lower for large maps; 20
   publish_frequency: 2.0
-  static_map: true # Not supplying a static map
+  static_map: false # Not supplying a static map
+  rolling_window: true
   always_send_full_costmap: false
 
   # Full width and height of IGVC map
@@ -47,8 +48,8 @@ global_costmap:
     enabled:              true
     inflation_radius:     0.65  # Tunable parameter (affect navigation plan)
 
-  plugins:
-    - {name: static_layer,       type: "rtabmap_costmap_plugins::StaticLayer"}
-    - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}
-    - {name: virtual_layer,       type: "virtual_layers::VirtualLayer"}
-    - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}
+      #plugins:
+      #- {name: static_layer,       type: "rtabmap_costmap_plugins::StaticLayer"}
+      #- {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}
+      # - {name: virtual_layer,       type: "virtual_layers::VirtualLayer"}
+      # - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}

@@ -61,11 +61,14 @@
             <param name="odom_tf_angular_variance" value="0.05"/>
             <param name="approx_sync"         type="bool"   value="true"/>
 
+            <remap from="grid_map" to="/map"/>
+
             <!-- RTAB-Map parameters -->
             <param name="Reg/Strategy"              value="1"/>    <!-- 1 for lidar -->
             <param name="Reg/Force3DoF"             value="true"/> <!-- 2d slam -->
             <param name="RGBD/NeighborLinkRefining" value="true"/> <!-- odometry correction with scans -->
 
+            <remap from="odom"    to="/odom"/>
             <remap from="scan"    to="/scan"/>
         </node>
 
