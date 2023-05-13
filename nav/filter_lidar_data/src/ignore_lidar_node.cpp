@@ -35,7 +35,7 @@ void IgnoreLidarNode::lidarCallback(const sensor_msgs::LaserScanConstPtr& lidar_
 
         // Set each element in ranges to inf (No obstacles present) to clear costmap
         double inf = std::numeric_limits<double>::infinity();
-        for (int i = 0; i < sizeof(output_msg.ranges)/sizeof(output_msg.ranges[0]); i++) {
+        for (int i = 0; i < output_msg.ranges.size(); i++) {
             output_msg.ranges[i] = inf;
         }
         
