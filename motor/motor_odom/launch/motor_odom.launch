@@ -1,16 +1,18 @@
 <launch>
-    <!--  -->
-    <!-- <node
-        name="motor_odom_node"
-        pkg="motor_odom"
-        type="motor_odom_node.py"
-        output="screen"
-    /> -->
+    <!-- read from wheel encoders using raspberry pi gpio -->
 
     <node 
         name="wheel_encoder_reader" 
         pkg="motor_odom" 
         type="read_wheel_encoders.py"
+        output="screen"
+    />
+
+    <!-- publish base_link twist portion of odom message based on wheel encoders -->
+    <node 
+        name="wheel_odom_pub" 
+        pkg="motor_odom" 
+        type="wheel_odom_pub"
         output="screen"
     />
 </launch>
