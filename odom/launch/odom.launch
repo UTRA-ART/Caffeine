@@ -20,4 +20,7 @@
         <rosparam command="load" file="$(find odom)/config/navsat.yaml"/>
     </node>
 
+    <node pkg="tf2_ros" type="static_transform_publisher" name="ground_truth_tf_broadcaster"
+    args="-19.5 0 0 1.5707 0 0 world ground_truth" />
+
 </launch>
