@@ -36,7 +36,7 @@ L_SPEED_PIN = 13    # (33)
 LIGHT_PIN = 16      # (36)
 
 # program control
-TIMEOUT = 100    # stop motors if TIMEOUT s have passed
+TIMEOUT = 10    # stop motors if TIMEOUT s have passed
 rostime_last = 0
 current_time = 0
 
@@ -148,7 +148,7 @@ if __name__ == '__main__':
             debug_pub.publish(test_msg)
 
         # control light
-        if light_mode:  
+        if not light_mode:  
             # autonomous mode; flashing
             if current_time - lighttime_last >= BLINK_INTERVAL:
                 lighttime_last = current_time
