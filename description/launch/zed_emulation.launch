@@ -13,13 +13,13 @@
         </node>
 
         <!-- Disparity to depth -->
-        <node pkg="nodelet" type="nodelet" name="disparity2depth" args="standalone rtabmap_ros/disparity_to_depth">
+        <node pkg="nodelet" type="nodelet" name="disparity2depth" args="standalone rtabmap_util/disparity_to_depth">
             <remap from="depth"                 to="depth/depth_registered"/>
             <remap from="disparity"             to="disparity/disparity_registered"/>
         </node>
 
         <!-- Visual Odometry using rtabmap_ros's stereo_odometry wrapper -->
-        <node pkg="rtabmap_ros" type="stereo_odometry" name="stereo_odometry">
+        <node pkg="rtabmap_odom" type="stereo_odometry" name="stereo_odometry">
             <remap from="left/image_rect"       to="left/image_rect_color"/>
             <remap from="left/camera_info"      to="left/camera_info"/>
 
