@@ -77,7 +77,7 @@ class NavigateWaypoints:
                 'longitude': gps_info.longitude, 
                 'latitude': gps_info.latitude, 
                 'description': 'Initial start location', 
-                'frame_id': 'odom'
+                'frame_id': 'map'
             }
 
             # Show waypoints 
