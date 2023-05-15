@@ -1,11 +1,22 @@
 <launch>
-    <!-- Launch zed camera -->
-    <!--<include file="$(find zed_wrapper)/launch/zed.launch"/>-->
 
-    <!-- Launch lane detection pipeline -->
-    <include file="$(find lane_detection)/launch/lane_detection_server.launch"/>
+    <arg name="launch_state" default="sim"/>
+
+    <group unless="$(eval launch_state == 'sim')">
+        <!-- Launch zed camera - test which one to launch-->
+        <include file="$(find zed_wrapper)/launch/zed_no_tf.launch"/>
+
+        <!-- <include file="$(find zed_wrapper)/launch/zed.launch"/> -->
+    </group>
 
     <!-- Launch pothole detection pipeline -->
-    <include file="$(find pothole_detection)/launch/pothole_detection_server.launch"/>
+    <!-- <include file="$(find pothole_detection)/launch/pothole_detection_server.launch">
+        <arg name="launch_state" value="$(arg launch_state)"/>
+    </include> -->
+
+    <!-- Launch lane detection pipeline -->
+    <include file="$(find lane_detection)/launch/lane_detection_server.launch"> 
+        <arg name="launch_state" value="$(arg launch_state)"/>
+    </include>
 
 </launch>

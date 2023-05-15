@@ -1,9 +1,7 @@
 <launch>
     <!--  -->
-    <node
-        name="motor_odom_node"
-        pkg="motor_odom"
-        type="motor_odom_node.py"
-        output="screen"
-    />
+    <arg="launch_state" default="sim"/>
+    <node name="motor_odom_node" pkg="motor_odom" type="motor_odom_node.py" output="screen">
+        <param name="launch_state" value="$(arg launch_state)"/>
+    </node>
 </launch>
