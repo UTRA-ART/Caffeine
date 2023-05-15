@@ -9,7 +9,7 @@ base_link_frame: base_link
 world_frame: map
 
 # publish transform: world_frame --> odom_frame
-publish_tf: true
+publish_tf: false
 
 transform_time_offset: 0.05
 
@@ -18,13 +18,13 @@ print_diagnostics: true
 
 ## Odometry Sensor(s) ##
 odom0: odometry/gps
-odom0_config: [true , true , false, # Only uses x, y position 
+odom0_config: [true , true , false, # Only uses x, y position
                false, false, false,
                false, false, false,
                false, false, false,
                false, false, false]
 odom0_queue_size: 10
-odom0_differential: false 
+odom0_differential: false
 odom0_relative: false
 
 # odom1: odometry/local
@@ -37,10 +37,10 @@ odom0_relative: false
 # odom1_differential: true
 # odom1_relative: false
 
-## IMU Sensor(s) ## 
+## IMU Sensor(s) ##
 
-imu0: imu/data 
-imu0_config: [false, false, false, 
+imu0: imu/data
+imu0_config: [false, false, false,
               false, true , true ,
               false, false, false,
               false, true , true ,
@@ -51,7 +51,7 @@ imu0_differential: false
 imu0_relative: true
 imu0_remove_gravitational_acceleration: true
 
-# pose0: /orbslam/pose # For when we set up. Interfaces with orbslam 
+# pose0: /orbslam/pose # For when we set up. Interfaces with orbslam
 # pose0_config: [true , true , true ,
 #                false , false , true ,
 #                false , false , false ,

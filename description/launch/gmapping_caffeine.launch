@@ -58,11 +58,14 @@
     <remap from="imu" to="$(arg imu_topic)" />
     <remap from="odom" to="$(arg odom_topic)" />
     <remap from="scan" to="$(arg scan_topic)" />
-
+    <remap from="fix" to="/gps/fix"/>
     </node>
 
       <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
       type="cartographer_occupancy_grid_node" args="-resolution 0.05" />
 
+    <include file="$(find odom)/launch/odom.launch">
+        <arg name="launch_state" value="sim"/>
+    </include>
 
 </launch>
