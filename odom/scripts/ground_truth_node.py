@@ -39,7 +39,10 @@ class GroundTruth:
         
         self.corrected_orientation_list = quaternion_from_euler(self.gazebo_roll,self.gazebo_pitch,self.corrected_yaw)
 
-        self.ground_truth_msg.pose.pose.position.x = gazebo_position.pose.pose.position.x + 19.5
+        #transform coordinates manually with rotation of 90 degrees and translation offset
+
+        self.ground_truth_msg.pose.pose.position.y = -(gazebo_position.pose.pose.position.x) + 19.5
+        self.ground_truth_msg.pose.pose.position.x = gazebo_position.pose.pose.position.y
         
         self.ground_truth_msg.pose.pose.orientation.x = self.corrected_orientation_list[0]
         self.ground_truth_msg.pose.pose.orientation.y = self.corrected_orientation_list[1]
