@@ -26,7 +26,7 @@ global_costmap:
       max_obstacle_height: 10.0,  # we still add lidar scans to costmap
       sensor_frame: base_laser,
       data_type: LaserScan,
-      topic: scan,
+      topic: scan_modified,
       marking: true,
       clearing: true,
       obstacle_range: 3.7,   # Decide how far we should see obstacles, should be less than raytrace range
