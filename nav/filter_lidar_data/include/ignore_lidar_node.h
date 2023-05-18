@@ -15,30 +15,24 @@ class IgnoreLidarNode
         ros::NodeHandle nh_;
         ros::Publisher ignore_lidar_pub_;
 
-        bool debug = false;
+        // bool debug = false;
 
-        struct GpsCoord {
-            double latitude{};
-            double longitude{};
-        };
+        // struct GpsCoord {
+        //     double latitude{};
+        //     double longitude{};
+        // };
 
-        struct OdomCoord {
-            double x;
-            double y;
-        };
-        
-        GpsCoord second_waypoint_;
-        GpsCoord third_waypoint_;
-
-        std::array<OdomCoord, 2> bounds_;
-
-        OdomCoord cur_odom_;
-        bool is_odom_init = false;
+        // struct OdomCoord {
+        //     double x;
+        //     double y;
+        // };
 
         ros::Subscriber lidar_sub_;
-        ros::Subscriber odom_sub_;
+        ros::Subscriber waypoint_sub_;
+        bool ignore_lidar_ = false;
 
         void lidarCallback(const sensor_msgs::LaserScanConstPtr &lidar_msg);
-        void odomCallback(const nav_msgs::OdometryConstPtr &odom_msg);
+        void WaypointCallback(const std_msgs::Bool& msg);
+
         geometry_msgs::PoseStamped getPoseFromGps(double latitude, double longitude, std::string target_frame);
 };

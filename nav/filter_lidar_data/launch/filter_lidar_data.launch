@@ -5,9 +5,10 @@
         type="ignore_lidar_node" 
         output="screen"
     >
-        <param name="second_waypoint_latitude" value="43.6571667"/>
+        <!-- Leftover from previous implementation -->
+        <!-- <param name="second_waypoint_latitude" value="43.6571667"/>
         <param name="second_waypoint_longitude" value="-79.3903788"/>
         <param name="third_waypoint_latitude" value="43.6571678"/>
-        <param name="third_waypoint_longitude" value="-79.3902588"/>
+        <param name="third_waypoint_longitude" value="-79.3902588"/> -->
     </node>
 </launch>

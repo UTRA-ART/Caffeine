@@ -1,4 +1,7 @@
 <launch>
+
+    <arg name="launch_state" default="sim"/>
+
     <!-- Compute local odometry: publish odom frame -->
     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_local" clear_params="true" output="screen">
         <remap from="odometry/filtered" to="odometry/local"/>
@@ -13,11 +16,16 @@
         <rosparam command="load" file="$(find odom)/config/odom_global.yaml"/>
     </node>
 
-    <!-- Establish transform b/w Earth reference and Robot reference -->
-    <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" respawn="true">
-        <remap from="odometry/filtered" to="odometry/global"/>
+    <!-- <node pkg="odom" type="zero_odom.py" name="zero_odom_node" output="screen"/> -->
 
-        <rosparam command="load" file="$(find odom)/config/navsat.yaml"/>
-    </node>
+    <!-- Establish transform b/w Earth reference and Robot reference -->
+    <!-- In scheduler, utm.launch is used. So this is only launched for sim -->
+    <group if="$(eval launch_state == 'sim')">
+        <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" respawn="true">
+            <remap from="odometry/filtered" to="odometry/global"/>
+
+            <rosparam command="load" file="$(find odom)/config/navsat.yaml"/>
+        </node>
+    </group>
 
 </launch>

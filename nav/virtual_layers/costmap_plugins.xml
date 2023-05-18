@@ -4,5 +4,16 @@
       <description>Retain all virtual points (linear interpolation) from CV white line detection</description>
     </class>
   </library>
+
+  <!-- <library path="lib/libvirtual_layers_local">
+    <class type="virtual_layers_local::VirtualLayer_Local" base_class_type="costmap_2d::Layer">
+      <description>Retain all virtual points (linear interpolation) from CV white line detection. Local Costmap Version</description>
+    </class>
+  </library>
+  <library path="lib/libvirtual_layers_global">
+    <class type="virtual_layers_global::VirtualLayer_Global" base_class_type="costmap_2d::Layer">
+      <description>Retain all virtual points (linear interpolation) from CV white line detection. Global Costmap Version</description>
+    </class>
+  </library> -->
 </class_libraries>
 
