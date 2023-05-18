@@ -27,16 +27,6 @@ odom0_queue_size: 10
 odom0_differential: false 
 odom0_relative: false
 
-# odom1: zed/zed_node/odom
-# odom1_config: [true, true, false,
-#                false, false, true,
-#                false, false, false,
-#                false, false, false,
-#                false, false, false]
-# odom1_queue_size: 10
-# odom1_differential: true
-# odom1_relative: false
-
 odom1: odometry/local
 odom1_config: [true , true , true ,
                true , true , true ,
