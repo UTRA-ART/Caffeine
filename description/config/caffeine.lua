@@ -23,6 +23,7 @@ options = {
   published_frame = "base_link",
   odom_frame = "odom",
   provide_odom_frame = true,
+  publish_tracked_pose = true,
   publish_frame_projected_to_2d = false,
   use_odometry = true,
   use_nav_sat = true,
