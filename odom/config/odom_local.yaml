@@ -9,7 +9,7 @@ base_link_frame: base_link
 world_frame: odom
 
 # publish transform: world_frame --> base_link_frame
-publish_tf: false 
+publish_tf: false
 
 transform_time_offset: 0.05
 
@@ -28,11 +28,20 @@ odom0_queue_size: 10
 odom0_differential: false
 odom0_relative: false
 
+odom1: zed/zed_node/odom
+odom1_config: [true, true, false,
+               false, false, true,
+               false, false, false,
+               false, false, false,
+               false, false, false]
+odom1_queue_size: 10
+odom1_differential: true
+odom1_relative: false
 
-## IMU Sensor(s) ## 
+## IMU Sensor(s) ##
 
-imu0: imu/data 
-imu0_config: [false, false, false, 
+imu0: imu/data
+imu0_config: [false, false, false,
               true , true , true ,
               false, false, false,
               true , true , true ,
@@ -41,13 +50,3 @@ imu0_queue_size: 10
 imu0_differential: false
 imu0_relative: true
 imu0_remove_gravitational_acceleration: true
-
-# odom1: vio/odom # ZED odom? Add if we want 
-# odom1_config: [true , true , false,
-#                false, false, true,
-#                true , true , false,
-#                false, false, true ,
-#                false, false, false]
-# odom1_queue_size: 10
-# odom1_differential: false
-# odom1_relative: false
