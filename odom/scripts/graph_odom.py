@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import math
+
 import matplotlib.pyplot as plt
 import message_filters
 import numpy as np
@@ -61,7 +63,23 @@ class OdomPlotterNode:
         plt.legend()
         plt.savefig("/tmp/y_position.png")
         plt.clf()
-        
+
+        x_rmse = list(math.sqrt((x - x_hat) ** 2) for x, x_hat in zip(gt_x, tracked_x))
+        plt.plot(N, x_rmse)
+        plt.xlabel("Timestep")
+        plt.ylabel("rmse")
+        plt.title("x rmse vs timestep")
+        plt.savefig("/tmp/x_rmse.png")
+        plt.clf()
+
+        y_rmse = list(math.sqrt((y - y_hat) ** 2) for y, y_hat in zip(gt_y, tracked_y))
+        plt.plot(N, y_rmse)
+        plt.xlabel("Timestep")
+        plt.ylabel("rmse")
+        plt.title("y rmse vs timestep")
+        plt.savefig("/tmp/y_rmse.png")
+        plt.clf()
+
         """
         plt.title("Cartographer position (2d)")
         plt.plot(tracked_x, tracked_y)
@@ -77,7 +95,6 @@ class OdomPlotterNode:
         plt.savefig("/tmp/ground_truth_position.png")
         plt.clf()
         """
-
 
 
 def main():
