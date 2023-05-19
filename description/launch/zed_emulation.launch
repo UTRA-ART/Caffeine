@@ -19,6 +19,7 @@
         </node>
 
         <!-- Visual Odometry using rtabmap_ros's stereo_odometry wrapper -->
+        <!--
         <node pkg="rtabmap_odom" type="stereo_odometry" name="stereo_odometry">
             <remap from="left/image_rect"       to="left/image_rect_color"/>
             <remap from="left/camera_info"      to="left/camera_info"/>
@@ -28,8 +29,6 @@
 
             <remap from="depth"                 to="depth/depth_registered"/>
             
-            <!-- Resets vis odom to last value after being reset. Works as long as vis odom isn't lost for too long -->
-            <!-- Refer to rtabmap_ros wiki, advanced parameter tuning, section 3.2-->
             <param name="Odom/ResetCountdown"   value="1"/> 
 
             <param name="frame_id"              type="string" value="base_link"/>
@@ -38,6 +37,7 @@
             <param name="queue_size"            value="5"/>
             <param name="publish_tf"            value="false"/>
         </node>
+        -->
 
     </group>
 
