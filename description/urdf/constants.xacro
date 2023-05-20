@@ -94,9 +94,6 @@
     <xacro:property name="laser_topicName" value="scan"/>
     <xacro:property name="laser_frameName" value="base_laser"/>
 
-    <xacro:property name="upper_laser_topicName" value="scan_upper"/>
-    <xacro:property name="upper_laser_frameName" value="upper_laser"/>
-
     <xacro:property name="laser_length" value="0.05"/>
     <xacro:property name="laser_width" value="0.05"/>
     <xacro:property name="laser_height" value="0.07"/>
@@ -104,10 +101,34 @@
 
     <xacro:property name="laser_x_dist" value="${base_length/2 - 2*laser_length}"/>
     <xacro:property name="laser_z_dist" value="${laser_height/2}"/>
+
+    <!--RPlidar A1-->
+
+    <xacro:property name="upper_laser_visualize" value="false"/>
+    <xacro:property name="upper_laser_update_rate" value="10"/>
+
+    <xacro:property name="upper_laser_horizontal_samples" value="1080"/>
+    <xacro:property name="upper_laser_horizontal_resolution" value="1"/>
+    <xacro:property name="upper_laser_field_of_view" value="270"/>
+    <xacro:property name="upper_laser_horizontal_min_angle" value="${-0.5*laser_field_of_view*pi/180}"/>
+    <xacro:property name="upper_laser_horizontal_max_angle" value="${0.5*laser_field_of_view*pi/180}"/>
+
+    <xacro:property name="upper_laser_range_min" value="0.06"/>
+    <xacro:property name="upper_laser_range_max" value="4.095"/>
+    <xacro:property name="upper_laser_resolution_angle" value="0.36"/> 
+    <xacro:property name="upper_laser_range_resolution" value="${laser_resolution_angle*pi/180}"/>
+
+    <xacro:property name="upper_laser_noise_type" value="gaussian"/>
+    <xacro:property name="upper_laser_noise_mean" value="0.0"/>
+    <xacro:property name="upper_laser_noise_stddev" value="0.01/3"/>
+
+    <xacro:property name="upper_laser_topicName" value="scan_upper"/>
+    <xacro:property name="upper_laser_frameName" value="upper_laser"/>
+
     <xacro:property name="distance_to_second_lidar" value="0.2"/>
 
     <!-- ZED camera -->
-    <!-- NOTE: approx as a rectangulSar prism -->
+    <!-- NOTE: approx as a rectangular prism -->
     <xacro:property name="ZED_camera_mass" value="0.1587573"/>
     <xacro:property name="ZED_camera_length" value="0.175"/>
     <xacro:property name="ZED_camera_width" value="0.03"/>
