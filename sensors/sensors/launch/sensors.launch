@@ -5,4 +5,5 @@
     <include file="$(find nmea_navsat_driver)/launch/nmea_serial_driver.launch">
         <arg name="launch_state" value="$(arg launch_state)"/>
     </include>
+    <include file="$(find rplidar_ros)/launch/rplidar.launch"/>
 </launch>
