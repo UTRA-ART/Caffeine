@@ -1,12 +1,14 @@
 <launch>
     <!-- Runs CV pipeline in python3 communicating with UDP pipeline -->
     <node
-        name="lane_detection_model_inference"
+        name="lane_detection_inference"
         pkg="lane_detection"
-        type="lane_detection_model_inference.py"
+        type="lane_detection_inference.py"
         output="screen"
     >
         <remap from="image" to="/zed/zed_node/left/image_rect_color"/>
+        <rosparam command="load" file="$(find lane_detection)/config/lane_detection_params.yaml"/>
+
     </node>
 
     <!-- Runs UDP client as node to publish results back in Python2 -->

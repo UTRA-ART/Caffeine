@@ -21,6 +21,9 @@ from geometry_msgs.msg import Point
 from cv_utils import camera_projection
 
 from line_fitting import fit_lanes
+from unet_lane.Inference import Inference
+
+from threshold_lane.threshold import lane_detection
 
 class CVModelInferencer:
     def __init__(self):
@@ -32,8 +35,21 @@ class CVModelInferencer:
         self.bridge = CvBridge()
         self.projection = camera_projection.CameraProjection()
         
-        # rospack = rospkg.RosPack()
-        # model_path = rospack.get_path('lane_detection') + '/models/unet_v1.onnx'
+        rospack = rospkg.RosPack()
+        self.model_path = rospack.get_path('lane_detection') + '/models/competition_model_4c_128.pt'
+
+        # Get the parameter to decide between deep learning and classical
+        self.classical_mode = rospy.get_param('~lane_detection_mode')
+        self.Inference = None
+        self.lane_detection = None
+
+        if self.classical_mode == 1:
+            self.lane_detection = lane_detection
+            rospy.loginfo("Lane Detection node initialized with CLASSICAL... ")
+        else:
+            self.Inference = Inference(self.model_path, False)
+            rospy.loginfo("Lane Detection node initialized with DEEP LEARNING... ")
+
 
 
     def run(self):
@@ -52,6 +68,13 @@ class CVModelInferencer:
 
             # Do model inference 
             mask = None
+
+            if self.classical_mode:
+                mask = self.lane_detection(input_img)
+            else:
+                mask = self.Inference.inference(input_img)
+
+
 
             # Publish to /cv/model_output
             img_msg = self.bridge.cv2_to_imgmsg(mask, encoding='passthrough')
