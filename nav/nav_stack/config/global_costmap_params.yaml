@@ -48,9 +48,9 @@ global_costmap:
 
   inflation_layer:
     enabled:              true
-    inflation_radius:     0.65  # Tunable parameter (affect navigation plan)
+    inflation_radius:     0.35  # Tunable parameter (affect navigation plan)
 
   plugins:
     - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}
-    - {name: virtual_layer,       type: "virtual_layers::VirtualLayer"}
+    #- {name: virtual_layer,       type: "virtual_layers::VirtualLayer"}
     - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}
