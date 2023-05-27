@@ -1,3 +1,6 @@
 [submodule "cv/zed-ros-wrapper"]
 	path = cv/zed-ros-wrapper
 	url = https://github.com/stereolabs/zed-ros-wrapper.git
+[submodule "sensors/rplidar_ros"]
+	path = sensors/rplidar_ros
+	url = https://github.com/Slamtec/rplidar_ros.git

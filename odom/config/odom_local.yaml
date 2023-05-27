@@ -18,9 +18,9 @@ print_diagnostics: true
 
 ## Odometry Sensor(s) ##
 
-odom0: odom
+odom0: odom #Use wheel_encoder data (change once new node is up)
 odom0_config: [true , true , false,
-               false, false, false,
+               false, false, true,
                true , true , false,
                false, false, true ,
                false, false, false]
@@ -28,6 +28,15 @@ odom0_queue_size: 10
 odom0_differential: false
 odom0_relative: false
 
+odom1: zed/zed_node/odom
+odom1_config: [true, true, false,
+               false, false, true,
+               false, false, false,
+               false, false, false,
+               false, false, false]
+odom1_queue_size: 10
+odom1_differential: true
+odom1_relative: false
 
 ## IMU Sensor(s) ## 
 
@@ -41,3 +50,7 @@ imu0_queue_size: 10
 imu0_differential: false
 imu0_relative: true
 imu0_remove_gravitational_acceleration: true
+
+
+
+

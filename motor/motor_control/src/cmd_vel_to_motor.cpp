@@ -5,7 +5,7 @@
 
 double g_vx = 0.0;
 double g_wz = 0.0;
-const double WHEELBASE = 0.89; // meters
+const double WHEELBASE = 0.926; //0.89; // meters
 
 // For more info see https://www.ato.com/Content/doc/ATO-BLD750-BLDC-motor-controller-specs.pdf 
 const double FACTOR = 1 / .447 * 5280 * 12 / 10 / 3.1415 / 60 * 16; // M/s to rpm (before gearbox) 

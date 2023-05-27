@@ -1,0 +1,13 @@
+<launch>
+    <arg name="launch_state" default="sim"/>
+
+    <!-- Twist Multiplexer -->
+    <include file="$(find twist_mux)/launch/twist_mux.launch">
+        <arg name="cmd_vel_out" value="cmd_vel"/>
+    </include>
+
+    <!-- Motor controller + feedback -->
+    <include file="$(find motor_control)/launch/motor_control.launch">
+        <arg name="launch_state" value="$(arg launch_state"/>
+    </include>
+</launch>

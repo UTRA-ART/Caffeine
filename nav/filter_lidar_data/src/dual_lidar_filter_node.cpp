@@ -20,7 +20,7 @@ void ramp_filter(float out[], const float main[], const float upper[], const flo
     const float inf = std::numeric_limits<float>::infinity();
     for (int i = 0; i < LIDAR_BUF_LEN; i++) {
         const float comp_depth = upper[get_2nd_depth_from_first_idx(i)];
-        const float depth = comp_depth - main[i];
+        float depth = comp_depth - main[i];
         if (depth > expected_ramp_depth) {
             out[i] = inf;
         } else {

@@ -1,5 +1,7 @@
 <launch>
 
+    <arg name="launch_state" default="sim"/> 
+
     <!-- Spawn at course start -->
     <arg name="world_type" default="grass"/>
     
@@ -63,6 +65,14 @@
     </include>
 
     <!-- Compute Odometry from Sensor Fusion -->
-    <include file="$(find odom)/launch/odom.launch"/>
+    <include file="$(find odom)/launch/odom.launch">
+        <arg name="launch_state" value="sim"/>
+    </include>
+
+    <!-- Record topics using Rosbag -->
+    <include file="$(find description)/launch/setup_rosbag.launch"
+        if="false">
+        <arg name="output_folder" default="$(find description)/caffeine_bag/caffeine_bag" />
+    </include>
 
 </launch>

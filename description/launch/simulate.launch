@@ -6,7 +6,7 @@
 
     <!-- IGVC worlds: full, walls, ramp, plain -->
     <!-- IGVC world types: pavement (2022 IGVC), grass (<2021 IGVC)-->
-    <arg name="world" default="helpme"/>
+    <arg name="world" default="full"/>
     <arg name="world_type" default="pavement"/>
 
     <!-- Simulate 'world' in Gazebo -->
@@ -42,5 +42,9 @@
     <group if="$(arg rviz)">
         <include file="$(find description)/launch/view.launch"/>
     </group>
+
+    <!--Ground Truth Transform-->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="ground_truth_transform"
+    args="-19.5 0 0 1.5707 0 0 world ground_truth" />
 
 </launch>
