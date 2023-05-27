@@ -28,17 +28,8 @@ class SSHConnection:
         elif ip_address == self.raspberry_pi3:
             rospy.loginfo('SSH client to Raspberry Pi 3 is active')
 
-    def navigate_to_folder(self):
-        _stdin, _stdout, _stderr = self.ssh_client.exec_command("cd ~/caffeine_ws")
-        print(_stdout.read().decode()) #prints out the stdout of the command
-
-        _stdin, _stdout, _stderr = self.ssh_client.exec_command("ls")
-        print(_stdout.read().decode()) #prints out the stdout of the command
-
-        _stdin, _stdout, _stderr = self.ssh_client.exec_command("source devel/setup.bash")
-        print(_stdout.read().decode()) #prints out the stdout of the command
-
     def close_ssh(self):
+        ip_address, port = self.ssh_client.get_transport().getpeername()
         if ip_address == self.raspberry_pi2:
             rospy.loginfo('Closing SSH client to Raspberry Pi 2')
         elif ip_address == self.raspberry_pi3:
@@ -53,7 +44,8 @@ class SSHConnection:
         
     def run(self):
         self.initiate_ssh(self.raspberry_pi2, self.username, self.password)
-        self.navigate_to_folder()
+        _stdin, _stdout, _stderr = self.ssh_client.exec_command("cd ~/caffeine_ws && ls && source devel/setup.bash")
+        print(_stdout.read().decode()) #prints the stdout of the command
         self.close_ssh()
 
 if __name__=='__main__':

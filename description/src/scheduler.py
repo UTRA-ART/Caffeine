@@ -114,10 +114,6 @@ class Scheduler:
         elif ip_address == self.raspberry_pi3:
             rospy.loginfo('SSH client to Raspberry Pi 3 is active')
 
-    def navigate_to_folder(self):
-        _stdin, _stdout, _stderr = self.ssh_client.exec_command("cd ~/caffeine_ws")
-        _stdin, _stdout, _stderr = self.ssh_client.exec_command("source devel/setup.bash")
-
     def close_ssh(self):
         if ip_address == self.raspberry_pi2:
             rospy.loginfo('Closing SSH client to Raspberry Pi 2')
@@ -168,10 +164,7 @@ class Scheduler:
         rospy.loginfo('Starting motor controls...')
         self.initiate_ssh(self.raspberry_pi3, self.username, self.password)
 
-        #navigate to Caffeine folder and source devel/setup.bash
-        self.navigate_to_folder()
-
-        _stdin, _stdout, _stderr = self.ssh_client.exec_command('roslaunch description motor_control_pipeline.launch launch_state:=IGVC &> /dev/null &')
+        _stdin, _stdout, _stderr = self.ssh_client.exec_command('cd ~/caffeine_ws && source devel/setup.bash && roslaunch description motor_control_pipeline.launch launch_state:=IGVC &> /dev/null &')
         print(_stdout.read().decode()) #prints the stdout of the command
 
         #os.system('roslaunch description motor_control_pipeline.launch launch_state:=IGVC &> /dev/null &')
@@ -184,10 +177,7 @@ class Scheduler:
         rospy.loginfo('Initializing odometry...')
         self.initiate_ssh(self.raspberry_pi2, self.username, self.password)
 
-        #navigate to Caffeine folder and source devel/setup.bash
-        self.navigate_to_folder()
-
-        _stdin, _stdout, _stderr = self.ssh_client.exec_command('roslaunch odom odom.launch launch_state:=IGVC &> /dev/null &')
+        _stdin, _stdout, _stderr = self.ssh_client.exec_command('cd ~/caffeine_ws && source devel/setup.bash && roslaunch odom odom.launch launch_state:=IGVC &> /dev/null &')
         print(_stdout.read().decode()) #prints out the stdout of the command
 
         #os.system('roslaunch odom odom.launch launch_state:=IGVC &> /dev/null &')
