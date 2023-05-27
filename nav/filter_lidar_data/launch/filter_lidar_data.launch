@@ -24,5 +24,16 @@
         <param name="upper_topic" value="/scan_upper" />
         <param name="out_topic" value="/scan_modified" />
         <param name="compare_lidar_time_tolerance_seconds" value="10" />
+
+        <!-- upper lidar index range -->
+        <!-- honestly the start index may not be required to change unless your indexing doesn't start at 0 -->
+        <param name="upper_lidar_start_index" value="0" />
+        <param name="upper_lidar_stop_index" value="1079" />
+        <!-- total indices by lidar, completely useless since we have stop index above -->
+        <!-- <param name="upper_lidar_count" value="1080" /> -->
+        <!-- angular range total in degrees, ie 360 degrees if all angles  (not referring to start stop range above, but total of the upper lidar array) -->
+        <param name="upper_lidar_angular_total_range" value='360' />
+        <!-- main lidar angular range -->
+        <param name="main_lidar_angular_total_range" value='270' />
     </node>
 </launch>
