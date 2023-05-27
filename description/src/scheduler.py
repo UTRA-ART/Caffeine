@@ -172,7 +172,7 @@ class Scheduler:
         self.navigate_to_folder()
 
         _stdin, _stdout, _stderr = self.ssh_client.exec_command('roslaunch description motor_control_pipeline.launch launch_state:=IGVC &> /dev/null &')
-        print(_stdout.read().decode())
+        print(_stdout.read().decode()) #prints the stdout of the command
 
         #os.system('roslaunch description motor_control_pipeline.launch launch_state:=IGVC &> /dev/null &')
         # self.wait_for_transform(listener, 'base_link', 'odom')
@@ -182,19 +182,18 @@ class Scheduler:
 
         # Run odom, wait for odom local, global, and /utm
         rospy.loginfo('Initializing odometry...')
-
         self.initiate_ssh(self.raspberry_pi2, self.username, self.password)
 
         #navigate to Caffeine folder and source devel/setup.bash
         self.navigate_to_folder()
 
         _stdin, _stdout, _stderr = self.ssh_client.exec_command('roslaunch odom odom.launch launch_state:=IGVC &> /dev/null &')
-        print(_stdout.read().decode())
+        print(_stdout.read().decode()) #prints out the stdout of the command
 
         #os.system('roslaunch odom odom.launch launch_state:=IGVC &> /dev/null &')
         self.wait_for_condition('odom_global_published', 35)
         self.wait_for_condition('odom_local_published', 35)
-        # self.wait_for_condition('odom_gps_published', 25)7
+        # self.wait_for_condition('odom_gps_published', 25)
 
         rospy.loginfo('Odometry initialized.')
         self.close_ssh()
