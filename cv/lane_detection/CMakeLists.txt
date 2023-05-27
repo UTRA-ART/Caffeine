@@ -18,6 +18,7 @@ add_message_files(
 generate_messages(
   DEPENDENCIES
   geometry_msgs
+  std_msgs
 )
 
 # Generate cmake config files via catkin_package
