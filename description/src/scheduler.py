@@ -1,4 +1,5 @@
-#!/usr/bin/python2
+#!/usr/bin/env python3
+
 import os
 import time
 import paramiko #need to install paramiko Python package
@@ -50,7 +51,6 @@ class Scheduler:
         self.assign_topic('/scan_modified', 'scan_override_set', LaserScan)
 
         #SSH
-
         self.raspberry_pi2 = "10.0.0.2" #IP Address
         self.raspberry_pi3 = "10.0.0.3" #IP Address
         self.username = "ubuntu"
