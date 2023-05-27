@@ -102,7 +102,7 @@ class Scheduler:
     def initiate_ssh(self, ip_address, username, password):
         if ip_address == self.raspberry_pi2:
             rospy.loginfo('Initiating SSH client to Raspberry Pi 2')
-        else if ip_address == self.raspberry_pi3:
+        elif ip_address == self.raspberry_pi3:
             rospy.loginfo('Initiating SSH client to Raspberry Pi 3')
 
         self.ssh_client = paramiko.client.SSHClient()
@@ -111,7 +111,7 @@ class Scheduler:
 
         if ip_address == self.raspberry_pi2:
             rospy.loginfo('SSH client to Raspberry Pi 2 is active')
-        else if ip_address == self.raspberry_pi3:
+        elif ip_address == self.raspberry_pi3:
             rospy.loginfo('SSH client to Raspberry Pi 3 is active')
 
     def navigate_to_folder(self):
@@ -121,14 +121,14 @@ class Scheduler:
     def close_ssh(self):
         if ip_address == self.raspberry_pi2:
             rospy.loginfo('Closing SSH client to Raspberry Pi 2')
-        else if ip_address == self.raspberry_pi3:
+        elif ip_address == self.raspberry_pi3:
             rospy.loginfo('Closing SSH client to Raspberry Pi 3')
 
         self.ssh_client.close()
 
         if ip_address == self.raspberry_pi2:
             rospy.loginfo('SSH client to Raspberry Pi 2 is closed')
-        else if ip_address == self.raspberry_pi3:
+        elif ip_address == self.raspberry_pi3:
             rospy.loginfo('SSH client to Raspberry Pi 3 is closed')
     
     def run(self):

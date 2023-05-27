@@ -7,7 +7,8 @@ class SSHConnection:
 
     def __init__(self):
         self.node = rospy.init_node("SSH_Connection")
-        self.raspberry_pi2 = "10.0.0.2" #IP Address
+        #self.raspberry_pi2 = "10.0.0.2" #IP Address
+        self.raspberry_pi2 = "192.168.171.155"
         self.raspberry_pi3 = "10.0.0.3" #IP Address
         self.username = "ubuntu"
         self.password = "utraart2021"
@@ -15,7 +16,7 @@ class SSHConnection:
     def initiate_ssh(self, ip_address, username, password):
         if ip_address == self.raspberry_pi2:
             rospy.loginfo('Initiating SSH client to Raspberry Pi 2')
-        else if ip_address == self.raspberry_pi3:
+        elif ip_address == self.raspberry_pi3:
             rospy.loginfo('Initiating SSH client to Raspberry Pi 3')
 
         self.ssh_client = paramiko.client.SSHClient()
@@ -24,7 +25,7 @@ class SSHConnection:
 
         if ip_address == self.raspberry_pi2:
             rospy.loginfo('SSH client to Raspberry Pi 2 is active')
-        else if ip_address == self.raspberry_pi3:
+        elif ip_address == self.raspberry_pi3:
             rospy.loginfo('SSH client to Raspberry Pi 3 is active')
 
     def navigate_to_folder(self):
@@ -40,14 +41,14 @@ class SSHConnection:
     def close_ssh(self):
         if ip_address == self.raspberry_pi2:
             rospy.loginfo('Closing SSH client to Raspberry Pi 2')
-        else if ip_address == self.raspberry_pi3:
+        elif ip_address == self.raspberry_pi3:
             rospy.loginfo('Closing SSH client to Raspberry Pi 3')
 
         self.ssh_client.close()
 
         if ip_address == self.raspberry_pi2:
             rospy.loginfo('SSH client to Raspberry Pi 2 is closed')
-        else if ip_address == self.raspberry_pi3:
+        elif ip_address == self.raspberry_pi3:
             rospy.loginfo('SSH client to Raspberry Pi 3 is closed')
         
     def run(self):
