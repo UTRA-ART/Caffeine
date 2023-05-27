@@ -115,7 +115,7 @@ class Scheduler:
             rospy.loginfo('SSH client to Raspberry Pi 3 is active')
 
     def navigate_to_folder(self):
-        _stdin, _stdout, _stderr = self.ssh_client.exec_command("cd ~/caffeine-ws")
+        _stdin, _stdout, _stderr = self.ssh_client.exec_command("cd ~/caffeine_ws")
         _stdin, _stdout, _stderr = self.ssh_client.exec_command("source devel/setup.bash")
 
     def close_ssh(self):
