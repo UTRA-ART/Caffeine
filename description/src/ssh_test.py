@@ -55,10 +55,6 @@ class SSHConnection:
         self.navigate_to_folder()
         self.close_ssh()
 
-        self.initiate_ssh(self.raspberry_pi3, self.username, self.password)
-        self.navigate_to_folder()
-        self.close_ssh()
-
 if __name__=='__main__':
     ssh_connection = SSH_Connection()
     ssh_connection.run()
