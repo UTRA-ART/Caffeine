@@ -75,7 +75,7 @@
         <origin xyz="${imu_x_dist} ${imu_y_dist} ${imu_z_dist}" rpy="0 0 0"/>
     </joint> 
 
-    <!--another lidar for testing-->
+    <!-- Second upper lidar -->
 
     <link name="upper_laser">
         <inertial>

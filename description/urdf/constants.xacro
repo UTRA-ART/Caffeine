@@ -126,7 +126,7 @@
     <xacro:property name="upper_laser_topicName" value="scan_upper"/>
     <xacro:property name="upper_laser_frameName" value="upper_laser"/>
 
-    <xacro:property name="distance_to_second_lidar" value="0.2"/>
+    <xacro:property name="distance_to_second_lidar" value="0.14"/>
 
     <!-- ZED camera -->
     <!-- NOTE: approx as a rectangular prism -->

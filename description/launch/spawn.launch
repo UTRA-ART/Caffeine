@@ -7,17 +7,17 @@
     
     <arg name="x" default="0" unless="$(eval arg('world_type') =='pavement')"/>
     <arg name="y" default="-21.5" unless="$(eval arg('world_type') =='pavement')"/>
-    <arg name="z" default="0.28" unless="$(eval arg('world_type') =='pavement')"/>
+    <arg name="z" default="0.25" unless="$(eval arg('world_type') =='pavement')"/>
     <arg name="roll" default="0" unless="$(eval arg('world_type') =='pavement')"/>
     <arg name="pitch" default="0" unless="$(eval arg('world_type') =='pavement')"/>
     <arg name="yaw" default="3.14" unless="$(eval arg('world_type') =='pavement')"/>
 
-    <!-- <arg name="x" value="-19.5" if="$(eval arg('world_type') =='pavement')" />
+    <arg name="x" value="-19.5" if="$(eval arg('world_type') =='pavement')" />
     <arg name="y" value="0" if="$(eval arg('world_type') =='pavement')" />
     <arg name="z" value="0.241" if="$(eval arg('world_type') =='pavement')" />
     <arg name="roll" value="0" if="$(eval arg('world_type') =='pavement')" />
     <arg name="pitch" value="0" if="$(eval arg('world_type') =='pavement')" />
-    <arg name="yaw" value="1.57" if="$(eval arg('world_type') =='pavement')" />  -->
+    <arg name="yaw" value="1.57" if="$(eval arg('world_type') =='pavement')" /> 
 
     <!-- Spawn at Second waypoint -->
 
@@ -28,7 +28,7 @@
     <arg name="pitch" value="-0.0076" if="$(eval arg('world_type') =='pavement')" />
     <arg name="yaw" value="0" if="$(eval arg('world_type') =='pavement')" /> -->
 
-    <!-- spawn at a ramp or some shit -->
+    <!-- Spawn in front of ramp -->
 
     <!-- <arg name="x" value="17" if="$(eval arg('world_type') =='pavement')" />
     <arg name="y" value="7" if="$(eval arg('world_type') =='pavement')" />
