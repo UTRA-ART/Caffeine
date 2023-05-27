@@ -20,8 +20,8 @@
         output="screen"
     >
          <!-- unless this can track a constant defined in constants.xacro, make sure this is updated to be actual distance b/w lidars -->
-        <param name="distance_to_second_lidar" value="0.2"/>
-        <param name="max_theta_degrees" value="30" />
+        <param name="distance_to_second_lidar" value="0.14"/>
+        <param name="max_theta_degrees" value="9" />
         <param name="main_topic" value="/scan" />
         <param name="upper_topic" value="/scan_upper" />
         <param name="out_topic" value="/scan_modified" />
