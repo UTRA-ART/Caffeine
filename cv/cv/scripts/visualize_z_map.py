@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import json
 import cv2 
 import numpy as np

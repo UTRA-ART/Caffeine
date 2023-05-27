@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 from audioop import avg
 import struct
 import sys
@@ -26,6 +26,7 @@ class ZedWrapperServer:
 
     def run(self):
         rospy.init_node('zed_data_output')
+        print("Node Started!")
         rospy.Subscriber("/zed/zed_node/depth/depth_registered", Image, self.get_depths)
         rospy.spin()
 
@@ -39,6 +40,8 @@ class ZedWrapperServer:
                 for y in range(_y, _y+30):
                     for x in range(_x, _x+30):
                         output[str((x, y))] = avg_depth_vals[i, j]
+
+        print("Checkpoint 1")
         
         rospack = rospkg.RosPack()
         save_path = rospack.get_path('cv') + '/config/depth_vals.json'
@@ -46,6 +49,7 @@ class ZedWrapperServer:
         json.dump(output, open(save_path, 'w'), indent=4)
 
     def get_depths(self, data):
+        print("Callback Triggered")
         img = self.bridge.imgmsg_to_cv2(data, desired_encoding='passthrough')  
         depth_values = np.ma.masked_invalid(cv2.resize(img, (330, 180)))
 
