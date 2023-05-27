@@ -57,7 +57,7 @@ class SSHConnection:
         self.close_ssh()
 
 if __name__=='__main__':
-    ssh_connection = SSH_Connection()
+    ssh_connection = SSHConnection()
     ssh_connection.run()
     
     while not rospy.is_shutdown():
