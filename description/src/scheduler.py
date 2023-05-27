@@ -1,6 +1,7 @@
 #!/usr/bin/python2
 import os
 import time
+import paramiko #need to install paramiko Python package
 
 import rospy
 import tf
@@ -48,6 +49,13 @@ class Scheduler:
         self.assign_topic('/pause_navigation', 'manual_default_set', Bool, True)
         self.assign_topic('/scan_modified', 'scan_override_set', LaserScan)
 
+        #SSH
+
+        self.raspberry_pi2 = "10.0.0.2" #IP Address
+        self.raspberry_pi3 = "10.0.0.3" #IP Address
+        self.username = "ubuntu"
+        self.password = "utraart2021"
+    
     def abort(self, msg):
         rospy.logerr("SOMETHING FAILED. ABORTING. THIS CAUSED IT:" + msg)
         # time.sleep(100000)
@@ -90,6 +98,38 @@ class Scheduler:
         if time.time() - start >= timeout:
             self.abort(target_frame)
             raise RuntimeError(target_frame + 'frame not started in time.')
+
+    def initiate_ssh(self, ip_address, username, password):
+        if ip_address == self.raspberry_pi2:
+            rospy.loginfo('Initiating SSH client to Raspberry Pi 2')
+        else if ip_address == self.raspberry_pi3:
+            rospy.loginfo('Initiating SSH client to Raspberry Pi 3')
+
+        self.ssh_client = paramiko.client.SSHClient()
+        self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        self.ssh_client.connect(ip_address, username=username, password=password)
+
+        if ip_address == self.raspberry_pi2:
+            rospy.loginfo('SSH client to Raspberry Pi 2 is active')
+        else if ip_address == self.raspberry_pi3:
+            rospy.loginfo('SSH client to Raspberry Pi 3 is active')
+
+    def navigate_to_folder(self):
+        _stdin, _stdout, _stderr = self.ssh_client.exec_command("cd ~/caffeine-ws")
+        _stdin, _stdout, _stderr = self.ssh_client.exec_command("source devel/setup.bash")
+
+    def close_ssh(self):
+        if ip_address == self.raspberry_pi2:
+            rospy.loginfo('Closing SSH client to Raspberry Pi 2')
+        else if ip_address == self.raspberry_pi3:
+            rospy.loginfo('Closing SSH client to Raspberry Pi 3')
+
+        self.ssh_client.close()
+
+        if ip_address == self.raspberry_pi2:
+            rospy.loginfo('SSH client to Raspberry Pi 2 is closed')
+        else if ip_address == self.raspberry_pi3:
+            rospy.loginfo('SSH client to Raspberry Pi 3 is closed')
     
     def run(self):
         listener = tf.TransformListener()
@@ -126,18 +166,38 @@ class Scheduler:
 
         # Run motor control and feedback, wait for /odom 
         rospy.loginfo('Starting motor controls...')
-        os.system('roslaunch description motor_control_pipeline.launch launch_state:=IGVC &> /dev/null &')
+        self.initiate_ssh(self.raspberry_pi3, self.username, self.password)
+
+        #navigate to Caffeine folder and source devel/setup.bash
+        self.navigate_to_folder()
+
+        _stdin, _stdout, _stderr = self.ssh_client.exec_command('roslaunch description motor_control_pipeline.launch launch_state:=IGVC &> /dev/null &')
+        print(_stdout.read().decode())
+
+        #os.system('roslaunch description motor_control_pipeline.launch launch_state:=IGVC &> /dev/null &')
         # self.wait_for_transform(listener, 'base_link', 'odom')
         # self.wait_for_condition('odom_motor_published', 30)
         rospy.loginfo('Motor controls started.')
+        self.close_ssh()
 
         # Run odom, wait for odom local, global, and /utm
         rospy.loginfo('Initializing odometry...')
-        os.system('roslaunch odom odom.launch launch_state:=IGVC &> /dev/null &')
+
+        self.initiate_ssh(self.raspberry_pi2, self.username, self.password)
+
+        #navigate to Caffeine folder and source devel/setup.bash
+        self.navigate_to_folder()
+
+        _stdin, _stdout, _stderr = self.ssh_client.exec_command('roslaunch odom odom.launch launch_state:=IGVC &> /dev/null &')
+        print(_stdout.read().decode())
+
+        #os.system('roslaunch odom odom.launch launch_state:=IGVC &> /dev/null &')
         self.wait_for_condition('odom_global_published', 35)
         self.wait_for_condition('odom_local_published', 35)
-        # self.wait_for_condition('odom_gps_published', 25)
+        # self.wait_for_condition('odom_gps_published', 25)7
+
         rospy.loginfo('Odometry initialized.')
+        self.close_ssh()
         
         # override scan 
         rospy.loginfo('Launching scan override...')
