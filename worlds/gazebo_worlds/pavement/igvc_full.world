@@ -2559,7 +2559,7 @@
     </model>
     <model name='outer_wall_16'>
       <static>1</static>
-      <pose frame=''>20.7 5.35 0 0 -0 0.9</pose>
+      <pose frame=''>18.7 5.35 0 0 -0 0.9</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
@@ -2775,7 +2775,7 @@
     </model>
     <model name='inner_wall_1'>
       <static>1</static>
-      <pose frame=''>14.12 5.4 0 0 -0 0.9</pose>
+      <pose frame=''>16.12 5.4 0 0 -0 0.9</pose>
       <link name='link'>
         <collision name='collision'>
           <geometry>
