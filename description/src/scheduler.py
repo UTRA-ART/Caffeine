@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 import os
 import time
 
@@ -141,13 +141,13 @@ class Scheduler:
         
         # override scan 
         rospy.loginfo('Launching scan override...')
-        os.system('roslaunch filter_lidar_data filter_lidar_data.launch &> /dev/null &')
+        os.system('roslaunch filter_lidar_data filter_lidar_data.launch launch_state:=IGVC &> /dev/null &')
         self.wait_for_condition('scan_override_set', 20)
         rospy.loginfo('Scan overriden.')
 
         # Run nav stack --- load_waypoints out, wait for /map /scan_modified
         rospy.loginfo('Initializing navigation stack...')
-        os.system('roslaunch nav_stack move_base.launch &> /dev/null &')
+        os.system('roslaunch nav_stack move_base.launch launch_state:=IGVC &> /dev/null &')
         self.wait_for_transform(listener, '/base_link', '/map')
         # self.wait_for_transform(listener, '/map', '/utm')
         rospy.loginfo('Navstack initialized.')
