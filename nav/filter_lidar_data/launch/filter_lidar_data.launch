@@ -35,17 +35,15 @@
         <!-- Start index may not be required to change unless your indexing doesn't start at 0 -->
         <param name="upper_lidar_start_index" value="0" />
 
-        <group unless="$(eval launch_state == 'sim')">
-            <!-- This will typically be upper lidar's total point count - 1, unless 0 is not your start index -->
-            <param name="upper_lidar_stop_index" value="1145" />
-            <!-- Angular range total in degrees, ie 360 degrees if all angles  (not referring to start stop range above, but total of the upper lidar array) -->
-            <param name="upper_lidar_angular_total_range" value='360' />
-        </group>
+        <param name="launch_state" value="$(arg launch_state)" />
+        <!-- This will typically be upper lidar's total point ,count - 1, unless 0 is not your start index -->
+        <param name="upper_lidar_stop_index" value="1080" if="$(eval launch_state =='sim')" />  <!-- Use 1080 for sim, and 1145 for irl -->
+        <param name="upper_lidar_stop_index" value="1145" unless="$(eval launch_state =='sim')"/>
+        
+        <!-- Angular range total in degrees, ie 360 degrees if all angles  (not referring to start stop range above, but total of the upper lidar array) -->
+        <param name="upper_lidar_angular_total_range" value='270' if="$(eval launch_state =='sim')" /> <!-- Use 270 for sim, and 360 for irl -->
+        <param name="upper_lidar_angular_total_range" value="360" unless="$(eval launch_state =='sim')"/>
 
-        <group if="$(eval launch_state == 'sim')">
-            <param name="upper_lidar_stop_index" value="1080" />
-            <param name="upper_lidar_angular_total_range" value='270' />
-        </group>
 
         <!-- Total indices by lidar, unused since we have stop index above -->
         <!-- <param name="upper_lidar_count" value="1080" /> -->
