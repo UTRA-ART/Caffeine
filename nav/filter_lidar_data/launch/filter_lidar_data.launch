@@ -1,4 +1,6 @@
 <launch>
+
+    <arg name="launch_state" default="sim"/>
     <!-- old method of filtering lidar -->
     <!-- <node 
         name="ignore_lidar" 
@@ -31,11 +33,11 @@
         <!-- honestly the start index may not be required to change unless your indexing doesn't start at 0 -->
         <param name="upper_lidar_start_index" value="0" />
         <!-- this will typically be upper lidar's total point count - 1, unless 0 is not your start index -->
-        <param name="upper_lidar_stop_index" value="1145" />
+        <param name="upper_lidar_stop_index" value="1080" />
         <!-- total indices by lidar, completely useless since we have stop index above -->
         <!-- <param name="upper_lidar_count" value="1080" /> -->
         <!-- angular range total in degrees, ie 360 degrees if all angles  (not referring to start stop range above, but total of the upper lidar array) -->
-        <param name="upper_lidar_angular_total_range" value='360' />
+        <param name="upper_lidar_angular_total_range" value='270' />
         <!-- main lidar angular range -->
         <param name="main_lidar_angular_total_range" value='270' />
     </node>
