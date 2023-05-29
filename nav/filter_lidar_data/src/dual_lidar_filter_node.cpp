@@ -6,27 +6,14 @@
 #include <functional>
 #include <limits>
 #include <string>
+#include <vector>
 
-const int LIDAR_BUF_LEN = 1080;
+// const int LIDAR_BUF_LEN = 1080;
 
 // method is based on computing expected difference in depth between two lidar detected
 // given ramp angle and lidar height difference
 float get_expected_ramp_depth(const float theta_degrees, const float lidar_distance) {
     return lidar_distance / std::tan(theta_degrees * M_PI / 180.0);
-}
-
-// modify main array with original lidar to contain filtered values, based on comparing with upper sensor
-void ramp_filter(float out[], const float main[], const float upper[], const float expected_ramp_depth, std::function<int(int)> get_2nd_depth_from_first_idx) {
-    const float inf = std::numeric_limits<float>::infinity();
-    for (int i = 0; i < LIDAR_BUF_LEN; i++) {
-        const float comp_depth = upper[get_2nd_depth_from_first_idx(i)];
-        float depth = comp_depth - main[i];
-        if (depth > expected_ramp_depth) {
-            out[i] = inf;
-        } else {
-            out[i] = main[i];
-        }
-    }
 }
 
 class DualLidarFilterNode {
@@ -62,35 +49,54 @@ private:
 
     float min_ramp_depth;
 
-    sensor_msgs::LaserScan last_upper;
-    std::function<int(int)> second_idx_fn;
+    // sensor_msgs::LaserScan last_upper;
+    std::vector<float> last_upper_ranges;
+    int last_upper_stamp;
+
+    int second_len;
+
+    // bool is_upper_valid{false};
+    std::function<int(int, int)> second_idx_fn;
 
     void lidarCallback(const sensor_msgs::LaserScanConstPtr& lidar_msg) {
-        // ROS_INFO("scan time, increments %i %f", lidar_msg->header.stamp.nsec, lidar_msg->range_max);
-        const int delt_secs_ab = std::abs<int>(lidar_msg->header.stamp.sec - last_upper.header.stamp.sec);
-        if (delt_secs_ab < comp_lidar_tol_secs) { // if time between two lidar updates is acceptable
+        const int delt_secs_ab = std::abs<int>(lidar_msg->header.stamp.sec - last_upper_stamp);
+        const bool acceptable_record_time_diff = delt_secs_ab < comp_lidar_tol_secs;
+        if (last_upper_ranges.size() >= second_len && acceptable_record_time_diff) {
             sensor_msgs::LaserScan out_msg = *lidar_msg;
-            ramp_filter(out_msg.ranges.data(), lidar_msg->ranges.data(), last_upper.ranges.data(), min_ramp_depth, second_idx_fn);
+            ramp_filter(out_msg.ranges, lidar_msg->ranges.data());
             out.publish(out_msg);
         } else { // default case, just use main lidar as it is
             out.publish(lidar_msg);
         }
     }
     void upperLidarCallback(const sensor_msgs::LaserScanConstPtr& lidar_msg) {
-        // ROS_INFO("upper %i %f", lidar_msg->header.stamp.nsec, lidar_msg->range_max);
-        last_upper = *lidar_msg;
+        last_upper_ranges = lidar_msg->ranges;
+        last_upper_stamp = lidar_msg->header.stamp.sec;
     }
     // get 2nd depth for depth comparison
-    int get_2nd_idx_from_first_idx(int prim_idx) {
-        const float ang_diff = ((float)prim_idx / (float)LIDAR_BUF_LEN - 0.5) * (float)main_lidar_angular_range;
+    int get_2nd_idx_from_first_idx(int prim_idx, int main_lidar_len) {
+        const float ang_diff = ((float)prim_idx / (float)main_lidar_len - 0.5) * (float)main_lidar_angular_range;
         // const float second_i_delt = ang / (float)upper_lidar_angular_range * (upper_lidar_stop_index - upper_lidar_start_index);
-        const int second_len = upper_lidar_stop_index - upper_lidar_start_index;
+        // const  = upper_lidar_stop_index - upper_lidar_start_index;
         const float second_i_diff = ang_diff / (float)upper_lidar_angular_range;
         const float second_i_delt = (second_i_diff + 0.5) * (float)second_len;
         const int second_i = round(second_i_delt + upper_lidar_start_index);
         return second_i;
     }
 
+    // modify main array with original lidar to contain filtered values, based on comparing with upper sensor
+    void ramp_filter(std::vector<float>& out, const float main[]) {
+        const float inf = std::numeric_limits<float>::infinity();
+        for (int i = 0; i < out.size(); i++) {
+            const float comp_depth = last_upper_ranges[second_idx_fn(i, out.size())];
+            float depth = comp_depth - main[i];
+            if (depth > min_ramp_depth) {
+                out[i] = inf;
+            } else {
+                out[i] = main[i];
+            }
+        }
+    }
     void get_constants() {
         nh.getParam("main_topic", main_topic_name);
         nh.getParam("upper_topic", upper_topic_name);
@@ -109,7 +115,8 @@ private:
         min_ramp_depth = get_expected_ramp_depth(max_theta_degrees, lidar_dist);
     }
     void init_upper_lidar_search_constants() {
-        second_idx_fn = std::bind(&DualLidarFilterNode::get_2nd_idx_from_first_idx, this, std::placeholders::_1);
+        second_idx_fn = std::bind(&DualLidarFilterNode::get_2nd_idx_from_first_idx, this, std::placeholders::_1, std::placeholders::_2);
+        second_len = upper_lidar_stop_index - upper_lidar_start_index;
     }
 };
 
