@@ -12,6 +12,7 @@
     <!-- Simulate 'world' in Gazebo -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="world_name" value="$(find worlds)/gazebo_worlds/$(arg world_type)/igvc_$(arg world).world"/>
+        <!-- <arg name="world_name" value="$(find worlds)/gazebo_worlds/$(arg world_type)/igvc_full_mod.world"/> IGNORE THIS -->
 
         <arg name="paused" value="false"/>
         <arg name="verbose" value="false"/>
@@ -31,6 +32,9 @@
 
     <!-- MISCALLANEOUS -->
 
+    <!-- Launch filtered lidar data topic used for mapping -->
+    <include file="$(find filter_lidar_data)/launch/filter_lidar_data.launch" />
+
     <!-- rqt robot steering GUI -->
     <group if="$(arg rqt_steer)">
         <node pkg="rqt_robot_steering" type="rqt_robot_steering" name="rqt_robot_steering">
@@ -46,5 +50,8 @@
     <!--Ground Truth Transform-->
     <node pkg="tf2_ros" type="static_transform_publisher" name="ground_truth_transform"
     args="-19.5 0 0 1.5707 0 0 world ground_truth" />
+
+    <!-- Cartographer (Mapping), publishes odom and map frame transforms -->
+    <include file="$(find description)/launch/cartographer.launch" />
 
 </launch>

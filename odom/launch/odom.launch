@@ -3,14 +3,13 @@
     <arg name="launch_state" default="sim"/>
 
     <!-- Compute local odometry: publish odom frame -->
-    <!--
+    
     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_local" clear_params="true" output="screen">
         <remap from="odometry/filtered" to="odometry/local"/>
 
         <rosparam command="load" file="$(find odom)/config/odom_local.yaml"/>
         </node>
-    -->
-
+   
     <!-- Compute global odometry: publish map frame -->
     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_global" clear_params="true" output="screen">
         <remap from="odometry/filtered" to="odometry/global"/>
