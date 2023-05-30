@@ -57,6 +57,33 @@ class CVModelInferencer:
         rospy.Subscriber("image", Image, self.process_image)
         rospy.spin()
 
+
+    def rm_barrel(self, img):
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+        org_min = np.array([10, 160, 20],np.uint8)
+        org_max = np.array([25, 255, 255],np.uint8)
+
+        mask = cv2.inRange(hsv, org_min, org_max)
+
+        if mask.max() > 0:
+            contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+            for c in contours:
+                epsilon  = 0.1*cv2.arcLength(c,True)
+                approx = cv2.approxPolyDP(c, epsilon , True)
+                if len(approx) <4:
+                    continue
+                p0,p1,p2,p3 = approx[0][0], approx[1][0],approx[2][0], approx[3][0]
+                pts = np.array([
+                        [p1, [p0[0]+int((p0[0]-p1[0])/(p1[1]-p0[1])*p0[1]),0],
+                        [p3[0]+int((p3[0]-p2[0])/(p2[1]-p3[1])*p3[1]),0], p2]
+                    ])
+                cv2.fillPoly(img, pts, color=(0,0,0))
+                cv2.drawContours(img, pts, -1, color=(0, 0, 0), thickness=10)
+
+        return img
+    
     def process_image(self, data):
         if data == []:
             return
@@ -65,7 +92,9 @@ class CVModelInferencer:
         
         if raw is not None:
             # Get the image
+            # input_img = self.rm_barrel(raw)
             input_img = raw.copy()
+            
             # cv2.imwrite(r'/home/ammarvora/utra/caffeine-ws/src/Caffeine/cv/lane_detection/src' + 'frame.png', input_img)
             # Do model inference 
             output = None

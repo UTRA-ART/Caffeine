@@ -26,7 +26,7 @@
   <exec_depend>rospy</exec_depend>
   <exec_depend>std_msgs</exec_depend>
 
-  <export>
+  <!-- <export>
     <costmap_2d plugin="${prefix}/costmap_plugins.xml"/>
-  </export>
+  </export> -->
 </package>

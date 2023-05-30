@@ -71,7 +71,7 @@ def clean_barrels (img):
             [0, 1, -30],
         ])
 
-        up = cv2.warpAffine(img, m_up, (img.shape[1], img.shape[0]))
+        up = cv2.warpAffine(img, m_up, (img.shape[1], img.shape[0]))     
         down = cv2.warpAffine(img, m_down, (img.shape[1], img.shape[0]))
 
         out = img + up + down
@@ -81,12 +81,36 @@ def clean_barrels (img):
     else:
         return img
 
+def rm_barrel(img):
+    hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+
+    mask = get_mask(hsv, create_orange_mask)
+
+    if mask.max() > 0:
+        contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        for c in contours:
+            epsilon  = 0.1*cv2.arcLength(c,True)
+            approx = cv2.approxPolyDP(c, epsilon , True)
+            if len(approx) <4:
+                continue
+            p0,p1,p2,p3 = approx[0][0], approx[1][0],approx[2][0], approx[3][0]
+            pts = np.array([
+                    [p1, [p0[0]+int((p0[0]-p1[0])/(p1[1]-p0[1])*p0[1]),0],
+                    [p3[0]+int((p3[0]-p2[0])/(p2[1]-p3[1])*p3[1]),0], p2]
+                ])
+            cv2.fillPoly(img, pts, color=(0,0,0))
+            cv2.drawContours(img, pts, -1, color=(0, 0, 0), thickness=10)
+
+    return img
 
 def lane_detection(img):
     # convert from bgr to hsv
     img = cv2.resize(img, (640, 360))
     img_hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
 
+
+    # no_barrels = rm_barrel(img)
     lanes = get_mask(img_hsv, create_mask)
     lanes = np.clip(lanes, 0, 1)
 
@@ -95,6 +119,7 @@ def lane_detection(img):
 
     output_img = cv2.subtract(lanes, barrels)
     output_img = np.clip(output_img, 0, 1) * 255
+
 
     # contours, hierarchy = cv2.findContours(output_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -116,7 +141,7 @@ def lane_detection(img):
 
 
 
-    # cv2.imwrite(r'/home/ammarvora/utra/caffeine-ws/src/Caffeine/cv/lane_detection/barrels.png', barrels * 255)
+    cv2.imwrite(r'/home/ammarvora/utra/caffeine-ws/src/Caffeine/cv/lane_detection/barrels.png', lanes * 255)
     return output_img
 
 
