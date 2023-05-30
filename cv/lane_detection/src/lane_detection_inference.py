@@ -66,46 +66,54 @@ class CVModelInferencer:
         if raw is not None:
             # Get the image
             input_img = raw.copy()
-
+            # cv2.imwrite(r'/home/ammarvora/utra/caffeine-ws/src/Caffeine/cv/lane_detection/src' + 'frame.png', input_img)
             # Do model inference 
-            mask = None
+            output = None
 
             if self.classical_mode:
-                mask = self.lane_detection(input_img)
+                output = self.lane_detection(input_img)
             else:
-                mask = self.Inference.inference(input_img)
+                output = self.Inference.inference(input_img)
 
-
+            mask = np.where(output > 0.5, 1., 0.)
+            mask = mask.astype(np.uint8)
+            mask = cv2.resize(mask, (330, 180))
 
             # Publish to /cv/model_output
-            img_msg = self.bridge.cv2_to_imgmsg(mask, encoding='passthrough')
+            img_msg = self.bridge.cv2_to_imgmsg(output, encoding='passthrough')
             if img_msg is not None:
                 self.pub_raw.publish(img_msg)
             
 
             '''The following code is needed for virtual layers'''
-            # Publish to /cv/lane_detection
-            lanes = fit_lanes(mask)
-            if lanes is not None:
-                # rospy.loginfo("lanes: %s", lanes)
-                lanes_msgs = []
-                for lane in lanes:
-                    project_points = self.projection(np.array(lane, dtype=np.uint8))
 
-                    lane_msg = FloatList()
-                    pts_msg = []
-                    for pt in project_points:
-                        pt_msg = Point()
-                        pt_msg.x = pt[0]
-                        pt_msg.y = pt[1]
-                        pt_msg.z = pt[2]
-                        pts_msg += [pt_msg]
-                    lane_msg.elements = pts_msg
-                    lanes_msgs += [lane_msg]
+            rows = np.where(mask==1)[0].reshape(-1,1)
+            cols = np.where(mask==1)[1].reshape(-1,1)
+            lane_table = np.concatenate((cols,rows),axis=1)
 
-                msg_header = Header(frame_id='left_camera_link_optical')
-                msg = FloatArray(header=msg_header, lists=lanes_msgs)
-                self.pub.publish(msg)
+            # print(lane_table)
+
+            
+            projected_lanes = self.projection(lane_table)
+
+            # Build the message
+            lane_msg = FloatList()
+            pts_msg = []
+
+            for pt in projected_lanes:
+
+                pt_msg = Point()
+                pt_msg.x = pt[0]
+                pt_msg.y = pt[1]
+                pt_msg.z = pt[2]
+
+                pts_msg.append(pt_msg)
+            lane_msg.elements = pts_msg
+
+
+            msg_header = Header(frame_id='left_camera_link_optical')
+            msg = FloatArray(header=msg_header, lists=[lane_msg])
+            self.pub.publish(msg)
 
                 
 

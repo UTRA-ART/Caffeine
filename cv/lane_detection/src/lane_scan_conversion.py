@@ -13,6 +13,7 @@ from geometry_msgs.msg import PoseStamped
 import numpy as np
 import math
 
+import time
 class LaneScanConversion:
     def __init__(self):
         # initialize node and publisher
@@ -48,33 +49,35 @@ class LaneScanConversion:
 
         # rospy.loginfo(data)
 
+
+        ta = time.time()
         # iterate through 
         for lane in data.lists:
             for point in lane.elements:
 
-                print(point)
+                # print(point)
 
                 old_pose = PoseStamped()
                 old_pose.header.frame_id = data.header.frame_id
                 old_pose.pose.position.x = point.x
-                old_pose.pose.position.x = point.y
-                old_pose.pose.position.x = point.z
+                old_pose.pose.position.y = point.y
+                old_pose.pose.position.z = point.z
                 old_pose.pose.orientation.w = 1.0
 
-                rospy.loginfo(old_pose)
+                # rospy.loginfo(old_pose)
 
                 # get x, y, z in lidar frame
                 new_pose = self.listener.transformPose('/base_laser', old_pose) # from frame /left_camera_link_optical to /base_laser
 
-                rospy.loginfo(new_pose)
+                # rospy.loginfo(new_pose)
                 
                 # Calculate the angle and distance
-                x = new_pose.pose.position.x
-                y = new_pose.pose.position.y
+                y = new_pose.pose.position.x
+                x = new_pose.pose.position.y
 
-                theta = np.arctan(x / y) - (np.pi / 2) # angle from x axis
+                theta = np.arctan(x / y) # angle from x axis
                 d = math.sqrt(x**2 + y**2) # distance from lidar
-                rospy.loginfo("Distance to point is: %f, angle is: %f\n", d, theta)
+                # rospy.loginfo("Distance to point is: %f, angle is: %f\n", d, theta)
                 # print("Distance to point is: %f, angle is: %f\n", d, theta)
 
                 # Find the index in scan_msg.ranges whose angle matches with angle calculated 
@@ -89,9 +92,11 @@ class LaneScanConversion:
 
                 # Let Loop iterate
                 
+        tb = time.time()
 
+        # print(f'Lidar Conversion FPS: {1 / (tb - ta)}')
 
-
+        tc = time.time()
         # nearest-neighbour interpolation for the angles in scan_msg that don't have a distance value
         ranges_interp = np.copy(scan_msg.ranges)
         inf_indices = np.isinf(ranges_interp)
@@ -108,6 +113,10 @@ class LaneScanConversion:
             # Set range values for invalid indices to inf
             ranges_interp[nonearest_indices] = float('inf')
             ranges_interp[inf_indices] = ranges_interp[valid_indices_nearest]
+
+        td = time.time()
+
+        # print(f'Interpolation FPS: {1 / (td - tc)}')
 
         # publish the scan_msg
         self.pub.publish(scan_msg)

@@ -26,7 +26,7 @@ class FloatArrayToPointCloud2Node:
         points = []
         for float_list in msg.lists:
             for element in float_list.elements:
-                point = [element.y, element.x, element.z]
+                point = [element.x, element.y, element.z]
                 points.append(point)
 
         fields = [PointField('x', 0, PointField.FLOAT32, 1),
@@ -34,7 +34,7 @@ class FloatArrayToPointCloud2Node:
           PointField('z', 8, PointField.FLOAT32, 1),
           ]
 
-        header = Header(frame_id='/left_camera_link_optical')
+        header = Header(frame_id='left_camera_link_optical')
 
         output_msg = point_cloud2.create_cloud(header, fields, points)
         self.points2_pub.publish( output_msg)

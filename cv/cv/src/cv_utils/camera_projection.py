@@ -13,12 +13,12 @@ from sensor_msgs.msg import CameraInfo
 class CameraProjection:
     def __init__(self):
         rospack = rospkg.RosPack()
-        save_path = rospack.get_path('cv') + '/config/processed_depth_vals.json'
+        save_path = rospack.get_path('cv') + '/config/depth_vals.json'
         if os.path.exists(save_path):
             print("Using depth map values from", save_path)
             self.depth_map = json.load(open(save_path, 'r'))
         else:
-            self.depth_map = self.gen_depth_to_y_map(1.5, 4)
+            self.depth_map = self.gen_depth_to_y_map(1, 4)
 
         self.depth_values = []
         self.keys = {}
@@ -90,12 +90,12 @@ class CameraProjection:
         ''' Create the constant depth to y map '''
 
         depth_map = {}
-        delta_z = (max_z-min_z)/6
+        delta_z = (max_z-min_z)
 
-        for i, _y in enumerate(range(150, -30, -30)):
-            for _x in range(0, 330, 30):
-                for y in range(_y, _y+30):
-                    for x in range(_x, _x+30):
+        for i, _y in enumerate(range(179, -1, 1)):
+            for _x in range(0, 330, 1):
+                for y in range(_y, _y+1):
+                    for x in range(_x, _x+1):
                         depth_map[str((x, y))] = delta_z*i
 
         for n,y in enumerate(range(180-1,-1,-1),1):
