@@ -32,7 +32,7 @@ class NavigateWaypoints:
         self.laps = 0
         self.populate_waypoint_dict() 
         self.current_lap = 0
-        self.curr_waypoint_idx = 0 if self.start_direction else len(self.waypoints) - 2
+        self.curr_waypoint_idx = 0 if self.start_direction == 1 else len(self.waypoints) - 2
         self.tf = TransformListener()
         self.publisher = rospy.Publisher('/waypoint_int', Bool, queue_size=10)
 
@@ -190,7 +190,7 @@ class NavigateWaypoints:
             curr_waypoint = self.get_next_waypoint()
             self.send_and_wait_goal_to_move_base(curr_waypoint)
 
-            if (self.curr_waypoint_idx >= len(self.waypoints)):
+            if (self.current_lap >= self.laps):
                 break
 
 
@@ -206,3 +206,4 @@ if __name__ == "__main__":
     rospy.init_node('navigate_waypoints')
     waypoints = NavigateWaypoints(static_waypoint_file, max_time_for_transform=60.0)
     waypoints.navigate_waypoints()
+    rospy.init_node('Finished Navigating!!')
