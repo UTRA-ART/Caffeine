@@ -65,12 +65,10 @@
     </include>
 
     <!-- Compute Odometry from Sensor Fusion -->
-    <!--
-    TODO: uncomment this later
+    
     <include file="$(find odom)/launch/odom.launch">
         <arg name="launch_state" value="sim"/>
     </include>
-    -->
 
     <!-- Record topics using Rosbag -->
     <include file="$(find description)/launch/setup_rosbag.launch"
