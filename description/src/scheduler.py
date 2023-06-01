@@ -197,11 +197,11 @@ class Scheduler:
         self.wait_for_transform(listener, '/map', '/odom')
         rospy.loginfo('Cartographer launched.')
         
-        # Run motor control and feedback, wait for /odom 
+        # Run motor control, teleop and feedback, wait for /odom 
         rospy.loginfo('Starting motor controls...')
         self.initiate_ssh(self.raspberry_pi3, self.username, self.password)
 
-        _stdin, _stdout, _stderr = self.ssh_client.exec_command('cd ~/caffeine_ws && source devel/setup.bash && roslaunch description motor_control_pipeline.launch launch_state:=IGVC &> /dev/null &')
+        _stdin, _stdout, _stderr = self.ssh_client.exec_command('cd ~/caffeine_ws && source devel/setup.bash && roslaunch motor_control teleop_motor_control.launch &> /dev/null &')
         print(_stdout.read().decode()) #prints the stdout of the command
 
         #os.system('roslaunch description motor_control_pipeline.launch launch_state:=IGVC &> /dev/null &')
@@ -238,9 +238,9 @@ class Scheduler:
         rospy.loginfo('Waypoints loaded.') 
 
         # teleop 
-        rospy.loginfo('Starting teleop...')
-        os.system('roslaunch teleop_twist_keyboard keyboard_teleop.launch')
-        rospy.loginfo('Teleop launched.')
+        #rospy.loginfo('Starting teleop...')
+        #os.system('roslaunch teleop_twist_keyboard keyboard_teleop.launch')
+        #rospy.loginfo('Teleop launched.')
 
         return True
 
