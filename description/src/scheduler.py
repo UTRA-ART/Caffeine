@@ -136,6 +136,10 @@ class Scheduler:
             rospy.loginfo('SSH client to Raspberry Pi 2 is closed')
         elif ip_address == self.raspberry_pi3:
             rospy.loginfo('SSH client to Raspberry Pi 3 is closed')
+
+    def unsubscribe_all(self):
+        for subscriber in self.subs:
+            subscriber.unregister()
     
     def run(self):
         listener = tf.TransformListener()
@@ -245,5 +249,6 @@ if __name__=='__main__':
     scheduler = Scheduler()
     if scheduler.run():
         rospy.loginfo("Scheduler succeeded. Caffeine is ready to rumble!")
+        scheduler.unsubscribe_all()
         while not rospy.is_shutdown():
             pass
