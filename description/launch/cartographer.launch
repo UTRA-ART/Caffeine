@@ -2,20 +2,16 @@
 
     <arg name="launch_state" default="sim"/> 
 
-    <arg name="scan_topic" default="/scan_modified" />
-    <arg name="imu_topic"  default="/imu/data" />
-    <arg name="odom_topic" default="/odom" />
-    <arg name="point_cloud_topic" default="/cv/lane_detections_viz" />
-
     <arg name="base_frame"  default="base_link"/>
     <arg name="odom_frame"  default="odom"/>
 
     <node name="cartographer_node" pkg="cartographer_ros" type="cartographer_node" args="-configuration_directory $(find description)/config -configuration_basename caffeine.lua" output="screen">
 
-        <remap from="imu" to="$(arg imu_topic)" />
-        <remap from="odom" to="$(arg odom_topic)" />
-        <remap from="scan" to="$(arg scan_topic)" />
-        <!-- <remap from="points2" to="$(arg point_cloud_topic)" /> -->
+        <remap from="imu" to="/imu/data" />
+        <remap from="odom" to="/odom" />
+        <!-- <remap from="scan" to="/cv/lane_detections_scan"/> -->
+        <!-- <remap from="scan" to="/scan_modified" /> -->
+        <remap from="points2" to="/cv/lane_detections_cloud" /> 
         <remap from="fix" to="/gps/fix"/>
     </node>
 

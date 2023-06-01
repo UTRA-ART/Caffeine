@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 from audioop import avg
 import struct
 import sys
@@ -26,34 +26,50 @@ class ZedWrapperServer:
 
     def run(self):
         rospy.init_node('zed_data_output')
+        print("Node Started!")
         rospy.Subscriber("/zed/zed_node/depth/depth_registered", Image, self.get_depths)
         rospy.spin()
+
+        self.get_depths()
 
         avg_depth_vals = np.ma.mean(self.averages, axis=0)
         avg_depth_vals = interpolate_nans(avg_depth_vals)
 
         output = {}
         # Gets z values for 30x30px cell in image. Can add smoothing if this is insufficient 
-        for i, _y in enumerate(range(0, 180, 30)):
-            for j, _x in enumerate(range(0, 330, 30)):
-                for y in range(_y, _y+30):
-                    for x in range(_x, _x+30):
+        for i, _y in enumerate(range(0, 180, 1)):
+            for j, _x in enumerate(range(0, 330, 1)):
+                for y in range(_y, _y+1):
+                    for x in range(_x, _x+1):
                         output[str((x, y))] = avg_depth_vals[i, j]
+
+        print("Checkpoint 1")
         
         rospack = rospkg.RosPack()
         save_path = rospack.get_path('cv') + '/config/depth_vals.json'
         print("Depth values recorded. Saved to", save_path)
         json.dump(output, open(save_path, 'w'), indent=4)
 
-    def get_depths(self, data):
-        img = self.bridge.imgmsg_to_cv2(data, desired_encoding='passthrough')  
-        depth_values = np.ma.masked_invalid(cv2.resize(img, (330, 180)))
+    def get_depths(self, data=None):
+        print("Callback Triggered")
+        # img = self.bridge.imgmsg_to_cv2(data, desired_encoding='passthrough')  
+
+        rospack = rospkg.RosPack()
+        hard_dir = rospack.get_path('cv') + '/config/depth_sim.npy'
+
+        depth_matrix = np.load(hard_dir)
+
+        print(depth_matrix)
+
+        # depth_values = np.ma.masked_invalid(cv2.resize(img, (330, 180)))
+
+        depth_values = np.ma.masked_invalid(cv2.resize(depth_matrix, (330, 180))) 
 
         to_add = []
-        for _y in range(0, 180, 30):
+        for _y in range(0, 180, 1):
             _xtoadd = []
-            for _x in range(0, 330, 30):
-                _xtoadd += [np.ma.mean(depth_values[_y:_y+30, _x:_x+30])]
+            for _x in range(0, 330, 1):
+                _xtoadd += [np.ma.mean(depth_values[_y:_y+1, _x:_x+1])]
             to_add += [_xtoadd]
         self.averages += [to_add]
 
