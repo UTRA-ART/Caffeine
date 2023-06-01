@@ -7,8 +7,9 @@ import paramiko #need to install paramiko Python package
 import rospy
 import tf
 from std_msgs.msg import Bool
-from sensor_msgs.msg import NavSatFix, LaserScan, Imu, Image
+from sensor_msgs.msg import NavSatFix, LaserScan, Imu, Image, PointCloud2
 from nav_msgs.msg import Odometry
+from geometry_msgs.msg import PoseStamped
 
 class Scheduler:
     '''
@@ -44,11 +45,19 @@ class Scheduler:
         self.assign_topic('/odometry/local', 'odom_local_published', Odometry)
         self.assign_topic('/odom', 'odom_motor_published', Odometry)
 
+        #Cartographer
+        self.tracked_pose_set = False
+        self.assign_topic('/tracked_pose', 'tracked_pose_set', PoseStamped)
+
         # Meta
         self.manual_default_set = False
         self.scan_override_set = False 
+        self.cv_cloud_set = False
+        self.cv_lane_scan_set = False
         self.assign_topic('/pause_navigation', 'manual_default_set', Bool, True)
         self.assign_topic('/scan_modified', 'scan_override_set', LaserScan)
+        self.assign_topic('/cv/lane_detections_cloud','cv_cloud_set',PointCloud2)
+        self.assign_topic('/cv/lane_detections_scan','cv_lane_scan_set',LaserScan)
 
         #SSH
         self.raspberry_pi2 = "10.0.0.2" #IP Address
@@ -154,12 +163,35 @@ class Scheduler:
         self.wait_for_condition('gps_started', 90)
         rospy.loginfo('Sensors launched.')
 
+        # Run utm frame transform
+        rospy.loginfo('Initializing UTM...')
+        os.system('roslaunch description utm.launch &> /dev/null &')
+        self.wait_for_transform(listener, '/map', '/utm')
+        rospy.loginfo('UTM initialized.')
+
+        # override scan 
+        rospy.loginfo('Launching scan override...')
+        os.system('roslaunch filter_lidar_data filter_lidar_data.launch &> /dev/null &')
+        self.wait_for_condition('scan_override_set', 20)
+        rospy.loginfo('Scan overriden.')
+
         # Run cv pipeline, wait for zed 
         rospy.loginfo('Starting CV pipeline...')
         os.system('roslaunch cv pipeline.launch launch_state:=IGVC &> /dev/null &')
         self.wait_for_condition('zed_started', 35)
+        self.wait_for_condition('cv_cloud_set', 30)
+        self.wait_for_condition('cv_lane_scan_set', 30)
         rospy.loginfo('CV pipeline launched.')
 
+        #Run cartographer
+
+        rospy.loginfo('Starting cartographer...')
+        os.system('roslaunch description cartographer.launch launch_state:=IGVC &> /dev/null &')
+        self.wait_for_condition('tracked_pose_set', 60)
+        self.wait_for_transform(listener, '/odom','/base_link')
+        self.wait_for_transform(listener, '/map', '/odom')
+        rospy.loginfo('Cartographer launched.')
+        
         # Run motor control and feedback, wait for /odom 
         rospy.loginfo('Starting motor controls...')
         self.initiate_ssh(self.raspberry_pi3, self.username, self.password)
@@ -187,12 +219,6 @@ class Scheduler:
 
         rospy.loginfo('Odometry initialized.')
         #self.close_ssh()
-        
-        # override scan 
-        rospy.loginfo('Launching scan override...')
-        os.system('roslaunch filter_lidar_data filter_lidar_data.launch &> /dev/null &')
-        self.wait_for_condition('scan_override_set', 20)
-        rospy.loginfo('Scan overriden.')
 
         # Run nav stack --- load_waypoints out, wait for /map /scan_modified
         rospy.loginfo('Initializing navigation stack...')
@@ -200,12 +226,6 @@ class Scheduler:
         self.wait_for_transform(listener, '/base_link', '/map')
         # self.wait_for_transform(listener, '/map', '/utm')
         rospy.loginfo('Navstack initialized.')
-
-        # Run utm frame transform
-        rospy.loginfo('Initializing UTM...')
-        os.system('roslaunch description utm.launch &> /dev/null &')
-        self.wait_for_transform(listener, '/map', '/utm')
-        rospy.loginfo('UTM initialized.')
         
         # load waypoints 
         rospy.loginfo('Loading waypoints...')
