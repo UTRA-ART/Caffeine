@@ -187,15 +187,6 @@ class Scheduler:
         self.wait_for_condition('cv_cloud_set', 30)
         self.wait_for_condition('cv_lane_scan_set', 30)
         rospy.loginfo('CV pipeline launched.')
-
-        #Run cartographer
-
-        rospy.loginfo('Starting cartographer...')
-        os.system('roslaunch description cartographer.launch launch_state:=IGVC &> /dev/null &')
-        self.wait_for_condition('tracked_pose_set', 60)
-        self.wait_for_transform(listener, '/odom','/base_link')
-        self.wait_for_transform(listener, '/map', '/odom')
-        rospy.loginfo('Cartographer launched.')
         
         # Run motor control, teleop and feedback, wait for /odom 
         rospy.loginfo('Starting motor controls...')
@@ -209,6 +200,22 @@ class Scheduler:
         # self.wait_for_condition('odom_motor_published', 30)
         rospy.loginfo('Motor controls started.')
         self.close_ssh()
+
+        #Run motor_odom_node
+
+        rospy.loginfo('Starting motor_odom_node...')
+        os.system('roslaunch motor_odom motor_odom.launch launch_state:=IGVC &> /dev/null &')
+        self.wait_for_condition('odom_motor_published', 30)
+        rospy.loginfo('motor_odom_node launched.')
+
+        #Run cartographer
+
+        rospy.loginfo('Starting cartographer...')
+        os.system('roslaunch description cartographer.launch launch_state:=IGVC &> /dev/null &')
+        self.wait_for_condition('tracked_pose_set', 60)
+        self.wait_for_transform(listener, '/odom','/base_link')
+        self.wait_for_transform(listener, '/map', '/odom')
+        rospy.loginfo('Cartographer launched.')
 
         # Run odom, wait for odom local, global, and /utm
         rospy.loginfo('Initializing odometry...')
