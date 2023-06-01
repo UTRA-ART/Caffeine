@@ -3,10 +3,12 @@
 
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <math.h>
 #include <functional>
 #include <limits>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 // const int LIDAR_BUF_LEN = 1080;
 
@@ -87,6 +89,7 @@ private:
     // modify main array with original lidar to contain filtered values, based on comparing with upper sensor
     void ramp_filter(std::vector<float>& out, const float main[]) {
         const float inf = std::numeric_limits<float>::infinity();
+        bool all_inf = true; // for carto fix below
         for (int i = 0; i < out.size(); i++) {
             const float comp_depth = last_upper_ranges[second_idx_fn(i, out.size())];
             float depth = comp_depth - main[i];
@@ -95,6 +98,12 @@ private:
             } else {
                 out[i] = main[i];
             }
+            if (!std::isinf(out[i])) {
+                all_inf = false;
+            }
+        }
+        if (all_inf) { // if all inf, carto seems to not like it!
+            std::fill(out.begin(), out.end(), NAN);
         }
     }
     void get_constants() {
