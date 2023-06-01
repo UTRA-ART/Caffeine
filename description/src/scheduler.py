@@ -124,6 +124,7 @@ class Scheduler:
             rospy.loginfo('SSH client to Raspberry Pi 3 is active')
 
     def close_ssh(self):
+        ip_address, port = self.ssh_client.get_transport().getpeername()
         if ip_address == self.raspberry_pi2:
             rospy.loginfo('Closing SSH client to Raspberry Pi 2')
         elif ip_address == self.raspberry_pi3:
