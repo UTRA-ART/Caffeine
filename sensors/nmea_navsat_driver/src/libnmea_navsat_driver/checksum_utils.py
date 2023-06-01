@@ -41,16 +41,39 @@ def check_nmea_checksum(nmea_sentence):
 
     Return True if the calculated checksum of the sentence matches the one provided.
     """
-    split_sentence = nmea_sentence.split('*')
+    #print(type(nmea_sentence))
+    nmea_sentence = str(nmea_sentence)
+    nmea_sentence = nmea_sentence.strip()
+    #print(type(nmea_sentence))
+
+    split_sentence = nmea_sentence.split("*").strip()
     if len(split_sentence) != 2:
         # No checksum bytes were found... improperly formatted/incomplete NMEA data?
         return False
     transmitted_checksum = split_sentence[1].strip()
 
     # Remove the $ at the front
-    data_to_checksum = split_sentence[0][1:]
+    data_to_checksum = split_sentence[0][1:].strip()
     checksum = 0
     for c in data_to_checksum:
         checksum ^= ord(c)
 
     return ("%02X" % checksum) == transmitted_checksum.upper()
+
+
+#import operator
+#from functools import reduce
+#
+#def check_nmea_checksum(sentence: str):
+#    """
+#    This function checks the validity of an NMEA string using it's checksum
+#    """
+#    sentence = sentence.strip(bytes("$\n", 'utf-8'))
+#    print(sentence)
+#    nmeadata, checksum = sentence.split(bytes("*", 'utf-8'), 1)
+#    print(nmeadata)
+#    calculated_checksum = reduce(operator.xor, (ord(str(s)[1].strip()) for s in nmeadata), 0)
+#    if int(checksum, base=16) == calculated_checksum:
+#        return nmeadata
+#    else:
+#        raise ValueError("The NMEA data does not match it's checksum")

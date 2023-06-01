@@ -5,7 +5,7 @@
   <arg name="launch_state" default="sim"/>
 
   <arg name="port" default="/dev/ttyUSB0" />
-  <arg name="baud" default="4800" />
+  <arg name="baud" default="115200" />  
   <arg name="frame_id" default="gps" />
   <arg name="use_GNSS_time" default="False" />
   <arg name="time_ref_source" default="gps" />
@@ -19,8 +19,8 @@
     <param name="time_ref_source" value="$(arg time_ref_source)" />
     <param name="useRMC" value="$(arg useRMC)" />
 
-    <remap from="/fix" to="/gps/fix" if="$(eval launch_state == 'IGVC')"/>
-    <remap from="/vel" to="/gps/fix_velocity" if="$(eval launch_state == 'IGVC')"/>
+    <remap from="/fix" to="/gps/fix" />
+    <remap from="/vel" to="/gps/fix_velocity" />
   </node>
 
 </launch>
