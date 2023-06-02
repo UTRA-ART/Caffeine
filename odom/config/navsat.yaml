@@ -9,7 +9,7 @@ zero_altitude: true
 
 # Publishing data
 publish_filtered_gps: true
-broadcast_cartesian_transform: true # NOTE: publishes transform (frame sepcified from input odometry) --> UTM
+broadcast_cartesian_transform: true # NOTE: publishes transform (frame specified from input odometry) --> UTM
 broadcast_cartesian_transform_as_parent_frame: true
 
 # Misc

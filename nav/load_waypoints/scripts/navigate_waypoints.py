@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 import json
 import os
@@ -33,6 +33,7 @@ class NavigateWaypoints:
         self.populate_waypoint_dict() 
         self.current_lap = 0
         self.curr_waypoint_idx = 0 if self.start_direction == 1 else len(self.waypoints) - 2
+        rospy.loginfo("First goal: %s" % (self.curr_waypoint_idx))
         self.tf = TransformListener()
         self.publisher = rospy.Publisher('/waypoint_int', Bool, queue_size=10)
 
@@ -54,12 +55,10 @@ class NavigateWaypoints:
                 rospy.loginfo("Invalid JSON")
                 sys.exit(1)
 
-        # Parse through json data and create list of lists holding all waypoints
-        for waypoint in waypoint_data["waypoints"]:
-            self.waypoints[waypoint['id']] = waypoint
-
         self.start_direction = 1 if waypoint_data["start_direction"] == "north" else -1
         self.laps = waypoint_data["laps"]
+
+        rospy.loginfo("start_direction: %s" % (self.start_direction))
     
         # Call method to wait for transform 
         self.waited_for_transform = self.wait_for_utm_transform()
@@ -68,23 +67,69 @@ class NavigateWaypoints:
         if self.waited_for_transform:
             # After waiting UTM transform, capture a message from the gps/fix topic
             gps_info = rospy.wait_for_message('gps/fix', NavSatFix)
-            # Append the starting gps coordinate to the waypoints dict as the final waypoint
-            last_coord_idx = len(self.waypoints) 
- 
-            # Append a final waypoint to return to the start (i.e. waypoint to return to start)
-            self.waypoints[last_coord_idx] = {
-                'id': last_coord_idx, 
-                'longitude': gps_info.longitude, 
-                'latitude': gps_info.latitude, 
-                'description': 'Initial start location', 
-                'frame_id': 'map'
-            }
-
-            # Show waypoints 
-            rospy.loginfo("Successfully loaded waypoints dict")
         else:
             rospy.loginfo("Waiting for transform from /map to /utm timed out!")
+
+        # Add additional waypoints to the corners of the course to avoid incorrect shortcuts
+        if waypoint_data["add_corners"]:
+            self.add_corners(waypoint_data, gps_info)
+        else:
+            # Parse through json data and create list of lists holding all waypoints
+            for waypoint in waypoint_data["waypoints"]:
+                self.waypoints[waypoint['id']] = waypoint
+
+        # Append the starting gps coordinate to the waypoints dict as the final waypoint
+        last_coord_idx = len(self.waypoints) 
+
+        # Append a final waypoint to return to the start (i.e. waypoint to return to start)
+        self.waypoints[last_coord_idx] = {
+            'id': last_coord_idx, 
+            'longitude': gps_info.longitude, 
+            'latitude': gps_info.latitude, 
+            'description': 'Initial start location', 
+            'frame_id': waypoint_data["waypoints"][0]["frame_id"] # For now is 'odom'
+        }
+
+        # Show waypoints 
+        rospy.loginfo("Successfully loaded waypoints dict")
+
         return 
+    
+    def add_corners(self, waypoint_data, gps_info):
+        is_sim = self.launch_state == "sim"
+        frame = waypoint_data["waypoints"][0]["frame_id"]
+        j = 0
+
+        # Account for whether the state is sim because map is rotated to face East instead of North
+        for i in range(len(waypoint_data["waypoints"]) + 3):
+            if i == 0:
+                self.waypoints[i] = {
+                    'id': i, 
+                    'longitude': waypoint_data["waypoints"][0]["longitude"] if is_sim else gps_info.longitude, 
+                    'latitude': gps_info.latitude if is_sim else waypoint_data["waypoints"][0]["latitude"], 
+                    'description': "First Corner", 
+                    'frame_id': frame
+                }
+            elif i == 5:
+                self.waypoints[i] = {
+                    'id': i, 
+                    'longitude': waypoint_data["waypoints"][3]["longitude"] + 0.000036 if is_sim else waypoint_data["waypoints"][3]["longitude"], 
+                    'latitude':  waypoint_data["waypoints"][3]["latitude"] if is_sim else waypoint_data["waypoints"][3]["latitude"] - 0.000036, 
+                    'description': "Third Corner", 
+                    'frame_id': frame
+                }
+            elif i == 6:
+                self.waypoints[i] = {
+                    'id': i, 
+                    'longitude': waypoint_data["waypoints"][3]["longitude"] if is_sim else gps_info.longitude, 
+                    'latitude':  gps_info.latitude - 0.00001 if is_sim else waypoint_data["waypoints"][3]["latitude"], 
+                    'description': "Fourth Corner", 
+                    'frame_id': frame
+                }
+            else:
+                self.waypoints[i] = waypoint_data["waypoints"][j]
+                self.waypoints[i]["id"] = i
+                j += 1
 
     def wait_for_utm_transform(self):
         '''
@@ -122,9 +167,10 @@ class NavigateWaypoints:
     
     def get_next_waypoint(self):
         waypoint = self.waypoints[self.curr_waypoint_idx]
-        if self.curr_waypoint_idx == 2 and self.start_direction == 1: # curr_waypoint_idx = 2 means heading towards id 2
+        rospy.loginfo("Next Goal: %s"%(waypoint["description"]))
+        if self.curr_waypoint_idx == 3 and self.start_direction == 1: # curr_waypoint_idx = 2 means heading towards id 2
             self.ignore_lidar = True 
-        elif self.curr_waypoint_idx == 1 and self.start_direction == -1:
+        elif self.curr_waypoint_idx == 2 and self.start_direction == -1:
             self.ignore_lidar = True 
         else:
             self.ignore_lidar = False
