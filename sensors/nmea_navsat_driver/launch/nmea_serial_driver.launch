@@ -4,8 +4,11 @@
 
   <arg name="launch_state" default="sim"/>
 
-  <arg name="port" default="/dev/ttyUSB0" />
-  <arg name="baud" default="115200" />  
+  <arg name="port" default="/dev/ttyUSB0" />  
+  <!-- change port depending on gps is plugged in -->
+  <!-- <arg name="baud" default="115200" />   -->
+  <!-- <arg name="port" default="/dev/ttyUSB1"/> -->
+  <arg name="baud" default="4800"/>
   <arg name="frame_id" default="gps" />
   <arg name="use_GNSS_time" default="False" />
   <arg name="time_ref_source" default="gps" />
