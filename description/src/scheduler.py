@@ -168,12 +168,6 @@ class Scheduler:
         self.wait_for_condition('gps_started', 90)
         rospy.loginfo('Sensors launched.')
 
-        # Run utm frame transform
-        rospy.loginfo('Initializing UTM...')
-        os.system('roslaunch description utm.launch &> /dev/null &')
-        self.wait_for_transform(listener, '/map', '/utm')
-        rospy.loginfo('UTM initialized.')
-
         # override scan 
         rospy.loginfo('Launching scan override...')
         os.system('roslaunch filter_lidar_data filter_lidar_data.launch &> /dev/null &')
@@ -201,21 +195,11 @@ class Scheduler:
         rospy.loginfo('Motor controls started.')
         self.close_ssh()
 
-        #Run motor_odom_node
-
+        #Run motor_odom_node, wait for /odom
         rospy.loginfo('Starting motor_odom_node...')
         os.system('roslaunch motor_odom motor_odom.launch launch_state:=IGVC &> /dev/null &')
         self.wait_for_condition('odom_motor_published', 30)
         rospy.loginfo('motor_odom_node launched.')
-
-        #Run cartographer
-
-        rospy.loginfo('Starting cartographer...')
-        os.system('roslaunch description cartographer.launch launch_state:=IGVC &> /dev/null &')
-        self.wait_for_condition('tracked_pose_set', 60)
-        self.wait_for_transform(listener, '/odom','/base_link')
-        self.wait_for_transform(listener, '/map', '/odom')
-        rospy.loginfo('Cartographer launched.')
 
         # Run odom, wait for odom local, global, and /utm
         rospy.loginfo('Initializing odometry...')
@@ -231,6 +215,20 @@ class Scheduler:
 
         rospy.loginfo('Odometry initialized.')
         #self.close_ssh()
+
+        # Run utm frame transform
+        rospy.loginfo('Initializing UTM...')
+        os.system('roslaunch description utm.launch &> /dev/null &')
+        self.wait_for_transform(listener, '/map', '/utm')
+        rospy.loginfo('UTM initialized.')
+
+        #Run cartographer
+        rospy.loginfo('Starting cartographer...')
+        os.system('roslaunch description cartographer.launch launch_state:=IGVC &> /dev/null &')
+        self.wait_for_condition('tracked_pose_set', 60)
+        self.wait_for_transform(listener, '/odom','/base_link')
+        self.wait_for_transform(listener, '/map', '/odom')
+        rospy.loginfo('Cartographer launched.')
 
         # Run nav stack --- load_waypoints out, wait for /map /scan_modified
         rospy.loginfo('Initializing navigation stack...')
