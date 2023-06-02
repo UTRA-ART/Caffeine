@@ -215,21 +215,25 @@ class NavigateWaypoints:
         goal.target_pose.header.frame_id = curr_waypoint["frame_id"]
         goal.target_pose.header.stamp = rospy.Time.now()
 
-        # Set goal position and orientation
-        pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
-        goal.target_pose.pose = pose.pose
+        reached_goal=False
 
-        # Sends goal and waits until the action is completed (or aborted if it is impossible)
-        action_client.send_goal(goal)
+        #update the same goal setting within a time period
+        while not reached_goal and not rospy.is_shutdown():
+            #update the goal position and orientation
+            pose = self.get_pose_from_gps(curr_waypoint["longtitude"],curr_waypoint["latitude"],current_waypoint["frame_id"])
+            goal.target_pose.pose = pose.pose
+
+        # Sends goal
+            action_client.send_goal(goal)
 
         # Waits for the server to finish performing the action.
-        finished_within_time = action_client.wait_for_result(rospy.Duration(6000))
+            finished_within_time = action_client.wait_for_result(rospy.Duration(10))
 
-        if not finished_within_time:  
-            action_client.cancel_goal()  
-            rospy.loginfo("Timed out achieving goal")  
-        else:  
-            rospy.loginfo("Reached nav goal")
+            if not finished_within_time:  
+                action_client.cancel_goal()  
+                rospy.loginfo("Timed out achieving goal")  
+            else:  
+                rospy.loginfo("Reached nav goal")
 
     def navigate_waypoints(self):
         while True:
