@@ -39,13 +39,14 @@
         <param name="launch_state" value="$(arg launch_state)" />
         <!-- This will typically be upper lidar's total point ,count - 1, unless 0 is not your start index -->
         <param name="upper_lidar_stop_index" value="1080" if="$(eval launch_state =='sim')" />  <!-- Use 1080 for sim, and 1145 for irl -->
-        <param name="upper_lidar_stop_index" value="1145" unless="$(eval launch_state =='sim')"/>
+        <param name="upper_lidar_stop_index" value="1145" unless="$(eval launch_state =='sim')" />
         
         <!-- Angular range total in degrees, ie 360 degrees if all angles  (not referring to start stop range above, but total of the upper lidar array) -->
         <param name="upper_lidar_angular_total_range" value='270' if="$(eval launch_state =='sim')" /> <!-- Use 270 for sim, and 360 for irl -->
         <param name="upper_lidar_angular_total_range" value="360" unless="$(eval launch_state =='sim')"/>
         
         <!-- Main(lower) lidar angular range -->
-        <param name="main_lidar_angular_total_range" value='180' />
+        <param name="main_lidar_angular_total_range" value='270' if="$(eval launch_state =='sim')" />
+        <param name="main_lidar_angular_total_range" value='180' unless="$(eval launch_state =='sim')" />
     </node>
 </launch>
