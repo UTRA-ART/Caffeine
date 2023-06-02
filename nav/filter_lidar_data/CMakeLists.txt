@@ -27,4 +27,10 @@ target_link_libraries(ignore_lidar_node ${catkin_LIBRARIES})
 install(TARGETS ignore_lidar_node
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
+add_executable(dual_lidar_filter_node src/dual_lidar_filter_node.cpp)
+target_link_libraries(dual_lidar_filter_node ${catkin_LIBRARIES})
+
+install(TARGETS dual_lidar_filter_node
+    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})

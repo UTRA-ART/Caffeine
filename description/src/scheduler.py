@@ -1,5 +1,4 @@
-#!/usr/bin/env python3
-
+#!/usr/bin/python3
 import os
 import time
 import paramiko #need to install paramiko Python package
@@ -232,7 +231,7 @@ class Scheduler:
 
         # Run nav stack --- load_waypoints out, wait for /map /scan_modified
         rospy.loginfo('Initializing navigation stack...')
-        os.system('roslaunch nav_stack move_base.launch &> /dev/null &')
+        os.system('roslaunch nav_stack move_base.launch launch_state:=IGVC &> /dev/null &')
         self.wait_for_transform(listener, '/base_link', '/map')
         # self.wait_for_transform(listener, '/map', '/utm')
         rospy.loginfo('Navstack initialized.')

@@ -1,14 +1,54 @@
 <launch>
-    <node 
-        name="filter_lidar_data" 
+
+    <arg name="launch_state" default="sim"/>
+    
+    <!-- Old method of filtering lidar (turning off lidar at the ramp)-->
+    <!-- <node 
+        name="ignore_lidar" 
         pkg="filter_lidar_data" 
         type="ignore_lidar_node" 
         output="screen"
-    >
+    > -->
         <!-- Leftover from previous implementation -->
         <!-- <param name="second_waypoint_latitude" value="43.6571667"/>
         <param name="second_waypoint_longitude" value="-79.3903788"/>
         <param name="third_waypoint_latitude" value="43.6571678"/>
         <param name="third_waypoint_longitude" value="-79.3902588"/> -->
+        <!-- <param name="third_waypoint_longitude" value="-79.3902588"/>
+    </node> -->
+
+    <node
+        name="dual_lidar_filter" 
+        pkg="filter_lidar_data" 
+        type="dual_lidar_filter_node" 
+        output="screen"
+    >
+         <!-- Unless this can track a constant defined in constants.xacro, make sure this is updated to be actual distance b/w lidars -->
+        <param name="distance_to_second_lidar" value="0.14"/>
+        <param name="max_theta_degrees" value="9" />
+        <param name="main_topic" value="/scan" />
+        <param name="upper_topic" value="/scan_upper" />
+        <param name="out_topic" value="/scan_modified" />
+        <param name="compare_lidar_time_tolerance_seconds" value="10" />
+
+        <!-- Upper lidar index range -->
+        <!-- Start index may not be required to change unless your indexing doesn't start at 0 -->
+        <param name="upper_lidar_start_index" value="0" />
+
+        <param name="launch_state" value="$(arg launch_state)" />
+        <!-- This will typically be upper lidar's total point ,count - 1, unless 0 is not your start index -->
+        <param name="upper_lidar_stop_index" value="1080" if="$(eval launch_state =='sim')" />  <!-- Use 1080 for sim, and 1145 for irl -->
+        <param name="upper_lidar_stop_index" value="1145" unless="$(eval launch_state =='sim')"/>
+        
+        <!-- Angular range total in degrees, ie 360 degrees if all angles  (not referring to start stop range above, but total of the upper lidar array) -->
+        <param name="upper_lidar_angular_total_range" value='270' if="$(eval launch_state =='sim')" /> <!-- Use 270 for sim, and 360 for irl -->
+        <param name="upper_lidar_angular_total_range" value="360" unless="$(eval launch_state =='sim')"/>
+
+
+        <!-- Total indices by lidar, unused since we have stop index above -->
+        <!-- <param name="upper_lidar_count" value="1080" /> -->
+
+        <!-- Main(lower) lidar angular range -->
+        <param name="main_lidar_angular_total_range" value='270' />
     </node>
 </launch>
