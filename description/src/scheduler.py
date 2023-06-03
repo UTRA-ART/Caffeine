@@ -58,7 +58,7 @@ class Scheduler:
         self.assign_topic('/scan_modified', 'scan_override_set', LaserScan)
         #self.assign_topic('/cv/lane_detections_cloud','cv_cloud_set',PointCloud2)
         self.assign_topic('/cv/lane_detections_scan2','cv_lane_scan_set',LaserScan)
-        self.assign_topic('/scan_merged','cv_merged_scan_set',LaserScan)
+        self.assign_topic('/scan_merged','merged_scan_set',LaserScan)
 
         #SSH
         self.raspberry_pi2 = "10.0.0.2" #IP Address
