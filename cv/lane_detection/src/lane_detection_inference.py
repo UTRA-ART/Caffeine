@@ -26,7 +26,7 @@ from unet_lane.Inference import Inference
 
 from threshold_lane.threshold import lane_detection
 
-import open3d as o3d
+# import open3d as o3d
 from sensor_msgs.msg import CameraInfo
 
 
@@ -69,7 +69,7 @@ class CVModelInferencer:
 
         
     def run(self):
-        rospy.Subscriber("image", Image, self.process_image)
+        rospy.Subscriber("/image", Image, self.process_image)
         rospy.spin()
    
     def lane_transform(self, img):
