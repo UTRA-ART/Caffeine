@@ -106,7 +106,7 @@ class NavigateWaypoints:
                 self.waypoints[i] = {
                     'id': i, 
                     'longitude': waypoint_data["waypoints"][0]["longitude"] if is_sim else gps_info.longitude, 
-                    'latitude': gps_info.latitude if is_sim else waypoint_data["waypoints"][0]["latitude"], 
+                    'latitude': gps_info.latitude + 0.00001 if is_sim else waypoint_data["waypoints"][0]["latitude"], 
                     'description': "First Corner", 
                     'frame_id': frame
                 }
