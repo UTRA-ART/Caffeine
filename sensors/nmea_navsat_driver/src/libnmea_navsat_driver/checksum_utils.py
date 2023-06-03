@@ -53,4 +53,31 @@ def check_nmea_checksum(nmea_sentence):
     for c in data_to_checksum:
         checksum ^= ord(c)
 
-    return ("%02X" % checksum) == transmitted_checksum.upper()
+    # for debugging purposes:
+    # print(f"data_to_checksum: {checksum}\ttransmitted_checksum: {transmitted_checksum} ({int(transmitted_checksum[:2], 16)})")
+    # print(f"converted type: {type(checksum)}\ttransmitted type: {type(transmitted_checksum)}")
+    # print(f"%02X % checksum: {'%02X' % checksum} ({type('%02X' % checksum)})")
+    # print(f"tolerance comparison: {abs(checksum - int(transmitted_checksum[:2], 16))}")
+    
+    
+    # actual code:
+    # return ("%02X" % checksum) == transmitted_checksum.upper()
+    return abs(checksum - int(transmitted_checksum[:2], 16)) <= 3
+
+
+#import operator
+#from functools import reduce
+#
+#def check_nmea_checksum(sentence: str):
+#    """
+#    This function checks the validity of an NMEA string using it's checksum
+#    """
+#    sentence = sentence.strip(bytes("$\n", 'utf-8'))
+#    print(sentence)
+#    nmeadata, checksum = sentence.split(bytes("*", 'utf-8'), 1)
+#    print(nmeadata)
+#    calculated_checksum = reduce(operator.xor, (ord(str(s)[1].strip()) for s in nmeadata), 0)
+#    if int(checksum, base=16) == calculated_checksum:
+#        return nmeadata
+#    else:
+#        raise ValueError("The NMEA data does not match it's checksum")
