@@ -53,10 +53,12 @@ class Scheduler:
         self.scan_override_set = False 
         #self.cv_cloud_set = False
         self.cv_lane_scan_set = False
+        self.merged_scan_set = False
         self.assign_topic('/pause_navigation', 'manual_default_set', Bool, True)
         self.assign_topic('/scan_modified', 'scan_override_set', LaserScan)
         #self.assign_topic('/cv/lane_detections_cloud','cv_cloud_set',PointCloud2)
         self.assign_topic('/cv/lane_detections_scan2','cv_lane_scan_set',LaserScan)
+        self.assign_topic('/scan_merged','cv_merged_scan_set',LaserScan)
 
         #SSH
         self.raspberry_pi2 = "10.0.0.2" #IP Address
@@ -179,6 +181,7 @@ class Scheduler:
         self.wait_for_condition('zed_started', 35)
         #self.wait_for_condition('cv_cloud_set', 30)
         self.wait_for_condition('cv_lane_scan_set', 30)
+        self.wait_for_condition('merged_scan_set', 30)
         rospy.loginfo('CV pipeline launched.')
         
         # Run motor control, teleop and feedback, wait for /odom 
