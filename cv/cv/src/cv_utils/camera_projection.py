@@ -8,23 +8,32 @@ from image_geometry import PinholeCameraModel
 import rospkg
 
 from sensor_msgs.msg import CameraInfo
-
+import math
 class CameraProjection:
     def __init__(self):
         rospack = rospkg.RosPack()
-        save_path = rospack.get_path('cv') + '/config/processed_depth_vals.json'
+        save_path = rospack.get_path('cv') + '/config/depth_vals_fixed.json'
         if os.path.exists(save_path):
             print("Using depth map values from", save_path)
-            self.depth_map = json.load(open(save_path, 'r'))
+            # self.depth_map = json.load(open(save_path, 'r'))
+            self.depth_map = None
         else:
             self.depth_map = self.gen_depth_to_y_map(1, 4)
 
-        self.depth_values = []
-        self.keys = {}
-        for i, key in enumerate(self.depth_map):
-            self.keys[key] = i
-            self.depth_values += [self.depth_map[key]]
-        self.depth_values = np.array(self.depth_values)
+
+        rospack = rospkg.RosPack()
+        hard_dir = rospack.get_path('cv') + '/config/depth_sim3.npy'
+        depth_matrix = np.load(hard_dir)
+        self.depth_values = np.nan_to_num(cv2.resize(depth_matrix, (330, 180)), nan=10000.)
+
+
+
+        # self.depth_values = []
+        # self.keys = {}
+        # for i, key in enumerate(self.depth_map):
+        #     self.keys[key] = i
+        #     self.depth_values += [self.depth_map[key]]
+        # self.depth_values = np.array(self.depth_values)
 
         camera_info = rospy.wait_for_message('/zed/zed_node/left/camera_info', CameraInfo)
 
@@ -56,7 +65,16 @@ class CameraProjection:
         camera_info.roi.width = int(camera_info.roi.width * scale_x)
         camera_info.roi.height = int(camera_info.roi.height * scale_y)
 
+        self.focalx = K[0]
+        self.focaly = K[5]
+        self.cx = K[2]
+        self.cy = K[6]
+
+
+
+
         self.camera = PinholeCameraModel()
+        print(camera_info)
 
         self.camera.fromCameraInfo(camera_info)
 
@@ -67,6 +85,15 @@ class CameraProjection:
         '''
         return self.project_2D_to_3D_camera(pts)
 
+    def convert_from_uvd(self, u, v, d):
+        # d *= self.pxToMetre
+        # d *= 0.10
+        x_over_z = (self.cx - u) / self.focalx
+        y_over_z = (self.cy - v) / self.focaly
+        z = d / np.sqrt(1. + x_over_z**2 + y_over_z**2)
+        x = x_over_z * z
+        y = y_over_z * z
+        return [x, y, z]
 
     def project_2D_to_3D_camera(self, pts):
         ''' Given the pixel image coordinates and a constant mapping of depth to y-values,
@@ -78,9 +105,34 @@ class CameraProjection:
             if pts[i][0] < 0 or pts[i][1] < 0 or pts[i][0] >= 330 or pts[i][1] >= 180:
                 continue
             vec = self.camera.projectPixelTo3dRay((pts[i][0], pts[i][1]))
-            z_val = self.depth_map[str((pts[i][0], pts[i][1]))]
-            point3D = [vec[i] * z_val/vec[2] for i in range(3)]
+            # z_val = self.depth_map[str((pts[i][0], pts[i][1]))]
+
+            z_val = self.depth_values[pts[i][1], pts[i][0]]
+            if z_val > 10:
+                continue
+            point3D = [vec[i] * z_val/np.linalg.norm(vec) for i in range(3)]
             points += [point3D]
+
+            # z_val *= pts[i][0] * 0.1 + 1
+
+            # theta = -0.593412 # 34 degrees in radians
+            # theta = 0
+            # rY = np.array([
+            #     np.array([1, 0., 0]),
+            #     np.array([0., math.cos(theta), -math.sin(theta)]),
+            #     np.array([0, math.sin(theta), math.cos(theta)]),
+
+            # ], dtype=np.float32)
+
+            # point3D = np.array(point3D, dtype=np.float32)
+            # point3D = np.matmul(rY, point3D)
+            # point3D = rY * point3D
+            # print(f'BEFORE: {z_val}, AFTER: {point3D[2]} ')
+
+            # point3D = self.convert_from_uvd(pts[i][1], pts[i][0], z_val)
+
+            # point3D = [point3D[2], -point3D[0], -point3D[1]]
+            # print(point3D)
 
         return points
 

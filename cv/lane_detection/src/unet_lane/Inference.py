@@ -85,6 +85,13 @@ class Inference():
         output_image[:,:,2] = edges_inv
         output_image[:,:,3] = gradient_map
 
+        # cv2.imwrite(r'/home/ammarvora/utra/caffeine-ws/src/Caffeine/cv/lane_detection/src/gray.png', output_image[:, :, 0])
+        # cv2.imwrite(r'/home/ammarvora/utra/caffeine-ws/src/Caffeine/cv/lane_detection/src/edges.png', output_image[:, :, 1])
+        # cv2.imwrite(r'/home/ammarvora/utra/caffeine-ws/src/Caffeine/cv/lane_detection/src/edges_inv.png', output_image[:, :, 2])
+        # cv2.imwrite(r'/home/ammarvora/utra/caffeine-ws/src/Caffeine/cv/lane_detection/src/gradient.png', output_image[:, :, 3])
+
+
+
         return output_image
     
     def find_edge_channel(self, img):

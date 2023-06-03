@@ -62,6 +62,10 @@ class CVModelInferencer:
             self.Inference = Inference(self.model_path, False)
             rospy.loginfo("Lane Detection node initialized with DEEP LEARNING... ")
 
+        # self.hack = cv2.imread(r'/home/ammarvora/utra/caffeine-ws/src/Caffeine/cv/lane_detection/src/lane.png')
+
+        # print(self.hack.shape)
+
 
         
     def run(self):
@@ -99,6 +103,9 @@ class CVModelInferencer:
         if raw is not None:
             # Get the image
             input_img = raw.copy()
+            # input_img = self.hack
+            
+            # input_img = cv2.resize(raw.shape[1], raw.shape[0])
             
             # cv2.imwrite(r'/home/ammarvora/utra/caffeine-ws/src/Caffeine/cv/lane_detection/src' + 'frame.png', input_img)
             # Do model inference 
@@ -138,8 +145,8 @@ class CVModelInferencer:
 
                 pt_msg = Point()
                 pt_msg.x = pt[0]
-                pt_msg.y = pt[2]
-                pt_msg.z = pt[1]
+                pt_msg.y = pt[1]
+                pt_msg.z = pt[2]
 
                 pts_msg.append(pt_msg)
             lane_msg.elements = pts_msg
