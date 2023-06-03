@@ -200,18 +200,18 @@ class Scheduler:
         rospy.loginfo('Motor controls started.')
         self.close_ssh()
 
-        # Run utm frame transform
-        rospy.loginfo('Initializing UTM...')
-        os.system('roslaunch description utm.launch &> /dev/null &')
-        self.wait_for_transform(listener, '/map', '/utm')
-        self.wait_for_condition('odom_gps_published', 25)
-        rospy.loginfo('UTM initialized.')
-
         #Run motor_odom_node, wait for /odom
         rospy.loginfo('Starting motor_odom_node...')
         os.system('roslaunch motor_odom motor_odom.launch launch_state:=IGVC &> /dev/null &')
         self.wait_for_condition('odom_motor_published', 30)
         rospy.loginfo('motor_odom_node launched.')
+
+        # Run utm frame transform,wait for odometry/gps
+        rospy.loginfo('Initializing UTM...')
+        os.system('roslaunch description utm.launch &> /dev/null &')
+        self.wait_for_transform(listener, '/map', '/utm')
+        self.wait_for_condition('odom_gps_published', 25)
+        rospy.loginfo('UTM initialized.')
 
         # Run odom, wait for odom local, global
         rospy.loginfo('Initializing odometry...')
