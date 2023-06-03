@@ -22,17 +22,19 @@ class Scheduler:
         self.gps_started = False
         self.zed_started = False
         self.imu_started = False
-        self.lidar_started = False
+        self.lower_lidar_started = False
+        self.upper_lidar_started = False
         self.assign_topic('/gps/fix', 'gps_started', NavSatFix)
         self.assign_topic('/zed_node/rgb/image_rect_color', 'zed_started', Image)
         self.assign_topic('/imu/data', 'imu_started', Imu)
-        self.assign_topic('/scan', 'lidar_started', LaserScan)
+        self.assign_topic('/scan', 'lower_lidar_started', LaserScan)
+        self.assign_topic('/scan_upper','upper_lidar_started', LaserScan)
 
         # Frames ???? How to do this 
         self.utm_published = False
         self.map_published = False
         # self.assign_topic('/imu/data', 'imu_started', None)
-        # self.assign_topic('/scan', 'lidar_started', None)
+        # self.assign_topic('/scan', 'lower_lidar_started', None)
 
         # Odometry 
         self.odom_global_published = False
@@ -165,7 +167,8 @@ class Scheduler:
         rospy.loginfo('Starting up sensors...')
         os.system('roslaunch sensors sensors.launch launch_state:=IGVC frame_id:=gps_link &> /dev/null &')
         self.wait_for_condition('imu_started', 35)
-        self.wait_for_condition('lidar_started', 35)
+        self.wait_for_condition('lower_lidar_started', 35)
+        self.wait_for_condition('upper_lidar_started', 40)
         self.wait_for_condition('gps_started', 90)
         rospy.loginfo('Sensors launched.')
 
