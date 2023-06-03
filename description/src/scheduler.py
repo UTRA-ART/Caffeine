@@ -200,13 +200,20 @@ class Scheduler:
         rospy.loginfo('Motor controls started.')
         self.close_ssh()
 
+        # Run utm frame transform
+        rospy.loginfo('Initializing UTM...')
+        os.system('roslaunch description utm.launch &> /dev/null &')
+        self.wait_for_transform(listener, '/map', '/utm')
+        self.wait_for_condition('odom_gps_published', 25)
+        rospy.loginfo('UTM initialized.')
+
         #Run motor_odom_node, wait for /odom
         rospy.loginfo('Starting motor_odom_node...')
         os.system('roslaunch motor_odom motor_odom.launch launch_state:=IGVC &> /dev/null &')
         self.wait_for_condition('odom_motor_published', 30)
         rospy.loginfo('motor_odom_node launched.')
 
-        # Run odom, wait for odom local, global, and /utm
+        # Run odom, wait for odom local, global
         rospy.loginfo('Initializing odometry...')
         #self.initiate_ssh(self.raspberry_pi2, self.username, self.password)
 
@@ -216,16 +223,9 @@ class Scheduler:
         os.system('roslaunch odom odom.launch launch_state:=IGVC &> /dev/null &')
         self.wait_for_condition('odom_global_published', 35)
         self.wait_for_condition('odom_local_published', 35)
-        # self.wait_for_condition('odom_gps_published', 25)
 
         rospy.loginfo('Odometry initialized.')
         #self.close_ssh()
-
-        # Run utm frame transform
-        rospy.loginfo('Initializing UTM...')
-        os.system('roslaunch description utm.launch &> /dev/null &')
-        self.wait_for_transform(listener, '/map', '/utm')
-        rospy.loginfo('UTM initialized.')
 
         #Run cartographer
         rospy.loginfo('Starting cartographer...')
