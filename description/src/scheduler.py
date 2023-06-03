@@ -235,7 +235,7 @@ class Scheduler:
         self.wait_for_transform(listener, '/map', '/odom')
         rospy.loginfo('Cartographer launched.')
 
-        # Run nav stack --- load_waypoints out, wait for /map /scan_modified
+        # Run nav stack --- load_waypoints out, wait for /map
         rospy.loginfo('Initializing navigation stack...')
         os.system('roslaunch nav_stack move_base.launch launch_state:=IGVC &> /dev/null &')
         self.wait_for_transform(listener, '/base_link', '/map')
