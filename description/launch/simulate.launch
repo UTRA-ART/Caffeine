@@ -52,6 +52,6 @@
     args="-19.5 0 0 1.5707 0 0 world ground_truth" />
 
     <!-- Cartographer (Mapping), publishes odom and map frame transforms -->
-    <!-- <include file="$(find description)/launch/cartographer.launch" /> -->
+    <include file="$(find description)/launch/cartographer.launch" />
 
 </launch>

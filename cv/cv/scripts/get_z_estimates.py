@@ -28,8 +28,8 @@ class ZedWrapperServer:
     def run(self):
         rospy.init_node('zed_data_output')
         print("Node Started!")
-        rospy.Subscriber("/zed/zed_node/depth/depth_registered", Image, self.get_depths)
-        rospy.spin()
+        # rospy.Subscriber("/zed/zed_node/depth/depth_registered", Image, self.get_depths)
+        # rospy.spin()
 
         
 
@@ -48,7 +48,7 @@ class ZedWrapperServer:
             to_add += [_xtoadd]
         self.averages += [to_add]
 
-        avg_depth_vals = np.ma.mean(self.averages, axis=0)
+        avg_depth_vals = np.ma.mean(self.depth, axis=0)
         avg_depth_vals = interpolate_nans(avg_depth_vals)
 
         output = {}

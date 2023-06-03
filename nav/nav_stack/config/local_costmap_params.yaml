@@ -21,7 +21,21 @@ local_costmap:
       max_obstacle_height: 10.0,  # we still add lidar scans to costmap
       sensor_frame: base_laser,
       data_type: LaserScan,
-      topic: scan_modified,
+      topic: scan_modified,     
+      marking: true,
+      clearing: true, # true
+      obstacle_range: 3.7,   # Decide how far we should see obstacles, should be less than raytrace range
+      raytrace_range: 4,      # max lidar is rated for is 4m
+      inf_is_valid: true,
+      expected_update_rate: 10
+    }
+
+    laser_scan_sensor: {
+      min_obstacle_height: -10.0, # In case odometry z-estimate goes too high/low,
+      max_obstacle_height: 10.0,  # we still add lidar scans to costmap
+      sensor_frame: base_laser,
+      data_type: LaserScan,
+      topic: /cv/lane_detections_scan2,      
       marking: true,
       clearing: true, # true
       obstacle_range: 3.7,   # Decide how far we should see obstacles, should be less than raytrace range

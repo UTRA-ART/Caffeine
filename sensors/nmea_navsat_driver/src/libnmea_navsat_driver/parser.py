@@ -278,6 +278,16 @@ def parse_nmea_sentence(nmea_sentence):
     """
     # Check for a valid nmea sentence
 
+    # debug
+    # print(f"nmea sentence: {nmea_sentence} ({type(nmea_sentence)})")
+    
+    # print(f"sentence again: {nmea_sentence} ({type(nmea_sentence)})")
+
+    # actual code
+
+    # assume utf-8 encoding
+    nmea_sentence = nmea_sentence.decode("utf-8")
+    
     if not re.match(
             r'(^\$GP|^\$GN|^\$GL|^\$IN).*\*[0-9A-Fa-f]{2}$', nmea_sentence):
         logger.debug(
