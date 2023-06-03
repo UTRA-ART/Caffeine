@@ -9,8 +9,8 @@
 
         <remap from="imu" to="/imu/data" />
         <remap from="odom" to="/odom" />
-        <!-- <remap from="scan" to="/cv/lane_detections_scan"/> -->
-        <remap from="scan" to="/scan_modified" />
+        <remap from="scan_1" to="/cv/lane_detections_scan2"/>
+        <remap from="scan_2" to="/scan_merged" />
         <!-- <remap from="points2" to="/cv/lane_detections_cloud" />  -->
         <remap from="fix" to="/gps/fix"/>
     </node>

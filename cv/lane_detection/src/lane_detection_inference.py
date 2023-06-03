@@ -26,6 +26,10 @@ from unet_lane.Inference import Inference
 
 from threshold_lane.threshold import lane_detection
 
+import open3d as o3d
+from sensor_msgs.msg import CameraInfo
+
+
 class CVModelInferencer:
     def __init__(self):
         rospy.init_node('lane_detection_model_inference')
@@ -43,7 +47,14 @@ class CVModelInferencer:
         self.classical_mode = rospy.get_param('~lane_detection_mode')
         self.Inference = None
         self.lane_detection = None
-
+        
+        # Load in the depth matrix
+        # depth_dir = rospack.get_path('lane_detection') + '/config/depth_sim.npy'
+        # depth_matrix_np = np.load(depth_dir)
+        # depth_matrix_np = depth_matrix_np * 1000 # Convert from (m) to (mm)
+        # depth_matrix_np = cv2.resize(depth_matrix_np, (330, 180))
+        # self.depth_matrix = o3d.geometry.Image(depth_matrix_np.astype(np.float32))
+    
         if self.classical_mode == 1:
             self.lane_detection = lane_detection
             rospy.loginfo("Lane Detection node initialized with CLASSICAL... ")
@@ -52,38 +63,33 @@ class CVModelInferencer:
             rospy.loginfo("Lane Detection node initialized with DEEP LEARNING... ")
 
 
-
+        
     def run(self):
         rospy.Subscriber("image", Image, self.process_image)
         rospy.spin()
+   
+    def lane_transform(self, img):
+        length = img.shape[0]
+        width = img.shape[1]
+        new_width = int(width/8)
 
 
-    def rm_barrel(self, img):
-        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        input_pts = np.float32([[int(width/2-new_width),0], 
+                                [int(width/2+new_width),0], 
+                                [width,length],
+                                [0,length] ])
+        output_pts = np.float32([[new_width, 0],
+                                [width-new_width, 0],
+                                [int(width/2)+new_width,length],
+                                [int(width/2)-new_width,length]])
+        M2 = cv2.getPerspectiveTransform(input_pts,output_pts)
+        out = cv2.warpPerspective(img,M2,(width, length),flags=cv2.INTER_LINEAR)
+        # plt.imshow(out)
+        # cv2.imshow('test', out)
+        # cv2.waitKey(0)
+        return out
 
-        org_min = np.array([10, 160, 20],np.uint8)
-        org_max = np.array([25, 255, 255],np.uint8)
 
-        mask = cv2.inRange(hsv, org_min, org_max)
-
-        if mask.max() > 0:
-            contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-            for c in contours:
-                epsilon  = 0.1*cv2.arcLength(c,True)
-                approx = cv2.approxPolyDP(c, epsilon , True)
-                if len(approx) <4:
-                    continue
-                p0,p1,p2,p3 = approx[0][0], approx[1][0],approx[2][0], approx[3][0]
-                pts = np.array([
-                        [p1, [p0[0]+int((p0[0]-p1[0])/(p1[1]-p0[1])*p0[1]),0],
-                        [p3[0]+int((p3[0]-p2[0])/(p2[1]-p3[1])*p3[1]),0], p2]
-                    ])
-                cv2.fillPoly(img, pts, color=(0,0,0))
-                cv2.drawContours(img, pts, -1, color=(0, 0, 0), thickness=10)
-
-        return img
-    
     def process_image(self, data):
         if data == []:
             return
@@ -92,7 +98,6 @@ class CVModelInferencer:
         
         if raw is not None:
             # Get the image
-            # input_img = self.rm_barrel(raw)
             input_img = raw.copy()
             
             # cv2.imwrite(r'/home/ammarvora/utra/caffeine-ws/src/Caffeine/cv/lane_detection/src' + 'frame.png', input_img)
@@ -133,8 +138,8 @@ class CVModelInferencer:
 
                 pt_msg = Point()
                 pt_msg.x = pt[0]
-                pt_msg.y = pt[1]
-                pt_msg.z = pt[2]
+                pt_msg.y = pt[2]
+                pt_msg.z = pt[1]
 
                 pts_msg.append(pt_msg)
             lane_msg.elements = pts_msg

@@ -19,6 +19,10 @@ class LaneScanConversion:
         # initialize node and publisher
         rospy.init_node('lane_scan_conversion', anonymous=True)
         self.pub = rospy.Publisher('cv/lane_detections_scan', LaserScan, queue_size=10)
+        # self.pub = rospy.Publisher('/scan_modified', LaserScan, queue_size=10)
+        self.count = 0
+
+
 
         # listen for transform from camera to lidar frames
         self.listener = tf.TransformListener()
@@ -34,6 +38,11 @@ class LaneScanConversion:
         rospy.spin()
 
     def process_lanes(self, data):
+        # if self.count == 1:
+        #     self.pub = None
+        #     return
+
+
         scan_msg = LaserScan()
         scan_msg.header.frame_id = 'base_laser'
         scan_msg.header.stamp = rospy.Time.now()
@@ -53,8 +62,10 @@ class LaneScanConversion:
 
         ta = time.time()
         # iterate through 
+        count = 0
         for lane in data.lists:
             for point in lane.elements:
+                count+= 1
 
                 # print(point)
 
@@ -73,16 +84,17 @@ class LaneScanConversion:
                 # rospy.loginfo(new_pose)
                 
                 # Calculate the angle and distance
-                y = new_pose.pose.position.x
-                x = new_pose.pose.position.y
+                x = old_pose.pose.position.x
+                y = old_pose.pose.position.y
 
-                theta = np.arctan(x / y) # angle from x axis
+                theta = np.arctan(y / x)# angle from x axis
                 d = math.sqrt(x**2 + y**2) # distance from lidar
                 # rospy.loginfo("Distance to point is: %f, angle is: %f\n", d, theta)
                 # print("Distance to point is: %f, angle is: %f\n", d, theta)
 
                 # Find the index in scan_msg.ranges whose angle matches with angle calculated 
                 # Set the value at that index as the distance
+                te = time.time()
                 index = np.abs(angles - theta).argmin()
 
                 # if the value at scan_msg.ranges[index] has not been set yet, just change it, else choose the smaller value between the current value in scan_msg.ranges[index] and the value, d
@@ -91,11 +103,16 @@ class LaneScanConversion:
                 else:
                     scan_msg.ranges[index] = min(d, scan_msg.ranges[index])
 
+                tg = time.time()
                 # Let Loop iterate
                 
         tb = time.time()
 
-        # print(f'Lidar Conversion FPS: {1 / (tb - ta)}')
+        if count != 0:
+            print(f'Lidar Conversion FPS: {1 / (tb - ta)}')
+            print(f'Lidar Conversion INSIDE FPS: {1 / (tg - te)}')
+            print(f'Count for LOOP: {count}')
+
 
         tc = time.time()
         # nearest-neighbour interpolation for the angles in scan_msg that don't have a distance value
@@ -117,10 +134,12 @@ class LaneScanConversion:
 
         td = time.time()
 
-        # print(f'Interpolation FPS: {1 / (td - tc)}')
+        print(f'Interpolation FPS: {1 / (td - tc)}')
 
         # publish the scan_msg
         self.pub.publish(scan_msg)
+
+        self.count+= 1
 
 if __name__ == '__main__':
     conversion = LaneScanConversion()
