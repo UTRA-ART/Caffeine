@@ -213,19 +213,19 @@ class Scheduler:
         self.wait_for_condition('odom_gps_published', 25)
         rospy.loginfo('UTM initialized.')
 
-        # Run odom, wait for odom local, global
-        rospy.loginfo('Initializing odometry...')
-        #self.initiate_ssh(self.raspberry_pi2, self.username, self.password)
+        # # Run odom, wait for odom local, global
+        # rospy.loginfo('Initializing odometry...')
+        # #self.initiate_ssh(self.raspberry_pi2, self.username, self.password)
 
-        #_stdin, _stdout, _stderr = self.ssh_client.exec_command('cd ~/caffeine_ws && source devel/setup.bash && roslaunch odom odom.launch launch_state:=IGVC &> /dev/null &')
-        #print(_stdout.read().decode()) #prints out the stdout of the command
+        # #_stdin, _stdout, _stderr = self.ssh_client.exec_command('cd ~/caffeine_ws && source devel/setup.bash && roslaunch odom odom.launch launch_state:=IGVC &> /dev/null &')
+        # #print(_stdout.read().decode()) #prints out the stdout of the command
 
-        os.system('roslaunch odom odom.launch launch_state:=IGVC &> /dev/null &')
-        self.wait_for_condition('odom_global_published', 35)
-        self.wait_for_condition('odom_local_published', 35)
+        # os.system('roslaunch odom odom.launch launch_state:=IGVC &> /dev/null &')
+        # self.wait_for_condition('odom_global_published', 35)
+        # self.wait_for_condition('odom_local_published', 35)
 
-        rospy.loginfo('Odometry initialized.')
-        #self.close_ssh()
+        # rospy.loginfo('Odometry initialized.')
+        # #self.close_ssh()
 
         #Run cartographer
         rospy.loginfo('Starting cartographer...')
