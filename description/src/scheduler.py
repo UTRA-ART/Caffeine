@@ -181,7 +181,7 @@ class Scheduler:
         self.wait_for_condition('zed_started', 35)
         #self.wait_for_condition('cv_cloud_set', 30)
         self.wait_for_condition('cv_lane_scan_set', 30)
-        self.wait_for_condition('merged_scan_set', 30)
+        self.wait_for_condition('merged_scan_set', 40)
         rospy.loginfo('CV pipeline launched.')
         
         # Run motor control, teleop and feedback, wait for /odom 
