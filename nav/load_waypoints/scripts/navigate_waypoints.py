@@ -133,19 +133,19 @@ class NavigateWaypoints:
                 self.waypoints[i] = waypoint_data["waypoints"][j]
                 self.waypoints[i]["id"] = i
                 j += 1
-                
-    def add_manual_corners(self, waypoint_data, gps_info):
+
+    def add_manual_points(self, waypoint_data, gps_info):
         is_sim = self.launch_state == "sim"
         frame = waypoint_data["waypoints"][0]["frame_id"]
         j = 0
 
-        # Account for whether the state is sim because map is rotated to face East instead of North
+        # Hardcoded GPS coor to account for diff corners
         for i in range(len(waypoint_data["waypoints"]) + 3):
             if i == 0:
                 self.waypoints[i] = {
                     'id': i, 
-                    'longitude': 42.4006259, 
-                    'latitude':  -83.13087, 
+                    'longitude': 42.668259, 
+                    'latitude':  -83.21867, 
                     'description': "First Corner", 
                     'frame_id': frame
                 }
@@ -153,25 +153,17 @@ class NavigateWaypoints:
             elif i==1:
                 self.waypoints[i]={
                     "id": i,
-                    'longitude': 42.400688,
-                    'latitude': -83.130614,
+                    'longitude': 42.668288,
+                    'latitude': -83.218414,
                     'description': "Second Corner", 
                     'frame_id': frame
                 }
             elif i == 5:
                 self.waypoints[i] = {
                     'id': i, 
-                    'longitude': 42.400307, 
-                    'latitude': -83.130814, 
+                    'longitude': 42.667907, 
+                    'latitude': -83.218614, 
                     'description': "Fourth Corner", 
-                    'frame_id': frame
-                }
-            elif i == 6:
-                self.waypoints[i] = {
-                    'id': i, 
-                    'longitude': 42.400539, 
-                    'latitude': -83.130843, 
-                    'description': "Finish One Lap", 
                     'frame_id': frame
                 }
             else:
