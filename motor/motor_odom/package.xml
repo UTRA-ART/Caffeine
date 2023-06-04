@@ -23,6 +23,10 @@
   <exec_depend>nav_msgs</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
 
+  <depend>roscpp</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+
   <export>
   </export>
 </package>
