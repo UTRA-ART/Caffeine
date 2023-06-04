@@ -1,14 +1,6 @@
 <launch>
 
     <arg name="launch_state" default="sim"/>
-
-    <!-- Compute local odometry: publish odom frame -->
-    
-    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_local" clear_params="true" output="screen">
-        <remap from="odometry/filtered" to="odometry/local"/>
-
-        <rosparam command="load" file="$(find odom)/config/odom_local.yaml"/>
-        </node>
    
     <!-- Compute global odometry: publish map frame -->
     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_global" clear_params="true" output="screen">
@@ -22,6 +14,15 @@
     <!-- Establish transform b/w Earth reference and Robot reference -->
     <!-- In scheduler, utm.launch is used. So this is only launched for sim -->
     <group if="$(eval launch_state == 'sim')">
+
+            <!-- Compute local odometry: publish odom frame -->
+    
+        <node pkg="robot_localization" type="ekf_localization_node" name="ekf_local" clear_params="true" output="screen">
+        <remap from="odometry/filtered" to="odometry/local"/>
+
+        <rosparam command="load" file="$(find odom)/config/odom_local.yaml"/>
+        </node>
+
         <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" respawn="true">
             <remap from="odometry/filtered" to="odometry/global"/>
 

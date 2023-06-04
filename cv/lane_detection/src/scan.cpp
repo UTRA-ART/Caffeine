@@ -175,7 +175,7 @@ private:
         }
 
         if (!point_found && last_scan_found) {
-            last_scan_msg.header.stamp = ros::Time::now();
+            // last_scan_msg.header.stamp = ros::Time::now();
             lidar_out.publish(last_scan_msg);
             // done_lane_lidar_copy = true;
         } else {

@@ -51,9 +51,9 @@ odom2_relative: false
 
 imu0: imu/data
 imu0_config: [false, false, false,
-              false, true , true ,
+              false, false , true ,
               false, false, false,
-              false, true , true ,
+              false, false , true ,
               true , true , false] # Acceleration can be on/off
 
 imu0_queue_size: 10
@@ -70,3 +70,14 @@ imu0_remove_gravitational_acceleration: true
 # pose0_queue_size: 10
 # pose0_differential: true
 # pose0_relative: false
+
+#feed velocity commands
+
+# twist0: /key_vel
+# twist0_config: [false, false, false,
+#                 false, false, false,
+#                 true,  false, false,
+#                 false, false, true,
+#                 false, false, false]
+# twist0_queue_size: 10
+# twist0_relative: false

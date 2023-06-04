@@ -122,6 +122,7 @@ class CVModelInferencer:
 
             # Publish to /cv/model_output
             img_msg = self.bridge.cv2_to_imgmsg(output, encoding='passthrough')
+            # img_msg.header.stamp = data.header.stamp
             if img_msg is not None:
                 self.pub_raw.publish(img_msg)
             
@@ -134,8 +135,11 @@ class CVModelInferencer:
 
             # print(lane_table)
 
-            
+            # ta = time.time()
             projected_lanes = self.projection(lane_table)
+            # tb = time.time()
+
+            # print(f'PROJECTION FPS: {1 / (tb - ta)}')
 
             # Build the message
             lane_msg = FloatList()
@@ -154,6 +158,7 @@ class CVModelInferencer:
 
             msg_header = Header(frame_id='left_camera_link_optical')
             msg = FloatArray(header=msg_header, lists=[lane_msg])
+            # msg.header.stamp = data.header.stamp
             self.pub.publish(msg)
 
                 

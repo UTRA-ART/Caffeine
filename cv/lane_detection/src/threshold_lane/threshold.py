@@ -106,7 +106,7 @@ def rm_barrel(img):
 
 def lane_detection(img):
     # convert from bgr to hsv
-    img = cv2.resize(img, (640, 360))
+    img = cv2.resize(img, (330, 180))
     img_hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
 
 
@@ -141,7 +141,7 @@ def lane_detection(img):
 
 
 
-    cv2.imwrite(r'/home/ammarvora/utra/caffeine-ws/src/Caffeine/cv/lane_detection/barrels.png', lanes * 255)
+    # cv2.imwrite(r'/home/ammarvora/utra/caffeine-ws/src/Caffeine/cv/lane_detection/barrels.png', lanes * 255)
     return output_img
 
 

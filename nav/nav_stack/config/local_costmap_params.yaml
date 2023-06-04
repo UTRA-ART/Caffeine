@@ -41,7 +41,7 @@ local_costmap:
       obstacle_range: 3.7,   # Decide how far we should see obstacles, should be less than raytrace range
       raytrace_range: 4,      # max lidar is rated for is 4m
       inf_is_valid: true,
-      expected_update_rate: 10
+      expected_update_rate: 40
     }
 
     # point_cloud_sensor: {
@@ -57,7 +57,7 @@ local_costmap:
 
   inflation_layer:
     enabled:              true
-    inflation_radius:     0.35  # Tunable parameter (affect navigation plan)
+    inflation_radius:     0.30 # Tunable parameter (affect navigation plan)
 
   plugins:
     - {name: obstacle_layer,      type: "costmap_2d::ObstacleLayer"}

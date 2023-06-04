@@ -189,36 +189,28 @@ class Scheduler:
         os.system('roslaunch cv pipeline.launch launch_state:=IGVC &> /dev/null &')
         #self.wait_for_condition('zed_started', 35)
         #self.wait_for_condition('cv_cloud_set', 30)
-        self.wait_for_condition('cv_lane_scan_set', 40)
-        self.wait_for_condition('merged_scan_set', 40)
+        self.wait_for_condition('cv_lane_scan_set', 70)
+        self.wait_for_condition('merged_scan_set', 100)
         rospy.loginfo('CV pipeline launched.')
         
-        # Run motor control, teleop and feedback, wait for /odom 
-        rospy.loginfo('Starting motor controls...')
-        self.initiate_ssh(self.raspberry_pi3, self.username, self.password)
+        # # Run motor control, teleop and feedback, wait for /odom 
+        # rospy.loginfo('Starting motor controls...')
+        # self.initiate_ssh(self.raspberry_pi3, self.username, self.password)
 
-        _stdin, _stdout, _stderr = self.ssh_client.exec_command('cd ~/caffeine_ws && source devel/setup.bash && roslaunch motor_control teleop_motor_control.launch')
-        #print(_stdout.read().decode()) #prints the stdout of the command
+        # _stdin, _stdout, _stderr = self.ssh_client.exec_command('cd ~/caffeine_ws && source devel/setup.bash && roslaunch motor_control teleop_motor_control.launch')
+        # #print(_stdout.read().decode()) #prints the stdout of the command
 
-        #os.system('roslaunch description motor_control_pipeline.launch launch_state:=IGVC &> /dev/null &')
-        # self.wait_for_transform(listener, 'base_link', 'odom')
-        # self.wait_for_condition('odom_motor_published', 30)
-        rospy.loginfo('Motor controls started.')
-        #self.close_ssh()
+        # #os.system('roslaunch description motor_control_pipeline.launch launch_state:=IGVC &> /dev/null &')
+        # # self.wait_for_transform(listener, 'base_link', 'odom')
+        # # self.wait_for_condition('odom_motor_published', 30)
+        # rospy.loginfo('Motor controls started.')
+        # #self.close_ssh()
 
-        #Run motor_odom_node, wait for /odom
-        rospy.loginfo('Starting motor_odom_node...')
-        os.system('roslaunch motor_odom motor_odom.launch launch_state:=IGVC &> /dev/null &')
-        self.wait_for_condition('odom_motor_published', 30)
-        rospy.loginfo('motor_odom_node launched.')
-
-        #Run cartographer
-        rospy.loginfo('Starting cartographer...')
-        os.system('roslaunch description cartographer.launch launch_state:=IGVC &> /dev/null &')
-        self.wait_for_condition('tracked_pose_set', 60)
-        self.wait_for_transform(listener, '/odom','/base_link')
-        self.wait_for_transform(listener, '/map', '/odom')
-        rospy.loginfo('Cartographer launched.')
+        #Run motor_odom_node
+        # rospy.loginfo('Starting motor_odom_node...')
+        # os.system('roslaunch motor_odom motor_odom.launch launch_state:=IGVC &> /dev/null &')
+        # self.wait_for_condition('odom_motor_published', 50)
+        # rospy.loginfo('motor_odom_node launched.')
 
         # Run odom, wait for odom local, global
         rospy.loginfo('Initializing odometry...')
@@ -229,7 +221,7 @@ class Scheduler:
 
         os.system('roslaunch odom odom.launch launch_state:=IGVC &> /dev/null &')
         self.wait_for_condition('odom_global_published', 35)
-        self.wait_for_condition('odom_local_published', 35)
+        #self.wait_for_condition('odom_local_published', 35)
 
         rospy.loginfo('Odometry initialized.')
         #self.close_ssh()
@@ -238,8 +230,16 @@ class Scheduler:
         rospy.loginfo('Initializing UTM...')
         os.system('roslaunch description utm.launch &> /dev/null &')
         self.wait_for_transform(listener, '/map', '/utm', timeout = 120)
-        self.wait_for_condition('odom_gps_published', 25)
+        self.wait_for_condition('odom_gps_published', 45)
         rospy.loginfo('UTM initialized.')
+
+        #Run cartographer
+        rospy.loginfo('Starting cartographer...')
+        os.system('roslaunch description cartographer.launch launch_state:=IGVC &> /dev/null &')
+        self.wait_for_condition('tracked_pose_set', 60)
+        self.wait_for_transform(listener, '/odom','/base_link')
+        self.wait_for_transform(listener, '/map', '/odom')
+        rospy.loginfo('Cartographer launched.')
 
         # Run nav stack --- load_waypoints out, wait for /map
         rospy.loginfo('Initializing navigation stack...')
@@ -254,10 +254,10 @@ class Scheduler:
         ## os.system('roslaunch teleop_twist_keyboard keyboard_teleop.launch')
         ## rospy.loginfo('Teleop launched.')
 
-        # load waypoints 
-        rospy.loginfo('Loading waypoints...')
-        os.system('roslaunch load_waypoints load_waypoints.launch launch_state:=IGVC &> /dev/null &')
-        rospy.loginfo('Waypoints loaded.') 
+        # # load waypoints 
+        # rospy.loginfo('Loading waypoints...')
+        # os.system('roslaunch load_waypoints load_waypoints.launch launch_state:=IGVC &> /dev/null &')
+        # rospy.loginfo('Waypoints loaded.') 
 
         #rviz
         rospy.loginfo('Starting rviz...')
@@ -272,6 +272,6 @@ if __name__=='__main__':
     if scheduler.run():
         rospy.loginfo("Scheduler succeeded. Caffeine is ready to rumble!")
         scheduler.unsubscribe_all()
-        scheduler.close_ssh()
+        # scheduler.close_ssh()
         while not rospy.is_shutdown():
             pass
