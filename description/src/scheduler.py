@@ -241,23 +241,23 @@ class Scheduler:
         self.wait_for_condition('odom_gps_published', 25)
         rospy.loginfo('UTM initialized.')
 
-        # # Run nav stack --- load_waypoints out, wait for /map
-        # rospy.loginfo('Initializing navigation stack...')
-        # os.system('roslaunch nav_stack move_base.launch launch_state:=IGVC &> /dev/null &')
-        # self.wait_for_transform(listener, '/base_link', '/map')
-        # #self.wait_for_transform(listener, '/map', '/utm', timeout=120)
-        # rospy.loginfo('Navstack initialized.')
-        # #rospy.loginfo('UTM initialized.')
+        # Run nav stack --- load_waypoints out, wait for /map
+        rospy.loginfo('Initializing navigation stack...')
+        os.system('roslaunch nav_stack move_base.launch launch_state:=IGVC &> /dev/null &')
+        self.wait_for_transform(listener, '/base_link', '/map')
+        #self.wait_for_transform(listener, '/map', '/utm', timeout=120)
+        rospy.loginfo('Navstack initialized.')
+        #rospy.loginfo('UTM initialized.')
         
-        # # load waypoints 
-        # rospy.loginfo('Loading waypoints...')
-        # os.system('roslaunch load_waypoints load_waypoints.launch launch_state:=IGVC &> /dev/null &')
-        # rospy.loginfo('Waypoints loaded.') 
+        # load waypoints 
+        rospy.loginfo('Loading waypoints...')
+        os.system('roslaunch load_waypoints load_waypoints.launch launch_state:=IGVC &> /dev/null &')
+        rospy.loginfo('Waypoints loaded.') 
 
-        # teleop 
-        #rospy.loginfo('Starting teleop...')
-        #os.system('roslaunch teleop_twist_keyboard keyboard_teleop.launch')
-        #rospy.loginfo('Teleop launched.')
+        #teleop 
+        rospy.loginfo('Starting teleop...')
+        os.system('roslaunch teleop_twist_keyboard keyboard_teleop.launch')
+        rospy.loginfo('Teleop launched.')
 
         #rviz
         rospy.loginfo('Starting rviz...')
@@ -272,5 +272,6 @@ if __name__=='__main__':
     if scheduler.run():
         rospy.loginfo("Scheduler succeeded. Caffeine is ready to rumble!")
         scheduler.unsubscribe_all()
+        scheduler.close_ssh()
         while not rospy.is_shutdown():
             pass
