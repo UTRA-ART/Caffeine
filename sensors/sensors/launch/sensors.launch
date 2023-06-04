@@ -1,7 +1,18 @@
 <launch>
     <arg name="launch_state" default="sim"/>
-    <include file="$(find urg_node)/launch/urg_lidar.launch"/>
     <include file="$(find phidgets_imu)/launch/imu.launch"/>
+
+    <node name="urg_node" pkg="urg_node" type="urg_node" output="screen">
+    <param name="ip_address" value=""/>
+    <param name="serial_port" type= "string" value="/dev/urglidar"/>
+    <param name="serial_baud" value="115200"/>
+    <param name="frame_id" value="base_laser"/>
+    <param name="calibrate_time" value="true"/>
+    <param name="publish_intensity" value="false"/>
+    <param name="publish_multiecho" value="false"/>
+    <param name="angle_min" value="-1.5707963"/>
+    <param name="angle_max" value="1.5707963"/>
+  </node>
     
     <node name="rplidarNode"          pkg="rplidar_ros"  type="rplidarNode" output="screen">
         <remap from="scan" to="scan_upper"/>
@@ -14,7 +25,7 @@
 
     <arg name="gps_port" default="/dev/gps_port"/>
     <arg name="baud" default="4800"/>
-    <arg name="frame_id" default="gps" />
+    <arg name="gps_frame_id" default="gps_link"/>
     <arg name="use_GNSS_time" default="False" />
     <arg name="time_ref_source" default="gps" />
     <arg name="useRMC" default="False" />
@@ -22,7 +33,7 @@
     <node name="nmea_serial_driver_node" pkg="nmea_navsat_driver" type="nmea_serial_driver" output="screen">
         <param name="port" type="string" value="$(arg gps_port)"/>
         <param name="baud" value="$(arg baud)" />
-        <param name="frame_id" value="$(arg frame_id)" />
+        <param name="gps_frame_id" value="$(arg gps_frame_id)" />
         <param name="use_GNSS_time" value="$(arg use_GNSS_time)" />
         <param name="time_ref_source" value="$(arg time_ref_source)" />
         <param name="useRMC" value="$(arg useRMC)" />
