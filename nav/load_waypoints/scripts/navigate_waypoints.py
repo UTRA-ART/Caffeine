@@ -73,10 +73,13 @@ class NavigateWaypoints:
         # Add additional waypoints to the corners of the course to avoid incorrect shortcuts
         if waypoint_data["add_corners"]:
             self.add_corners(waypoint_data, gps_info)
+        elif waypoint_data["add_manual_points"]:
+            self.add_manual_points(waypoint_data,gps_info)
         else:
             # Parse through json data and create list of lists holding all waypoints
             for waypoint in waypoint_data["waypoints"]:
                 self.waypoints[waypoint['id']] = waypoint
+
 
         # Append the starting gps coordinate to the waypoints dict as the final waypoint
         last_coord_idx = len(self.waypoints) 
@@ -124,6 +127,51 @@ class NavigateWaypoints:
                     'longitude': waypoint_data["waypoints"][3]["longitude"] if is_sim else gps_info.longitude, 
                     'latitude':  gps_info.latitude - 0.00001 if is_sim else waypoint_data["waypoints"][3]["latitude"], 
                     'description': "Fourth Corner", 
+                    'frame_id': frame
+                }
+            else:
+                self.waypoints[i] = waypoint_data["waypoints"][j]
+                self.waypoints[i]["id"] = i
+                j += 1
+                
+    def add_manual_corners(self, waypoint_data, gps_info):
+        is_sim = self.launch_state == "sim"
+        frame = waypoint_data["waypoints"][0]["frame_id"]
+        j = 0
+
+        # Account for whether the state is sim because map is rotated to face East instead of North
+        for i in range(len(waypoint_data["waypoints"]) + 3):
+            if i == 0:
+                self.waypoints[i] = {
+                    'id': i, 
+                    'longitude': 42.4006259, 
+                    'latitude':  -83.13087, 
+                    'description': "First Corner", 
+                    'frame_id': frame
+                }
+        
+            elif i==1:
+                self.waypoints[i]={
+                    "id": i,
+                    'longitude': 42.400688,
+                    'latitude': -83.130614,
+                    'description': "Second Corner", 
+                    'frame_id': frame
+                }
+            elif i == 5:
+                self.waypoints[i] = {
+                    'id': i, 
+                    'longitude': 42.400307, 
+                    'latitude': -83.130814, 
+                    'description': "Fourth Corner", 
+                    'frame_id': frame
+                }
+            elif i == 6:
+                self.waypoints[i] = {
+                    'id': i, 
+                    'longitude': 42.400539, 
+                    'latitude': -83.130843, 
+                    'description': "Finish One Lap", 
                     'frame_id': frame
                 }
             else:
