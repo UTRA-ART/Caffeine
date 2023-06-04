@@ -454,7 +454,7 @@ Visualization Manager:
                 Shaft Length: 1
                 Shaft Radius: 0.05000000074505806
                 Value: Arrow
-              Topic: /zed/zed_node/odom
+              Topic: /zed_node/odom
               Unreliable: false
               Value: true
           Enabled: true
@@ -464,7 +464,7 @@ Visualization Manager:
             - Class: rviz/Camera
               Enabled: true
               Image Rendering: background and overlay
-              Image Topic: /zed/zed_node/left/image_rect_color
+              Image Topic: /zed_node/left/image_rect_color
               Name: Camera
               Overlay Alpha: 0.5
               Queue Size: 2
@@ -508,7 +508,7 @@ Visualization Manager:
               Zoom Factor: 1
             - Class: rviz/Image
               Enabled: false
-              Image Topic: /zed/zed_node/depth/depth_registered
+              Image Topic: /zed_node/depth/depth_registered
               Max Value: 25
               Median window: 5
               Min Value: 0
@@ -541,7 +541,7 @@ Visualization Manager:
               Size (Pixels): 3
               Size (m): 0.009999999776482582
               Style: Points
-              Topic: /zed/zed_node/point_cloud/cloud_registered
+              Topic: /zed_node/point_cloud/cloud_registered
               Unreliable: false
               Use Fixed Frame: true
               Use rainbow: true

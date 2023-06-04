@@ -30,14 +30,14 @@ odom0_relative: false
 # odom1: odometry/local
 # odom1_config: [true , true , true ,
 #                true , true , true ,
-#                true , true , true , # Z vel is true now cause we have a Z true in odom_local (zed/zed_node)
+#                true , true , true , # Z vel is true now cause we have a Z true in odom_local (zed_node)
 #                true , true , true ,
 #                false, false, false] # Acceleration can be on/off, testing
 # odom1_queue_size: 10
 # odom1_differential: true
 # odom1_relative: false
 
-odom2: zed/zed_node/odom
+odom2: zed_node/odom
 odom2_config: [true, true, false,
                false, false, true,
                false, false, false,

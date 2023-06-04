@@ -4718,7 +4718,7 @@
             </clip>
           </camera>
           <plugin name='stereo_camera_controller' filename='libgazebo_ros_multicamera.so'>
-            <cameraName>zed/zed_node</cameraName>
+            <cameraName>zed_node</cameraName>
             <alwaysOn>1</alwaysOn>
             <updateRate>0</updateRate>
             <imageTopicName>image_raw_color</imageTopicName>

@@ -28,7 +28,7 @@ class ZedWrapperServer:
     def run(self):
         rospy.init_node('zed_data_output')
         print("Node Started!")
-        # rospy.Subscriber("/zed/zed_node/depth/depth_registered", Image, self.get_depths)
+        # rospy.Subscriber("/zed_node/depth/depth_registered", Image, self.get_depths)
         # rospy.spin()
 
         

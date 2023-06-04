@@ -46,7 +46,7 @@
     <xacro:property name="wheel_right_joint" value="right_wheel_joint"/>
 
     <!--<xacro:property name="wheels_separation" value="0.875"/>-->
-    <xacro:property name="wheels_separation" value="0.926"/>
+    <xacro:property name="wheels_separation" value="0.916"/>
     <xacro:property name="wheel_diameter" value="0.25"/>
 
     <xacro:property name="wheel_acceleration" value="1.0"/>
@@ -134,7 +134,7 @@
     <xacro:property name="ZED_camera_length" value="0.175"/>
     <xacro:property name="ZED_camera_width" value="0.03"/>
     <xacro:property name="ZED_camera_height" value="0.06"/>
-    <xacro:property name="ZED_camera_pitch" value="${0 * pi/180}"/>
+    <xacro:property name="ZED_camera_pitch" value="${32 * pi/180}"/>
     <!--<xacro:property name="ZED_camera_pitch" value="${50 * pi/180}"/>-->
     <!-- ZED image height/width corresponds to image size for 60Hz refresh-->
     <xacro:property name="ZED_image_refresh" value="60"/>
@@ -143,7 +143,7 @@
     <xacro:property name="ZED_image_format" value="R8G8B8"/>
     <xacro:property name="ZED_image_hfov" value="${90 * pi/180}"/>
 
-    <xacro:property name="ZED_name" value="zed/zed_node"/>
+    <xacro:property name="ZED_name" value="zed_node"/>
     <xacro:property name="ZED_always_on" value="true"/>
     <xacro:property name="ZED_update_rate" value="0"/>
     <xacro:property name="ZED_image_topicName" value="image_raw_color"/>

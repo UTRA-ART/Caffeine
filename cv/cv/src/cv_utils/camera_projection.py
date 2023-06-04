@@ -22,7 +22,7 @@ class CameraProjection:
 
 
         rospack = rospkg.RosPack()
-        hard_dir = rospack.get_path('cv') + '/config/depth_sim3.npy'
+        hard_dir = rospack.get_path('cv') + '/config/depth_sim_good.npy'
         depth_matrix = np.load(hard_dir)
         self.depth_values = np.nan_to_num(cv2.resize(depth_matrix, (330, 180)), nan=10000.)
 
@@ -35,7 +35,7 @@ class CameraProjection:
         #     self.depth_values += [self.depth_map[key]]
         # self.depth_values = np.array(self.depth_values)
 
-        camera_info = rospy.wait_for_message('/zed/zed_node/left/camera_info', CameraInfo)
+        camera_info = rospy.wait_for_message('/zed_node/left/camera_info', CameraInfo)
 
         # Update camera intrinsics to account for the resized new images
         scale_x = 330.0/camera_info.width

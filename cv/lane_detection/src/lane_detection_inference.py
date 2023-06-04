@@ -44,7 +44,7 @@ class CVModelInferencer:
         self.model_path = rospack.get_path('lane_detection') + '/models/competition_model_4c_128.pt'
 
         # Get the parameter to decide between deep learning and classical
-        self.classical_mode = rospy.get_param('~lane_detection_mode')
+        self.classical_mode = rospy.get_param('/lane_detection_inference/lane_detection_mode')
         self.Inference = None
         self.lane_detection = None
         
