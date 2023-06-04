@@ -189,7 +189,7 @@ class Scheduler:
         os.system('roslaunch cv pipeline.launch launch_state:=IGVC &> /dev/null &')
         #self.wait_for_condition('zed_started', 35)
         #self.wait_for_condition('cv_cloud_set', 30)
-        self.wait_for_condition('cv_lane_scan_set', 30)
+        self.wait_for_condition('cv_lane_scan_set', 40)
         self.wait_for_condition('merged_scan_set', 40)
         rospy.loginfo('CV pipeline launched.')
         
@@ -248,20 +248,20 @@ class Scheduler:
         #self.wait_for_transform(listener, '/map', '/utm', timeout=120)
         rospy.loginfo('Navstack initialized.')
         #rospy.loginfo('UTM initialized.')
-        
+
+        ## teleop 
+        ## rospy.loginfo('Starting teleop...')
+        ## os.system('roslaunch teleop_twist_keyboard keyboard_teleop.launch')
+        ## rospy.loginfo('Teleop launched.')
+
         # load waypoints 
         rospy.loginfo('Loading waypoints...')
         os.system('roslaunch load_waypoints load_waypoints.launch launch_state:=IGVC &> /dev/null &')
         rospy.loginfo('Waypoints loaded.') 
 
-        #teleop 
-        rospy.loginfo('Starting teleop...')
-        os.system('roslaunch teleop_twist_keyboard keyboard_teleop.launch')
-        rospy.loginfo('Teleop launched.')
-
         #rviz
         rospy.loginfo('Starting rviz...')
-        os.system('roslaunch description rviz.launch')
+        os.system('roslaunch description rviz.launch &> /dev/null &')
         rospy.loginfo('rviz launched.')
 
         return True
