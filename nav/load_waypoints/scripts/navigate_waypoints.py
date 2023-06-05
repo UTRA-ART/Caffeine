@@ -220,7 +220,7 @@ class NavigateWaypoints:
         #update the same goal setting within a time period
         while not reached_goal and not rospy.is_shutdown():
             #update the goal position and orientation
-            pose = self.get_pose_from_gps(curr_waypoint["longtitude"],curr_waypoint["latitude"],current_waypoint["frame_id"])
+            pose = self.get_pose_from_gps(curr_waypoint["longitude"],curr_waypoint["latitude"],curr_waypoint["frame_id"])
             goal.target_pose.pose = pose.pose
 
         # Sends goal
