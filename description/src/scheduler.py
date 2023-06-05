@@ -221,7 +221,7 @@ class Scheduler:
 
         os.system('roslaunch odom odom.launch launch_state:=IGVC &> /dev/null &')
         self.wait_for_condition('odom_global_published', 35)
-        #self.wait_for_condition('odom_local_published', 35)
+        self.wait_for_condition('odom_local_published', 35)
 
         rospy.loginfo('Odometry initialized.')
         #self.close_ssh()

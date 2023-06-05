@@ -108,7 +108,7 @@ class CameraProjection:
             # z_val = self.depth_map[str((pts[i][0], pts[i][1]))]
 
             z_val = self.depth_values[pts[i][1], pts[i][0]]
-            if z_val > 10:
+            if z_val > 6:
                 continue
             point3D = [vec[i] * z_val/np.linalg.norm(vec) for i in range(3)]
             points += [point3D]

@@ -28,15 +28,15 @@ print_diagnostics: true
 # odom0_differential: false
 # odom0_relative: false
 
-odom0: zed_node/odom
-odom0_config: [true, true, false,
-               false, false, true,
-               false, false, false,
-               false, false, false,
-               false, false, false]
-odom0_queue_size: 10
-odom0_differential: false
-odom0_relative: false
+# odom0: zed_node/odom
+# odom0_config: [true, true, false,
+#                false, false, true,
+#                false, false, false,
+#                false, false, false,
+#                false, false, false]
+# odom0_queue_size: 10
+# odom0_differential: false
+# odom0_relative: false
 
 ## IMU Sensor(s) ##
 
@@ -50,3 +50,14 @@ imu0_queue_size: 10
 imu0_differential: false
 imu0_relative: true
 imu0_remove_gravitational_acceleration: true
+
+#feed velocity commands
+
+# twist0: /key_vel
+# twist0_config: [false, false, false,
+#                 false, false, false,
+#                 true,  false, false,
+#                 false, false, true,
+#                 false, false, false]
+# twist0_queue_size: 10
+# twist0_relative: false

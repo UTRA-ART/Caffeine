@@ -1,6 +1,6 @@
 {
     "start_direction": "south",
-    "laps": 2,
+    "laps": 1,
     "add_corners": false,
     "add_manual_points": false,
     "waypoints" : [

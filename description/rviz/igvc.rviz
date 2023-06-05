@@ -327,9 +327,9 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -0.24515874683856964
-        Y: -1.1140258312225342
-        Z: -0.038960251957178116
+        X: 4.0193986892700195
+        Y: 0.4152379333972931
+        Z: 2.200741767883301
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
