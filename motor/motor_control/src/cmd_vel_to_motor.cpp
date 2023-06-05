@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include "std_msgs/Float64.h"
+#include "std_msgs/String.h"
 #include "nav_msgs/Odometry.h"
 #include "geometry_msgs/Twist.h"
 
@@ -28,13 +29,13 @@ int main(int argc, char **argv)
     current_time = ros::Time::now();
 
     // Subscribe to cmd_vel topics
-    ros::Subscriber cmd_vel_sub = n.subscribe("twist_mux/cmd_vel", 1, targetcb);
+    ros::Subscriber cmd_vel_sub = n.subscribe("/twist_mux/cmd_vel", 1, targetcb);
 
     // Publish to right and left wheels
     ros::Publisher rvel_pub = n.advertise<std_msgs::Float64>("/right_wheel/command", 1);
     ros::Publisher lvel_pub = n.advertise<std_msgs::Float64>("/left_wheel/command", 1);
-    // Publisher for debugging
-    ros::Publisher debug_pub = n.advertise<std_msgs::Float64>("/debug_cmd_vel_to_motor", 1);
+    // ros::Publisher debug_pub = n.advertise<std_msgs::String>("debug", 1);
+    ros::Publisher debug_pub = n.advertise<std_msgs::Float64>("/debug2", 1);
 
     ros::Rate loop_rate(100);
 
@@ -46,17 +47,18 @@ int main(int argc, char **argv)
 
     while (n.ok())
     {
-        // Check for msgs, updates xi, yi, zi, x, y, z
+        // Che      ck for msgs, updates xi, yi, zi, x, y, z
         ros::spinOnce();
 
         // NOTE: The following expressions are derived from unicycle kinematics
-        vr = g_vx + (WHEELBASE * g_wz) / 2.0;
-        vl = g_vx - (WHEELBASE * g_wz) / 2.0;
+        vr = g_vx - (WHEELBASE * g_wz) / 2.0;
+        vl = g_vx + (WHEELBASE * g_wz) / 2.0;
 
         rvelmsg.data = (vr * FACTOR - B) / M;
         lvelmsg.data = (vl * FACTOR - B) / M;
 
-        // if input velocity is zero, ignore offset and set output to zero
+        // if(vr == 0) rvelmsg.data = 0;
+        // if(vl == 0) lvelmsg.data = 0;
         if((g_vx == 0.0) && (g_wz == 0.0)){
             rvelmsg.data = 0.0;
             lvelmsg.data = 0.0;
@@ -64,6 +66,11 @@ int main(int argc, char **argv)
 
         rvel_pub.publish(rvelmsg);
         lvel_pub.publish(lvelmsg);
+
+        // debugmsg.data = std::to_string(g_vx) + std::to_string(g_wz);
+        debugmsg.data = g_vx;
+        debug_pub.publish(debugmsg);
+
 
         loop_rate.sleep();
     }
