@@ -44,7 +44,7 @@ class Scheduler:
         self.assign_topic('/odometry/global', 'odom_global_published', Odometry)
         self.assign_topic('/odometry/gps', 'odom_gps_published', Odometry)
         self.assign_topic('/odometry/local', 'odom_local_published', Odometry)
-        self.assign_topic('/odom_wheel_encoder_quat', 'odom_motor_published', Odometry)
+        self.assign_topic('/fake_odom_wheel_encoder_quat', 'odom_motor_published', Odometry)
 
         #Cartographer
         self.tracked_pose_set = False

@@ -14,9 +14,9 @@ TrajectoryPlannerROS:
   min_vel_theta: -0.8
   min_in_place_vel_theta: -0.5
 
-  acc_lim_theta: 2.0
-  acc_lim_x: 2.5
-  acc_lim_y: 2.5
+  acc_lim_theta: 0.5
+  acc_lim_x: 0.5
+  acc_lim_y: 0.5
 
   # Caffeine is not Holonomic
   holonomic_robot: false

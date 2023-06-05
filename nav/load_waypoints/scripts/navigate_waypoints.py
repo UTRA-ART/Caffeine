@@ -71,27 +71,27 @@ class NavigateWaypoints:
             rospy.loginfo("Waiting for transform from /map to /utm timed out!")
 
         # Add additional waypoints to the corners of the course to avoid incorrect shortcuts
-        if waypoint_data["add_corners"]:
-            self.add_corners(waypoint_data, gps_info)
-        elif waypoint_data["add_manual_points"]:
-            self.add_manual_points(waypoint_data,gps_info)
-        else:
+        # if waypoint_data["add_corners"]:
+        #     self.add_corners(waypoint_data, gps_info)
+        # elif waypoint_data["add_manual_points"]:
+        #     self.add_manual_points(waypoint_data,gps_info)
+        # else:
             # Parse through json data and create list of lists holding all waypoints
-            for waypoint in waypoint_data["waypoints"]:
-                self.waypoints[waypoint['id']] = waypoint
+        for waypoint in waypoint_data["waypoints"]:
+            self.waypoints[waypoint['id']] = waypoint
 
 
         # Append the starting gps coordinate to the waypoints dict as the final waypoint
-        last_coord_idx = len(self.waypoints) 
+        # last_coord_idx = len(self.waypoints) 
 
         # Append a final waypoint to return to the start (i.e. waypoint to return to start)
-        self.waypoints[last_coord_idx] = {
-            'id': last_coord_idx, 
-            'longitude': gps_info.longitude, 
-            'latitude': gps_info.latitude, 
-            'description': 'Initial start location', 
-            'frame_id': waypoint_data["waypoints"][0]["frame_id"] # For now is 'odom'
-        }
+        # self.waypoints[last_coord_idx] = {
+        #     'id': last_coord_idx, 
+        #     'longitude': gps_info.longitude, 
+        #     'latitude': gps_info.latitude, 
+        #     'description': 'Initial start location', 
+        #     'frame_id': waypoint_data["waypoints"][0]["frame_id"] # For now is 'odom'
+        # }
 
         # Show waypoints 
         rospy.loginfo("Successfully loaded waypoints dict")
@@ -245,7 +245,7 @@ class NavigateWaypoints:
         
     def send_and_wait_goal_to_move_base(self, curr_waypoint):
         # Create an action client called "move_base" with action definition file "MoveBaseAction"
-        action_client = actionlib.SimpleActionClient('/move_base', MoveBaseAction)
+        action_client = actionlib.SimpleActionClient('/move_base', MoveBaseAction, True)
 
         # Waits until the action server has started up and started listening for goals.
         action_client.wait_for_server()
