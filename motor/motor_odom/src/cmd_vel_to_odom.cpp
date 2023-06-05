@@ -128,6 +128,10 @@ void update_odom(){
     vr = cmd_vr * m + b;
     vl = cmd_vl * m + b;
 
+    if((cmd_vx == 0.0) && (cmd_wz == 0.0)){
+        vr = 0;
+        vl = 0;
+    }
     
 
     odom_new.header.stamp = ros::Time::now();

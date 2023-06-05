@@ -44,7 +44,7 @@ class Scheduler:
         self.assign_topic('/odometry/global', 'odom_global_published', Odometry)
         self.assign_topic('/odometry/gps', 'odom_gps_published', Odometry)
         self.assign_topic('/odometry/local', 'odom_local_published', Odometry)
-        self.assign_topic('/odom', 'odom_motor_published', Odometry)
+        self.assign_topic('/odom_wheel_encoder_quat', 'odom_motor_published', Odometry)
 
         #Cartographer
         self.tracked_pose_set = False
@@ -180,7 +180,10 @@ class Scheduler:
 
         #run zed
         rospy.loginfo('Start ZED separately...')
-        os.system('roslaunch zed_wrapper zed_no_tf.launch &> /dev/null &')
+        if rospy.get_param('/scheduler/visual_odom_enable'):
+            os.system('roslaunch zed_wrapper zed_no_tf.launch position_tracking:=true &> /dev/null &')
+        else:
+            os.system('roslaunch zed_wrapper zed_no_tf.launch position_tracking:=false &> /dev/null &')
         self.wait_for_condition('zed_started', 35)
         rospy.loginfo('ZED launched before CV.')
 
@@ -207,10 +210,10 @@ class Scheduler:
         # #self.close_ssh()
 
         #Run motor_odom_node
-        # rospy.loginfo('Starting motor_odom_node...')
-        # os.system('roslaunch motor_odom motor_odom.launch launch_state:=IGVC &> /dev/null &')
-        # self.wait_for_condition('odom_motor_published', 50)
-        # rospy.loginfo('motor_odom_node launched.')
+        rospy.loginfo('Starting motor_odom_node...')
+        os.system('roslaunch motor_odom motor_odom.launch launch_state:=IGVC &> /dev/null &')
+        self.wait_for_condition('odom_motor_published', 50)
+        rospy.loginfo('motor_odom_node launched.')
 
         # Run odom, wait for odom local, global
         rospy.loginfo('Initializing odometry...')

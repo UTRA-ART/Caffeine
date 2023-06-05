@@ -12,7 +12,7 @@ local_costmap:
   resolution: 0.1
 
   obstacle_layer:
-    observation_sources: laser_scan_sensor #point_cloud_sensor
+    observation_sources: laser_scan_sensor cv_laser_scan #point_cloud_sensor
     enabled: true
     track_unknown_space: true
 
@@ -30,7 +30,7 @@ local_costmap:
       expected_update_rate: 10
     }
 
-    laser_scan_sensor: {
+    cv_laser_scan: {
       min_obstacle_height: -10.0, # In case odometry z-estimate goes too high/low,
       max_obstacle_height: 10.0,  # we still add lidar scans to costmap
       sensor_frame: base_laser,

@@ -3,4 +3,4 @@ footprint: [[-0.630, -0.488], [-0.630, 0.488], [0.630, 0.488], [0.630, -0.488]]
 
 # NOTE: Caffeine is generally parallel to the ground with 3-wheel drive + battery HACK
 map_type: costmap
-observation_sources: laser_scan_sensor
+observation_sources: laser_scan_sensor, cv_laser_scan
