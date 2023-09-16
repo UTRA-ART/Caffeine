@@ -47,12 +47,12 @@ int main(int argc, char **argv)
 
     while (n.ok())
     {
-        // Check for msgs, updates xi, yi, zi, x, y, z
+        // Che      ck for msgs, updates xi, yi, zi, x, y, z
         ros::spinOnce();
 
         // NOTE: The following expressions are derived from unicycle kinematics
-        vr = g_vx + (WHEELBASE * g_wz) / 2.0;
-        vl = g_vx - (WHEELBASE * g_wz) / 2.0;
+        vr = g_vx - (WHEELBASE * g_wz) / 2.0;
+        vl = g_vx + (WHEELBASE * g_wz) / 2.0;
 
         rvelmsg.data = (vr * FACTOR - B) / M;
         lvelmsg.data = (vl * FACTOR - B) / M;

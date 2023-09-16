@@ -23,6 +23,3 @@ catkin_package(
 )
 
 include_directories(${catkin_INCLUDE_DIRS})
-
-add_executable(wheel_odom_pub src/odom_pub.cpp)
-target_link_libraries(wheel_odom_pub ${catkin_LIBRARIES})

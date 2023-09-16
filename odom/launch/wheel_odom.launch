@@ -1,0 +1,7 @@
+<launch>
+    <node 
+        name="wheel_odom_pub" 
+        pkg="odom" 
+        type="wheel_odom_pub" 
+        output="screen"/>   
+</launch>
