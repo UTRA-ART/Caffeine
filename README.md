@@ -30,9 +30,15 @@ echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 
 # Dependencies for buiding packages
-sudo apt install python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential
+sudo apt install python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
 sudo rosdep init
 rosdep update
+```
+
+### Install catkin_tools
+Provides the tools for working with the catkin build system and workspaces. More information can be found here: [Docs](https://catkin-tools.readthedocs.io/en/latest/). We use this to build packages with `catkin build`.
+```
+sudo apt-get install python3-catkin-tools
 ```
 
 ### Install the Navigation Package ###
@@ -87,11 +93,39 @@ Before cloning this repository, create a ROS workspace:
 ```
 mkdir -p caffeine-ws/src
 cd caffeine-ws
-catkin_make
+catkin build
 ```
 After, clone this repository into the `/src` folder.
 
-### Cleaning the ROS Workspace ###
+## Installing Cartographer (SLAM) ##
+Cartographer provides Mapping and Localization services and requires building from source. Instructions are taken from the [Cartographer ROS](https://google-cartographer-ros.readthedocs.io/en/latest/) documentation.
+```
+sudo apt-get update
+sudo apt-get install -y python3-wstool python3-rosdep ninja-build stow
+
+# Clone the Cartographer Repos into src folder
+mkdir caffeine-ws
+wstool init src
+wstool merge -t src https://raw.githubusercontent.com/cartographer-project/cartographer_ros/master/cartographer_ros.rosinstall
+wstool update -t src
+
+# Use rosdep to install Cartographer dependencies
+sudo rosdep init # This will print an error if you have already executed it before, the error can be ignored
+rosdep update
+rosdep install --from-paths src --ignore-src --rosdistro=${ROS_DISTRO} -y # Ignore warnings about libabseil
+
+# Other dependencies
+sudo apt-get install libceres-dev
+sudo apt-get install liblua5.2-dev
+
+# Install the abseil-cpp library
+src/cartographer/scripts/install_abseil.sh
+
+# Build and install
+catkin build
+```
+
+## Cleaning the ROS Workspace ##
 Every once in a while it is necessary to clear unnecesary logs that are saved from tests that have been run. These logs can quickly add up to the GB range, and can slow down ROS. To check how many logs you have run:
 
 ```
