@@ -245,7 +245,8 @@ class NavigateWaypoints:
         
     def send_and_wait_goal_to_move_base(self, curr_waypoint):
         # Create an action client called "move_base" with action definition file "MoveBaseAction"
-        action_client = actionlib.SimpleActionClient('/move_base', MoveBaseAction, True)
+        # action_client = actionlib.SimpleActionClient('/move_base', MoveBaseAction, True)
+        action_client = actionlib.SimpleActionClient('/move_base', MoveBaseAction)
 
         # Waits until the action server has started up and started listening for goals.
         action_client.wait_for_server()
