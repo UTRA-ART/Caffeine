@@ -105,7 +105,7 @@ class NavigateWaypoints:
             if i == 0:
                 self.waypoints[i] = {
                     'id': i, 
-                    'longitude': waypoint_data["waypoints"][0]["longitude"] if is_sim else gps_info.longitude, 
+                    'longitude': -79.3905355 if is_sim else gps_info.longitude, 
                     'latitude': gps_info.latitude + 0.00001 if is_sim else waypoint_data["waypoints"][0]["latitude"], 
                     'description': "First Corner", 
                     'frame_id': frame
@@ -215,21 +215,32 @@ class NavigateWaypoints:
         goal.target_pose.header.frame_id = curr_waypoint["frame_id"]
         goal.target_pose.header.stamp = rospy.Time.now()
 
-        # Set goal position and orientation
-        pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
-        goal.target_pose.pose = pose.pose
+        #while not reached Goal, resend the goal. 
+        #if finished goal, send the next goal and start again. 
+        finished_within_time = 0
 
-        # Sends goal and waits until the action is completed (or aborted if it is impossible)
-        action_client.send_goal(goal)
+        times =0
+        
+        while 1:
+            # Set goal position and orientation
+            pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
+            goal.target_pose.pose = pose.pose
+            rospy.loginfo("read from json again")
+            
+            # Sends goal and waits until the action is completed (or aborted if it is impossible)
+            action_client.send_goal(goal)
+            rospy.loginfo("sends goal again")
 
-        # Waits for the server to finish performing the action.
-        finished_within_time = action_client.wait_for_result(rospy.Duration(6000))
+            # Give certain time for rover to set goal repetitively
+            finished_within_time = action_client.wait_for_result(rospy.Duration(5))
+            rospy.loginfo("wait 5 secs again")
+            if finished_within_time:
+                rospy.loginfo("Reached nav goal")
+                break
+            else:
+                times += 1
+                rospy.loginfo("Resending the goal: %d", times)  
 
-        if not finished_within_time:  
-            action_client.cancel_goal()  
-            rospy.loginfo("Timed out achieving goal")  
-        else:  
-            rospy.loginfo("Reached nav goal")
 
     def navigate_waypoints(self):
         while True:

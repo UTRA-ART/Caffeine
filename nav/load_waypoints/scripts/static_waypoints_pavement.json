@@ -5,7 +5,7 @@
     "waypoints" : [
         {
             "id" : 0,
-            "longitude" : -79.3905355,
+            "longitude" : -79.3904605,
             "latitude" : 43.6571768,
             "description"  : "Entrance of No-Man's Land Part 1",
             "test_loc_description": "start no-mans land",
@@ -13,7 +13,7 @@
             "pose_test" : [11.2,0,0,0,0,0],
             "pose_test_norm" : [10,0,0,0,0,0]
         },
-        {
+        {    
             "id" : 1,
             "longitude" : -79.3903788,
             "latitude" : 43.6571667,
@@ -27,7 +27,7 @@
             "id" : 2,
             "longitude" : -79.3902588,
             "latitude" : 43.6571678,
-            "description"  : "Start of No-Man's Land Part 2",
+            "description"  : "Start of No-Man's Land Part 1",
             "test_loc_description": "Ramp End",
             "frame_id" : "map",
             "pose_test" : [11.2,0,0,0,0,0],
