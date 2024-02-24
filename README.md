@@ -104,7 +104,7 @@ sudo apt-get update
 sudo apt-get install -y python3-wstool python3-rosdep ninja-build stow
 
 # Clone the Cartographer Repos into src folder
-mkdir caffeine-ws
+cd caffeine-ws
 wstool init src
 wstool merge -t src https://raw.githubusercontent.com/cartographer-project/cartographer_ros/master/cartographer_ros.rosinstall
 wstool update -t src
@@ -121,7 +121,12 @@ sudo apt-get install liblua5.2-dev
 # Install the abseil-cpp library
 src/cartographer/scripts/install_abseil.sh
 
+# Apply patch to make cartographer work with costmap
+cd src/cartographer # Make sure you are in caffeine-ws/src/cartographer
+git apply ../Caffeine/misc/cartographer_costmap.patch
+
 # Build and install
+cd ..
 catkin build
 ```
 
