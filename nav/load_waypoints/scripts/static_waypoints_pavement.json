@@ -15,9 +15,9 @@
         },
         {    
             "id" : 1,
-            "longitude" : -79.3903788,
-            "latitude" : 43.6571667,
-            "description"  : "End of No-Man's Land Part 1",
+            "longitude" :-79.3902935,
+            "latitude" :43.657155,
+            "description"  : "Ramp starts",
             "test_loc_description": "Ramp Start",
             "frame_id" : "map",
             "pose_test" : [11.2,0,0,0,0,0],
@@ -25,20 +25,21 @@
         },
         {
             "id" : 2,
-            "longitude" : -79.3902588,
-            "latitude" : 43.6571678,
-            "description"  : "Start of No-Man's Land Part 1",
+            "longitude" :-79.3901971,
+            "latitude" :43.6571525,
+            "description"  : "Ramp ends",
             "test_loc_description": "Ramp End",
             "frame_id" : "map",
             "pose_test" : [11.2,0,0,0,0,0],
             "pose_test_norm" : [10,0,0,0,0,0]
         },
         {
+            
             "id" : 3,
-            "longitude" : -79.3901090,
-            "latitude" : 43.6571607,
-            "description"  : "Start of No-Man's Land Part 2",
-            "test_loc_description": "Ramp End",
+            "longitude" :-79.39001207,
+            "latitude" :43.65715932,
+            "description"  : "End of No-Man's Land",
+            "test_loc_description": "End of No-Man's Land",
             "frame_id" : "map",
             "pose_test" : [11.2,0,0,0,0,0],
             "pose_test_norm" : [10,0,0,0,0,0]

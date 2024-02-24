@@ -24,7 +24,7 @@ class NavigateWaypoints:
         self.waypoints = dict() 
         self.static_waypoint_file = static_waypoint_file
         self.max_time_for_transform = max_time_for_transform # Maximum time to wait for the transform. Node shuts down if time limit hit
-        self.waited_for_transform = False # Initialize the boolean for whether or waiting has timed out 
+        self.waited_for_transform = False # Initialize the boolean for whether waiting has timed out 
 
         self.launch_state = rospy.get_param('/load_waypoints_server/launch_state')
         self.ignore_lidar = False
@@ -113,8 +113,8 @@ class NavigateWaypoints:
             elif i == 5:
                 self.waypoints[i] = {
                     'id': i, 
-                    'longitude': waypoint_data["waypoints"][3]["longitude"] + 0.000036 if is_sim else waypoint_data["waypoints"][3]["longitude"], 
-                    'latitude':  waypoint_data["waypoints"][3]["latitude"] if is_sim else waypoint_data["waypoints"][3]["latitude"] - 0.000036, 
+                    'longitude': -79.38998072 if is_sim else waypoint_data["waypoints"][3]["longitude"], 
+                    'latitude': 43.65714925 if is_sim else waypoint_data["waypoints"][3]["latitude"] - 0.000036, 
                     'description': "Third Corner", 
                     'frame_id': frame
                 }
@@ -155,7 +155,7 @@ class NavigateWaypoints:
                     now = rospy.Time.now()
 
                     # Wait for transform from /map to /utm
-                    listener.waitForTransform("map", "/utm", now, rospy.Duration(5.0))
+                    listener.waitForTransform("/map", "/utm", now, rospy.Duration(5.0))
                     rospy.loginfo("Transform found. Time waited for transform: %s s"%(rospy.get_time() - start_time))
                     waited_for_transform = True
                     break
@@ -189,10 +189,10 @@ class NavigateWaypoints:
         return waypoint
     
     def get_pose_from_gps(self, longitude, latitude, frame, pose_test_var = None):
-        '''converts gps coordinated to frame (odom,map,etc)'''
+        '''converts gps coordinates to frame (odom,map,etc)'''
         
         # create PoseStamped message to set up for do_transform_pose
-        utm_coords = utm.from_latlon(latitude, longitude)
+        utm_coords = utm.from_latlon(latitude, longitude)#latitude and longitude transformed into UTM
         utm_pose = PoseStamped()
         utm_pose.header.frame_id = 'utm'
         utm_pose.pose.position.x = utm_coords[0]
