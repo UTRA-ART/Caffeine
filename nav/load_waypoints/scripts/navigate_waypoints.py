@@ -225,21 +225,21 @@ class NavigateWaypoints:
             # Set goal position and orientation
             pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
             goal.target_pose.pose = pose.pose
-            rospy.loginfo("read from json again")
+            #rospy.loginfo("read from json again")
             
             # Sends goal and waits until the action is completed (or aborted if it is impossible)
             action_client.send_goal(goal)
-            rospy.loginfo("sends goal again")
+            #rospy.loginfo("sends goal again")
 
             # Give certain time for rover to set goal repetitively
             finished_within_time = action_client.wait_for_result(rospy.Duration(5))
-            rospy.loginfo("wait 5 secs again")
+            #rospy.loginfo("wait 5 secs again")
             if finished_within_time:
-                rospy.loginfo("Reached nav goal")
+                #rospy.loginfo("Reached nav goal")
                 break
             else:
                 times += 1
-                rospy.loginfo("Resending the goal: %d", times)  
+                #rospy.loginfo("Resending the goal: %d", times)  
 
 
     def navigate_waypoints(self):
