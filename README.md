@@ -78,6 +78,13 @@ Provides the [Hector Gazebo Plugins](http://wiki.ros.org/hector_gazebo_plugins) 
 sudo apt-get install ros-noetic-hector-gazebo-plugins
 ```
 
+### Other Dependencies
+Provides the GPS conversion to better work with latitude and longitude values.
+```
+pip3 install utm
+sudo apt-get install ros-noetic-geodesy
+```
+
 ### Install IGVC World ###
 Custom built world(s) representing the IGVC competition can be found in the [`/worlds`](./worlds) package. To install them for use in the Gazebo simulator, run the `./install_models.sh` script found in the `/worlds/models` folder.
 > **NOTE:** The install script copies specific contents of `/worlds/models` to `~/.gazebo/models`
@@ -175,6 +182,18 @@ roslaunch teleop_twist_keyboard keyboard_teleop.launch
 
 When running `simulate.launch`, an error saying that the `spawn_model` node failed will appear. This occurs because both the gazebo world and the urdf are loaded in the same `roslaunch` file (IGVC takes too long to load before model is spawned). The spawner will automatically retry and spawn Caffeine properly, so this error can be safely ignored.
 > A solution is to spawn Caffeine only once the gazebo (IGVC) world has been loaded, but this requires a new `roslaunch` file and thus a new terminal - which is excessive at this point.
+
+## Useful Commands ##
+```
+# Generates real-time flow diagram of the transform tree
+rosrun rqt_tf_tree rqt_tf_tree
+
+# Echos the tf transform from frame_1 -> frame_2
+rosrun tf tf_echo /frame_1 /frame_2
+
+# Generates real-time flow diagram of the topics, nodes, and the connections
+rosrun rqt_graph rqt_graph 
+```
 
 ---
 <p align="center">
