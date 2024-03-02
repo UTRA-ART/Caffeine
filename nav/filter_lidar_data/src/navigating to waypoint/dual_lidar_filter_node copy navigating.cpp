@@ -4,7 +4,6 @@
 
 #include "geometry_msgs/PoseStamped.h"
 #include "visualization_msgs/Marker.h"
-#include <geometry_msgs/PoseArray.h>
 // for this piece of shit below, if Eigen stops compilation:
 // do sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 // or something of that sort, suck my dick
@@ -55,9 +54,6 @@ public:
         fucker = nh.advertise<std_msgs::String>("/fucker", 1);
         markfucker = nh.advertise<visualization_msgs::Marker>("/markfucker", 1);
 
-        // fuck
-        ramp_seg_pub = nh.advertise<geometry_msgs::PoseArray>("/ramp_seg", 1);
-
         lidar_sub = nh.subscribe(main_topic_name, 10, &DualLidarFilterNode::lidarCallback, this);
         upper_lidar_sub = nh.subscribe(upper_topic_name, 10, &DualLidarFilterNode::upperLidarCallback, this);
         out = nh.advertise<sensor_msgs::LaserScan>(out_topic_name, 1);
@@ -75,9 +71,6 @@ private:
     ros::Publisher fucker;
     ros::Publisher markfucker;
     actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac;
-
-    // anal
-    ros::Publisher ramp_seg_pub;
 
     std::string main_topic_name;
     std::string upper_topic_name;
@@ -145,8 +138,8 @@ private:
             // pcl_ros::transformPointCloud("map", transform, cloudI, cloudO);
             // sensor_msgs::convertPointCloud2ToPointCloud(cloudO, cloud);
 
-            // auto ramp_ends = get_longest_strip(lidar_msg->ranges.data(), out_msg.ranges.size());
-            // ramp_ends = std::make_pair(0, 300);
+            auto ramp_ends = get_longest_strip(lidar_msg->ranges.data(), out_msg.ranges.size());
+            ramp_ends = std::make_pair(0, 300);
             auto indices = get_all_deeper(lidar_msg->ranges.data(), out_msg.ranges.size());
 
             std_msgs::String peepee;
@@ -167,26 +160,6 @@ private:
                         largest_i = i;
                     }
                 }
-
-                // send this shit to other node
-                geometry_msgs::PoseArray ramp_msg;
-                ramp_msg.header = paff.header;
-                ramp_msg.poses.reserve(indices.size());
-                for (const int i : indices[largest_i]) {
-                    geometry_msgs::Pose pose;
-                    pose.position.x = cloud.points[i].x;
-                    pose.position.y = cloud.points[i].y;
-                    pose.position.z = cloud.points[i].z;
-                    ramp_msg.poses.push_back(pose);
-                }
-                ramp_seg_pub.publish(ramp_msg);
-
-
-                // expel points that are further apart from the ends here
-                // using avg dist between points in the set
-                
-
-                // compute waypoint from remainign points
                 const auto& front = cloud.points[indices[largest_i].front()];
                 const auto& back = cloud.points[indices[largest_i].back()];
                 const float x_len = back.x - front.x;
@@ -195,8 +168,8 @@ private:
                 const float xmid = x_len * 0.5 + front.x;
                 const float ymid = x_len * 0.5 * slope + front.y;
 
-                const float px = xmid - 1.5;
-                const float py = ymid + 1.5 / slope; // NOTE: watch for division by ~0, like when line is vertical on x-y plane
+                const float px = xmid - 1;
+                const float py = ymid + 1 / slope; // NOTE: watch for division by ~0, like when line is vertical on x-y plane
 
                 // navigate dumb fuck
                 move_base_msgs::MoveBaseGoal goal;
@@ -205,8 +178,8 @@ private:
                 goal.target_pose.pose.position.x = px;
                 goal.target_pose.pose.position.y = py;
                 goal.target_pose.pose.orientation.w = 1;
-                // ac.sendGoal(goal);
-                // ac.waitForResult(); // suck my dick
+                ac.sendGoal(goal);
+                ac.waitForResult(); // suck my dick
 
                 visualization_msgs::Marker mom;
                 mom.header.stamp = ros::Time::now();
