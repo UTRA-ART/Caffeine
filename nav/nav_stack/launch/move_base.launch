@@ -3,11 +3,10 @@
     <arg name="launch_state" default="sim"/>
 
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-        <remap from="odom" to="odometry/local"/>
         <remap from="cmd_vel" to="nav_vel"/>
 
         <!-- Load common parameters for both the global and local costmaps -->
-        <rosparam file="$(find nav_stack)/config/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
+        <rosparam file="$(find nav_stack)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
         <rosparam file="$(find nav_stack)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
 
         <!-- Load costmap (global/local) specific parameters -->
@@ -20,11 +19,6 @@
         <!-- Global Planner -->
         <param name="base_global_planner" value="navfn/NavfnROS"/>
     </node>
-
-    <!-- Launch filtered lidar data topic used for costmap-->
-    <include file="$(find filter_lidar_data)/launch/filter_lidar_data.launch">
-        <arg name="launch_state" value="$(arg launch_state)"/>
-    </include>
 
     <!-- TODO: always have a manual override available when doing autonomous navigation -->
 

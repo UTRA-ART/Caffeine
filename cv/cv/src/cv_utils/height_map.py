@@ -4,6 +4,7 @@ from typing import Dict, Tuple
 
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 HEIGHT: int = 180
 WIDTH: int = 330
@@ -55,27 +56,27 @@ def least_squares(raw_depth_vals_path: str, drawit: bool = True) -> np.ndarray:
     print("errors: \n", errors)
     print("residual:", residual)
 
-    if drawit:
-        xs, ys, zs = points[:, 0], points[:, 1], points[:, 2]
+    # if drawit:
+    #     xs, ys, zs = points[:, 0], points[:, 1], points[:, 2]
 
-        # Plot raw data
-        plt.figure()
-        ax = plt.subplot(111, projection="3d")
-        ax.scatter(xs, ys, zs, color="b")
+    #     # Plot raw data
+    #     plt.figure()
+    #     ax = plt.subplot(111, projection="3d")
+    #     ax.scatter(xs, ys, zs, color="b")
 
-        # Plot plane
-        xlim = ax.get_xlim()
-        ylim = ax.get_ylim()
-        x_grid, y_grid = np.meshgrid(
-            np.arange(xlim[0], xlim[1]), np.arange(ylim[0], ylim[1])
-        )
-        z_grid = fit[0] * x_grid + fit[1] * y_grid + fit[2]
-        ax.plot_wireframe(x_grid, y_grid, z_grid, color="k")
+    #     # Plot plane
+    #     xlim = ax.get_xlim()
+    #     ylim = ax.get_ylim()
+    #     x_grid, y_grid = np.meshgrid(
+    #         np.arange(xlim[0], xlim[1], dtype=object), np.arange(ylim[0], ylim[1], dtype=object)
+    #     )
+    #     z_grid = fit[0] * x_grid + fit[1] * y_grid + fit[2]
+    #     ax.plot_wireframe(x_grid, y_grid, z_grid, color="k")
 
-        ax.set_xlabel("x")
-        ax.set_ylabel("y")
-        ax.set_zlabel("z")
-        plt.show()
+    #     ax.set_xlabel("x")
+    #     ax.set_ylabel("y")
+    #     ax.set_zlabel("z")
+    #     plt.show()
     return fit
 
 

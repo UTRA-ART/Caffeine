@@ -1,3 +1,5 @@
+#!/usr/bin/ python3
+
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2013, Eric Perko
@@ -54,7 +56,7 @@ def main():
     rospy.init_node('nmea_serial_driver')
 
     serial_port = rospy.get_param('~port', '/dev/ttyUSB0')
-    serial_baud = rospy.get_param('~baud', 4800)
+    serial_baud = rospy.get_param('~baud', 115200)
     frame_id = RosNMEADriver.get_frame_id()
 
     try:

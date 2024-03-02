@@ -30,9 +30,15 @@ echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 
 # Dependencies for buiding packages
-sudo apt install python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential
+sudo apt install python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
 sudo rosdep init
 rosdep update
+```
+
+### Install catkin_tools
+Provides the tools for working with the catkin build system and workspaces. More information can be found here: [Docs](https://catkin-tools.readthedocs.io/en/latest/). We use this to build packages with `catkin build`.
+```
+sudo apt-get install python3-catkin-tools
 ```
 
 ### Install the Navigation Package ###
@@ -72,6 +78,13 @@ Provides the [Hector Gazebo Plugins](http://wiki.ros.org/hector_gazebo_plugins) 
 sudo apt-get install ros-noetic-hector-gazebo-plugins
 ```
 
+### Other Dependencies
+Provides the GPS conversion to better work with latitude and longitude values.
+```
+pip3 install utm
+sudo apt-get install ros-noetic-geodesy
+```
+
 ### Install IGVC World ###
 Custom built world(s) representing the IGVC competition can be found in the [`/worlds`](./worlds) package. To install them for use in the Gazebo simulator, run the `./install_models.sh` script found in the `/worlds/models` folder.
 > **NOTE:** The install script copies specific contents of `/worlds/models` to `~/.gazebo/models`
@@ -87,11 +100,44 @@ Before cloning this repository, create a ROS workspace:
 ```
 mkdir -p caffeine-ws/src
 cd caffeine-ws
-catkin_make
+catkin build
 ```
 After, clone this repository into the `/src` folder.
 
-### Cleaning the ROS Workspace ###
+## Installing Cartographer (SLAM) ##
+Cartographer provides Mapping and Localization services and requires building from source. Instructions are taken from the [Cartographer ROS](https://google-cartographer-ros.readthedocs.io/en/latest/) documentation.
+```
+sudo apt-get update
+sudo apt-get install -y python3-wstool python3-rosdep ninja-build stow
+
+# Clone the Cartographer Repos into src folder
+cd caffeine-ws
+wstool init src
+wstool merge -t src https://raw.githubusercontent.com/cartographer-project/cartographer_ros/master/cartographer_ros.rosinstall
+wstool update -t src
+
+# Use rosdep to install Cartographer dependencies
+sudo rosdep init # This will print an error if you have already executed it before, the error can be ignored
+rosdep update
+rosdep install --from-paths src --ignore-src --rosdistro=${ROS_DISTRO} -y # Ignore warnings about libabseil
+
+# Other dependencies
+sudo apt-get install libceres-dev
+sudo apt-get install liblua5.2-dev
+
+# Install the abseil-cpp library
+src/cartographer/scripts/install_abseil.sh
+
+# Apply patch to make cartographer work with costmap
+cd src/cartographer # Make sure you are in caffeine-ws/src/cartographer
+git apply ../Caffeine/misc/cartographer_costmap.patch
+
+# Build and install
+cd ..
+catkin build
+```
+
+## Cleaning the ROS Workspace ##
 Every once in a while it is necessary to clear unnecesary logs that are saved from tests that have been run. These logs can quickly add up to the GB range, and can slow down ROS. To check how many logs you have run:
 
 ```
@@ -136,6 +182,18 @@ roslaunch teleop_twist_keyboard keyboard_teleop.launch
 
 When running `simulate.launch`, an error saying that the `spawn_model` node failed will appear. This occurs because both the gazebo world and the urdf are loaded in the same `roslaunch` file (IGVC takes too long to load before model is spawned). The spawner will automatically retry and spawn Caffeine properly, so this error can be safely ignored.
 > A solution is to spawn Caffeine only once the gazebo (IGVC) world has been loaded, but this requires a new `roslaunch` file and thus a new terminal - which is excessive at this point.
+
+## Useful Commands ##
+```
+# Generates real-time flow diagram of the transform tree
+rosrun rqt_tf_tree rqt_tf_tree
+
+# Echos the tf transform from frame_1 -> frame_2
+rosrun tf tf_echo /frame_1 /frame_2
+
+# Generates real-time flow diagram of the topics, nodes, and the connections
+rosrun rqt_graph rqt_graph 
+```
 
 ---
 <p align="center">
