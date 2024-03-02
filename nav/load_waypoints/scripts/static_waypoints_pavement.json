@@ -6,7 +6,7 @@
         {
             "id" : 0,
             "longitude" : -79.3904605,
-            "latitude" : 43.6571768,
+            "latitude" : 43.65719,
             "description"  : "Entrance of No-Man's Land Part 1",
             "test_loc_description": "start no-mans land",
             "frame_id" : "map",
