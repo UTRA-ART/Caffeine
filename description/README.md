@@ -11,3 +11,5 @@ This folder contains robot specific packages for Caffeine.
 ```
 [relevant topics of package 0]
 ```
+### Gmapping ###
+Gampping is NOT used anymore to generate the map frame anymore; cartographer replaces its functionality. 
