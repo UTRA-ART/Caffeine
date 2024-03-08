@@ -5,6 +5,7 @@
 #include "geometry_msgs/PoseStamped.h"
 #include "visualization_msgs/Marker.h"
 #include <geometry_msgs/PoseArray.h>
+#include <std_msgs/Bool.h>
 // for this piece of shit below, if Eigen stops compilation:
 // do sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 // or something of that sort, suck my dick
@@ -40,7 +41,7 @@ float get_expected_ramp_depth(const float theta_degrees, const float lidar_dista
 
 class DualLidarFilterNode {
 public:
-    DualLidarFilterNode() : ac("/move_base", true) {}
+    DualLidarFilterNode() {}
     void begin(ros::NodeHandle _nh) {
         nh = _nh;
         get_constants();
@@ -50,13 +51,14 @@ public:
         // ros::Duration(10.0).sleep(); // wait for the dumb ass tree to beocme connected, whore
 
         // bullshit whore fuck you
-        fuck = nh.advertise<nav_msgs::Path>("/fuck", 1);
+        // fuck = nh.advertise<nav_msgs::Path>("/fuck", 1);
         fuckListener.setExtrapolationLimit(ros::Duration(0));
         fucker = nh.advertise<std_msgs::String>("/fucker", 1);
-        markfucker = nh.advertise<visualization_msgs::Marker>("/markfucker", 1);
+        // markfucker = nh.advertise<visualization_msgs::Marker>("/markfucker", 1);
 
         // fuck
         ramp_seg_pub = nh.advertise<geometry_msgs::PoseArray>("/ramp_seg", 1);
+        ramp_routine_sub = nh.subscribe("/ramp_routine", 10, &DualLidarFilterNode::rampRoutineSub, this);
 
         lidar_sub = nh.subscribe(main_topic_name, 10, &DualLidarFilterNode::lidarCallback, this);
         upper_lidar_sub = nh.subscribe(upper_topic_name, 10, &DualLidarFilterNode::upperLidarCallback, this);
@@ -67,14 +69,15 @@ private:
     ros::Subscriber lidar_sub;
     ros::Subscriber upper_lidar_sub;
     ros::Publisher out;
+    ros::Subscriber ramp_routine_sub;
+    bool ramp_routine_active = false;
 
     // cunt
-    ros::Publisher fuck;
+    // ros::Publisher fuck;
     tf::TransformListener fuckListener;
     laser_geometry::LaserProjection fuckProjector;
     ros::Publisher fucker;
-    ros::Publisher markfucker;
-    actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> ac;
+    // ros::Publisher markfucker;
 
     // anal
     ros::Publisher ramp_seg_pub;
@@ -103,6 +106,9 @@ private:
     // bool is_upper_valid{false};
     std::function<int(int, int)> second_idx_fn;
 
+    void rampRoutineSub(const std_msgs::BoolConstPtr& _ramp_routine) {
+        ramp_routine_active = _ramp_routine->data;
+    }
     void lidarCallback(const sensor_msgs::LaserScanConstPtr& lidar_msg) {
         const int delt_secs_ab = std::abs<int>(lidar_msg->header.stamp.sec - last_upper_stamp);
         const bool acceptable_record_time_diff = delt_secs_ab < comp_lidar_tol_secs;
@@ -130,9 +136,9 @@ private:
                 fuckListener.waitForTransform("/base_laser", "/map", now, ros::Duration(2.0));
                 fuckProjector.transformLaserScanToPointCloud(frame, refitted_msg, cloud, fuckListener);
 
-                while(!ac.waitForServer(ros::Duration(0.0))){
-                    ROS_INFO("Waiting for the move_base action server to come up");
-                }
+                // while(!ac.waitForServer(ros::Duration(0.0))){
+                //     ROS_INFO("Waiting for the move_base action server to come up");
+                // }
             } catch (tf2::LookupException e) { // these little shits can happen at the bginning
                 return;
             } catch (tf2::ConnectivityException e) {
@@ -170,7 +176,8 @@ private:
 
                 // send this shit to other node
                 geometry_msgs::PoseArray ramp_msg;
-                ramp_msg.header = paff.header;
+                ramp_msg.header.stamp = ros::Time::now();
+                ramp_msg.header.frame_id = "map";
                 ramp_msg.poses.reserve(indices.size());
                 for (const int i : indices[largest_i]) {
                     geometry_msgs::Pose pose;
@@ -208,25 +215,25 @@ private:
                 // ac.sendGoal(goal);
                 // ac.waitForResult(); // suck my dick
 
-                visualization_msgs::Marker mom;
-                mom.header.stamp = ros::Time::now();
-                mom.header.frame_id = frame;
-                mom.action = 0;
-                mom.id = 69;
-                mom.type = visualization_msgs::Marker::CUBE;
-                mom.pose.position.x = px;
-                mom.pose.position.y = py;
-                mom.pose.position.z = 1;
-                mom.scale.x = 0.2;
-                mom.scale.y = 0.2;
-                mom.scale.z = 0.2;
-                mom.color.r = 1;
-                mom.color.g = 0;
-                mom.color.b = 0;
-                mom.color.a = 1;
-                mom.lifetime = ros::Duration(0);
-                mom.frame_locked = true;
-                markfucker.publish(mom);
+                // visualization_msgs::Marker mom;
+                // mom.header.stamp = ros::Time::now();
+                // mom.header.frame_id = frame;
+                // mom.action = 0;
+                // mom.id = 69;
+                // mom.type = visualization_msgs::Marker::CUBE;
+                // mom.pose.position.x = px;
+                // mom.pose.position.y = py;
+                // mom.pose.position.z = 1;
+                // mom.scale.x = 0.2;
+                // mom.scale.y = 0.2;
+                // mom.scale.z = 0.2;
+                // mom.color.r = 1;
+                // mom.color.g = 0;
+                // mom.color.b = 0;
+                // mom.color.a = 1;
+                // mom.lifetime = ros::Duration(0);
+                // mom.frame_locked = true;
+                // markfucker.publish(mom);
 
                 for (int i : indices[largest_i]) {
                     auto& anal = cloud.points[i];
@@ -265,7 +272,7 @@ private:
             // penis.pose.position.z = 100000;
             // paff.poses.push_back(penis);
             
-            fuck.publish(paff);
+            // fuck.publish(paff);
 
         } else { // default case, just use main lidar as it is
             out.publish(lidar_msg);
@@ -360,6 +367,10 @@ private:
             if (!std::isinf(out[i])) {
                 all_inf = false;
             }
+        }
+        // poo
+        if (ramp_routine_active) {
+            all_inf = true;
         }
         if (all_inf) { // if all inf, carto seems to not like it!
             std::fill(out.begin(), out.end(), NAN);

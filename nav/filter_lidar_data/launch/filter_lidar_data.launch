@@ -51,4 +51,10 @@
         <param name="main_lidar_angular_total_range" value='270' if="$(eval launch_state =='sim')" />
         <param name="main_lidar_angular_total_range" value='180' unless="$(eval launch_state =='sim')" />
     </node>
+    <node
+        name="ramp_navigate" 
+        pkg="filter_lidar_data" 
+        type="ramp_navigate" 
+        output="screen"
+    ></node>
 </launch>
