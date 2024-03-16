@@ -26,7 +26,7 @@
         {
             "id" : 2,
             "longitude" :-79.3901971,
-            "latitude" :43.6571525,
+            "latitude" :43.657141,
             "description"  : "Ramp ends",
             "test_loc_description": "Ramp End",
             "frame_id" : "map",
@@ -36,8 +36,8 @@
         {
             
             "id" : 3,
-            "longitude" :-79.39001207,
-            "latitude" :43.65715932,
+            "longitude" :-79.39004,
+            "latitude" :43.65715,
             "description"  : "End of No-Man's Land",
             "test_loc_description": "End of No-Man's Land",
             "frame_id" : "map",
