@@ -54,7 +54,9 @@ public:
         // fuck = nh.advertise<nav_msgs::Path>("/fuck", 1);
         fuckListener.setExtrapolationLimit(ros::Duration(0));
         fucker = nh.advertise<std_msgs::String>("/fucker", 1);
-        // markfucker = nh.advertise<visualization_msgs::Marker>("/markfucker", 1);
+        markfucker = nh.advertise<visualization_msgs::Marker>("/markfucker", 1);
+        markfucker2 = nh.advertise<visualization_msgs::Marker>("/markfucker2", 1);
+        markpaff = nh.advertise<nav_msgs::Path>("/markpaff", 1);
 
         // fuck
         ramp_seg_pub = nh.advertise<geometry_msgs::PoseArray>("/ramp_seg", 1);
@@ -73,11 +75,13 @@ private:
     bool ramp_routine_active = false;
 
     // cunt
-    // ros::Publisher fuck;
+    ros::Publisher fuck;
     tf::TransformListener fuckListener;
     laser_geometry::LaserProjection fuckProjector;
     ros::Publisher fucker;
-    // ros::Publisher markfucker;
+    ros::Publisher markfucker;
+    ros::Publisher markfucker2;
+    ros::Publisher markpaff;
 
     // anal
     ros::Publisher ramp_seg_pub;
@@ -155,12 +159,12 @@ private:
             // ramp_ends = std::make_pair(0, 300);
             auto indices = get_all_deeper(lidar_msg->ranges.data(), out_msg.ranges.size());
 
-            std_msgs::String peepee;
-            fucker.publish(peepee);
-            peepee.data = std::to_string(cloud.points.size()) + " santa lauc " + std::to_string(lidar_msg->ranges.size());
-            fucker.publish(peepee);
-            peepee.data = std::to_string(lidar_msg->range_min) + " santa lauc " + std::to_string(lidar_msg->range_max);
-            fucker.publish(peepee);
+            // std_msgs::String peepee;
+            // fucker.publish(peepee);
+            // peepee.data = std::to_string(cloud.points.size()) + " santa lauc " + std::to_string(lidar_msg->ranges.size());
+            // fucker.publish(peepee);
+            // peepee.data = std::to_string(lidar_msg->range_min) + " santa lauc " + std::to_string(lidar_msg->range_max);
+            // fucker.publish(peepee);
 
             nav_msgs::Path paff;
             paff.header.stamp = ros::Time::now();
@@ -194,24 +198,24 @@ private:
                 
 
                 // compute waypoint from remainign points
-                const auto& front = cloud.points[indices[largest_i].front()];
-                const auto& back = cloud.points[indices[largest_i].back()];
-                const float x_len = back.x - front.x;
-                const float ylen = back.y - front.y;
-                const float slope = ylen / x_len;
-                const float xmid = x_len * 0.5 + front.x;
-                const float ymid = x_len * 0.5 * slope + front.y;
+                // const auto& front = cloud.points[indices[largest_i].front()];
+                // const auto& back = cloud.points[indices[largest_i].back()];
+                // const float x_len = back.x - front.x;
+                // const float ylen = back.y - front.y;
+                // const float slope = ylen / x_len;
+                // const float xmid = x_len * 0.5 + front.x;
+                // const float ymid = x_len * 0.5 * slope + front.y;
 
-                const float px = xmid - 1.5;
-                const float py = ymid + 1.5 / slope; // NOTE: watch for division by ~0, like when line is vertical on x-y plane
+                // const float px = xmid - 1.5;
+                // const float py = ymid + 1.5 / slope; // NOTE: watch for division by ~0, like when line is vertical on x-y plane
 
                 // navigate dumb fuck
-                move_base_msgs::MoveBaseGoal goal;
-                goal.target_pose.header.frame_id = frame;
-                goal.target_pose.header.stamp = ros::Time::now();
-                goal.target_pose.pose.position.x = px;
-                goal.target_pose.pose.position.y = py;
-                goal.target_pose.pose.orientation.w = 1;
+                // move_base_msgs::MoveBaseGoal goal;
+                // goal.target_pose.header.frame_id = frame;
+                // goal.target_pose.header.stamp = ros::Time::now();
+                // goal.target_pose.pose.position.x = px;
+                // goal.target_pose.pose.position.y = py;
+                // goal.target_pose.pose.orientation.w = 1;
                 // ac.sendGoal(goal);
                 // ac.waitForResult(); // suck my dick
 
@@ -235,13 +239,26 @@ private:
                 // mom.frame_locked = true;
                 // markfucker.publish(mom);
 
-                for (int i : indices[largest_i]) {
-                    auto& anal = cloud.points[i];
-                    penis.pose.position.x = anal.x;
-                    penis.pose.position.y = anal.y;
-                    penis.pose.position.z = anal.z;
-                    paff.poses.push_back(penis);
-                }
+                // penis.pose.position.x = px;
+                // penis.pose.position.y = py;
+                // paff.poses.push_back(penis);
+                // penis.pose.position.x = px + 5;
+                // penis.pose.position.y = py - 5 / slope;
+                // paff.poses.push_back(penis);
+                // markpaff.publish(paff);
+
+                // mom.pose.position.x = px + 5;
+                // mom.pose.position.y = py - 5 / slope;
+                // markfucker2.publish(mom);
+
+                // paff.poses.clear();
+                // for (int i : indices[largest_i]) {
+                //     auto& anal = cloud.points[i];
+                //     penis.pose.position.x = anal.x;
+                //     penis.pose.position.y = anal.y;
+                //     penis.pose.position.z = anal.z;
+                //     paff.poses.push_back(penis);
+                // }
             }
 
             // for (int i = ramp_ends.first; i < ramp_ends.second; i += 1) {
@@ -369,8 +386,8 @@ private:
             }
         }
         // poo
-        if (ramp_routine_active) {
-            all_inf = true;
+        if (ramp_routine_active) { // NOTE: careful with this
+            // all_inf = true;
         }
         if (all_inf) { // if all inf, carto seems to not like it!
             std::fill(out.begin(), out.end(), NAN);
