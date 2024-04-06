@@ -57,7 +57,8 @@ def main():
 
     serial_port = rospy.get_param('~port', '/dev/ttyUSB0')
     serial_baud = rospy.get_param('~baud', 115200)
-    frame_id = RosNMEADriver.get_frame_id()
+    #frame_id = RosNMEADriver.get_frame_id()
+    frame_id = rospy.get_param('~gps_frame_id', 'gps_link')
 
     try:
         GPS = serial.Serial(port=serial_port, baudrate=serial_baud, timeout=2)

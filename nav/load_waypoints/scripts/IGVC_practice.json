@@ -1,26 +1,14 @@
 {
-    "start_direction": "south",
-    "laps": 2,
+    "start_direction": "north",
+    "laps": 1,
+    "add_corners": false,
+    "add_manual_points": false,
     "waypoints" : [
         {
             "id" : 0,
-            "longitude" : -83.130645144,
-            "latitude" : 42.400556255,
+            "longitude" : -83.218459,
+            "latitude" : 42.668212,
             "description"  : "North waypoint",
-            "frame_id" : "map"
-        },
-        {
-            "id" : 1,
-            "longitude" : -83.130640432,
-            "latitude" : 42.400510946,
-            "description"  : "Mid",
-            "frame_id" : "map"
-        },
-        {
-            "id" : 2,
-            "longitude" : -83.130635756,
-            "latitude" : 42.400465621,
-            "description"  : "South",
             "frame_id" : "map"
         }
     ]

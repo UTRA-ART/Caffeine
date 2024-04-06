@@ -61,7 +61,7 @@
 
     <!-- Emulate ZED stereo camera image processing -->
     <include file="$(find description)/launch/zed_emulation.launch">
-        <arg name="camera_ns" value="zed/zed_node"/>
+        <arg name="camera_ns" value="zed_node"/>
     </include>
 
     <!-- Compute Odometry from Sensor Fusion -->

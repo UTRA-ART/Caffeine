@@ -60,10 +60,10 @@ def check_nmea_checksum(nmea_sentence):
         checksum ^= ord(c)
 
     # for debugging purposes:
-    print(f"data_to_checksum: {checksum}\ttransmitted_checksum: {transmitted_checksum} ({int(transmitted_checksum[:2], 16)})")
-    print(f"converted type: {type(checksum)}\ttransmitted type: {type(transmitted_checksum)}")
-    print(f"%02X % checksum: {'%02X' % checksum} ({type('%02X' % checksum)})")
-    print(f"tolerance comparison: {abs(checksum - int(transmitted_checksum[:2], 16))}")
+    # print(f"data_to_checksum: {checksum}\ttransmitted_checksum: {transmitted_checksum} ({int(transmitted_checksum[:2], 16)})")
+    # print(f"converted type: {type(checksum)}\ttransmitted type: {type(transmitted_checksum)}")
+    # print(f"%02X % checksum: {'%02X' % checksum} ({type('%02X' % checksum)})")
+    # print(f"tolerance comparison: {abs(checksum - int(transmitted_checksum[:2], 16))}")
     
     
     # actual code:

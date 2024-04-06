@@ -9,25 +9,33 @@
         type="lane_detection_inference.py"
         output="screen"
     >
-        <remap from="image" to="/zed/zed_node/rgb/image_rect_color" unless="$(eval launch_state == 'sim')"/>
-        <remap from="image" to="/zed/zed_node/left/image_rect_color" if="$(eval launch_state == 'sim')"/>
+        <!-- <remap from="image" to="/zed_node/rgb/image_rect_color" unless="$(eval launch_state == 'sim')"/> -->
+        <remap from="image" to="/zed_node/left/image_rect_color" if="$(eval launch_state == 'IGVC')"/>
 
         <rosparam command="load" file="$(find lane_detection)/config/lane_detection_params.yaml"/>
     </node>
 
-    <node
+    <!-- <node
         name="lane_scan_conversion"
         pkg="lane_detection"
         type="lane_scan_conversion.py"
         output="screen"
     >
-    </node>
+    </node> -->
 
     
-    <node
+    <!-- <node
         name="lane_viz"
         pkg="lane_detection"
         type="lane_viz.py"
+        output="screen"
+    >
+    </node> -->
+
+    <node
+        name="lane_scan_cpp"
+        pkg="lane_detection"
+        type="scan"
         output="screen"
     >
     </node>
