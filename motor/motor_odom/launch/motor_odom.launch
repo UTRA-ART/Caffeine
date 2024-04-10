@@ -1,10 +1,17 @@
 <launch>
     <!-- read from wheel encoders using raspberry pi gpio -->
 
-    <node 
+    <!-- <node 
         name="wheel_encoder_reader" 
         pkg="motor_odom" 
         type="read_wheel_encoders.py"
+        output="screen"
+    /> -->
+
+    <node 
+        name="hall_effect_reader"
+        pkg="motor_odom"
+        type="read_hall_effect.py"
         output="screen"
     />
 
