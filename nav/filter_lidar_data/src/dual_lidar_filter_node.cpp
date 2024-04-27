@@ -50,14 +50,6 @@ public:
 
         // ros::Duration(10.0).sleep(); // wait for the dumb ass tree to beocme connected, whore
 
-        // bullshit whore fuck you
-        // fuck = nh.advertise<nav_msgs::Path>("/fuck", 1);
-        fuckListener.setExtrapolationLimit(ros::Duration(0));
-        fucker = nh.advertise<std_msgs::String>("/fucker", 1);
-        markfucker = nh.advertise<visualization_msgs::Marker>("/markfucker", 1);
-        markfucker2 = nh.advertise<visualization_msgs::Marker>("/markfucker2", 1);
-        markpaff = nh.advertise<nav_msgs::Path>("/markpaff", 1);
-
         // fuck
         ramp_seg_pub = nh.advertise<geometry_msgs::PoseArray>("/ramp_seg", 1);
         ramp_routine_sub = nh.subscribe("/ramp_routine", 10, &DualLidarFilterNode::rampRoutineSub, this);
@@ -74,17 +66,10 @@ private:
     ros::Subscriber ramp_routine_sub;
     bool ramp_routine_active = false;
 
-    // cunt
-    ros::Publisher fuck;
-    tf::TransformListener fuckListener;
-    laser_geometry::LaserProjection fuckProjector;
-    ros::Publisher fucker;
-    ros::Publisher markfucker;
-    ros::Publisher markfucker2;
-    ros::Publisher markpaff;
-
     // anal
     ros::Publisher ramp_seg_pub;
+    tf::TransformListener tfListener;
+    laser_geometry::LaserProjection projector;
 
     std::string main_topic_name;
     std::string upper_topic_name;
@@ -123,7 +108,6 @@ private:
 
             // all my bullshit is here
             std::string frame = "map";
-            // sensor_msgs::PointCloud2 cloudO, cloudI;
             sensor_msgs::PointCloud cloud;
             sensor_msgs::LaserScan refitted_msg = *lidar_msg;
             // clamp values, otherewise all laserscan points are not converted
@@ -137,12 +121,8 @@ private:
             }
             try {
                 ros::Time now = ros::Time::now();
-                fuckListener.waitForTransform("/base_laser", "/map", now, ros::Duration(2.0));
-                fuckProjector.transformLaserScanToPointCloud(frame, refitted_msg, cloud, fuckListener);
-
-                // while(!ac.waitForServer(ros::Duration(0.0))){
-                //     ROS_INFO("Waiting for the move_base action server to come up");
-                // }
+                tfListener.waitForTransform("/base_laser", "/map", now, ros::Duration(2.0));
+                projector.transformLaserScanToPointCloud(frame, refitted_msg, cloud, tfListener);
             } catch (tf2::LookupException e) { // these little shits can happen at the bginning
                 return;
             } catch (tf2::ConnectivityException e) {
@@ -150,26 +130,8 @@ private:
             } catch (tf2::ExtrapolationException e) {
                 return;
             }
-            // tf::StampedTransform transform;
-            // fuckListener.lookupTransform("map", "base_laser", ros::Time(0), transform);
-            // pcl_ros::transformPointCloud("map", transform, cloudI, cloudO);
-            // sensor_msgs::convertPointCloud2ToPointCloud(cloudO, cloud);
-
-            // auto ramp_ends = get_longest_strip(lidar_msg->ranges.data(), out_msg.ranges.size());
-            // ramp_ends = std::make_pair(0, 300);
             auto indices = get_all_deeper(lidar_msg->ranges.data(), out_msg.ranges.size());
 
-            // std_msgs::String peepee;
-            // fucker.publish(peepee);
-            // peepee.data = std::to_string(cloud.points.size()) + " santa lauc " + std::to_string(lidar_msg->ranges.size());
-            // fucker.publish(peepee);
-            // peepee.data = std::to_string(lidar_msg->range_min) + " santa lauc " + std::to_string(lidar_msg->range_max);
-            // fucker.publish(peepee);
-
-            nav_msgs::Path paff;
-            paff.header.stamp = ros::Time::now();
-            paff.header.frame_id = frame;
-            geometry_msgs::PoseStamped penis;
             int largest_i = 0;
             if (indices.size() > 0) {
                 for (int i = 0; i < indices.size(); i += 1) { 
@@ -192,104 +154,9 @@ private:
                 }
                 ramp_seg_pub.publish(ramp_msg);
 
-
-                // expel points that are further apart from the ends here
-                // using avg dist between points in the set
-                
-
-                // compute waypoint from remainign points
-                // const auto& front = cloud.points[indices[largest_i].front()];
-                // const auto& back = cloud.points[indices[largest_i].back()];
-                // const float x_len = back.x - front.x;
-                // const float ylen = back.y - front.y;
-                // const float slope = ylen / x_len;
-                // const float xmid = x_len * 0.5 + front.x;
-                // const float ymid = x_len * 0.5 * slope + front.y;
-
-                // const float px = xmid - 1.5;
-                // const float py = ymid + 1.5 / slope; // NOTE: watch for division by ~0, like when line is vertical on x-y plane
-
-                // navigate dumb fuck
-                // move_base_msgs::MoveBaseGoal goal;
-                // goal.target_pose.header.frame_id = frame;
-                // goal.target_pose.header.stamp = ros::Time::now();
-                // goal.target_pose.pose.position.x = px;
-                // goal.target_pose.pose.position.y = py;
-                // goal.target_pose.pose.orientation.w = 1;
-                // ac.sendGoal(goal);
-                // ac.waitForResult(); // suck my dick
-
-                // visualization_msgs::Marker mom;
-                // mom.header.stamp = ros::Time::now();
-                // mom.header.frame_id = frame;
-                // mom.action = 0;
-                // mom.id = 69;
-                // mom.type = visualization_msgs::Marker::CUBE;
-                // mom.pose.position.x = px;
-                // mom.pose.position.y = py;
-                // mom.pose.position.z = 1;
-                // mom.scale.x = 0.2;
-                // mom.scale.y = 0.2;
-                // mom.scale.z = 0.2;
-                // mom.color.r = 1;
-                // mom.color.g = 0;
-                // mom.color.b = 0;
-                // mom.color.a = 1;
-                // mom.lifetime = ros::Duration(0);
-                // mom.frame_locked = true;
-                // markfucker.publish(mom);
-
-                // penis.pose.position.x = px;
-                // penis.pose.position.y = py;
-                // paff.poses.push_back(penis);
-                // penis.pose.position.x = px + 5;
-                // penis.pose.position.y = py - 5 / slope;
-                // paff.poses.push_back(penis);
-                // markpaff.publish(paff);
-
-                // mom.pose.position.x = px + 5;
-                // mom.pose.position.y = py - 5 / slope;
-                // markfucker2.publish(mom);
-
-                // paff.poses.clear();
-                // for (int i : indices[largest_i]) {
-                //     auto& anal = cloud.points[i];
-                //     penis.pose.position.x = anal.x;
-                //     penis.pose.position.y = anal.y;
-                //     penis.pose.position.z = anal.z;
-                //     paff.poses.push_back(penis);
-                // }
+                // expel extra points here from ramp segment here if wanting to omit
+                // and other filters
             }
-
-            // for (int i = ramp_ends.first; i < ramp_ends.second; i += 1) {
-            //     auto& anal = cloud.points[i];
-            //     penis.pose.position.x = anal.x;
-            //     penis.pose.position.y = anal.y;
-            //     penis.pose.position.z = anal.z;
-            //     paff.poses.push_back(penis);
-            // }
-            // only two endpoints to describe ramp
-            // auto& anal = cloud.points[ramp_ends.first];
-            // penis.pose.position.x = anal.x;
-            // penis.pose.position.y = anal.y;
-            // penis.pose.position.z = anal.z;
-            // paff.poses.push_back(penis);
-            // auto& painal = cloud.points[ramp_ends.second-1];
-            // penis.pose.position.x = painal.x;
-            // penis.pose.position.y = painal.y;
-            // penis.pose.position.z = painal.z;
-            // paff.poses.push_back(penis);
-
-            // penis.pose.position.x = 0;
-            // penis.pose.position.y = 0;
-            // penis.pose.position.z = 0;
-            // paff.poses.push_back(penis);
-            // penis.pose.position.x = 100000;
-            // penis.pose.position.y = 100000;
-            // penis.pose.position.z = 100000;
-            // paff.poses.push_back(penis);
-            
-            // fuck.publish(paff);
 
         } else { // default case, just use main lidar as it is
             out.publish(lidar_msg);
@@ -298,9 +165,6 @@ private:
     // return index pair in scan corresponding to largest ramp-like entity
     // second index is exclusive
     std::pair<int, int> get_longest_strip(const float main[], int size) {
-        // const float inf = std::numeric_limits<float>::infinity();
-        // bool all_inf = true; // for carto fix below
-
         int l_a = -1, l_b = -1;
         int a = -1, b = -1;
         bool in_ramp = false; // if in process of seeing ramp
