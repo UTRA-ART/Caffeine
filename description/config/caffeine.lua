@@ -15,6 +15,30 @@
 include "map_builder.lua"
 include "trajectory_builder.lua"
 
+-- Function to check if a topic is being published
+function is_topic_published(topic_name)
+  local command = "rostopic info " .. topic_name
+
+  local handle = io.popen(command)
+  local result = handle:read("*a")
+  -- print(".......result", result)
+  handle:close()
+
+  if string.find(result, "Publishers: None") == nil then
+    return true
+  else
+    return false
+  end
+end
+
+-- check if cv published
+local topic_name = "/cv/model_output"
+num_scan = 1
+if is_topic_published(topic_name) then
+  print("......................cv published")
+    num_scan = 2
+end
+
 options = {
   map_builder = MAP_BUILDER,
   trajectory_builder = TRAJECTORY_BUILDER,
@@ -28,7 +52,7 @@ options = {
   use_odometry = true,
   use_nav_sat = true,
   use_landmarks = false,
-  num_laser_scans = 2,
+  num_laser_scans = num_scan,
   num_multi_echo_laser_scans = 0,
   num_subdivisions_per_laser_scan = 1,
   num_point_clouds = 0,
@@ -74,4 +98,3 @@ TRAJECTORY_BUILDER_2D.max_range = 3.5 -- Decrease
 -------------------------------------------------------------------------------------
 
 return options
-
