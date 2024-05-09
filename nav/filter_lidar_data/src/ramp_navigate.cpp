@@ -83,18 +83,24 @@ private:
         Eigen::Vector2d mid(-1, 0.5 * len);
         Eigen::Vector2d midmap = ramp2map * mid + Eigen::Vector2d(front.x, front.y);
 
-        const float mvavg = 0.4;
+        // make the goal closer to ramp until within proximity
+        // so any error calculating front of ramp that happens to be too far back from ramp is mitigated
+        const float goal_dist2 = (midmap[0] - caff.x())*(midmap[0] - caff.x()) + (midmap[1] - caff.y())*(midmap[1] - caff.y());
+        if (goal_dist2 > 1.5*1.5) {
+            midmap = ramp2map * Eigen::Vector2d(0, 0.5 * len) + Eigen::Vector2d(front.x, front.y);
+        }
+
+        const float mvavg = 0.5;
         const float mvavg_st = 1 - mvavg;
 
         ramp2map = ramp2map * mvavg_st + mvavg * ramp2map_;
         xmid = xmid * mvavg_st + mvavg * midmap[0];
         ymid = ymid * mvavg_st + mvavg * midmap[1];
 
-        // NOTE: change this to be some distance in front of ramp, not based on x distance
         px = xmid;
         py = ymid;
 
-        if (state == no_ramp) { // OWRK FROM AROND HERE
+        if (state == no_ramp) {
             if (pre_ramp_detections < 10) {
                 return;
             } else {

@@ -48,8 +48,6 @@ public:
         init_ramp_depth();
         init_upper_lidar_search_constants();
 
-        // ros::Duration(10.0).sleep(); // wait for the dumb ass tree to beocme connected, whore
-
         // fuck
         ramp_seg_pub = nh.advertise<geometry_msgs::PoseArray>("/ramp_seg", 1);
         ramp_routine_sub = nh.subscribe("/ramp_routine", 10, &DualLidarFilterNode::rampRoutineSub, this);
@@ -139,8 +137,7 @@ private:
                         largest_i = i;
                     }
                 }
-
-                // send this shit to other node
+                // send this shit to ramp node
                 geometry_msgs::PoseArray ramp_msg;
                 ramp_msg.header.stamp = ros::Time::now();
                 ramp_msg.header.frame_id = "map";
@@ -153,9 +150,6 @@ private:
                     ramp_msg.poses.push_back(pose);
                 }
                 ramp_seg_pub.publish(ramp_msg);
-
-                // expel extra points here from ramp segment here if wanting to omit
-                // and other filters
             }
 
         } else { // default case, just use main lidar as it is
@@ -164,34 +158,34 @@ private:
     }
     // return index pair in scan corresponding to largest ramp-like entity
     // second index is exclusive
-    std::pair<int, int> get_longest_strip(const float main[], int size) {
-        int l_a = -1, l_b = -1;
-        int a = -1, b = -1;
-        bool in_ramp = false; // if in process of seeing ramp
-        // size = 300;
-        for (int i = 0; i < size; i++) {
-            const float comp_depth = last_upper_ranges[second_idx_fn(i, size)];
-            float depth = comp_depth - main[i];
-            if (depth > min_ramp_depth) {
-                // out[i] = inf;
-                if (!in_ramp) {
-                    a = i;
-                }
-                in_ramp = true;
-            } else {
-                // out[i] = main[i];
-                if (in_ramp) {
-                    b = i;
-                    if ((l_b - l_a) < (b - a)) { // replace with longest
-                        l_a = a;
-                        l_b = b;
-                    }
-                }
-                in_ramp = false;
-            }
-        }
-        return std::make_pair(l_a, l_b);
-    }
+    // std::pair<int, int> get_longest_strip(const float main[], int size) {
+    //     int l_a = -1, l_b = -1;
+    //     int a = -1, b = -1;
+    //     bool in_ramp = false; // if in process of seeing ramp
+    //     // size = 300;
+    //     for (int i = 0; i < size; i++) {
+    //         const float comp_depth = last_upper_ranges[second_idx_fn(i, size)];
+    //         float depth = comp_depth - main[i];
+    //         if (depth > min_ramp_depth) {
+    //             // out[i] = inf;
+    //             if (!in_ramp) {
+    //                 a = i;
+    //             }
+    //             in_ramp = true;
+    //         } else {
+    //             // out[i] = main[i];
+    //             if (in_ramp) {
+    //                 b = i;
+    //                 if ((l_b - l_a) < (b - a)) { // replace with longest
+    //                     l_a = a;
+    //                     l_b = b;
+    //                 }
+    //             }
+    //             in_ramp = false;
+    //         }
+    //     }
+    //     return std::make_pair(l_a, l_b);
+    // }
     // all da damn indices w deeper thing
     std::vector<std::vector<int>> get_all_deeper(const float main[], int size) {
         std::vector<std::vector<int>> cockandballs;

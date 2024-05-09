@@ -229,51 +229,11 @@ class NavigateWaypoints:
             # Set goal position and orientation
             pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
             goal.target_pose.pose = pose.pose
+            # goal.target_pose.pose = Pose(Point(wp['x'], wp['y'], wp['z']), Quaternion(0, 0, 0, 1))
             #rospy.loginfo("read from json again")
             
             # Sends goal and waits until the action is completed (or aborted if it is impossible)
             action_client.send_goal(goal)
-            #rospy.loginfo("sends goal again")
-
-            # Give certain time for rover to set goal repetitively
-            finished_within_time = action_client.wait_for_result(rospy.Duration(5))
-            #rospy.loginfo("wait 5 secs again")
-            if finished_within_time or self.ramp_naving:
-                #rospy.loginfo("Reached nav goal")
-                break
-            else:
-                times += 1
-                #rospy.loginfo("Resending the goal: %d", times) 
-    
-    # if you keep this functionn i will murder you
-    def fake_send_and_wait_goal_to_move_base(self, wp):
-        # Create an action client called "move_base" with action definition file "MoveBaseAction"
-        action_client = actionlib.SimpleActionClient('/move_base', MoveBaseAction)
-
-        # Waits until the action server has started up and started listening for goals.
-        action_client.wait_for_server()
-
-        # Creates a new goal with the MoveBaseGoal constructor
-        goal = MoveBaseGoal()
-        goal.target_pose.header.frame_id = 'map'
-        goal.target_pose.header.stamp = rospy.Time.now()
-
-        #while not reached Goal, resend the goal. 
-        #if finished goal, send the next goal and start again. 
-        finished_within_time = 0
-
-        times =0
-        
-        while 1:
-            # Set goal position and orientation
-            # pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
-            # goal.target_pose.pose = pose.pose
-            goal.target_pose.pose = Pose(Point(wp['x'], wp['y'], wp['z']), Quaternion(0, 0, 0, 1))
-            #rospy.loginfo("read from json again")
-            
-            # Sends goal and waits until the action is completed (or aborted if it is impossible)
-            action_client.send_goal(goal)
-            rospy.loginfo("fuck i just sent a goal my asshole")
             #rospy.loginfo("sends goal again")
 
             # Give certain time for rover to set goal repetitively
@@ -293,16 +253,6 @@ class NavigateWaypoints:
                     #rospy.loginfo("Resending the goal: %d", times) 
 
     def navigate_waypoints(self):
-        for no, wp in enumerate(self.fake_wps):
-            rospy.loginfo("FAKE wp: {}".format(no))
-            # curr_waypoint = self.get_next_waypoint()
-            self.fake_send_and_wait_goal_to_move_base(wp)
-            if self.ramp_naving:
-                break
-
-            if (self.current_lap >= self.laps):
-                break
-        return
         while True:
             curr_waypoint = self.get_next_waypoint()
             self.send_and_wait_goal_to_move_base(curr_waypoint)
@@ -322,14 +272,6 @@ class NavigateWaypoints:
 
     def sub_ramp_naving(self):
         self.ramp_wp_sub = rospy.Subscriber("/ramp_naving", Bool, self.ramp_naving_callback)
-    
-    def create_fake_wps(self):
-        self.fake_wps = [
-            {'x': 4, 'y': 0, 'z': 0},
-            # {'x': 18.077850, 'y': 15.669566, 'z': 0.241},
-            {'x': 20, 'y': 0, 'z': 0},
-            {'x': 25, 'y': 0, 'z': 0},
-        ]
 
 if __name__ == "__main__":
     # CHANGE THIS TO GET MAP SPECIFIC GPS WAYPOINTS
@@ -342,7 +284,6 @@ if __name__ == "__main__":
 
     rospy.init_node('navigate_waypoints')
     waypoints = NavigateWaypoints(static_waypoint_file, max_time_for_transform=60.0)
-    waypoints.create_fake_wps() # you better remove this shit
     waypoints.sub_ramp_naving()
     # waypoints.navigate_waypoints()
     t = th.Thread(target=waypoints.navigate_waypoints)
