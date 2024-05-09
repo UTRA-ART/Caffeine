@@ -144,7 +144,7 @@ private:
         goal.target_pose.pose.orientation.w = 1;
         float px = xmid;
         float py = ymid;
-        const float ramp_traverse_dist = 5;
+        const float ramp_traverse_dist = 6; // make it a tiny bit past the ramp
         const int traverse_count = 6;
         const Eigen::Vector2d incr = ramp2map * Eigen::Vector2d(ramp_traverse_dist / traverse_count,0);
         // NOTE: change this to be some distance in front of ramp, not based on x distance
