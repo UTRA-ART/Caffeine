@@ -174,11 +174,11 @@ int main(int argc, char **argv){
     // set initial odometry message pose and twist
     odom_new.header.frame_id = "odom";
     odom_old.pose.pose.position.x = 0;
-    odom_old.pose.pose.postion.y = 0;
+    odom_old.pose.pose.position.y = 0;
     odom_new.pose.pose.position.z = 0;
     odom_new.pose.pose.orientation.x = 0;
     odom_new.pose.pose.orientation.y = 0;
-    odom_old.pos.pose.orientation.z = 0;
+    odom_old.pose.pose.orientation.z = 0;
     odom_new.twist.twist.linear.x = 0;
     odom_new.twist.twist.linear.y = 0;
     odom_new.twist.twist.linear.z = 0;
