@@ -7,6 +7,8 @@
  * subscribed to:
  *   right_wheel/ticks_ps  (ticks per second, Float64)
  *   left_wheel/ticks_ps
+ *   right_wheel/command
+ *   left_wheel/command
  * 
  * publishes to:
  *   odom_wheel_encoder_euler
@@ -16,11 +18,15 @@
  *   tcp_nodelay: https://answers.ros.org/question/360038/what-are-the-differences-between-the-different-transporthints/
  *   covariance matrix: https://answers.ros.org/question/64759/covariance-matrix-for-vo-and-odom/
  *   motion model: https://www.roboticsbook.org/S52_diffdrive_actions.html
+ * 
+ * 2024-04-10
+ * fix direction issue - direction retrieved from command messages and
+ * and combined with directionless ticks/s from hall effect sensors
  */
 
 
 #include <ros/ros.h>
-#include <std_msgs/Int32.h>
+#include <std_msgs/Int16.h>
 #include <std_msgs/Float64.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -31,7 +37,7 @@
 #include <time.h>
 
 #include <std_msgs/String.h>
-#include <ros/console.h>
+#include <sstream>
 
 // publish to
 ros::Publisher odom_data_pub;
@@ -39,6 +45,10 @@ ros::Publisher odom_data_pub_quat;
 nav_msgs::Odometry odom_new;
 // where to get old odometry?
 nav_msgs::Odometry odom_old;
+
+ros::Publisher debug_pub;
+std_msgs::String debug_msg;
+std::stringstream ss;
 
 // timestamps
 time_t last;
@@ -88,16 +98,14 @@ using namespace std;
 
 
 // get current ticks/second from each wheel
-void right_encoder_cb(const std_msgs::Int32& right_ticks){
+void right_encoder_cb(const std_msgs::Float64& right_ticks){
     // ticks per second from hall effect sensor for right wheel
     ticks_ps_right = right_ticks.data;
     // velocity = ticks per second / ticks per metre = metres per second
     vel_right = ticks_ps_right / TICKS_PER_METRE;
-
-    ROS_DEBUG("vel_right: %f", vel_right);
 }
 
-void left_encoder_cb(const std_msgs::Int32& left_ticks){
+void left_encoder_cb(const std_msgs::Float64& left_ticks){
     // ticks per second from hall effect sensor for left wheel
     ticks_ps_left = left_ticks.data;
     vel_left = ticks_ps_left / TICKS_PER_METRE;
@@ -114,6 +122,7 @@ void right_direction_cb(const std_msgs::Float64& left_wheel_cmd){
 }
 
 void left_direction_cb(const std_msgs::Float64& right_wheel_cmd){
+    std::stringstream ss;
     if(right_wheel_cmd.data > 0){
         r_direction = 1;
     }
@@ -209,14 +218,6 @@ void update_odom(){
     distance_left = l_direction * vel_left * duration;
     distance_right = r_direction * vel_right * duration;
 
-    // std_msgs::String msg;
-    // std::stringstream ss;
-
-    // ss << "distance_left: " << distance_left;
-    // msg.data = ss.str();
-
-    // debug_pub.publish(msg)
-
     // average distance since last cycle
     double cycle_distance = (distance_right + distance_left) / 2;
     // number of radians the robot has turned since the last cycle
@@ -256,8 +257,8 @@ void update_odom(){
     // odom_new.twist.twist.linear.x = cycle_distance/(odom_new.header.stamp.toSec() - odom_old.header.stamp.toSec());
     // odom_new.twist.twist.angular.z = cycle_angle/(odom_new.header.stamp.toSec() - odom_old.header.stamp.toSec());
     odom_new.header.stamp = ros::Time::now();
-    odom_new.twist.twist.linear.x = WHEEL_RADIUS/2 * (vel_left + vel_right);
-    odom_new.twist.twist.angular.z = WHEEL_RADIUS/WHEEL_BASE * (vel_right - vel_left);
+    odom_new.twist.twist.linear.x = WHEEL_RADIUS/2 * ((l_direction * vel_left) + (r_direction * vel_right));
+    odom_new.twist.twist.angular.z = WHEEL_RADIUS/WHEEL_BASE * ((r_direction * vel_right) - (l_direction * vel_left));
 
     // save pose data for next cycle
     odom_old.pose.pose.position.x = odom_new.pose.pose.position.x;
@@ -292,10 +293,8 @@ int main(int argc, char **argv){
 
     // subscribers
     // ticks per second from both wheels
-    // ros::Subscriber right_vel_sub = nh.subscribe("/right_wheel/ticks_ps", 100, right_encoder_cb, ros::TransportHints().tcpNoDelay());    // reduce latency for large messages
-    // ros::Subscriber left_vel_sub = nh.subscribe("/left_wheel/ticks_ps", 100, left_encoder_cb, ros::TransportHints().tcpNoDelay());       // 100 is queue size
-    ros::Subscriber right_vel_sub = nh.subscribe("/right_wheel/ticks", 100, right_encoder_cb);
-    ros::Subscriber left_vel_sub = nh.subscribe("/left_wheel/ticks", 100, left_encoder_cb);
+    ros::Subscriber right_vel_sub = nh.subscribe("right_wheel/ticks_ps", 100, right_encoder_cb, ros::TransportHints().tcpNoDelay());    // reduce latency for large messages
+    ros::Subscriber left_vel_sub = nh.subscribe("left_wheel/ticks_ps", 100, left_encoder_cb, ros::TransportHints().tcpNoDelay());       // 100 is queue size
     // wheel commands to get direction for both wheels
     ros::Subscriber r_vel = nh.subscribe("/right_wheel/command", 100, right_direction_cb, ros::TransportHints().tcpNoDelay());
     ros::Subscriber l_vel = nh.subscribe("/left_wheel/command", 100, left_direction_cb, ros::TransportHints().tcpNoDelay());
@@ -309,9 +308,9 @@ int main(int argc, char **argv){
     odom_data_pub = nh.advertise<nav_msgs::Odometry>("odom_wheel_encoder_euler", 100);   // simple odom message, orientation.z is an euler angle
     odom_data_pub_quat = nh.advertise<nav_msgs::Odometry>("odom_wheel_encoder_quat", 100);   // full odom message, orientation.z is quaternion
 
-    // debug_pub = nh.advertise<std_msgs::String>("debug", 100);
+    debug_pub = nh.advertise<std_msgs::String>("debug_wheel_odom", 100);
 
-    ros::Rate loop_rate(60);
+    ros::Rate loop_rate(30);
 
     while(ros::ok()){
         // distance is updated in update_odom
