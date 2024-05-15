@@ -1,0 +1,15 @@
+<launch>
+    <arg name='baud_rate' default='9600'/>
+    <arg name='ros_rate' default='30'/>
+    <arg name='odom_arduino_port' default='/dev/ttyACM0'/>
+
+    <!-- read ticks from arduino -->
+    <node name='ticks_publisher' pkg='electronics' type='read_odom_arduino.py' output='screen'>
+        <param name='baud_rate' value='$(arg baud_rate)'/>
+        <param name='ros_rate' value='$(arg ros_rate)'/>
+        <param name='odom_arduino_port' value='$(arg odom_arduino_port)'/>
+    </node>
+
+    <!-- publish odom to ros -->
+    <node name='wheel_odom_pub' pkg='motor_odom' type='wheel_odom_pub' output='screen'/>
+</launch>
