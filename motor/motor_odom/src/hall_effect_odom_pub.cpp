@@ -20,7 +20,7 @@
 
 
 #include <ros/ros.h>
-#include <std_msgs/Int16.h>
+#include <std_msgs/Int32.h>
 #include <std_msgs/Float64.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -88,7 +88,7 @@ using namespace std;
 
 
 // get current ticks/second from each wheel
-void right_encoder_cb(const std_msgs::Float64& right_ticks){
+void right_encoder_cb(const std_msgs::Int32& right_ticks){
     // ticks per second from hall effect sensor for right wheel
     ticks_ps_right = right_ticks.data;
     // velocity = ticks per second / ticks per metre = metres per second
@@ -97,7 +97,7 @@ void right_encoder_cb(const std_msgs::Float64& right_ticks){
     ROS_DEBUG("vel_right: %f", vel_right);
 }
 
-void left_encoder_cb(const std_msgs::Float64& left_ticks){
+void left_encoder_cb(const std_msgs::Int32& left_ticks){
     // ticks per second from hall effect sensor for left wheel
     ticks_ps_left = left_ticks.data;
     vel_left = ticks_ps_left / TICKS_PER_METRE;
@@ -294,8 +294,8 @@ int main(int argc, char **argv){
     // ticks per second from both wheels
     // ros::Subscriber right_vel_sub = nh.subscribe("/right_wheel/ticks_ps", 100, right_encoder_cb, ros::TransportHints().tcpNoDelay());    // reduce latency for large messages
     // ros::Subscriber left_vel_sub = nh.subscribe("/left_wheel/ticks_ps", 100, left_encoder_cb, ros::TransportHints().tcpNoDelay());       // 100 is queue size
-    ros::Subscriber right_vel_sub = nh.subscribe("/right_wheel/ticks_ps", 100, right_encoder_cb);
-    ros::Subscriber left_vel_sub = nh.subscribe("/left_wheel/ticks_ps", 100, left_encoder_cb);
+    ros::Subscriber right_vel_sub = nh.subscribe("/right_wheel/ticks", 100, right_encoder_cb);
+    ros::Subscriber left_vel_sub = nh.subscribe("/left_wheel/ticks", 100, left_encoder_cb);
     // wheel commands to get direction for both wheels
     ros::Subscriber r_vel = nh.subscribe("/right_wheel/command", 100, right_direction_cb, ros::TransportHints().tcpNoDelay());
     ros::Subscriber l_vel = nh.subscribe("/left_wheel/command", 100, left_direction_cb, ros::TransportHints().tcpNoDelay());
