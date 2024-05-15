@@ -17,5 +17,13 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+<<<<<<< HEAD
 add_executable(wheel_odom_pub src/hall_effect_odom_pub.cpp)
 target_link_libraries(wheel_odom_pub ${catkin_LIBRARIES})
+=======
+# add_executable(wheel_odom_pub src/hall_effect_odom_pub.cpp)
+# target_link_libraries(wheel_odom_pub ${catkin_LIBRARIES})
+
+add_executable(wheel_odom_pub src/odom_pub2.cpp)
+target_link_libraries(wheel_odom_pub ${catkin_LIBRARIES})
+>>>>>>> 8ba7006e7dd2a2d30d21b1cfa5612980676f5600
