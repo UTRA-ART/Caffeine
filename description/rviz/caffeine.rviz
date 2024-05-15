@@ -5,9 +5,10 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /Sensors1
+        - /TF1/Frames1
         - /Sensors1/Odometry1
         - /Navigation1
+        - /Navigation1/Local Plan1
         - /Map1
       Splitter Ratio: 0.46499103307724
     Tree Height: 367
@@ -149,9 +150,9 @@ Visualization Manager:
       Frames:
         All Enabled: false
         base_laser:
-          Value: true
+          Value: false
         base_link:
-          Value: true
+          Value: false
         battery_link:
           Value: false
         chassis_link:
@@ -161,37 +162,37 @@ Visualization Manager:
         front_caster_wheel:
           Value: true
         gps_link:
-          Value: true
+          Value: false
         ground_truth:
-          Value: true
+          Value: false
         imu_link:
-          Value: true
+          Value: false
         left_camera_link:
           Value: false
         left_camera_link_optical:
           Value: false
         left_wheel_link:
-          Value: false
+          Value: true
         map:
-          Value: true
-        odom:
-          Value: true
-        right_wheel_link:
           Value: false
+        odom:
+          Value: false
+        right_wheel_link:
+          Value: true
         stand_link:
           Value: false
         upper_laser:
-          Value: true
+          Value: false
         utm:
-          Value: true
+          Value: false
         world:
-          Value: true
+          Value: false
         zed_base_link:
-          Value: true
+          Value: false
       Marker Alpha: 1
       Marker Scale: 1
       Name: TF
-      Show Arrows: true
+      Show Arrows: false
       Show Axes: true
       Show Names: true
       Tree:
@@ -595,7 +596,7 @@ Visualization Manager:
           Buffer Length: 1
           Class: rviz/Path
           Color: 252; 233; 79
-          Enabled: false
+          Enabled: true
           Head Diameter: 0.30000001192092896
           Head Length: 0.20000000298023224
           Length: 0.30000001192092896
@@ -612,14 +613,14 @@ Visualization Manager:
           Radius: 0.029999999329447746
           Shaft Diameter: 0.10000000149011612
           Shaft Length: 0.10000000149011612
-          Topic: /move_base/TrajectoryPlannerROS/global_plan
+          Topic: /move_base/GlobalPlanner/plan
           Unreliable: false
-          Value: false
+          Value: true
         - Alpha: 1
           Buffer Length: 1
           Class: rviz/Path
           Color: 252; 175; 62
-          Enabled: false
+          Enabled: true
           Head Diameter: 0.30000001192092896
           Head Length: 0.20000000298023224
           Length: 0.30000001192092896
@@ -636,9 +637,9 @@ Visualization Manager:
           Radius: 0.029999999329447746
           Shaft Diameter: 0.10000000149011612
           Shaft Length: 0.10000000149011612
-          Topic: /move_base/TrajectoryPlannerROS/local_plan
+          Topic: /move_base/DWAPlannerROS/local_plan
           Unreliable: false
-          Value: false
+          Value: true
         - Alpha: 1
           Buffer Length: 1
           Class: rviz/Path
@@ -775,7 +776,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 24.365787506103516
+      Distance: 3.02836537361145
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -783,17 +784,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -2.33485746383667
-        Y: 3.4108896255493164
-        Z: 6.6797115323424805e-06
+        X: 15.048643112182617
+        Y: -1.05635666847229
+        Z: 9.777138984645717e-06
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.9797967672348022
+      Pitch: 0.6402024626731873
       Target Frame: <Fixed Frame>
-      Yaw: 2.170396327972412
+      Yaw: 2.975369930267334
     Saved: ~
 Window Geometry:
   Camera:
