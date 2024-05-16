@@ -64,15 +64,21 @@ const double PI = 3.1415926;
 
 // robot physical constants (CHANGE THESE)
 // Assuming 200 pulses per rotation (estimate)
-const double TICKS_PER_REVOLUTION = 200;
+// const double TICKS_PER_REVOLUTION = 200;
 // Approximately 9.8inches = 24.892cm diameter (estimate)
 const double WHEEL_RADIUS = 0.125; // (in metres)
 const double WHEEL_BASE = 1.0; // (centre of left tire to centre of right tire)
 
-const double ANGULAR_VEL_PER_PULSE = 360 / TICKS_PER_REVOLUTION;
-const double METRES_PER_TICK = ((ANGULAR_VEL_PER_PULSE) / 360) * (2 * PI * WHEEL_RADIUS);
-// TICKS_PER_METRE = ticks per 
-const double TICKS_PER_METRE = 1 / METRES_PER_TICK; 
+// const double ANGULAR_VEL_PER_PULSE = 360 / TICKS_PER_REVOLUTION;
+// const double METRES_PER_TICK = ((ANGULAR_VEL_PER_PULSE) / 360) * (2 * PI * WHEEL_RADIUS);
+// // TICKS_PER_METRE = ticks per 
+// const double TICKS_PER_METRE = 1 / METRES_PER_TICK; 
+
+const double METRES_PER_ROTATION = PI * 2 * WHEEL_RADIUS;
+// ticks per second to rpm: rpm = a * tps^2 + b*tps + c
+const double A = -0.000089;
+const double B = 0.299813;
+const double C = 2.846322;
 
 // distance both wheels have travelled
 double distance_left = 0;
@@ -81,13 +87,14 @@ double distance_right = 0;
 // ticks per second for each wheel
 float ticks_ps_left = 0;   
 float ticks_ps_right = 0;
-<<<<<<< HEAD
 
 // direction for each wheel
 int l_direction = 0;
 int r_direction = 0;
 
 // wheel velocities
+double rpm_right = 0;
+double rpm_left = 0;
 double vel_right = 0;
 double vel_left = 0;
 
@@ -102,14 +109,24 @@ using namespace std;
 void right_encoder_cb(const std_msgs::Float64& right_ticks){
     // ticks per second from hall effect sensor for right wheel
     ticks_ps_right = right_ticks.data;
-    // velocity = ticks per second / ticks per metre = metres per second
-    vel_right = ticks_ps_right / TICKS_PER_METRE;
+    // convert ticks per second to metres per second
+    if(ticks_ps_right > 0){
+        rpm_right = (A * ticks_ps_right * ticks_ps_right) + (B * ticks_ps_right) + C;
+        vel_right = rpm_right * METRES_PER_ROTATION / 60;
+    }else{
+        vel_right = 0;
+    }
 }
 
 void left_encoder_cb(const std_msgs::Float64& left_ticks){
     // ticks per second from hall effect sensor for left wheel
     ticks_ps_left = left_ticks.data;
-    vel_left = ticks_ps_left / TICKS_PER_METRE;
+    if(ticks_ps_left > 0){
+        rpm_left = (A * ticks_ps_left * ticks_ps_left) + (B * ticks_ps_left) + C;
+        vel_left = rpm_left * METRES_PER_ROTATION / 60;
+    }else{
+        vel_left = 0;
+    }
 }
 
 // get the direction (positive or negative) from each wheel
@@ -132,101 +149,6 @@ void left_direction_cb(const std_msgs::Float64& right_wheel_cmd){
     }
 }
 
-=======
-
-// direction for each wheel
-int l_direction = 0;
-int r_direction = 0;
-
-// wheel velocities
-double vel_right = 0;
-double vel_left = 0;
-
-// has initial pose been received?
-bool initial_pose_received = false;
-
-using namespace std;
-
-
-
-// get current ticks/second from each wheel
-void right_encoder_cb(const std_msgs::Float64& right_ticks){
-    // ticks per second from hall effect sensor for right wheel
-    ticks_ps_right = right_ticks.data;
-    // velocity = ticks per second / ticks per metre = metres per second
-    vel_right = ticks_ps_right / TICKS_PER_METRE;
-}
-
-void left_encoder_cb(const std_msgs::Float64& left_ticks){
-    // ticks per second from hall effect sensor for left wheel
-    ticks_ps_left = left_ticks.data;
-    vel_left = ticks_ps_left / TICKS_PER_METRE;
-}
-
-// get the direction (positive or negative) from each wheel
-void right_direction_cb(const std_msgs::Float64& left_wheel_cmd){
-    if(left_wheel_cmd.data > 0){
-        l_direction = 1;
-    }
-    else{
-        l_direction = -1;
-    }
-}
-
-void left_direction_cb(const std_msgs::Float64& right_wheel_cmd){
-    std::stringstream ss;
-    if(right_wheel_cmd.data > 0){
-        r_direction = 1;
-    }
-    else{
-        r_direction = -1;
-    }
-}
-
-// // get initial 2d message from either rviz clicks or a manual pose publisher
-// void set_initial_2d(const geometry_msgs::PoseStamped &rviz_click){
-//    odom_old.pose.pose.position.x = rviz_click.pose.position.x;
-//    odom_old.pose.pose.position.y = rviz_click.pose.position.y;
-//    odom_old.pose.pose.orientation.z = rviz_click.pose.orientation.z;
-//    initial_pose_received = true;
-// }
-
-// // calculate how far the wheels have travelled since last cycle
-// void calc_left(const std_msgs::Int16& left_count){
-//     static int last_count_left = 0;
-//     if(left_count.data != 0 && last_count_left != 0){
-//         int left_ticks = (left_count.data - last_count_left);
-        
-//         if(left_ticks > 10000){
-//             left_ticks = 0 - (65535 - left_ticks);
-//         }else if(left_ticks < -10000){
-//             left_ticks = 65535 - left_ticks;
-//         }
-
-//         distance_left = left_ticks/TICKS_PER_METRE;
-//     }
-
-//     last_count_left = left_count.data;
-// }
-
-// void calc_right(const std_msgs::Int16& right_count){
-//     static int last_count_right = 0;
-//     if(right_count.data != 0 && last_count_right != 0){
-//         int right_ticks = right_count.data - last_count_right;
-
-//         if(right_ticks > 10000){
-//             right_ticks = 0 - (65535 - right_ticks);
-//         }else if(right_ticks < -10000){
-//             right_ticks = 65535 - right_ticks;
-//         }
-
-//         distance_right = right_ticks/TICKS_PER_METRE;
-//     }
-
-//     last_count_right = right_count.data;
-// }
-
->>>>>>> 86762812060f4e5791e11c6422366fa6ebf8fe24
 // publish odom_new as nav_msgs/odom message in quaternion form
 void publish_quat(){
     tf2::Quaternion q;
@@ -310,8 +232,8 @@ void update_odom(){
     // odom_new.twist.twist.linear.x = cycle_distance/(odom_new.header.stamp.toSec() - odom_old.header.stamp.toSec());
     // odom_new.twist.twist.angular.z = cycle_angle/(odom_new.header.stamp.toSec() - odom_old.header.stamp.toSec());
     odom_new.header.stamp = ros::Time::now();
-    odom_new.twist.twist.linear.x = WHEEL_RADIUS/2 * ((l_direction * vel_left) + (r_direction * vel_right));
-    odom_new.twist.twist.angular.z = WHEEL_RADIUS/WHEEL_BASE * ((r_direction * vel_right) - (l_direction * vel_left));
+    odom_new.twist.twist.linear.x = ((l_direction * vel_left) + (r_direction * vel_right)) / 2;
+    odom_new.twist.twist.angular.z = ((r_direction * vel_right) - (l_direction * vel_left)) / WHEEL_BASE;
 
     // save pose data for next cycle
     odom_old.pose.pose.position.x = odom_new.pose.pose.position.x;
