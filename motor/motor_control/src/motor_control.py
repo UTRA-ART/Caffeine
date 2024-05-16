@@ -22,8 +22,12 @@ import RPi.GPIO as gpio
 import time 
 
 # constants
-VEL_CONVERT = 51.0 * 100 / 255  # factor by which to multiply cmd_vel message before sending to motor controllers
-                                # 51 because ??, 100 because rpi pwm messages are from 0-100, 255 because arduino pwm messages are from 0-255
+def vel_convert(x):
+    # x must be positive
+    return max(48.5469 * 100 * x / 255 - 0.2489, 0)
+
+# VEL_CONVERT = 51.0 * 100 / 255  # factor by which to multiply cmd_vel message before sending to motor controllers
+#                                 # 51 because ??, 100 because rpi pwm messages are from 0-100, 255 because arduino pwm messages are from 0-255
 VEL_MAX = 100       # maximum pwm duty cycle of raspberry pi is 100
 RATE = 1          # rospy.Rate
 PWM_FREQ = 512
@@ -61,10 +65,10 @@ def rmotor_cb(control_msg):
 
     input = control_msg.data 
     if input >= 0:
-        right_speed = min(VEL_CONVERT * input, VEL_MAX)     # clip speed at maximum duty cycle
+        right_speed = min(vel_convert(input), VEL_MAX)     # clip speed at maximum duty cycle
         right_dir = True
     else:
-        right_speed = min(-VEL_CONVERT * input, VEL_MAX)
+        right_speed = min(vel_convert(-input), VEL_MAX)
         right_dir = False
     
     # debug_pub.publish(f"Right input: {input}")
@@ -76,10 +80,10 @@ def lmotor_cb(control_msg):
 
     input = control_msg.data 
     if input >= 0:
-        left_speed = min(VEL_CONVERT * input, VEL_MAX)
+        left_speed = min(vel_convert(input), VEL_MAX)
         left_dir = False
     else:
-        left_speed = min(-VEL_CONVERT * input, VEL_MAX)
+        left_speed = min(vel_convert(-input), VEL_MAX)
         left_dir = True
 
     # debug_pub.publish(f"Left input: {input}")

@@ -76,6 +76,7 @@ const double WHEEL_BASE = 1.0; // (centre of left tire to centre of right tire)
 
 const double METRES_PER_ROTATION = PI * 2 * WHEEL_RADIUS;
 // ticks per second to rpm: rpm = a * tps^2 + b*tps + c
+// values from approximating rpm/hall reading
 const double A = -0.000089;
 const double B = 0.299813;
 const double C = 2.846322;
