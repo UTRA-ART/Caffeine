@@ -29,7 +29,7 @@ def vel_convert(x):
 # VEL_CONVERT = 51.0 * 100 / 255  # factor by which to multiply cmd_vel message before sending to motor controllers
 #                                 # 51 because ??, 100 because rpi pwm messages are from 0-100, 255 because arduino pwm messages are from 0-255
 VEL_MAX = 100       # maximum pwm duty cycle of raspberry pi is 100
-RATE = 1          # rospy.Rate
+RATE = 10          # rospy.Rate
 PWM_FREQ = 512
 
 # pins
@@ -70,8 +70,6 @@ def rmotor_cb(control_msg):
     else:
         right_speed = min(vel_convert(-input), VEL_MAX)
         right_dir = False
-    
-    # debug_pub.publish(f"Right input: {input}")
 
 def lmotor_cb(control_msg):
     global rostime_last, left_speed, left_dir
@@ -85,8 +83,6 @@ def lmotor_cb(control_msg):
     else:
         left_speed = min(vel_convert(-input), VEL_MAX)
         left_dir = True
-
-    # debug_pub.publish(f"Left input: {input}")
 
 def mode_cb(mode_msg):
     global light_mode

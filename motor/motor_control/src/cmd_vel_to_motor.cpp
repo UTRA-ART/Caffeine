@@ -56,6 +56,8 @@ int main(int argc, char **argv)
 
         rvelmsg.data = (vr * FACTOR - B) / M;
         lvelmsg.data = (vl * FACTOR - B) / M;
+        // rvelmsg.data = vr * 33.468 - 8.4216;
+        // lvelmsg.data = vl * 33.468 - 8.4216;
 
         // if(vr == 0) rvelmsg.data = 0;
         // if(vl == 0) lvelmsg.data = 0;

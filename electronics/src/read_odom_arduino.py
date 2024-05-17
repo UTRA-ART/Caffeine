@@ -22,7 +22,7 @@ params
 import serial
 
 import rospy
-from std_msgs.msg import Int32
+from std_msgs.msg import Float64
 
 odom_arduino_port = rospy.get_param('/ticks_publisher/odom_arduino_port')
 
@@ -54,8 +54,8 @@ if __name__ == '__main__':
     # ros setup
     rospy.init_node("ticks_publisher", anonymous=True)
 
-    ticks_pub_r = rospy.Publisher("right_wheel/ticks", Int32, queue_size=10)
-    ticks_pub_l = rospy.Publisher("left_wheel/ticks", Int32, queue_size=10)
+    ticks_pub_r = rospy.Publisher("right_wheel/ticks_ps", Float64, queue_size=10)
+    ticks_pub_l = rospy.Publisher("left_wheel/ticks_ps", Float64, queue_size=10)
 
     # rospy.Subscriber("right_wheel/command", Float64, r_command_cb)
     # rospy.Subscriber("left_wheel/command", Float64, l_command_cb)
