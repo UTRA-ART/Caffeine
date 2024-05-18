@@ -22,7 +22,8 @@ from geometry_msgs.msg import Point
 from cv_utils import camera_projection
 
 from line_fitting import fit_lanes
-from unet_lane.Inference import Inference
+# from unet_lane.Inference import Inference
+from ultralytics import YOLO
 
 from threshold_lane.threshold import lane_detection
 
@@ -41,7 +42,7 @@ class CVModelInferencer:
         self.projection = camera_projection.CameraProjection()
         
         rospack = rospkg.RosPack()
-        self.model_path = rospack.get_path('lane_detection') + '/models/competition_model_4c_128.pt'
+        self.model_path = rospack.get_path('lane_detection') + '/models/best.pt'
 
         # Get the parameter to decide between deep learning and classical
         self.classical_mode = rospy.get_param('/lane_detection_inference/lane_detection_mode')
@@ -59,7 +60,7 @@ class CVModelInferencer:
             self.lane_detection = lane_detection
             rospy.loginfo("Lane Detection node initialized with CLASSICAL... ")
         else:
-            self.Inference = Inference(self.model_path, False)
+            self.Inference = YOLO(self.model_path)
             rospy.loginfo("Lane Detection node initialized with DEEP LEARNING... ")
 
         # self.hack = cv2.imread(r'/home/ammarvora/utra/caffeine-ws/src/Caffeine/cv/lane_detection/src/lane.png')
@@ -114,9 +115,9 @@ class CVModelInferencer:
             if self.classical_mode:
                 output = self.lane_detection(input_img)
             else:
-                output = self.Inference.inference(input_img)
+                output = self.Inference(input_img)
 
-            mask = np.where(output > 0.5, 1., 0.)
+            mask = np.where(output[0] > 0.5, 1., 0.)
             mask = mask.astype(np.uint8)
             mask = cv2.resize(mask, (330, 180))
 

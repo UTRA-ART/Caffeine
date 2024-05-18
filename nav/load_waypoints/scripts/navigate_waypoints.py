@@ -71,27 +71,24 @@ class NavigateWaypoints:
             rospy.loginfo("Waiting for transform from /map to /utm timed out!")
 
         # Add additional waypoints to the corners of the course to avoid incorrect shortcuts
-        # if waypoint_data["add_corners"]:
-        #     self.add_corners(waypoint_data, gps_info)
-        # elif waypoint_data["add_manual_points"]:
-        #     self.add_manual_points(waypoint_data,gps_info)
-        # else:
+        if waypoint_data["add_corners"]:
+            self.add_corners(waypoint_data, gps_info)
+        else:
             # Parse through json data and create list of lists holding all waypoints
-        for waypoint in waypoint_data["waypoints"]:
-            self.waypoints[waypoint['id']] = waypoint
-
+            for waypoint in waypoint_data["waypoints"]:
+                self.waypoints[waypoint['id']] = waypoint
 
         # Append the starting gps coordinate to the waypoints dict as the final waypoint
-        # last_coord_idx = len(self.waypoints) 
+        last_coord_idx = len(self.waypoints) 
 
         # Append a final waypoint to return to the start (i.e. waypoint to return to start)
-        # self.waypoints[last_coord_idx] = {
-        #     'id': last_coord_idx, 
-        #     'longitude': gps_info.longitude, 
-        #     'latitude': gps_info.latitude, 
-        #     'description': 'Initial start location', 
-        #     'frame_id': waypoint_data["waypoints"][0]["frame_id"] # For now is 'odom'
-        # }
+        self.waypoints[last_coord_idx] = {
+            'id': last_coord_idx, 
+            'longitude': gps_info.longitude, 
+            'latitude': gps_info.latitude, 
+            'description': 'Initial start location', 
+            'frame_id': waypoint_data["waypoints"][0]["frame_id"] # For now is 'odom'
+        }
 
         # Show waypoints 
         rospy.loginfo("Successfully loaded waypoints dict")
@@ -108,16 +105,16 @@ class NavigateWaypoints:
             if i == 0:
                 self.waypoints[i] = {
                     'id': i, 
-                    'longitude': waypoint_data["waypoints"][0]["longitude"] if is_sim else gps_info.longitude, 
-                    'latitude': gps_info.latitude if is_sim else waypoint_data["waypoints"][0]["latitude"], 
+                    'longitude': -79.3905355 if is_sim else gps_info.longitude, 
+                    'latitude': gps_info.latitude + 0.00001 if is_sim else waypoint_data["waypoints"][0]["latitude"], 
                     'description': "First Corner", 
                     'frame_id': frame
                 }
             elif i == 5:
                 self.waypoints[i] = {
                     'id': i, 
-                    'longitude': waypoint_data["waypoints"][3]["longitude"] + 0.000036 if is_sim else waypoint_data["waypoints"][3]["longitude"], 
-                    'latitude':  waypoint_data["waypoints"][3]["latitude"] if is_sim else waypoint_data["waypoints"][3]["latitude"] - 0.000036, 
+                    'longitude': -79.38998072 if is_sim else waypoint_data["waypoints"][3]["longitude"], 
+                    'latitude': 43.65714925 if is_sim else waypoint_data["waypoints"][3]["latitude"] - 0.000036, 
                     'description': "Third Corner", 
                     'frame_id': frame
                 }
@@ -126,43 +123,6 @@ class NavigateWaypoints:
                     'id': i, 
                     'longitude': waypoint_data["waypoints"][3]["longitude"] if is_sim else gps_info.longitude, 
                     'latitude':  gps_info.latitude - 0.00001 if is_sim else waypoint_data["waypoints"][3]["latitude"], 
-                    'description': "Fourth Corner", 
-                    'frame_id': frame
-                }
-            else:
-                self.waypoints[i] = waypoint_data["waypoints"][j]
-                self.waypoints[i]["id"] = i
-                j += 1
-
-    def add_manual_points(self, waypoint_data, gps_info):
-        is_sim = self.launch_state == "sim"
-        frame = waypoint_data["waypoints"][0]["frame_id"]
-        j = 0
-
-        # Hardcoded GPS coor to account for diff corners
-        for i in range(len(waypoint_data["waypoints"]) + 3):
-            if i == 0:
-                self.waypoints[i] = {
-                    'id': i, 
-                    'longitude': 42.668259, 
-                    'latitude':  -83.21867, 
-                    'description': "First Corner", 
-                    'frame_id': frame
-                }
-        
-            elif i==1:
-                self.waypoints[i]={
-                    "id": i,
-                    'longitude': 42.668288,
-                    'latitude': -83.218414,
-                    'description': "Second Corner", 
-                    'frame_id': frame
-                }
-            elif i == 5:
-                self.waypoints[i] = {
-                    'id': i, 
-                    'longitude': 42.667907, 
-                    'latitude': -83.218614, 
                     'description': "Fourth Corner", 
                     'frame_id': frame
                 }
@@ -245,7 +205,6 @@ class NavigateWaypoints:
         
     def send_and_wait_goal_to_move_base(self, curr_waypoint):
         # Create an action client called "move_base" with action definition file "MoveBaseAction"
-        # action_client = actionlib.SimpleActionClient('/move_base', MoveBaseAction, True)
         action_client = actionlib.SimpleActionClient('/move_base', MoveBaseAction)
 
         # Waits until the action server has started up and started listening for goals.

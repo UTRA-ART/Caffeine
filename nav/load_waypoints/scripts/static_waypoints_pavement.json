@@ -2,7 +2,6 @@
     "start_direction": "north",
     "laps": 2,
     "add_corners": true,
-    "add_manual_points": false,
     "waypoints" : [
         {
             "id" : 0,
@@ -27,7 +26,7 @@
         {
             "id" : 2,
             "longitude" :-79.3901971,
-            "latitude" :43.6571525,
+            "latitude" :43.657141,
             "description"  : "Ramp ends",
             "test_loc_description": "Ramp End",
             "frame_id" : "map",
@@ -37,10 +36,10 @@
         {
             
             "id" : 3,
-            "longitude" : -79.3901090,
-            "latitude" : 43.6571607,
-            "description"  : "Start of No-Man's Land Part 2",
-            "test_loc_description": "Ramp End",
+            "longitude" :-79.39004,
+            "latitude" :43.65715,
+            "description"  : "End of No-Man's Land",
+            "test_loc_description": "End of No-Man's Land",
             "frame_id" : "map",
             "pose_test" : [11.2,0,0,0,0,0],
             "pose_test_norm" : [10,0,0,0,0,0]

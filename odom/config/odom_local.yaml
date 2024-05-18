@@ -18,7 +18,8 @@ print_diagnostics: true
 
 ## Odometry Sensor(s) ##
 
-odom0: fake_odom_wheel_encoder_quat #Use wheel_encoder data
+odom0: odom # Sim wheel_encoder data
+# odom0: fake_odom_wheel_encoder_quat # IRL wheel encoder data
 odom0_config: [false , false , false,
                false, false, false,
                true , true , false,

@@ -10,7 +10,7 @@
         output="screen"
     >
         <!-- <remap from="image" to="/zed_node/rgb/image_rect_color" unless="$(eval launch_state == 'sim')"/> -->
-        <remap from="image" to="/zed_node/left/image_rect_color" if="$(eval launch_state == 'IGVC')"/>
+        <remap from="image" to="/zed_node/left/image_rect_color" />
 
         <rosparam command="load" file="$(find lane_detection)/config/lane_detection_params.yaml"/>
     </node>
