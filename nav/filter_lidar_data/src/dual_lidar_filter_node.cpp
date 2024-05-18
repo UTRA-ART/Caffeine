@@ -89,6 +89,7 @@ private:
     int last_upper_stamp;
 
     int second_len;
+    int init_lidar_fill = 0;
 
     // bool is_upper_valid{false};
     std::function<int(int, int)> second_idx_fn;
@@ -248,7 +249,11 @@ private:
             // all_inf = true;
         }
         if (all_inf) { // if all inf, carto seems to not like it!
-            std::fill(out.begin(), out.end(), NAN);
+            std::fill(out.begin(), out.end(),NAN);
+            if (init_lidar_fill < 10) {
+                out[0] = 3.0;
+                init_lidar_fill += 1;
+            }
         }
     }
     void get_constants() {
