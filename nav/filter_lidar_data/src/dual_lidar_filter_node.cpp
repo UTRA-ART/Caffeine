@@ -157,39 +157,10 @@ private:
             out.publish(lidar_msg);
         }
     }
-    // return index pair in scan corresponding to largest ramp-like entity
-    // second index is exclusive
-    // std::pair<int, int> get_longest_strip(const float main[], int size) {
-    //     int l_a = -1, l_b = -1;
-    //     int a = -1, b = -1;
-    //     bool in_ramp = false; // if in process of seeing ramp
-    //     // size = 300;
-    //     for (int i = 0; i < size; i++) {
-    //         const float comp_depth = last_upper_ranges[second_idx_fn(i, size)];
-    //         float depth = comp_depth - main[i];
-    //         if (depth > min_ramp_depth) {
-    //             // out[i] = inf;
-    //             if (!in_ramp) {
-    //                 a = i;
-    //             }
-    //             in_ramp = true;
-    //         } else {
-    //             // out[i] = main[i];
-    //             if (in_ramp) {
-    //                 b = i;
-    //                 if ((l_b - l_a) < (b - a)) { // replace with longest
-    //                     l_a = a;
-    //                     l_b = b;
-    //                 }
-    //             }
-    //             in_ramp = false;
-    //         }
-    //     }
-    //     return std::make_pair(l_a, l_b);
-    // }
+
     // all da damn indices w deeper thing
     std::vector<std::vector<int>> get_all_deeper(const float main[], int size) {
-        std::vector<std::vector<int>> cockandballs;
+        std::vector<std::vector<int>> cbt;
         bool in_ramp = false; // if in process of seeing ramp
         // size = 300;
         for (int i = 0; i < size; i++) {
@@ -198,19 +169,19 @@ private:
             if (depth > min_ramp_depth) {
                 // out[i] = inf;
                 if (!in_ramp) {
-                    cockandballs.push_back(std::vector<int>());
+                    cbt.push_back(std::vector<int>());
                 }
                 in_ramp = true;
-                cockandballs.back().push_back(i);
+                cbt.back().push_back(i);
             } else {
                 // out[i] = main[i];
                 // if (in_ramp) { // exclusive, so even tho this ponit isn't in it follows exclusive end shit
-                //     cockandballs.back().push_back(i);
+                //     cbt.back().push_back(i);
                 // }
                 in_ramp = false;
             }
         }
-        return cockandballs;
+        return cbt;
     }
 
     void upperLidarCallback(const sensor_msgs::LaserScanConstPtr& lidar_msg) {
@@ -250,7 +221,7 @@ private:
         }
         if (all_inf) { // if all inf, carto seems to not like it!
             std::fill(out.begin(), out.end(),NAN);
-            if (init_lidar_fill < 10) {
+            if (init_lidar_fill < 50) {
                 out[0] = 3.0;
                 init_lidar_fill += 1;
             }
