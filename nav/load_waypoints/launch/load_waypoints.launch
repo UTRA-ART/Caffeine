@@ -1,12 +1,14 @@
 <launch>
     <arg name="launch_state" default="sim"/>
+
     <node pkg="load_waypoints" type="navigate_waypoints.py" name="load_waypoints_server" output="screen">
         <param name="launch_state" value="$(arg launch_state)"/>
     </node>
+
     <node
         name="ramp_navigate" 
         pkg="load_waypoints" 
         type="ramp_navigate" 
-        output="screen"
-    ></node>
+        output="screen" />
+
 </launch> 

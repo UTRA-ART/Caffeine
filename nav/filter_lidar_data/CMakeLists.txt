@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_filters
   geodesy
   laser_geometry)
+
 find_package(PCL REQUIRED)
 
 catkin_package(

@@ -12,6 +12,9 @@
 #include <Eigen/Dense>
 #include <cmath>
 
+// If Eigen stops compilation:
+// Try: sudo ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
+
 enum State {
     no_ramp,    // normal
     to_ramp,    // navigating to front of ramp
@@ -27,9 +30,9 @@ public:
         state = no_ramp;
         ramps_to_cross = 1;
 
-        ramp_seg_sub = nh.subscribe("/ramp_seg", 10, &RampNavigateNode::rampFrontCallback, this);
-        ramp_routine_pub = nh.advertise<std_msgs::Bool>("/ramp_routine", 1); // for dual_lidar to know to fuck off
-        ramp_naving_pub = nh.advertise<std_msgs::Bool>("/ramp_naving", 1); // for navigate_waypoints to know to fuck off
+        ramp_seg_sub = nh.subscribe("/ramp_seg", 10, &RampNavigateNode::rampFrontCallback, this); // Stores location of ramp as line segments
+        ramp_routine_pub = nh.advertise<std_msgs::Bool>("/ramp_routine", 1); // Tells that we are currently crossing ramp (not just approaching)
+        ramp_naving_pub = nh.advertise<std_msgs::Bool>("/ramp_naving", 1); // For navigate_waypoints to know to temporarily stop and let ramp nav take over
     }
 
 private:
@@ -43,21 +46,17 @@ private:
 
     State state;
     int pre_ramp_detections = 0;
-    int no_ramp_period = 0; // how many times pre_ramp_detections is NOT incremented
+    int no_ramp_period = 0; // How many times pre_ramp_detections is NOT incremented
     float slope, xmid, ymid, px, py;
     Eigen::Matrix2d ramp2map;
 
     void rampFrontCallback(const geometry_msgs::PoseArrayConstPtr& ramp_seg) {
-        if (state == on_ramp) {
+        if (state == on_ramp || ramps_to_cross <= 0) {
             return;
         }
-        if (ramps_to_cross <= 0) {
-            return;
-        }
-        tf::StampedTransform transform;
-        tfListener.lookupTransform("map", "base_link", ros::Time(0), transform);
-        const auto& caff = transform.getOrigin();
 
+        // If the length of ramp segment is not within expected range, do not proceed
+        // Also make sure the ramp is detected for more than one time point (confirm it's actually there)
         if (!pass_length(ramp_seg->poses)) {
             if (pre_ramp_detections > 0) {
                 no_ramp_period += 1;
@@ -69,12 +68,18 @@ private:
             return;
         }
         pre_ramp_detections += 1; // WORK HERE
-        // change your dumb shit algorithm for finding the point in front of ramp
+
+        // Obtain base_link -> map transform
+        tf::StampedTransform transform;
+        tfListener.lookupTransform("map", "base_link", ros::Time(0), transform);
+        const auto& caff = transform.getOrigin();
+
+        // Find the middle point in front of ramp
         const auto& front = ramp_seg->poses.front().position;
         const auto& back = ramp_seg->poses.back().position;
         const float x_len = back.x - front.x;
         const float y_len = back.y - front.y;
-        const float len = sqrt(x_len*x_len + y_len*y_len);
+        const float len = sqrt(x_len*x_len + y_len*y_len); // Length of detected ramp segment
 
         Eigen::Matrix2d ramp2map_;
         ramp2map_ << y_len, x_len,
@@ -83,8 +88,8 @@ private:
         Eigen::Vector2d mid(-1, 0.5 * len);
         Eigen::Vector2d midmap = ramp2map * mid + Eigen::Vector2d(front.x, front.y);
 
-        // make the goal closer to ramp until within proximity
-        // so any error calculating front of ramp that happens to be too far back from ramp is mitigated
+        // Make the goal closer to ramp until within proximity
+        // to mitigate  error caused by calculating the front of ramp to be too far away
         const float goal_dist2 = (midmap[0] - caff.x())*(midmap[0] - caff.x()) + (midmap[1] - caff.y())*(midmap[1] - caff.y());
         if (goal_dist2 > 1.5*1.5) {
             midmap = ramp2map * Eigen::Vector2d(0, 0.5 * len) + Eigen::Vector2d(front.x, front.y);
@@ -97,6 +102,7 @@ private:
         xmid = xmid * mvavg_st + mvavg * midmap[0];
         ymid = ymid * mvavg_st + mvavg * midmap[1];
 
+        // Goal x, y in map frame
         px = xmid;
         py = ymid;
 
@@ -108,10 +114,11 @@ private:
                 pre_ramp_detections = 0;
                 std_msgs::Bool naving_msg;
                 naving_msg.data = true;
-                ramp_naving_pub.publish(naving_msg);
+                ramp_naving_pub.publish(naving_msg); // Send message that we are current in ramp navigation mode
             }
         }
 
+        // Set a move_base goal for the middle front of ramp
         move_base_msgs::MoveBaseGoal goal;
         goal.target_pose.header.frame_id = "map";
         goal.target_pose.header.stamp = ros::Time::now();
@@ -126,7 +133,7 @@ private:
         const float goalerror2 = (px - caff.x()) * (px - caff.x()) + (py - caff.y()) * (py - caff.y());
         if (goalerror2 < 0.5) {
             state = on_ramp;
-            cross(goal, xmid, ymid, ramp2map);
+            cross(goal, xmid, ymid, ramp2map); // Continue rest of navigation across ramp
 
             std_msgs::Bool naving_msg;
             naving_msg.data = false;
@@ -136,37 +143,33 @@ private:
     }
     
     void cross(move_base_msgs::MoveBaseGoal goal, const float xmid, const float ymid, const Eigen::Matrix2d ramp2map) {
-        // goal.target_pose.header.frame_id = "map";
-        std_msgs::Bool pee;
-        pee.data = true;
-        ramp_routine_pub.publish(pee);
+        std_msgs::Bool is_on_ramp;
+        is_on_ramp.data = true;
+        ramp_routine_pub.publish(is_on_ramp); // Send message that we are currently crossing ramp
 
-        goal.target_pose.pose.orientation.w = 1;
+        const float ramp_traverse_dist = 6; // Total distance to traverse 
+        const int traverse_count = 6; // How many goal points to set along the ramp
+        const Eigen::Vector2d incr = ramp2map * Eigen::Vector2d(ramp_traverse_dist / traverse_count, 0); // Make it a tiny bit past the ramp
+
         float px = xmid;
         float py = ymid;
-        const float ramp_traverse_dist = 6; // make it a tiny bit past the ramp
-        const int traverse_count = 6;
-        const Eigen::Vector2d incr = ramp2map * Eigen::Vector2d(ramp_traverse_dist / traverse_count,0);
-        // NOTE: change this to be some distance in front of ramp, not based on x distance
-        // const float xwise_incre = 0.5;
+
+        // Set goals at repeated small increments across ramp
         for (int i = 0; i < traverse_count; i += 1) {
-        // for (int i = 0; i < 2; i += 1) {
             goal.target_pose.header.stamp = ros::Time::now();
             px += incr[0];
             py += incr[1];
             goal.target_pose.pose.position.x = px;
             goal.target_pose.pose.position.y = py;
-            // if (i == 6) { // NOTE: fuck me, i guess we disbale lidar til rover does crossing
-            //     pee.data = false;
-            //     ramp_routine_pub.publish(pee);
-            // }
+
             ac.sendGoal(goal);
             ac.waitForResult();
         }
-        state = no_ramp;
+        state = no_ramp; // After we finish crossing ramp
     }
 
-    bool pass_length(const std::vector<geometry_msgs::Pose>& seg) { // if ramp segment ends pass minimum length
+    // Check for length of segments (between min and max lengthpass)
+    bool pass_length(const std::vector<geometry_msgs::Pose>& seg) { // If ramp segment ends pass minimum length
         const auto& front = seg.front().position;
         const auto& back = seg.back().position;
         const float dx = front.x - back.x;
