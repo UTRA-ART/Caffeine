@@ -33,15 +33,22 @@ class NavigateWaypoints:
         self.ignore_lidar = False
         self.start_direction = 1 # North: 1, South = -1
         self.laps = 0
+
         self.populate_waypoint_dict() 
+        
         self.current_lap = 0
         self.curr_waypoint_idx = 0 if self.start_direction == 1 else len(self.waypoints) - 2
         rospy.loginfo("First goal: %s" % (self.curr_waypoint_idx))
+
         self.tf = TransformListener()
+        
         self.publisher = rospy.Publisher('/waypoint_int', Bool, queue_size=10)
 
+        # Threading for ramp navigation
         self.ramp_naving = False
         self.cv_ramp_naving = th.Condition()
+
+        self.ramp_wp_sub = rospy.Subscriber("/ramp_naving", Bool, self.ramp_naving_callback) # Check if we should initiate ramp nav program
 
     def populate_waypoint_dict(self):
         '''
@@ -225,25 +232,23 @@ class NavigateWaypoints:
 
         times =0
         
+        # Send goals repeatedly  
         while 1:
             # Set goal position and orientation
             pose = self.get_pose_from_gps(curr_waypoint["longitude"], curr_waypoint["latitude"], curr_waypoint["frame_id"])
             goal.target_pose.pose = pose.pose
-            # goal.target_pose.pose = Pose(Point(wp['x'], wp['y'], wp['z']), Quaternion(0, 0, 0, 1))
-            #rospy.loginfo("read from json again")
             
             # Sends goal and waits until the action is completed (or aborted if it is impossible)
             action_client.send_goal(goal)
-            #rospy.loginfo("sends goal again")
 
             # Give certain time for rover to set goal repetitively
             finished_within_time = action_client.wait_for_result(rospy.Duration(5))
-            #rospy.loginfo("wait 5 secs again")
+            
             with self.cv_ramp_naving:
                 if self.ramp_naving:
-                    rospy.loginfo("INTERRUPTED you little shit")
-                    self.cv_ramp_naving.wait_for(lambda : not self.ramp_naving)
-                    rospy.loginfo("WOw one hell of a nap huh")
+                    rospy.loginfo("Normal nav INTERRUPTED") # ramp_navigate.cpp takes over
+                    self.cv_ramp_naving.wait_for(lambda : not self.ramp_naving) # Stalls here (thread blocked) until ramp nav completed 
+                    rospy.loginfo("Returning to waypoint navigation")
                     break
                 elif finished_within_time:
                     rospy.loginfo("Reached nav goal")
@@ -262,29 +267,26 @@ class NavigateWaypoints:
             if (self.current_lap >= self.laps):
                 break
     
+    # Constanting updating the threading conditions
     def ramp_naving_callback(self, ramp_naving):
         with self.cv_ramp_naving:
             self.ramp_naving = ramp_naving.data
-            rospy.loginfo("message from my asshole {}".format(self.ramp_naving))
+            # rospy.loginfo("Message from /ramp_naving {}".format(self.ramp_naving))
             if not self.ramp_naving:
-                rospy.loginfo("sending a wakey call")
-                self.cv_ramp_naving.notify_all()
-
-    def sub_ramp_naving(self):
-        self.ramp_wp_sub = rospy.Subscriber("/ramp_naving", Bool, self.ramp_naving_callback)
+                # rospy.loginfo("Sending a wake up call")
+                self.cv_ramp_naving.notify_all() # Notifies blocked threads to recheck their condition
 
 if __name__ == "__main__":
-    # CHANGE THIS TO GET MAP SPECIFIC GPS WAYPOINTS
+    # Pick json file with desired GPS coordinates
     launch_state = rospy.get_param('/load_waypoints_server/launch_state')
     if launch_state == "sim":
         static_waypoint_file = 'static_waypoints_pavement.json'
-        # static_waypoint_file = 'static_waypoints_grass.json'
     else:
         static_waypoint_file = 'IGVC_practice.json'
 
     rospy.init_node('navigate_waypoints')
     waypoints = NavigateWaypoints(static_waypoint_file, max_time_for_transform=60.0)
-    waypoints.sub_ramp_naving()
+    
     # waypoints.navigate_waypoints()
     t = th.Thread(target=waypoints.navigate_waypoints)
     t.start()

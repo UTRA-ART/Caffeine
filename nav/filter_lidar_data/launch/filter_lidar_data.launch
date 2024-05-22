@@ -30,8 +30,8 @@
         <param name="distance_to_second_lidar" value="0.14"/>
         <param name="max_theta_degrees" value="45" unless="$(eval launch_state =='sim')" />
         <param name="max_theta_degrees" value="20" if="$(eval launch_state =='sim')" /> <!-- Ramp is different in sim -->
-        <param name="main_topic" value="/scan" />
-        <param name="upper_topic" value="/scan_upper" />
+        <param name="main_lidar_topic" value="/scan" />
+        <param name="upper_lidar_topic" value="/scan_upper" />
         <param name="out_topic" value="/scan_modified" />
         <param name="compare_lidar_time_tolerance_seconds" value="10" />
 

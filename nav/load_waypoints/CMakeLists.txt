@@ -11,15 +11,15 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 ## Generate added messages and services with any dependencies listed here
-  generate_messages(
-    DEPENDENCIES
-    load_waypoints  # Or other packages containing msgs
-  )
+generate_messages(
+  DEPENDENCIES
+  load_waypoints  # Or other packages containing msgs
+)
 
 include_directories(
   # include
-    ${catkin_INCLUDE_DIRS}
-  )
+  ${catkin_INCLUDE_DIRS}
+)
 
 catkin_install_python(
   PROGRAMS scripts/navigate_waypoints.py
@@ -36,6 +36,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_filters
   geodesy
   laser_geometry)
+
 find_package(PCL REQUIRED)
 
 catkin_package(
