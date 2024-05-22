@@ -81,6 +81,8 @@ private:
     int upper_lidar_start_index;
     int upper_lidar_stop_index;
     int main_lidar_angular_range;
+    float begin_idx_frc;
+    float end_idx_frc;
 
     float min_ramp_depth;
 
@@ -219,8 +221,15 @@ private:
         if (ramp_routine_active) { // NOTE: careful with this
             // all_inf = true;
         }
+
+        int begin_idx = (int)(begin_idx_frc * out.size());
+        int end_idx = (int)(end_idx_frc * out.size());
+        std::fill(out.begin(), out.begin() + begin_idx, NAN);
+        std::fill(out.begin() + end_idx, out.end(), NAN);
+
         if (all_inf) { // if all inf, carto seems to not like it!
-            std::fill(out.begin(), out.end(),NAN);
+            std::fill(out.begin(), out.end(), NAN);
+
             if (init_lidar_fill < 50) {
                 out[0] = 3.0;
                 init_lidar_fill += 1;
@@ -240,7 +249,14 @@ private:
         nh.getParam("upper_lidar_start_index", upper_lidar_start_index);      
         nh.getParam("upper_lidar_stop_index", upper_lidar_stop_index);
         nh.getParam("main_lidar_angular_total_range", main_lidar_angular_range);
-    }
+
+        float begin_angle, end_angle;
+        nh.getParam("begin_angle", begin_angle);
+        nh.getParam("end_angle", end_angle);
+
+        begin_idx_frc = begin_angle / main_lidar_angular_range;
+        end_idx_frc = end_angle / main_lidar_angular_range;
+    } 
     void init_ramp_depth() {
         min_ramp_depth = get_expected_ramp_depth(max_theta_degrees, lidar_dist);
     }
