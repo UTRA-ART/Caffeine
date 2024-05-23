@@ -70,8 +70,8 @@ private:
     int upper_lidar_start_index;
     int upper_lidar_stop_index;
     int main_lidar_angular_range;
-    float begin_idx_frc;
-    float end_idx_frc;
+    bool limit_output_range;
+    float desired_output_range;
 
     float min_ramp_depth;
 
@@ -177,8 +177,6 @@ private:
     // Get 2nd depth for depth comparison
     int get_2nd_idx_from_first_idx(int prim_idx, int main_lidar_len) {
         const float ang_diff = ((float)prim_idx / (float)main_lidar_len - 0.5) * (float)main_lidar_angular_range;
-        // const float second_i_delt = ang / (float)upper_lidar_angular_range * (upper_lidar_stop_index - upper_lidar_start_index);
-        // const  = upper_lidar_stop_index - upper_lidar_start_index;
         const float second_i_diff = ang_diff / (float)upper_lidar_angular_range;
         const float second_i_delt = (second_i_diff + 0.5) * (float)second_len;
         const int second_i = round(second_i_delt + upper_lidar_start_index);
@@ -189,23 +187,27 @@ private:
     void ramp_filter(std::vector<float>& out, const float main[]) {
         const float inf = std::numeric_limits<float>::infinity();
         bool all_inf = true; // for carto fix below
+
+        // For limiting output range (only want certain range to be used bc of self collision)
+        float angle_to_idx = out.size() / main_lidar_angular_range;
+        int begin_idx = (int)((main_lidar_angular_range - desired_output_range) * angle_to_idx / 2);
+        int end_idx = (int)(out.size() - begin_idx);
+
         for (int i = 0; i < out.size(); i++) {
             const float comp_depth = last_upper_ranges[second_idx_fn(i, out.size())];
             float depth = comp_depth - main[i];
             if (depth > min_ramp_depth) {
-                out[i] = inf;
+                out[i] = inf; // Remove where ramp is
             } else {
                 out[i] = main[i];
             }
-            if (!std::isinf(out[i])) {
-                all_inf = false;
+
+            if (limit_output_range && (i < begin_idx || i > end_idx)) {
+                out[i] = NAN; // Remove ranges specified by desired output range
+            } else if (!std::isinf(out[i])) {
+                all_inf = false; // Only count inf if it's not part of ignored range
             }
         }
-
-        int begin_idx = (int)(begin_idx_frc * out.size());
-        int end_idx = (int)(end_idx_frc * out.size());
-        std::fill(out.begin(), out.begin() + begin_idx, NAN);
-        std::fill(out.begin() + end_idx, out.end(), NAN);
 
         // If lidar senses all inf, set one point to 3.0 for ~50 msgs to make cartographer initialize
         if (all_inf) { // if all inf, carto seems to not like it!
@@ -231,12 +233,14 @@ private:
         nh.getParam("upper_lidar_stop_index", upper_lidar_stop_index);
         nh.getParam("main_lidar_angular_total_range", main_lidar_angular_range);
 
-        float begin_angle, end_angle;
-        nh.getParam("begin_angle", begin_angle);
-        nh.getParam("end_angle", end_angle);
+        nh.getParam("limit_output_range", limit_output_range);
+        nh.getParam("desired_output_total_range", desired_output_range);
 
-        begin_idx_frc = begin_angle / main_lidar_angular_range;
-        end_idx_frc = end_angle / main_lidar_angular_range;
+        // Check that desired_output_range <= main_lidar_angular_range
+        if (limit_output_range && (desired_output_range > main_lidar_angular_range)) {
+            ROS_WARN("Desired lidar range is larger than possible lidar range. Ignoring this filtering.");
+            limit_output_range = false;
+        }
     }
     void init_ramp_depth() {
         min_ramp_depth = get_expected_ramp_depth(max_theta_degrees, lidar_dist);

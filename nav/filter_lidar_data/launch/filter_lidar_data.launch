@@ -52,11 +52,10 @@
         <param name="main_lidar_angular_total_range" value='360' unless="$(eval launch_state =='sim')" />
 
         <!-- 
-            Begin and ending angles which will not be ignored
-            careful that it is within range of main_lidar_angular_total_range, otherwise
-            dual_lidar_filter_node may crash
-         -->
-        <param name="begin_angle" value='10' />
-        <param name="end_angle" value='260' />
+            Enter the desired output lidar range (other data points ignored) and toggle this function
+            Make sure that this is within range of main_lidar_angular_total_range
+        -->
+        <param name="limit_output_range" value='false' /> 
+        <param name="desired_output_total_range" value='180' />
     </node>
 </launch>
