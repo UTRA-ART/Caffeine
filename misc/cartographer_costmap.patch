@@ -1,5 +1,5 @@
 diff --git a/cartographer/io/submap_painter.cc b/cartographer/io/submap_painter.cc
-index 49b0046..7615386 100644
+index 49b0046..95172a7 100644
 --- a/cartographer/io/submap_painter.cc
 +++ b/cartographer/io/submap_painter.cc
 @@ -206,7 +206,10 @@ UniqueCairoSurfacePtr DrawTexture(const std::vector<char>& intensity,
@@ -8,8 +8,8 @@ index 49b0046..7615386 100644
      const uint8_t intensity_value = intensity.at(i);
 -    const uint8_t alpha_value = alpha.at(i);
 +    uint8_t alpha_value = alpha.at(i);
-+    if (intensity_value == 0 && alpha_value > 0) {
-+      alpha_value = 255;
++    if (intensity_value == 0 && alpha_value > 75) {
++      alpha_value = 250;
 +    }
      const uint8_t observed =
          (intensity_value == 0 && alpha_value == 0) ? 0 : 255;
