@@ -1,22 +1,24 @@
-# Navigation Function (navigation path)
+planner_frequency: 100
+
+##### Global Planner #####
+# Parameters tweaked largely refers to this doc: https://kaiyuzheng.me/documents/navguide.pdf
+GlobalPlanner:
+  default_tolerance: 0.1
+ # use_dijkstra: false
+  visualize_potential: true
+  #use_grid_path: true
+  cost_factor: 0.55
+  neutral_cost: 66
+  lethal_cost: 200
+
+# Navigation Function (Backup Planner)
 NavfnROS: #http://wiki.ros.org/navfn
   # Specifies whether or not to allow navfn to create plans that traverse unknown space.
   allow_unknown: true
   # A tolerance on the goal point for the planner.
   default_tolerance: 0.1
 
-#Parameters tweaked largely refers to this doc: https://kaiyuzheng.me/documents/navguide.pdf
-# GlobalPlanner:
-#   default_tolerance: 0.1
-#  # use_dijkstra: false
-#   visualize_potential: true
-#   #use_grid_path: true
-#   cost_factor: 0.55
-#   neutral_cost: 66
-#   lethal_cost: 200
-
-  
-planner_frequency: 100
+##### Local Planner #####
 
 # Plans robot movement
 DWAPlannerROS: 

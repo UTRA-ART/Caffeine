@@ -16,19 +16,19 @@
         <!-- Load navigation parameters-->
         <rosparam file="$(find nav_stack)/config/local_global_planner.yaml" command="load" />
         
-        <!-- Local Planner -->
+        <!-- Local Planner (Default) -->
         <!-- Use DWAPlannerROS package for local planning -->
         <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS"/>
 
-        <!-- Use TrajectoryPlannerROS package for local planning -->
-        <!-- <param name="base_local_planner" value="TrajectoryPlannerROS"/> -->
+        <!-- Use TrajectoryPlannerROS package for local planning by using commenting out other local planners -->
 
         <!-- Global Planner -->
-        <!-- Use NavfnROS package for global planning -->
-        <param name="base_global_planner" value="navfn/NavfnROS"/>
 
-        <!-- Use Global Planner package for global planning -->
-        <!-- <param name="base_global_planner" value="global_planner/GlobalPlanner"/> -->
+        <!-- Use Global Planner package for global planning (Default)-->
+        <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
+
+        <!-- Use NavfnROS package for global planning (Backup) -->
+        <!-- <param name="base_global_planner" value="navfn/NavfnROS"/> -->        
     </node>
 
     <!-- TODO: always have a manual override available when doing autonomous navigation -->
