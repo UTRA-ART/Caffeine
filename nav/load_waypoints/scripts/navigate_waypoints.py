@@ -41,7 +41,7 @@ class NavigateWaypoints:
         rospy.loginfo("First goal: %s" % (self.curr_waypoint_idx))
 
         self.tf = TransformListener()
-        self.publisher = rospy.Publisher('/waypoint_int', Bool, queue_size=10)#publishing to the waypoint_int topic using the message type Bool.
+        self.publisher = rospy.Publisher('/waypoint_int', Bool, queue_size=10) # Publishing to the waypoint_int topic using the message type Bool.
 
         # Threading for ramp navigation
         self.ramp_naving = False
