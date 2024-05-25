@@ -36,7 +36,6 @@
     <arg name="roll" value="0.000015" if="$(eval arg('world_type') =='pavement')" />
     <arg name="pitch" value="-0.0076" if="$(eval arg('world_type') =='pavement')" />
     <arg name="yaw" value="-1.57" if="$(eval arg('world_type') =='pavement')" /> -->
-    
 
     <!-- Parse URDF with xacro -->
     <param name="robot_description" command="xacro '$(find description)/urdf/caffeine.urdf.xacro'"/>

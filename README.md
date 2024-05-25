@@ -35,7 +35,7 @@ sudo rosdep init
 rosdep update
 ```
 
-### Install catkin_tools
+### Install catkin_tools ###
 Provides the tools for working with the catkin build system and workspaces. More information can be found here: [Docs](https://catkin-tools.readthedocs.io/en/latest/). We use this to build packages with `catkin build`.
 ```
 sudo apt-get install python3-catkin-tools
@@ -57,6 +57,12 @@ sudo apt-get install ros-noetic-rviz-imu-plugin
 Provides the [Robot Localization](http://docs.ros.org/en/noetic/api/robot_localization/html/index.html) package which is used for localizing the robot.
 ```
 sudo apt-get install ros-noetic-robot-localization
+```
+
+### Install DWA Local Planner ###
+Provides the [DWA Local Planner](http://wiki.ros.org/dwa_local_planner) package which is used for local planning in navigation.
+```
+sudo apt-get install ros-noetic-dwa-local-planner
 ```
 
 ### Install RTAB Map ###

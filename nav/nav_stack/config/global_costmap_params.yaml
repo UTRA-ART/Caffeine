@@ -11,6 +11,7 @@ global_costmap:
   # TODO: Update size if needed
   width: 100
   height: 100
+  #resolution: 0.02
 
   observation_sources: laser_scan_sensor
 
@@ -62,7 +63,8 @@ global_costmap:
   # Inflation layer is necessary to put an area of medium cost around the obstacles (cartographer does not do this)
   inflation_layer:
     enabled:              true
-    inflation_radius:     0.4  # Tunable parameter (affect navigation plan)
+    inflation_radius:     1.0 # Tunable parameter (affect navigation plan)
+    cost_scaling_factor: 2.0
 
       # plugins:
       # - {name: static_layer,       type: "rtabmap_costmap_plugins::StaticLayer"}
