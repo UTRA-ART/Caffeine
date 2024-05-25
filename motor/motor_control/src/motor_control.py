@@ -81,36 +81,6 @@ def target_cb(target_msg):
     g_vx = target_msg.linear.x
     g_wz = target_msg.angular.z
 
-# def rmotor_cb(control_msg):
-#     global rostime_last, right_speed, right_dir
-
-#     rostime_last = time.time() 
-
-#     input = control_msg.data 
-#     if input >= 0:
-#         duty_cycle = M * input + K
-#         right_speed = min(max(duty_cycle, 0), VEL_MAX)     # clip speed at maximum duty cycle
-#         right_dir = True
-#     else:
-#         duty_cycle = M * (-input) + K
-#         right_speed = min(max(duty_cycle, 0), VEL_MAX)
-#         right_dir = False
-
-# def lmotor_cb(control_msg):
-#     global rostime_last, left_speed, left_dir
-
-#     rostime_last = time.time() 
-
-#     input = control_msg.data 
-#     if input >= 0:
-#         duty_cycle = M * input + K
-#         left_speed = min(max(duty_cycle, 0), VEL_MAX)
-#         left_dir = False
-#     else:
-#         duty_cycle = M * (-input) + K
-#         left_speed = min(max(duty_cycle, 0), VEL_MAX)
-#         left_dir = True
-
 def mode_cb(mode_msg):
     global mode
 
@@ -150,9 +120,6 @@ if __name__ == '__main__':
     rospy.init_node("motor_control_node", anonymous=True)
 
     rospy.Subscriber("/twist_mux/cmd_vel", Twist, target_cb)
-
-    # rospy.Subscriber("right_wheel/command", Float64, rmotor_cb)
-    # rospy.Subscriber("left_wheel/command", Float64, lmotor_cb)
     rospy.Subscriber("pause_navigation", Bool, mode_cb)
     
     debug_pub = rospy.Publisher("debug", String, queue_size=10)

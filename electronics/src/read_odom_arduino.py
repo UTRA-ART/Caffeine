@@ -16,7 +16,7 @@ publishes to:
 params
 - baud_rate
 - ros_rate
-- odom_arduino_port
+- arduino_port
 '''
 
 import serial
@@ -24,7 +24,7 @@ import serial
 import rospy
 from std_msgs.msg import Int32
 
-odom_arduino_port = rospy.get_param('/ticks_publisher/odom_arduino_port')
+arduino_port = rospy.get_param('/ticks_publisher/arduino_port')
 
 BAUD_RATE = rospy.get_param('/ticks_publisher/baud_rate')
 ROS_RATE = rospy.get_param('/ticks_publisher/ros_rate', 31)
@@ -48,7 +48,7 @@ def l_command_cb(control_msg):
 
 if __name__ == '__main__':
     # serial connection setup
-    conn = serial.Serial(odom_arduino_port, BAUD_RATE, timeout=1)
+    conn = serial.Serial(arduino_port, BAUD_RATE, timeout=1)
     conn.reset_input_buffer()
 
     # ros setup
