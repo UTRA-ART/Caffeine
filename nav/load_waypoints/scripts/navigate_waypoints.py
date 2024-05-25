@@ -119,19 +119,11 @@ class NavigateWaypoints:
             if i == 0:
                 self.waypoints[i] = {
                     'id': i, 
-                    'longitude': -79.3904605 if is_sim else gps_info.longitude, 
+                    'longitude': -79.3905355 if is_sim else gps_info.longitude, 
                     'latitude': gps_info.latitude + 0.00001 if is_sim else waypoint_data["waypoints"][0]["latitude"], 
                     'description': "First Corner", 
                     'frame_id': frame
                 }
-            # elif i ==1: 
-            #         self.waypoints[i] = {
-            #         'id': i, 
-            #         'longitude':-79.39056561879578 if is_sim else gps_info.longitude, 
-            #         'latitude': 43.656825442311444 if is_sim else waypoint_data["waypoints"][0]["latitude"], 
-            #         'description': "First Corner", 
-            #         'frame_id': frame
-            #     }
             elif i == 5:
                 self.waypoints[i] = {
                     'id': i, 
