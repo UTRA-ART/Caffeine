@@ -7,7 +7,7 @@
     <node name='ticks_publisher' pkg='electronics' type='read_odom_arduino.py' output='screen'>
         <param name='baud_rate' value='$(arg baud_rate)'/>
         <param name='ros_rate' value='$(arg ros_rate)'/>
-        <param name='odom_arduino_port' value='$(arg odom_arduino_port)'/>
+        <param name='arduino_port' value='$(arg odom_arduino_port)'/>
     </node>
 
     <!-- publish odom to ros -->

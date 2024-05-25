@@ -65,30 +65,14 @@ const double initial_y = 0.0;
 const double initial_theta = 0.00000000001;
 const double PI = 3.1415926;
 
-// robot physical constants (CHANGE THESE)
-// Assuming 200 pulses per rotation (estimate)
-// const double TICKS_PER_REVOLUTION = 200;
 // Approximately 9.8inches = 24.892cm diameter (estimate)
 const double WHEEL_RADIUS = 0.125; // (in metres)
 const double CIRCUMFERENCE = 2 * PI * WHEEL_RADIUS;
 const double WHEEL_BASE = 1.0; // (centre of left tire to centre of right tire)
 
-// const double ANGULAR_VEL_PER_PULSE = 360 / TICKS_PER_REVOLUTION;
-// const double METRES_PER_TICK = ((ANGULAR_VEL_PER_PULSE) / 360) * (2 * PI * WHEEL_RADIUS);
-// // TICKS_PER_METRE = ticks per 
-// 
-
-// const double METRES_PER_ROTATION = PI * 2 * WHEEL_RADIUS;
-// ticks per second to rpm: rpm = a * tps^2 + b*tps + c
-// values from approximating rpm/hall reading
-// const double A = -0.000089;
-// const double B = 0.299813;
-// const double C = 2.846322;
 // defines slope of rpm/(ticks per second) reading, with intercept set to 0
 const double A = 0.3114;
 const double TICKS_PER_METRE = 1 / A / CIRCUMFERENCE * 60;
-// convert rpm to m/s
-// const double RPM_TO_SPEED = 2 * PI * WHEEL_RADIUS / 60;
 
 // distance both wheels have travelled
 double distance_left = 0;
@@ -120,8 +104,6 @@ void right_ticks_cb(const std_msgs::Int32& right_ticks){
     // ticks from sensor since last message for right wheel
     ticks_right = right_ticks.data;
     // convert ticks to metres per second
-    // rpm_right = ticks_right * A;
-    // vel_right = rpm_right * RPM_TO_SPEED;
     distance_right = ticks_right / TICKS_PER_METRE;
 }
 
@@ -191,9 +173,6 @@ void publish_quat(){
 
 // update odometry information
 void update_odom(){
-    // // distance = direction * velocity * time
-    // distance_left = l_direction * vel_left * duration;
-    // distance_right = r_direction * vel_right * duration;
 
     // average distance since last cycle
     double cycle_distance = (distance_right + distance_left) / 2;
@@ -233,9 +212,6 @@ void update_odom(){
     odom_new.header.stamp = ros::Time::now();
     odom_new.twist.twist.linear.x = cycle_distance/(odom_new.header.stamp.toSec() - odom_old.header.stamp.toSec());
     odom_new.twist.twist.angular.z = cycle_angle/(odom_new.header.stamp.toSec() - odom_old.header.stamp.toSec());
-    // odom_new.header.stamp = ros::Time::now();
-    // odom_new.twist.twist.linear.x = ((l_direction * vel_left) + (r_direction * vel_right)) / 2;
-    // odom_new.twist.twist.angular.z = ((r_direction * vel_right) - (l_direction * vel_left)) / WHEEL_BASE;
 
     // save pose data for next cycle
     odom_old.pose.pose.position.x = odom_new.pose.pose.position.x;
