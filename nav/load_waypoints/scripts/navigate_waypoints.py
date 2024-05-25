@@ -41,8 +41,7 @@ class NavigateWaypoints:
         rospy.loginfo("First goal: %s" % (self.curr_waypoint_idx))
 
         self.tf = TransformListener()
-        
-        self.publisher = rospy.Publisher('/waypoint_int', Bool, queue_size=10)
+        self.publisher = rospy.Publisher('/waypoint_int', Bool, queue_size=10) # Publishing to the waypoint_int topic using the message type Bool.
 
         # Threading for ramp navigation
         self.ramp_naving = False
@@ -98,7 +97,7 @@ class NavigateWaypoints:
             'longitude': gps_info.longitude, 
             'latitude': gps_info.latitude, 
             'description': 'Initial start location', 
-            'frame_id': waypoint_data["waypoints"][0]["frame_id"] # For now is 'odom'
+            'frame_id': waypoint_data["waypoints"][0]["frame_id"] # For now is 'map'
         }
 
         # Show waypoints 
@@ -107,6 +106,10 @@ class NavigateWaypoints:
         return 
     
     def add_corners(self, waypoint_data, gps_info):
+        '''
+        Description: 
+            Add corner waypoints in the lanes to better navigate rover. 
+        '''
         is_sim = self.launch_state == "sim"
         frame = waypoint_data["waypoints"][0]["frame_id"]
         j = 0

@@ -18,7 +18,7 @@ print_diagnostics: true
 
 ## Odometry Sensor(s) ##
 
-odom0: odom #Use wheel_encoder data (change once new node is up)
+odom0: odom #Use wheel_encoder data (change once new node is up). Simulated by Gazebo
 odom0_config: [true , true , false,
                false, false, true,
                true , true , false,

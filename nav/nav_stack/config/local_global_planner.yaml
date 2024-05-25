@@ -1,0 +1,91 @@
+planner_frequency: 100
+
+##### Global Planner #####
+# Parameters tweaked largely refers to this doc: https://kaiyuzheng.me/documents/navguide.pdf
+GlobalPlanner:
+  default_tolerance: 0.1
+ # use_dijkstra: false
+  visualize_potential: true
+  #use_grid_path: true
+  cost_factor: 0.55
+  neutral_cost: 66
+  lethal_cost: 200
+
+# Navigation Function (Backup Planner)
+NavfnROS: #http://wiki.ros.org/navfn
+  # Specifies whether or not to allow navfn to create plans that traverse unknown space.
+  allow_unknown: true
+  # A tolerance on the goal point for the planner.
+  default_tolerance: 0.1
+
+##### Local Planner #####
+
+# Plans robot movement
+DWAPlannerROS: 
+  # Robot Configuration Parameters
+  acc_lim_x: 5
+  acc_lim_y: 0
+  acc_lim_th: 5
+
+  max_vel_trans: 2.23
+  min_vel_trans: -2.23
+  max_vel_x: 2.23
+  min_vel_x: -2.23
+
+  max_vel_y: 0
+  min_vel_y: 0
+
+  max_rot_vel: 0.75
+  min_rot_vel: -0.75
+
+  # Goal Tolerance Parameters
+  yaw_goal_tolerance: 3.14
+  xy_goal_tolerance: 0.75
+
+  # Forward Simulation Parameters
+  sim_time: 2.0
+
+  vx_samples: 15
+  vth samples: 40
+
+  # Trajectory Scoring Parameters
+  path_distance_bias: 60.0
+  goal_distance_bias: 20.0
+  occdist_scale: 0.02
+
+# Plans robot movement
+TrajectoryPlannerROS: 
+  # Robot Configuration Parameters
+  acc_lim_x: 5.0
+  acc_lim_y: 0
+  acc_lim_theta: 5.0
+
+  max_vel_x: 2.23
+  min_vel_x: -2.23
+  max_vel_theta: 0.75
+  min_vel_theta: -0.75
+  min_in_place_vel_theta: -0.75
+
+  escape_vel: -2.23 # Recovery
+
+  holonomic_robot: false # Caffeine is not Holonomic
+
+  # Goal Tolerance Parameters
+  xy_goal_tolerance:  0.75
+  yaw_goal_tolerance: 3.14
+
+  # Forward Simulation Parameters
+  sim_time: 2.0
+  vx_samples: 15
+  vtheta_samples: 40
+
+  # Trajectory Scoring Parameters
+  meter_scoring: true # Sets distances in cost function to meters instead of cells (allows different map resolutions)
+   
+    #pdist_scale and gdist_scale changed according to DWAPlannerROS's path_distance_bias and goal_distance_bias's value used in this yaml and their default value in DWA planner. 
+    #ex: pdist_scale used / TrajectoryPlanner default pdist_scale = DWAPlannerROS path_distance_bias used / DWAPlannerROS default path_distance_bias
+  pdist_scale: 1.125 # Default: 0.6
+  gdist_scale: 0.5 # Default: 0.6
+  occdist_scale: 0.02 # Default: 0.01
+  heading_scoring: false # Default: false
+  heading_lookahead: 0.35 # Default: 0.35
