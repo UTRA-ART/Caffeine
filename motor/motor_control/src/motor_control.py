@@ -11,6 +11,10 @@ Subscribes to:
 * right_wheel/command
 * left_wheel/command
 * pause_navigation
+
+Publishes to:
+* right_wheel/direction
+* left_wheel/direction
 '''
 
 import rospy 
@@ -65,6 +69,9 @@ right_speed = 0
 right_dir = True      # True: CW, False: CCW
 left_speed = 0
 left_dir = True
+
+right_dir_last = True 
+left_dir_last = True
 
 # light variables
 BLINK_INTERVAL = 0.5
@@ -154,6 +161,10 @@ if __name__ == '__main__':
     # rospy.Subscriber("right_wheel/command", Float64, rmotor_cb)
     # rospy.Subscriber("left_wheel/command", Float64, lmotor_cb)
     rospy.Subscriber("pause_navigation", Bool, mode_cb)
+
+    # publishers
+    right_dir_pub = rospy.Publisher("right_wheel/direction", Bool, queue_size=1)
+    left_dir_pub = rospy.Publisher("left_wheel/direction", Bool, queue_size=1)
     
     debug_pub = rospy.Publisher("debug", String, queue_size=10)
     # debug_lights = rospy.Publisher("debug_lights", Bool, queue_size=1)
@@ -210,6 +221,14 @@ if __name__ == '__main__':
 
             r_speed_pin.ChangeDutyCycle(right_speed)
             l_speed_pin.ChangeDutyCycle(left_speed)
+
+            # publish direction
+            if right_dir != right_dir_last:
+                right_dir_pub.publish(right_dir)
+                right_dir_last = right_dir 
+            if left_dir != left_dir_last:
+                left_dir_pub.publish(not left_dir)
+                left_dir_last = left_dir 
 
         # control light
         if not mode:  
