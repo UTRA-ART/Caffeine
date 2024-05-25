@@ -71,7 +71,7 @@ left_speed = 0
 left_dir = True
 
 right_dir_last = True 
-left_dir_last = True
+left_dir_last = False
 
 # light variables
 BLINK_INTERVAL = 0.5
@@ -190,12 +190,16 @@ if __name__ == '__main__':
             l_speed_pin.ChangeDutyCycle(left_speed)
 
             # publish direction
-            if right_dir != right_dir_last:
-                right_dir_pub.publish(right_dir)
-                right_dir_last = right_dir 
-            if left_dir != left_dir_last:
-                left_dir_pub.publish(not left_dir)
-                left_dir_last = left_dir 
+            # if right_dir != right_dir_last:
+            #     right_dir_pub.publish(right_dir)
+            #     right_dir_last = right_dir 
+            #     rospy.loginfo(f"changing right_dir to  {right_dir}")
+            # if left_dir != left_dir_last:
+            #     left_dir_pub.publish(not left_dir)
+            #     left_dir_last = left_dir 
+            #     rospy.loginfo(f"changing left_dir to {left_dir}")
+            right_dir_pub.publish(right_dir)
+            left_dir_pub.publish(not left_dir)
 
         # control light
         if not mode:  

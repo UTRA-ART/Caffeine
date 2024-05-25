@@ -1,0 +1,16 @@
+<launch>
+    <arg name='baud_rate' default='115200'/>
+    <arg name='ros_rate' default='30'/>
+    <arg name='odom_arduino_port' default='/dev/ttyACM0'/>
+
+    <!-- launch teleop -->
+    <include file="$(find motor_control)/launch/teleop_motor_control.launch"/>
+
+    <!-- launch wheel odom -->
+    <include file="$(find motor_odom)/launch/motor_odom_w_arduino.launch">
+        <arg name='baud_rate' value="$(arg baud_rate)"/>
+        <arg name='ros_rate' value="$(arg ros_rate)"/>
+        <arg name='odom_arduino_port' value="$(arg odom_arduino_port)"/>
+    </include>
+
+</launch>

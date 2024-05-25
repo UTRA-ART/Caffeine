@@ -29,8 +29,10 @@
 
 
 #include <ros/ros.h>
+#include <ros/console.h>
 #include <std_msgs/Int32.h>
 #include <std_msgs/Float64.h>
+#include <std_msgs/Bool.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -114,21 +116,18 @@ void left_ticks_cb(const std_msgs::Int32& left_ticks){
 }
 
 // get the direction (positive or negative) from each wheel
-void right_direction_cb(const std_msgs::Float64& left_wheel_cmd){
-    if(left_wheel_cmd.data > 0){
+void left_direction_cb(const std_msgs::Bool& left_dir_msg){
+    if(left_dir_msg.data){
         l_direction = 1;
-    }
-    else{
+    }else{
         l_direction = -1;
     }
 }
 
-void left_direction_cb(const std_msgs::Float64& right_wheel_cmd){
-    std::stringstream ss;
-    if(right_wheel_cmd.data > 0){
+void right_direction_cb(const std_msgs::Bool& right_dir_msg){
+    if(right_dir_msg.data){
         r_direction = 1;
-    }
-    else{
+    }else{
         r_direction = -1;
     }
 }
@@ -175,9 +174,9 @@ void publish_quat(){
 void update_odom(){
 
     // average distance since last cycle
-    double cycle_distance = (distance_right + distance_left) / 2;
+    double cycle_distance = ((r_direction * distance_right) + (l_direction * distance_left)) / 2;
     // number of radians the robot has turned since the last cycle
-    double cycle_angle = asin((distance_right - distance_left)/WHEEL_BASE);
+    double cycle_angle = asin(((r_direction * distance_right) - (l_direction * distance_left))/WHEEL_BASE);
     // average angle during the last cycle
     double avg_angle = cycle_angle/2 + odom_old.pose.pose.orientation.z;
 
@@ -249,17 +248,16 @@ int main(int argc, char **argv){
     ros::Subscriber right_vel_sub = nh.subscribe("/right_wheel/ticks", 100, right_ticks_cb, ros::TransportHints().tcpNoDelay());    // reduce latency for large messages
     ros::Subscriber left_vel_sub = nh.subscribe("/left_wheel/ticks", 100, left_ticks_cb, ros::TransportHints().tcpNoDelay());       // 100 is queue size
     // wheel commands to get direction for both wheels
-    ros::Subscriber r_vel = nh.subscribe("/right_wheel/command", 100, right_direction_cb, ros::TransportHints().tcpNoDelay());
-    ros::Subscriber l_vel = nh.subscribe("/left_wheel/command", 100, left_direction_cb, ros::TransportHints().tcpNoDelay());
-    // ros::Subscriber init_pose_sub = nh.subscribe("initial_2d", 1, set_initial_2d);
+    ros::Subscriber r_vel = nh.subscribe("/right_wheel/direction", 100, right_direction_cb, ros::TransportHints().tcpNoDelay());
+    ros::Subscriber l_vel = nh.subscribe("/left_wheel/direction", 100, left_direction_cb, ros::TransportHints().tcpNoDelay());
     
     // initial timestamp? not sure how to initialize the time, time taken mostly in loop?
     last = time(NULL);
     current = last;
 
     // publishers
-    odom_data_pub = nh.advertise<nav_msgs::Odometry>("odom_wheel_encoder_euler", 100);   // simple odom message, orientation.z is an euler angle
-    odom_data_pub_quat = nh.advertise<nav_msgs::Odometry>("odom_wheel_encoder_quat", 100);   // full odom message, orientation.z is quaternion
+    odom_data_pub = nh.advertise<nav_msgs::Odometry>("wheel_odom/euler", 100);   // simple odom message, orientation.z is an euler angle
+    odom_data_pub_quat = nh.advertise<nav_msgs::Odometry>("wheel_odom/quat", 100);   // full odom message, orientation.z is quaternion
 
     debug_pub = nh.advertise<std_msgs::String>("debug_wheel_odom", 100);
 
@@ -287,6 +285,8 @@ int main(int argc, char **argv){
         // duration is the difference, used in next loop for update_odom
         // typecast to integer in order to use in calculations
         duration = static_cast<long int> (current - last);
+
+        ROS_DEBUG("left_dir: %d\tright_dir: %d", l_direction, r_direction);
 
     }
 
