@@ -57,6 +57,7 @@ sudo apt-get install ros-noetic-rviz-imu-plugin
 Provides the [Robot Localization](http://docs.ros.org/en/noetic/api/robot_localization/html/index.html) package which is used for localizing the robot.
 ```
 sudo apt-get install ros-noetic-robot-localization
+```
 
 ### Install DWA Local Planner ###
 Provides the [DWA Local Planner](http://wiki.ros.org/dwa_local_planner) package which is used for local planning in navigation.
