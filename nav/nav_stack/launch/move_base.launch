@@ -20,7 +20,7 @@
         <!-- Use DWAPlannerROS package for local planning -->
         <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS"/>
 
-        <!-- Use TrajectoryPlannerROS package for local planning by using commenting out other local planners -->
+        <!-- Use TrajectoryPlannerROS package for local planning by commenting out other local planners -->
 
         <!-- Global Planner -->
 
