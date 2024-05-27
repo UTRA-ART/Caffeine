@@ -59,7 +59,7 @@ class Scheduler:
         self.assign_topic('/pause_navigation', 'manual_default_set', Bool, True)
         self.assign_topic('/scan_modified', 'scan_override_set', LaserScan)
         #self.assign_topic('/cv/lane_detections_cloud','cv_cloud_set',PointCloud2)
-        self.assign_topic('/cv/lane_detections_scan2','cv_lane_scan_set',LaserScan)
+        self.assign_topic('/cv/lane_detections_scan','cv_lane_scan_set',LaserScan)
         self.assign_topic('/scan_merged','merged_scan_set',LaserScan)
 
         #SSH

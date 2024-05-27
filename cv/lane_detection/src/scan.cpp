@@ -46,7 +46,7 @@ private:
 
 
     std::string lane_float_topic = "/cv/lane_detections";
-    std::string lane_laser_topic = "/cv/lane_detections_scan2";
+    std::string lane_laser_topic = "/cv/lane_detections_scan";
     std::string lidar_laser_topic = "/scan_modified";
     std::string lidar_laser_topic_out = "/scan_merged";
 
@@ -66,7 +66,7 @@ private:
         
         sensor_msgs::LaserScan scan_msg;
         scan_msg.header.frame_id = "base_laser";
-        scan_msg.header.stamp = ros::Time::now();
+        scan_msg.header.stamp = float_array.header.stamp;
         scan_msg.angle_min = -2.3561899662017822;
         scan_msg.angle_max = 2.3561899662017822;
         scan_msg.angle_increment = 0.0043673585169017315;
