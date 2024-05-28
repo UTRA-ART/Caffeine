@@ -17,27 +17,29 @@ include "trajectory_builder.lua"
 
 -- Function to check if a topic is being published
 function is_topic_published(topic_name)
-  local command = "rostopic info " .. topic_name
+  local command = "rostopic list"
 
   local handle = io.popen(command)
   local result = handle:read("*a")
-  -- print(".......result", result)
+  -- print(".......result: ", result)
   handle:close()
 
-  if string.find(result, "Publishers: None") == nil then
-    return true
-  else
+  if string.find(result, topic_name) == nil then
     return false
+  else
+    return true
   end
 end
 
 -- check if cv published
-local topic_name = "/cv/model_output"
+local topic_name = "/cv/lane_detections"
 num_scan = 1
 if is_topic_published(topic_name) then
   print("......................cv published")
     num_scan = 2
 end
+
+print("NUMBER SCAN: ", num_scan)
 
 options = {
   map_builder = MAP_BUILDER,
