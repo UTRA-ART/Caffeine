@@ -4,6 +4,7 @@
 
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
         <remap from="cmd_vel" to="nav_vel"/>
+        <!-- <remap from="odom" to="odometry/local"/> -->
 
         <!-- Load common parameters for both the global and local costmaps -->
         <rosparam file="$(find nav_stack)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />

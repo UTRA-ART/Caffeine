@@ -21,7 +21,7 @@ class SSHConnection:
 
         self.ssh_client = paramiko.client.SSHClient()
         self.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        self.ssh_client.connect(ip_address, username=username, password=password)
+        self.ssh_client.connect(ip_address, username=username, password=password, allow_agent = False)
 
         if ip_address == self.raspberry_pi2:
             rospy.loginfo('SSH client to Raspberry Pi 2 is active')
@@ -43,7 +43,7 @@ class SSHConnection:
             rospy.loginfo('SSH client to Raspberry Pi 3 is closed')
         
     def run(self):
-        self.initiate_ssh(self.raspberry_pi2, self.username, self.password)
+        self.initiate_ssh(self.raspberry_pi3, self.username, self.password)
         _stdin, _stdout, _stderr = self.ssh_client.exec_command("cd ~/caffeine_ws && ls && source devel/setup.bash")
         print(_stdout.read().decode()) #prints the stdout of the command
         self.close_ssh()

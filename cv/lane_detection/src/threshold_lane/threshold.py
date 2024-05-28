@@ -10,7 +10,7 @@ OUTPUT_DIR = "C:\\Users\\16474\\Desktop\\lanes-utra\\threshold-out"
 
 def create_mask(img_hsv):
     '''Create mask for white pixels using HSV color scheme'''
-    sensitivity = 35
+    sensitivity = 40
     lower_white = np.array([0,0,255-sensitivity])
     upper_white = np.array([255,sensitivity,255])
     mask = cv2.inRange(img_hsv, lower_white, upper_white)
@@ -106,7 +106,7 @@ def rm_barrel(img):
 
 def lane_detection(img):
     # convert from bgr to hsv
-    img = cv2.resize(img, (640, 360))
+    img = cv2.resize(img, (330, 180))
     img_hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
 
 
@@ -119,7 +119,7 @@ def lane_detection(img):
 
     output_img = cv2.subtract(lanes, barrels)
     output_img = np.clip(output_img, 0, 1) * 255
-
+    output_img[:50, :] = 0
 
     # contours, hierarchy = cv2.findContours(output_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -141,7 +141,7 @@ def lane_detection(img):
 
 
 
-    cv2.imwrite(r'/home/ammarvora/utra/caffeine-ws/src/Caffeine/cv/lane_detection/barrels.png', lanes * 255)
+    # cv2.imwrite(r'/home/ammarvora/utra/caffeine-ws/src/Caffeine/cv/lane_detection/barrels.png', lanes * 255)
     return output_img
 
 

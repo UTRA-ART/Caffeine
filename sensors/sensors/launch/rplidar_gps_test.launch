@@ -1,0 +1,32 @@
+<launch>
+    <node name="rplidarNode"          pkg="rplidar_ros"  type="rplidarNode" output="screen">
+        <remap from="scan" to="scan_upper"/>
+    <param name="serial_port" type="string" value="/dev/rplidar"/>
+    <param name="serial_baudrate"     type="int"    value="115200"/><!--A1/A2 -->
+    <param name="frame_id"            type="string" value="laser"/>
+    <param name="inverted"            type="bool"   value="false"/>
+    <param name="angle_compensate"    type="bool"   value="true"/>
+    </node>
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rplidar_ros)/rviz/rplidar.rviz" />
+
+    <arg name="launch_state" default="IGVC"/>
+    <arg name="gps_port" default= "/dev/gps_port"/>
+    <arg name="baud" default="4800"/>
+    <arg name="frame_id" default="gps" />
+    <arg name="use_GNSS_time" default="False" />
+    <arg name="time_ref_source" default="gps" />
+    <arg name="useRMC" default="False" />
+
+    <node name="nmea_serial_driver_node" pkg="nmea_navsat_driver" type="nmea_serial_driver" output="screen">
+        <param name="port" type="string" value="$(arg gps_port)"/>
+        <param name="baud" value="$(arg baud)" />
+        <param name="frame_id" value="$(arg frame_id)" />
+        <param name="use_GNSS_time" value="$(arg use_GNSS_time)" />
+        <param name="time_ref_source" value="$(arg time_ref_source)" />
+        <param name="useRMC" value="$(arg useRMC)" />
+
+        <remap from="/fix" to="/gps/fix" />
+        <remap from="/vel" to="/gps/fix_velocity" />
+    </node>
+</launch>

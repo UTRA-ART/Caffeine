@@ -14,7 +14,7 @@ from sensor_msgs.msg import Image
 class DummyZed:
     def __init__(self):
         self.bridge = CvBridge()
-        self.pub = rospy.Publisher("/zed/zed_node/rgb/image_rect_color", Image)
+        self.pub = rospy.Publisher("/zed_node/rgb/image_rect_color", Image)
         self.cap = cv2.VideoCapture(0)
 
     def run(self):

@@ -1,6 +1,7 @@
 frequency: 5.0
 delay: 0.0  # Simulated GPS needs no start-up time
-# delay: 90.0 # Real GPS start-up time
+#delay: 90.0 # Real GPS start-up time
+# world_frame: map
 
 # Initial configuration
 magnetic_declination_radians: -0.1306

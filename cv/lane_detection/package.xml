@@ -15,4 +15,12 @@
   <depend>sensor_msgs</depend>
   <depend>cv_bridge</depend>
   <depend>image_transport</depend>
+
+
+  <depend>roscpp</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf</depend>
+
+
+
 </package>

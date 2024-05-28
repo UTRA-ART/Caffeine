@@ -1,10 +1,11 @@
 <launch>
 
+    <!-- <arg name="launch_state" default="IGVC"/> -->
     <arg name="launch_state" default="sim"/>
 
     <group unless="$(eval launch_state == 'sim')">
         <!-- Launch zed camera - test which one to launch-->
-        <include file="$(find zed_wrapper)/launch/zed_no_tf.launch"/>
+        <!-- <include file="$(find zed_wrapper)/launch/zed_no_tf.launch"/> -->
 
         <!-- <include file="$(find zed_wrapper)/launch/zed.launch"/> -->
     </group>
