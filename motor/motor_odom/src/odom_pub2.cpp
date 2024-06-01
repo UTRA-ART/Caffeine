@@ -246,6 +246,7 @@ void update_odom(){
 int main(int argc, char **argv){
     // set data fields of odometry message
     odom_new.header.frame_id = "odom";
+    odom_new.child_frame_id = "base_link";
     odom_new.pose.pose.position.z = 0;
     odom_new.pose.pose.orientation.x = 0;
     odom_new.pose.pose.orientation.y = 0;
