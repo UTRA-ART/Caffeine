@@ -44,14 +44,23 @@ WHEEL_BASE = 1          # update this with urdf
 VEL_MAX = 39        # duty cycle just under 5 mph
 
 # conversion
-A = 0.4363
-B = -5.4321
+A_left = 0.448
+B_left = -6.3637
 
-def convert_speed(target):
+def convert_speed_left(target):
     # convert to RPM
     rpm = target * 60 / CIRCUMFERENCE
     # convert to duty cycle
-    return A * rpm + B
+    return A_left * rpm + B_left
+
+A_right = 0.4385
+B_right = -5.9086
+
+def convert_speed_right(target):
+    # convert to RPM
+    rpm = target * 60 / CIRCUMFERENCE
+    # convert to duty cycle
+    return A_right * rpm + B_right
 
 # pins
 R_DIR_PIN = 5       # (29)
@@ -159,10 +168,10 @@ if __name__ == '__main__':
             if vr == 0:
                 right_duty_cycle = 0
             elif vr > 0:
-                right_duty_cycle = convert_speed(vr)
+                right_duty_cycle = convert_speed_right(vr)
                 right_dir = True 
             else:
-                right_duty_cycle = convert_speed(-vr)
+                right_duty_cycle = convert_speed_right(-vr)
                 right_dir = False
             right_speed = min(max(right_duty_cycle, 0), VEL_MAX)
 
@@ -171,10 +180,10 @@ if __name__ == '__main__':
             if vl == 0:
                 left_duty_cycle = 0
             elif vl > 0:
-                left_duty_cycle = convert_speed(vl)
+                left_duty_cycle = convert_speed_left(vl)
                 left_dir = False 
             else:
-                left_duty_cycle = convert_speed(-vl)
+                left_duty_cycle = convert_speed_left(-vl)
                 left_dir = True 
             left_speed = min(max(left_duty_cycle, 0), VEL_MAX)
 

@@ -23,6 +23,7 @@ import serial
 
 import rospy
 from std_msgs.msg import Int32
+from std_msgs.msg import Bool
 
 arduino_port = rospy.get_param('/ticks_publisher/arduino_port')
 
