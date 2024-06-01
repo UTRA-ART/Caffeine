@@ -1,3 +1,6 @@
+// to do: add delay & last_error_time
+// to do: integrate current and temperature properly
+
 // pins
 const int tempsensor = A0;
 const int currentsensor = A1;
@@ -33,11 +36,11 @@ int restart_when_ok = 0;
 int motor_state = 0;      // 0 = shutoff, 1 = restart
 
 // messages
-char ok_msg[2] = "OK";
-char current_msg[30] = "CURRENT";
-char temperature_msg[30] = "TEMPERATURE";
-char alarm_msg[30] = "ALARM";
-char user_msg[30] = "USER";
+char ok_msg[2] = "O";
+char current_msg[30] = "C";
+char temperature_msg[30] = "T";
+char alarm_msg[10] = "A";
+char user_msg[10] = "U";
 
 void setup() {
   pinMode(tempsensor, INPUT);
@@ -52,6 +55,8 @@ void setup() {
 
   Serial.begin(115200);
 
+  Serial.println("STARTING");
+
   restart();
 }
 
@@ -61,7 +66,7 @@ void loop() {
   for (int x = 0; x < 150; x++) {          //Get 150 samples
     AcsValue = analogRead(currentsensor);  //Read current sensor values
     Samples = Samples + AcsValue;          //Add samples together
-    delay(3);                              // let ADC settle before next sample 3ms
+    // delay(3);                              // let ADC settle before next sample 3ms
   }
   AvgAcs = Samples / 150.0;
   AcsValueF = -1 * (2.5 - (AvgAcs * (5.0 / 1024.0)));
@@ -73,29 +78,29 @@ void loop() {
   //0.100v(100mV) is rise in output voltage when 1A current flows at input
 
   //publish and activate alarm signal if necessary
-  if (AcsValueF >= MAX_SAFE_CUR){
-    if (!current_error) {
-      current_error = 1;
-      shutoff();
-      Serial.println(current_msg);
-    }
-  }else{
-    current_error = 0;
-  }
+  // if (AcsValueF >= MAX_SAFE_CUR){
+  //   if (!current_error) {
+  //     current_error = 1;
+  //     shutoff();
+  //     Serial.println(current_msg);
+  //   }
+  // }else{
+  //   current_error = 0;
+  // }
 
   //calculating temperature
-  vout = analogRead(tempsensor);  //Reading the value from sensor
-  tempc = vout * (5.0 / 1023.0) * 10.0;
+  // vout = analogRead(tempsensor);  //Reading the value from sensor
+  // tempc = vout * (5.0 / 1023.0) * 10.0;
 
-  if (tempc >= MAX_SAFE_TEMP) {
-    if (!temperature_error){
-      temperature_error = 1;
-      shutoff();
-      Serial.println(temperature_msg);
-    }
-  }else{
-    temperature_error = 0;
-  }
+  // if (tempc >= MAX_SAFE_TEMP) {
+  //   if (!temperature_error){
+  //     temperature_error = 1;
+  //     shutoff();
+  //     Serial.println(temperature_msg);
+  //   }
+  // }else{
+  //   temperature_error = 0;
+  // }
 
   // alarm signals
   if (digitalRead(alarm_left) || digitalRead(alarm_right)) {
@@ -118,7 +123,7 @@ void loop() {
       // disable motors
       restart_when_ok = 0;
       shutoff();
-      Serial.println(user_msg);
+      // Serial.println(user_msg);
     }
   }
 
