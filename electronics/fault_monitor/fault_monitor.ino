@@ -116,7 +116,7 @@ void shutoff(){
   // digitalWrite(en_right, HIGH);
   // digitalWrite(brk_left, HIGH);
   // digitalWrite(brk_right, HIGH);
-  digitalWrite(stop_all, HIGH);
+  digitalWrite(stop_all, LOW);
   digitalWrite(soft_start, LOW);
   Serial.println("OFF");
 
@@ -130,7 +130,7 @@ void restart(){
   // digitalWrite(en_right, LOW);
 
   softStart();
-  digitalWrite(stop_all, LOW);
+  digitalWrite(stop_all, HIGH);
 
   motor_state = 1;
 
