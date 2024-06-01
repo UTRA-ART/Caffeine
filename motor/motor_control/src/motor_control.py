@@ -44,8 +44,8 @@ WHEEL_BASE = 1          # update this with urdf
 VEL_MAX = 39        # duty cycle just under 5 mph
 
 # conversion
-A = 0.4379
-B = -6.2066
+A = 0.4363
+B = -5.4321
 
 def convert_speed(target):
     # convert to RPM
