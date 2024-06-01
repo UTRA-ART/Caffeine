@@ -41,26 +41,32 @@ CIRCUMFERENCE = 2 * pi * WHEEL_RADIUS
 WHEEL_BASE = 1          # update this with urdf
 
 
-VEL_MAX = 39        # duty cycle just under 5 mph
+VEL_MAX = 2.2352        # 5 mph = 2.2352 m/s
 
-# conversion
+# conversion: duty cycle = A * rpm + B
 A_left = 0.448
 B_left = -6.3637
+
+A_left_small = 0.2016
 
 def convert_speed_left(target):
     # convert to RPM
     rpm = target * 60 / CIRCUMFERENCE
     # convert to duty cycle
-    return A_left * rpm + B_left
+    dc = A_left * rpm + B_left
+    return dc if dc > 0 else A_left_small * rpm
 
 A_right = 0.4385
 B_right = -5.9086
+
+A_right_small = 0.2016
 
 def convert_speed_right(target):
     # convert to RPM
     rpm = target * 60 / CIRCUMFERENCE
     # convert to duty cycle
-    return A_right * rpm + B_right
+    dc = A_right * rpm + B_right
+    return dc if dc > 0 else A_right_small * rpm
 
 # pins
 R_DIR_PIN = 5       # (29)
@@ -94,7 +100,7 @@ def target_cb(target_msg):
     
     rostime_last = time.time()
 
-    g_vx = target_msg.linear.x
+    g_vx = min(target_msg.linear.x, VEL_MAX)
     g_wz = target_msg.angular.z
 
 def mode_cb(mode_msg):

@@ -32,7 +32,7 @@
  * 
  * 2024-06-01
  * subscribe to rover_pose to reset position without relaunching
- */
+*/
 
 
 #include <ros/ros.h>
