@@ -76,7 +76,7 @@ const double PI = 3.1415926;
 // Approximately 9.8inches = 24.892cm diameter (estimate)
 const double WHEEL_RADIUS = 0.125; // (in metres)
 const double CIRCUMFERENCE = 2 * PI * WHEEL_RADIUS;
-const double WHEEL_BASE = 1.0; // (centre of left tire to centre of right tire)
+const double WHEEL_BASE = 0.823976; // (centre of left tire to centre of right tire)
 
 // defines slope of rpm/(ticks per second) reading, with intercept set to 0
 const double A = 0.3114;
