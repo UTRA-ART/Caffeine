@@ -41,11 +41,11 @@ CIRCUMFERENCE = 2 * pi * WHEEL_RADIUS
 WHEEL_BASE = 0.823976          # update this with urdf
 
 
-VEL_MAX = 2.2352        # 5 mph = 2.2352 m/s
+VEL_MAX = 39    # 2.2352        # 5 mph = 2.2352 m/s
 
 # conversion: duty cycle = A * rpm + B
-A_left = 0.448
-B_left = -6.3637
+A_left = 0.4385 # 0.448
+B_left = -5.9086 # -6.3637
 
 A_left_small = 0.2016
 
@@ -54,7 +54,7 @@ def convert_speed_left(target):
     rpm = target * 60 / CIRCUMFERENCE
     # convert to duty cycle
     dc = A_left * rpm + B_left
-    return dc if dc > 0 else A_left_small * rpm
+    return dc if dc > 5 else A_left_small * rpm
 
 A_right = 0.4385
 B_right = -5.9086
@@ -66,7 +66,7 @@ def convert_speed_right(target):
     rpm = target * 60 / CIRCUMFERENCE
     # convert to duty cycle
     dc = A_right * rpm + B_right
-    return dc if dc > 0 else A_right_small * rpm
+    return dc if dc > 5 else A_right_small * rpm
 
 # pins
 R_DIR_PIN = 5       # (29)
@@ -215,6 +215,8 @@ if __name__ == '__main__':
 
             test_msg = f'Right: {right_speed}, {right_dir}, Left: {left_speed}, {left_dir}'
             rospy.loginfo(test_msg)
+            debug_pub.publish(f"rpm: {vr  * 60 / CIRCUMFERENCE}, {vl * 60 / CIRCUMFERENCE}")
+            debug_pub.publish(f"{right_duty_cycle}\t{left_duty_cycle}")
             debug_pub.publish(test_msg)
 
             # set speed
