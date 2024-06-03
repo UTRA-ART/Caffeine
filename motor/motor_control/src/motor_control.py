@@ -38,7 +38,7 @@ current_time = 0
 # constants
 WHEEL_RADIUS = 0.125    # update this with urdf
 CIRCUMFERENCE = 2 * pi * WHEEL_RADIUS
-WHEEL_BASE = 1          # update this with urdf
+WHEEL_BASE = 0.823976          # update this with urdf
 
 
 VEL_MAX = 2.2352        # 5 mph = 2.2352 m/s
