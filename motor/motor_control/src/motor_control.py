@@ -74,6 +74,8 @@ R_SPEED_PIN = 12    # (32)
 L_DIR_PIN = 6       # (31)
 L_SPEED_PIN = 13    # (33)
 LIGHT_PIN = 16      # (36)
+R_IS_STOPPED = 24   # (18)
+L_IS_STOPPED = 23   # (16)
 
 # speed variables
 g_vx = 0
@@ -127,6 +129,9 @@ if __name__ == '__main__':
     gpio.setup(R_DIR_PIN, gpio.OUT, initial=gpio.LOW)
     gpio.setup(L_DIR_PIN, gpio.OUT, initial=gpio.LOW)
     gpio.setup(LIGHT_PIN, gpio.OUT, initial=gpio.LOW)
+    gpio.setup(R_IS_STOPPED, gpio.OUT, initial=gpio.LOW)
+    gpio.setup(L_IS_STOPPED, gpio.OUT, initial=gpio.LOW)
+    
     # digital PWM
     gpio.setup(R_SPEED_PIN, gpio.OUT)
     r_speed_pin = gpio.PWM(R_SPEED_PIN, PWM_FREQ)
@@ -197,22 +202,26 @@ if __name__ == '__main__':
             gpio.output(R_DIR_PIN, right_dir)
             gpio.output(L_DIR_PIN, left_dir)
 
+            # pin output if motor is stopped
+            if right_speed == 0:
+                gpio.output(R_IS_STOPPED, LOW)
+            else:
+                gpio.output(R_IS_STOPPED, HIGH)
+
+            if left_speed == 0:
+                gpio.output(L_IS_STOPPED, LOW)
+            else:
+                gpio.output(L_IS_STOPPED, HIGH)                
+
             test_msg = f'Right: {right_speed}, {right_dir}, Left: {left_speed}, {left_dir}'
             rospy.loginfo(test_msg)
             debug_pub.publish(test_msg)
 
+            # set speed
             r_speed_pin.ChangeDutyCycle(right_speed)
             l_speed_pin.ChangeDutyCycle(left_speed)
 
             # publish direction
-            # if right_dir != right_dir_last:
-            #     right_dir_pub.publish(right_dir)
-            #     right_dir_last = right_dir 
-            #     rospy.loginfo(f"changing right_dir to  {right_dir}")
-            # if left_dir != left_dir_last:
-            #     left_dir_pub.publish(not left_dir)
-            #     left_dir_last = left_dir 
-            #     rospy.loginfo(f"changing left_dir to {left_dir}")
             right_dir_pub.publish(right_dir)
             left_dir_pub.publish(not left_dir)
 

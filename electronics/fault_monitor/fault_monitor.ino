@@ -13,7 +13,7 @@ const int volt_sensor = A2;
 // const int brk_right = 6;
 // const int en_right = 7;
 
-const int stop_all = 10;
+const int stop_all = 10;    // set low to stop stuff
 const int soft_start = 11;
 
 const int light_inp = 12;
