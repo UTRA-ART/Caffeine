@@ -45,10 +45,11 @@ int motor_state = 0;      // 0 = shutoff, 1 = restart
 
 // messages
 char ok_msg[2] = "O";
-char current_msg[30] = "C";
-char temperature_msg[30] = "T";
-char alarm_msg[10] = "A";
-char user_msg[10] = "U";
+char current_msg[2] = "C";
+char undervoltage_msg[2] = "V";
+char temperature_msg[2] = "T";
+char alarm_msg[2] = "A";
+char user_msg[2] = "U";
 
 void setup() {
   pinMode(tempsensor, INPUT);
